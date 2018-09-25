@@ -1,8 +1,6 @@
-import { CloudFrontHeaders, CloudFrontResultResponse } from 'aws-lambda';
+import { CloudFrontHeaders, CloudFrontRequestEvent, CloudFrontResultResponse } from 'aws-lambda';
 import { isResponseOk, LoggerFactory, toBodyText } from 'cutwater-core';
-import { IncomingMessage } from 'http';
-
-import { toCloudFrontHeaders } from './CloudfrontUtils';
+import { IncomingHttpHeaders, IncomingMessage } from 'http';
 
 const BLACK_LISTED_HEADERS = [
   'Connection',
@@ -46,8 +44,20 @@ const READ_ONLY_HEADERS_VIEWER_RESPONSE = ['Content-Encoding', 'Content-Length',
 
 const LOG = LoggerFactory.getLogger();
 
+export const stripViewerRequestHeaders = (headers: CloudFrontHeaders): CloudFrontHeaders => {
+  return stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_REQUEST);
+};
+
 export const stripOriginRequestHeaders = (headers: CloudFrontHeaders): CloudFrontHeaders => {
   return stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_REQUEST);
+};
+
+export const stripViewerResponseHeaders = (headers: CloudFrontHeaders): CloudFrontHeaders => {
+  return stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_RESPONSE);
+};
+
+export const stripOriginResponseHeaders = (headers: CloudFrontHeaders): CloudFrontHeaders => {
+  return stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_RESPONSE);
 };
 
 const stripHeaders = (headers: CloudFrontHeaders, headerList: string[]): CloudFrontHeaders => {
@@ -62,21 +72,57 @@ const stripHeaders = (headers: CloudFrontHeaders, headerList: string[]): CloudFr
   return rval;
 };
 
-export const copyOriginResponseToCloudFrontResponse = (
+export const originResponseToCloudFrontResultResponse = (
   originResponse: IncomingMessage,
-  cfResponse: CloudFrontResultResponse,
-  callback: (err?: any) => void,
-) => {
-  cfResponse.status = originResponse.statusCode.toString();
-  cfResponse.statusDescription = originResponse.statusMessage;
-  cfResponse.headers = stripOriginRequestHeaders(toCloudFrontHeaders(originResponse.headers));
+): Promise<CloudFrontResultResponse> => {
+  const rval = {} as CloudFrontResultResponse;
+  rval.status = originResponse.statusCode.toString();
+  rval.statusDescription = originResponse.statusMessage;
+  rval.headers = stripOriginRequestHeaders(toCloudFrontHeaders(originResponse.headers));
   if (isResponseOk(originResponse)) {
-    toBodyText(originResponse).then(bodyText => {
-      cfResponse.bodyEncoding = 'text';
-      cfResponse.body = bodyText;
-      callback();
+    return new Promise((resolve, reject) => {
+      toBodyText(originResponse)
+        .then(bodyText => {
+          rval.bodyEncoding = 'text';
+          rval.body = bodyText;
+          resolve(rval);
+        })
+        .catch(reason => reject(reason));
     });
   } else {
-    callback();
+    return Promise.resolve(rval);
   }
+};
+
+export const isCustomOriginRequestEvent = (event: CloudFrontRequestEvent): boolean => {
+  const { config, request } = event.Records[0].cf;
+  const origin = request.origin ? request.origin.custom : undefined;
+  return config.eventType === 'origin-request' && origin ? true : false;
+};
+
+export const toIncomingHttpHeaders = (headers?: CloudFrontHeaders): IncomingHttpHeaders => {
+  const rval: IncomingHttpHeaders = {};
+  if (headers) {
+    Object.keys(headers).forEach(name => {
+      const header = headers[name];
+      rval[header[0].key] = header.map(obj => obj.value);
+    });
+  }
+  return rval;
+};
+
+export const toCloudFrontHeaders = (headers: IncomingHttpHeaders): CloudFrontHeaders => {
+  const rval: CloudFrontHeaders = {};
+  let value: string | number | string[];
+  Object.keys(headers).forEach(headerName => {
+    value = headers[headerName];
+    if (typeof value === 'number') {
+      value = headers[headerName].toString();
+    }
+    if (typeof value === 'string') {
+      value = [value];
+    }
+    rval[headerName.toLowerCase()] = value.map(headerValue => ({ key: headerName, value: headerValue }));
+  });
+  return rval;
 };

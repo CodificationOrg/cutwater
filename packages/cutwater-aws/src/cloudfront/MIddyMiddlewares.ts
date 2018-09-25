@@ -1,34 +1,51 @@
-import { CloudFrontRequestEvent, CloudFrontResultResponse } from 'aws-lambda';
+import { CloudFrontCustomOrigin, CloudFrontRequest, CloudFrontRequestEvent, CloudFrontResultResponse } from 'aws-lambda';
 import { LoggerFactory, mergeHeaders } from 'cutwater-core';
-import { IncomingMessage, request, RequestOptions } from 'http';
+import { IncomingMessage, request as HttpRequest, RequestOptions } from 'http';
 import { IHandlerLambda, IMiddyMiddlewareObject, IMiddyNextFunction } from 'middy';
 
-import { toIncomingHttpHeaders } from './CloudfrontUtils';
-import { copyOriginResponseToCloudFrontResponse } from './LambdaEdgeUtils';
+import { isCustomOriginRequestEvent, originResponseToCloudFrontResultResponse, toIncomingHttpHeaders } from './LambdaEdgeUtils';
 
 const LOG = LoggerFactory.getLogger();
 
-export interface CloudFrontRequestFilter {
-  filter: (event: CloudFrontRequestEvent) => void;
+export interface OriginRequestConfig {
+  filter: (request: CloudFrontRequest) => void;
 }
 
-export const withOriginResponse = (config: CloudFrontRequestFilter): IMiddyMiddlewareObject => {
+export interface CloudFrontOriginRequestEvent extends CloudFrontRequestEvent {
+  originResponse?: CloudFrontResultResponse;
+}
+
+export const withOriginRequestResponse = (config?: OriginRequestConfig): IMiddyMiddlewareObject => {
   return {
-    before: (handler: IHandlerLambda<CloudFrontRequestEvent, CloudFrontResultResponse>, next: IMiddyNextFunction) => {
-      const options = toRequestOptions(handler.event);
-      LOG.trace('Origin request options: %j', options);
-      const req = request(options, (response: IncomingMessage) => {
-        copyOriginResponseToCloudFrontResponse(response, handler.response, next);
-      });
-      req.end();
+    before: (handler: IHandlerLambda<CloudFrontOriginRequestEvent, CloudFrontResultResponse>, next: IMiddyNextFunction) => {
+      if (isCustomOriginRequestEvent(handler.event)) {
+        const request = handler.event.Records[0].cf.request;
+        if (config) {
+          config.filter(request);
+        }
+        const options = toRequestOptions(request, request.origin.custom);
+        LOG.trace('Origin request options: %j', options);
+        const req = HttpRequest(options, (response: IncomingMessage) => {
+          originResponseToCloudFrontResultResponse(response)
+            .then(result => {
+              handler.event.originResponse = result;
+              next();
+            })
+            .catch(reason => {
+              throw new Error(reason);
+            });
+        });
+        req.end();
+      } else {
+        LOG.debug('Skipping middleware because event is not a custom Origin-Request.');
+        next();
+      }
     },
   };
 };
 
-const toRequestOptions = (event: CloudFrontRequestEvent): RequestOptions => {
+const toRequestOptions = (req: CloudFrontRequest, origin: CloudFrontCustomOrigin): RequestOptions => {
   const rval: RequestOptions = {};
-  const req = event.Records[0].cf.request;
-  const origin = req.origin.custom;
   rval.protocol = origin.protocol + ':';
   rval.hostname = origin.domainName;
   rval.path = `${req.uri}${req.querystring ? '?' + req.querystring : ''}`;
