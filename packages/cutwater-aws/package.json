@@ -48,6 +48,7 @@
     "middy": "^0.18.1"
   },
   "dependencies": {
-    "aws-sdk": "^2.321.0"
+    "aws-sdk": "^2.321.0",
+    "cutwater-core": "^0.0.0"
   }
 }
