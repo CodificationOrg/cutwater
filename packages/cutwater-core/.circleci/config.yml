@@ -1,0 +1,83 @@
+defaults: &defaults
+  docker:
+    - image: circleci/node:8.11.1
+
+  working_directory: ~/codification/cutwater-core
+  parallelism: 1
+  shell: /bin/bash --login
+
+version: 2
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: 'Set Pacific Time Zone'
+          command: "echo 'America/Los_Angeles' | sudo tee -a /etc/timezone; sudo dpkg-reconfigure -f noninteractive tzdata;"
+      - restore_cache:
+          name: 'Restore Yarn Package Cache'
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: 'Install dependencies'
+          command: yarn install
+      - save_cache:
+          name: 'Save Yarn Package Cache'
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - run:
+          name: 'Clean & Build'
+          command: yarn build
+      - persist_to_workspace:
+          root: ~/codification
+          paths:
+            - cutwater-core
+
+  test:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/codification
+      - run:
+          name: 'Run Tests'
+          command: yarn test
+      - store_test_results:
+          path: test-results
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/codification
+      - run:
+          name: 'Authenticate with registry'
+          command: printf "//`node -p \"require('url').parse(process.env.NPM_REGISTRY_URL || 'https://registry.npmjs.org').host\"`/:_authToken=${NPM_TOKEN}\nregistry=${NPM_REGISTRY_URL:-https://registry.npmjs.org}\n" >> ~/.npmrc
+      - run:
+          name: 'Publish package'
+          command: npm publish --access public --tag next
+
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+      - test:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+      - deploy:
+          context: org-codification-global
+          requires:
+            - test
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
