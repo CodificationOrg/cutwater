@@ -1,0 +1,13 @@
+src/
+.circleci/
+test-results/
+.env
+*.log
+.yarnrc
+tsconfig.json
+tsconfig.cjs.json
+tslint.json
+.prettierrc
+.yarnclean
+yarn.lock
+gulpfile.js

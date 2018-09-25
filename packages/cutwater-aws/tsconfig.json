@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+      "allowSyntheticDefaultImports": true,
+      "importHelpers": true,
+      "moduleResolution": "node",
+      "outDir": "lib/esm",
+      "sourceMap": false,
+      "noImplicitAny": false,
+      "module": "es6",
+      "declaration": true,
+      "target": "es6",
+      "lib": ["es6", "dom"]
+    },
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": ["node_modules", "src/**/*.spec.ts"]
+  }
