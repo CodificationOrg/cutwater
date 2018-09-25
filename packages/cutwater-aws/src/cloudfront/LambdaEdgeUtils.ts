@@ -105,7 +105,7 @@ export const toIncomingHttpHeaders = (headers?: CloudFrontHeaders): IncomingHttp
   if (headers) {
     Object.keys(headers).forEach(name => {
       const header = headers[name];
-      rval[header[0].key] = header.map(obj => obj.value);
+      rval[header[0].key] = header.length > 1 ? header.map(obj => obj.value) : header[0].value;
     });
   }
   return rval;
