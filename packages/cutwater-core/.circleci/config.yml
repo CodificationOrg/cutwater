@@ -47,6 +47,9 @@ jobs:
           at: ~/codification
       - add_ssh_keys
       - run:
+          name: 'Keyscan Github'
+          command: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+      - run:
           name: 'Configure git defaults'
           command: git config user.email "circleci@codification.org" && git config user.name "CircleCI"
       - run:
