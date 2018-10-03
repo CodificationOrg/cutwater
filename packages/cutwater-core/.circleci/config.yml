@@ -45,6 +45,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/codification
+      - add_ssh_keys:
+          fingerprints:
+            - "e2:c0:fe:9a:df:9d:7f:56:ea:bd:c2:5d:40:f3:f5:58"
       - run:
           name: 'Configure git defaults'
           command: git config user.email "circleci@codification.org" && git config user.name "CircleCI"
