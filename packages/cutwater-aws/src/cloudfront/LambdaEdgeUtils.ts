@@ -1,4 +1,6 @@
-import { CloudFrontHeaders, CloudFrontRequestEvent, CloudFrontResultResponse } from 'aws-lambda';
+import {
+    CloudFrontHeaders, CloudFrontRequestEvent, CloudFrontResponseEvent, CloudFrontResultResponse
+} from 'aws-lambda';
 import { isResponseOk, LoggerFactory, toBodyText } from 'cutwater-core';
 import { IncomingHttpHeaders, IncomingMessage } from 'http';
 
@@ -98,6 +100,11 @@ export const isCustomOriginRequestEvent = (event: CloudFrontRequestEvent): boole
   const { config, request } = event.Records[0].cf;
   const origin = request.origin ? request.origin.custom : undefined;
   return config.eventType === 'origin-request' && origin ? true : false;
+};
+
+export const isCustomOriginResponseEvent = (event: CloudFrontResponseEvent): boolean => {
+  const { config} = event.Records[0].cf;
+  return config.eventType === 'origin-response';
 };
 
 export const toIncomingHttpHeaders = (headers?: CloudFrontHeaders): IncomingHttpHeaders => {
