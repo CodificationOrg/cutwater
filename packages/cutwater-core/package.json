@@ -10,15 +10,18 @@
   "typings": "lib/esm/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
+    "validate": "yarn lint && yarn test && yarn format",
     "test": "gulp prepareTest &&  ts-node -P tsconfig.cjs.json node_modules/tape/bin/tape -r dotenv/config \"src/**/*.spec.ts\" | tap-xunit > ./test-results/tap/results.xml",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "build": "gulp clean && npm-run-all --parallel build:esm build:cjs",
     "build:esm": "tsc",
     "build:cjs": "tsc -p tsconfig.cjs.json",
-    "preversion": "yarn test && yarn lint",
-    "version": "yarn format && git add -A .",
-    "postversion": "git push && git push --tags"
+    "release:before": "yarn validate && git add -A .",
+    "release:after": "git push origin --tags",
+    "release:dev": "yarn release:before && standard-version -a --prerelease beta",
+    "release:prod": "yarn release:before && standard-version -a",
+    "release:dry": "yarn validate && standard-version -a --dry-run --prerelease beta"
   },
   "repository": {
     "type": "git",

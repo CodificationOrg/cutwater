@@ -30,23 +30,26 @@ jobs:
       - run:
           name: 'Clean & Build'
           command: yarn build
-      - persist_to_workspace:
-          root: ~/codification
-          paths:
-            - cutwater-core
-
-  test:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/codification
       - run:
           name: 'Run Tests'
           command: yarn test
       - store_test_results:
           path: test-results
+      - persist_to_workspace:
+          root: ~/codification
+          paths:
+            - cutwater-core
 
-  deploy:
+  release:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/codification
+      - run:
+          name: 'Cut new release'
+          command: yarn release:prod
+
+  publish:
     <<: *defaults
     steps:
       - attach_workspace:
@@ -66,16 +69,18 @@ workflows:
           filters:
             tags:
               only: /v[0-9]+(\.[0-9]+)*/
-      - test:
+            branches:
+              only: master
+      - release:
           requires:
             - build
           filters:
-            tags:
-              only: /v[0-9]+(\.[0-9]+)*/
-      - deploy:
-          context: org-codification-global
+            branches:
+              only: master
+      - publish:
           requires:
-            - test
+            - build
+          context: org-codification-global
           filters:
             tags:
               only: /v[0-9]+(\.[0-9]+)*/
