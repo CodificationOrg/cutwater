@@ -6,7 +6,7 @@ import { TimeUnit } from './TimeUnit';
 export class TZUtils {
   public static readonly ENV_OFFSET = 'UTC_OFFSET';
 
-  public static readonly DEFAULT_OFFSET = TimeUnit.hours(-5).toMinutes();
+  public static readonly DEFAULT_OFFSET = 0;
 
   public static readonly FORMAT_TIMESTAMP = 'YYYY-MM-DD HH:mm:ss,SSS';
 
