@@ -1,8 +1,9 @@
 # Compiled Directories
-target/
-bin/
-lib/
-test-results/
+target
+bin
+lib
+docs
+test-results
 
 # Node Modules
 node_modules/
