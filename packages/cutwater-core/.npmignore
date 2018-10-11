@@ -1,5 +1,6 @@
 src/
 .circleci/
+.publish/
 test-results/
 .env
 *.log

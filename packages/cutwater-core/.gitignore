@@ -2,7 +2,7 @@
 target
 bin
 lib
-docs
+.publish
 test-results
 
 # Node Modules
