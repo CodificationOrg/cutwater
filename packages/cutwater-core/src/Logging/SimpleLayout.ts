@@ -3,8 +3,18 @@ import { Layout } from './Layout';
 import { LoggerFactory } from './LoggerFactory';
 import { LoggingEvent } from './LoggingEvent';
 
+/**
+ * Specifies a simple, default layout for logging messages of the following form:
+ *
+ * ```
+ * TIMESTAMP - LOGGER_NAME - LEVEL - MESSAGE
+ * ```
+ */
 export class SimpleLayout implements Layout {
-  public timestampFormat = 'YYYY-MM-DD HH:mm:ss,SSS';
+  /**
+   * The format to be used for timestamps in this layout.
+   */
+  public timestampFormat: string = 'YYYY-MM-DD HH:mm:ss,SSS';
 
   public format(event: LoggingEvent): string {
     const loggerName = event.logger.name && event.logger.name !== LoggerFactory.DEFAULT_LOGGER ? `${event.logger.name} - ` : '';

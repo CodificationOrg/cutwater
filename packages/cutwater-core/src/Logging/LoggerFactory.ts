@@ -7,16 +7,53 @@ import { Level } from './Level';
 import { Logger } from './Logger';
 import { LoggingEvent } from './LoggingEvent';
 
+/**
+ * The source and single point of management for [[Logger]] instances.
+ */
 export class LoggerFactory {
-  public static readonly ENV_LOGGING_LEVEL = 'LOGGING_LEVEL';
-  public static readonly ENV_LOGGING_LEVEL_PREFIX = LoggerFactory.ENV_LOGGING_LEVEL + '_';
+  /**
+   * The `key` in [[Config]] that will be checked for a default logging level.
+   *
+   * @readonly
+   */
+  public static readonly ENV_LOGGING_LEVEL: string = 'LOGGING_LEVEL';
 
-  public static readonly DEFAULT_LOGGER = 'DEFAULT';
-  public static readonly DEFAULT_LOGGING_LEVEL = 'ERROR';
+  /**
+   * The prefix for the `key` in [[Config]] that will be used to determine the logging level for
+   * [[Logger]] instances with the name following the prefix.
+   *
+   * @readonly
+   */
+  public static readonly ENV_LOGGING_LEVEL_PREFIX: string = LoggerFactory.ENV_LOGGING_LEVEL + '_';
 
+  /**
+   * The name of the default [[Logger]].
+   *
+   * @readonly
+   */
+  public static readonly DEFAULT_LOGGER: string = 'DEFAULT';
+  /**
+   * The [[Level]] used if a default is not found under the `LOGGING_LEVEL` key in [[Config]].
+   *
+   * @readonly
+   */
+  public static readonly DEFAULT_LOGGING_LEVEL: string = 'ERROR';
+
+  /**
+   * The [[Level]] used by all [[Logger]] instances that do not have one specified.
+   */
   public static GLOBAL_LEVEL: Level;
+  /**
+   * The [[Appender]] used by all [[Logger]] instances that do not have one specified.
+   */
   public static GLOBAL_APPENDER: Appender = new ConsoleAppender();
 
+  /**
+   * Returns the [[Logger]] instance with the specified name.  If no name is provided, the default will be returned.
+   * If a logger does not exist with the specified name, a new one will be created.
+   *
+   * @param loggerName - Name of the logger instance to be returned.
+   */
   public static getLogger(loggerName: string = this.DEFAULT_LOGGER): Logger {
     this.init();
 
@@ -29,6 +66,11 @@ export class LoggerFactory {
     return rval;
   }
 
+  /**
+   * Causes the specified [[Logger]] to append a single message for each enabled [[Level]].
+   *
+   * @param logger - The logger to output levels for.
+   */
   public static logEnabledLevels(logger: Logger): void {
     Level.LEVELS.forEach(level => {
       logger[level.name.toLowerCase()](`${level.name}: ENABLED`);
@@ -57,6 +99,9 @@ export class LoggerFactory {
   private constructor() {}
 }
 
+/**
+ * @ignore
+ */
 class DefaultLoggerImpl implements Logger {
   private loggerName: string;
   private loggerLevel: Level;
