@@ -60,6 +60,9 @@ export const toIncomingHttpHeaders = (headers: IncomingHttpHeaders | OutgoingHtt
   return rval;
 };
 
+/** 
+ * @ignore 
+ */
 const toNormalizedHeaderValue = (value: string | string[] | number | undefined): string | string[] | undefined => {
   return typeof value === 'number' ? value.toString() : value;
 };
