@@ -8,7 +8,7 @@ export class Config {
    *
    * @param key - The configuration key.
    * @param value - The configuration value.
-   * @returns - The previous configuration value if one existed.
+   * @returns The previous configuration value if one existed.
    */
   public static put(key: string, value: string): string {
     const rval = this.get(key);
