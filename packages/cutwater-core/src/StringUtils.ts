@@ -1,3 +1,11 @@
+/**
+ * Returns `true` if the `value` contains the `searchTerm`. By default, this function is case sensitive.
+ *
+ * @param value - The value to be searched.
+ * @param searchTerm - The value to be searched for.
+ * @param caseInsensitive - Value indicating if the match should be case sensitive.
+ * @return {boolean}
+ */
 export const contains = (value: string, searchTerm: string, caseInsensitive = false): boolean => {
   return (
     value &&
@@ -6,6 +14,14 @@ export const contains = (value: string, searchTerm: string, caseInsensitive = fa
   );
 };
 
+/**
+ * Returns `true` if the `value` starts with the `searchTerm`. By default, this function is case sensitive.
+ *
+ * @param value - The value to be searched.
+ * @param searchTerm - The prefix to be searched for.
+ * @param caseInsensitive - Value indicating if the match should be case sensitive.
+ * @return {boolean}
+ */
 export const startsWith = (value: string, searchTerm: string, caseInsensitive = false): boolean => {
   return (
     value &&
@@ -14,6 +30,14 @@ export const startsWith = (value: string, searchTerm: string, caseInsensitive = 
   );
 };
 
+/**
+ * Returns `true` if the `value` ends with the `searchTerm`. By default, this function is case sensitive.
+ *
+ * @param value - The value to be searched.
+ * @param searchTerm - The suffix to be searched for.
+ * @param caseInsensitive - Value indicating if the match should be case sensitive.
+ * @return {boolean}
+ */
 export const endsWith = (value: string, searchTerm: string, caseInsensitive = false): boolean => {
   const index = value && searchTerm && value.length >= searchTerm.length ? value.length - searchTerm.length : -1;
   return (
