@@ -51,7 +51,7 @@ jobs:
           command: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
       - run:
           name: 'Configure git defaults'
-          command: git config user.email "circleci@codification.org" && git config user.name "CircleCI"
+          command: git config --global user.email "circleci@codification.org" && git config --global user.name "CircleCI"
       - run:
           name: 'Cut new release'
           command: yarn release:prod
