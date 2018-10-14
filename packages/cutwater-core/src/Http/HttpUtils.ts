@@ -1,9 +1,19 @@
 import { IncomingHttpHeaders, IncomingMessage, OutgoingHttpHeaders } from 'http';
 
+/**
+ * Returns `true` if the response status is between 200 and 399 inclusive.
+ *
+ * @param response - Response from the Node.js `http` module.
+ */
 export const isResponseOk = (response: IncomingMessage): boolean => {
   return response.statusCode > 199 && response.statusCode < 400;
 };
 
+/**
+ * Returns a `Promise` that resolves to the text data contained in the response body.
+ *
+ * @param response - Response from the Node.js `http` module.
+ */
 export const toBodyText = (response: IncomingMessage): Promise<string> => {
   let rval = '';
   return new Promise<string>((resolve, reject) => {
@@ -15,20 +25,33 @@ export const toBodyText = (response: IncomingMessage): Promise<string> => {
   });
 };
 
+/**
+ * Returns the result of merging the `src` headers into the initial `dst` headers.
+ *
+ * @param dst - The initial set of headers.
+ * @param src - The headers to be merged into the `dst`.
+ * @param overwrite - If `true`, headers in the `src` will overwrite existing headers in the `dst`.
+ * @return A new object containing the results of the merge.
+ */
 export const mergeHeaders = (
-  target: IncomingHttpHeaders | OutgoingHttpHeaders,
+  dst: IncomingHttpHeaders | OutgoingHttpHeaders,
   src: IncomingHttpHeaders | OutgoingHttpHeaders,
   overwrite = true,
 ): IncomingHttpHeaders => {
-  const rval = toIncomingHttpHeaders(target);
+  const rval = toIncomingHttpHeaders(dst);
   Object.keys(src).forEach(headerName => {
-    if (!target[headerName] || overwrite) {
+    if (!dst[headerName] || overwrite) {
       rval[headerName] = toNormalizedHeaderValue(src[headerName]);
     }
   });
   return rval;
 };
 
+/**
+ * Converts a set of headers, either incoming or outgoing, to the incoming format used by the `http` module in Node.js.
+ *
+ * @param headers - Headers to be converted to the incoming format.
+ */
 export const toIncomingHttpHeaders = (headers: IncomingHttpHeaders | OutgoingHttpHeaders): IncomingHttpHeaders => {
   const rval = {};
   Object.keys(headers).forEach(headerName => {
