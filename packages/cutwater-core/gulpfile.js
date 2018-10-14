@@ -27,14 +27,16 @@ const prepareDocs = () => {
     return gulp
         .src('./src/docs/**/*', {
             dot: true
-        }).pipe(gulp.dest(`./.publish/`));
+        }).pipe(gulp.dest(`./lib/docs/`));
 };
 exports.prepareDocs = prepareDocs;
 
 const publishGHPages = () => {
     return gulp
-        .src('./lib/docs/**/*').pipe(ghPages());
+        .src('./lib/docs/**/*', {
+            dot: true
+        }).pipe(ghPages());
 };
 exports.publishGHPages = publishGHPages;
 
-exports.publishDocs = gulp.series(publishGHPages, prepareDocs, publishGHPages);
+exports.publishDocs = gulp.series(prepareDocs, publishGHPages);
