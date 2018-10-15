@@ -3,7 +3,7 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/CodificationOrg/cutwater-core.svg)](https://circleci.com/gh/CodificationOrg/cutwater-core)
 [![NPM](https://img.shields.io/npm/v/cutwater-core.svg)](https://www.npmjs.com/package/cutwater-core)
 
-A library providing the functionality that we always seem to need in every project Typescript/Javascript project.
+A library providing the functionality that we always seem to need in every Typescript/Javascript project.
 
 ## Installation
 
@@ -50,7 +50,7 @@ if (Env.isProd()) {
   console.log('Yeah, we made it to production!');
 }
 if (Env.isDev()) {
-  console.log('No yet I guess.');
+  console.log('Not yet I guess.');
 }
 ```
 
