@@ -9,13 +9,13 @@ A library providing the functionality that we always seem to need in every Types
 
 Via npm:
 
-```
+```bash
 npm install cutwater-core
 ```
 
 Via yarn:
 
-```
+```bash
 yarn add cutwater-core
 ```
 
@@ -109,4 +109,25 @@ LOG.debug('Examine this object: %j', someObj);
 
 ### Http
 
-_Documentation Coming Soon!_
+**Note:** The `http` related functions are designed to simplify aspects of working with the [http module in Node.js](https://nodejs.org/api/http.html)
+
+```typescript
+import { isResponseOk, LoggerFactory, mergeHeaders, toBodyText } from 'cutwater-core';
+
+const LOG = LoggerFactory.getLogger();
+const response = magicalHttpRequestFunction();
+if(isResponseOk(response)){
+  toBodyText(response).then(
+    bodyTxt => {
+      LOG.info('The body text was: %s', bodyTxt);
+    }
+  ).catch(
+    err => {
+      LOG.error('Oops! Problem reading the body: %j',err);
+    }
+  )
+
+  const nextRequestHeaders = mergeHeaders(response.headers,{'x-custom-header':'Custom Value'},true);
+  // Will add the 'x-custom-header' to the received headers, or overwrite if it already exists.
+}
+```
