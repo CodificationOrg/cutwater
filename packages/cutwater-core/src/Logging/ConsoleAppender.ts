@@ -5,7 +5,7 @@ import { SimpleLayout } from './SimpleLayout';
 
 // tslint:disable:no-console
 /**
- * The default [[Appender]] implementation that writes all [[LoggerEvent]]s to `console.log()`.
+ * The default [[Appender]] implementation that writes all [[LoggingEvent]]s to `console.log()`.
  */
 export class ConsoleAppender implements Appender {
   /**
