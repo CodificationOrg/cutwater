@@ -1,1 +1,1 @@
-export * from './HttpUtils';
+export { HttpUtils } from './HttpUtils';
