@@ -2,6 +2,8 @@
 target
 bin
 lib
+lib-esm
+_bundles
 .publish
 test-results
 

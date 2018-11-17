@@ -4,13 +4,13 @@ const ghPages = require('gulp-gh-pages');
 
 const paths = {
     src: 'src',
-    lib: 'lib',
+    lib: ['lib', 'lib-esm', '_bundles'],
     test: 'test-results/tap',
     publish: '.publish'
 };
 
 const clean = () => {
-    return del([paths.lib, paths.publish]);
+    return del([...paths.lib, paths.publish]);
 }
 exports.clean = clean;
 
