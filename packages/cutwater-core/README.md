@@ -19,9 +19,10 @@ Via yarn:
 yarn add cutwater-core
 ```
 
-## API Documentation
+## Documentation
 
-Detailed API documentation can be found [here](https://codificationorg.github.io/cutwater-core/index.html).
+* [Release Notes](https://codificationorg.github.io/cutwater-core/CHANGELOG.html)
+* [API Documentation](https://codificationorg.github.io/cutwater-core/index.html)
 
 ## Quick Start Guide
 
