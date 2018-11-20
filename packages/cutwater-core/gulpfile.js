@@ -1,6 +1,8 @@
 const gulp = require('gulp');
 const del = require('del');
+const merge = require('merge2');
 const ghPages = require('gulp-gh-pages');
+const markdown = require('gulp-markdown');
 
 const paths = {
     src: 'src',
@@ -24,10 +26,14 @@ const prepareTest = () => {
 exports.prepareTest = prepareTest;
 
 const prepareDocs = () => {
-    return gulp
+    const docs = gulp
         .src('./src/docs/**/*', {
             dot: true
         }).pipe(gulp.dest(`./lib/docs/`));
+    const notes = gulp.src('./CHANGELOG.md')
+        .pipe(markdown())
+        .pipe(gulp.dest('./lib/docs/'));
+    return merge(docs, notes);
 };
 exports.prepareDocs = prepareDocs;
 
