@@ -1,18 +1,15 @@
 {
-    "compilerOptions": {
-      "allowSyntheticDefaultImports": true,
-      "importHelpers": true,
-      "moduleResolution": "node",
-      "outDir": "lib/esm",
-      "sourceMap": false,
-      "noImplicitAny": false,
-      "module": "es6",
-      "declaration": true,
-      "target": "es6",
-      "lib": ["es6", "dom"]
-    },
-    "include": [
-      "src/**/*.ts"
-    ],
-    "exclude": ["node_modules", "src/**/*.spec.ts"]
-  }
+  "compilerOptions": {
+    "outDir": "lib",
+    "sourceMap": true,
+    "module": "commonjs",
+    "declaration": true,
+    "target": "es5",
+    "lib": ["es2015", "dom"],
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": ["node_modules", "src/**/*.spec.ts"]
+}
