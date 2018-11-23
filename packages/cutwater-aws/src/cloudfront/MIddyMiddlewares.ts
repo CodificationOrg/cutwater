@@ -6,7 +6,7 @@ import {
   CloudFrontResponseEvent,
   CloudFrontResultResponse,
 } from 'aws-lambda';
-import { Config, LoggerFactory, mergeHeaders } from 'cutwater-core';
+import { Config, HttpUtils, LoggerFactory } from 'cutwater-core';
 import { IncomingHttpHeaders, IncomingMessage, request as HttpRequest, RequestOptions } from 'http';
 import { IHandlerLambda, IMiddyMiddlewareObject, IMiddyNextFunction } from 'middy';
 
@@ -66,7 +66,7 @@ const toRequestOptions = (req: CloudFrontRequest, origin: CloudFrontCustomOrigin
   rval.method = req.method;
   rval.headers = toIncomingHttpHeaders(req.headers);
   if (origin.customHeaders) {
-    rval.headers = mergeHeaders(rval.headers, toIncomingHttpHeaders(origin.customHeaders));
+    rval.headers = HttpUtils.mergeHeaders(rval.headers, toIncomingHttpHeaders(origin.customHeaders));
   }
   return rval;
 };
@@ -82,7 +82,7 @@ export const withCustomOriginRequestHeaders = (customHeaderPrefix = 'x-custom-')
           customHeaderPrefix,
           true,
         );
-        request.headers = toCloudFrontHeaders(mergeHeaders(headers, customHeaders, true));
+        request.headers = toCloudFrontHeaders(HttpUtils.mergeHeaders(headers, customHeaders, true));
       } else {
         LOG.debug('Skipping middleware because event is not a custom Origin-Request.');
       }
@@ -129,7 +129,7 @@ export const withOriginResponseHeaders = (config: IncomingHttpHeaders): IMiddyMi
     before: (handler: IHandlerLambda<CloudFrontResponseEvent, CloudFrontResponse>, next: IMiddyNextFunction) => {
       if (isCustomOriginResponseEvent(handler.event)) {
         const response = handler.event.Records[0].cf.response;
-        const mergedHeaders = mergeHeaders(toIncomingHttpHeaders(response.headers), config);
+        const mergedHeaders = HttpUtils.mergeHeaders(toIncomingHttpHeaders(response.headers), config);
         response.headers = stripOriginResponseHeaders(toCloudFrontHeaders(mergedHeaders));
       } else {
         LOG.debug('Skipping middleware because event is not a Origin-Response.');
