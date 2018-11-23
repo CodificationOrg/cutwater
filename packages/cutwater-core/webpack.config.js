@@ -17,7 +17,8 @@ module.exports = {
         filename: '[name].js',
         libraryTarget: 'umd',
         library: 'Cutwater-Core',
-        umdNamedDefine: true
+        umdNamedDefine: true,
+        globalObject: "(typeof window !== 'undefined' ? window : this)",
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
