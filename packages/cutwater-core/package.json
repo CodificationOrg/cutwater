@@ -55,6 +55,7 @@
     "awesome-typescript-loader": "^5.2.1",
     "del": "^3.0.0",
     "dotenv": "^6.0.0",
+    "follow-redirects": "^1.6.1",
     "gulp": "^4.0.0",
     "gulp-gh-pages": "^0.5.4",
     "gulp-markdown": "^3.0.0",

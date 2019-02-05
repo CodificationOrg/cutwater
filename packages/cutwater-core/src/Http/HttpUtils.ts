@@ -16,12 +16,25 @@ export class HttpUtils {
    * @param response - Response from the Node.js `http` module.
    */
   public static toBodyText(response: IncomingMessage): Promise<string> {
-    let rval = '';
-    return new Promise<string>((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+      this.toBuffer(response)
+        .then(data => resolve(data.toString()))
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+   * Returns a `Promise` that resolves to the text data contained in the response body.
+   *
+   * @param response - Response from the Node.js `http` module.
+   */
+  public static toBuffer(response: IncomingMessage): Promise<Buffer> {
+    const rval = [];
+    return new Promise<Buffer>((resolve, reject) => {
       response.on('data', chunk => {
-        rval += chunk;
+        rval.push(chunk);
       });
-      response.on('end', () => resolve(rval));
+      response.on('end', () => resolve(Buffer.concat(rval)));
       response.on('error', err => reject(err));
     });
   }
