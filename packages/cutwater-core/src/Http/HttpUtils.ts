@@ -24,7 +24,7 @@ export class HttpUtils {
   }
 
   /**
-   * Returns a `Promise` that resolves to the text data contained in the response body.
+   * Returns a `Promise` that resolves to the raw data contained in the response body.
    *
    * @param response - Response from the Node.js `http` module.
    */
