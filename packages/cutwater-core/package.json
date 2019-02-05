@@ -1,6 +1,6 @@
 {
   "name": "cutwater-core",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "A library providing the functionality that we always seem to need in every Typescript/Javascript project.",
   "homepage": "https://github.com/CodificationOrg/cutwater-core",
   "bugs": "https://github.com/CodificationOrg/cutwater-core/issues",
