@@ -29,12 +29,15 @@ export class HttpUtils {
    * @param response - Response from the Node.js `http` module.
    */
   public static toBuffer(response: IncomingMessage): Promise<Buffer> {
-    const rval = [];
+    let rval = '';
     return new Promise<Buffer>((resolve, reject) => {
+      response.setEncoding('binary');
       response.on('data', chunk => {
-        rval.push(chunk);
+        rval += chunk;
       });
-      response.on('end', () => resolve(Buffer.concat(rval)));
+      response.on('end', () => {
+        resolve(new Buffer(rval, 'binary'));
+      });
       response.on('error', err => reject(err));
     });
   }
