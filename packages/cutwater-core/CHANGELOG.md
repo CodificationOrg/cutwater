@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/CodificationOrg/cutwater-core/compare/v0.2.0...v0.3.0) (2019-02-06)
+
+
+### Bug Fixes
+
+* correct issue causing some response Buffers to fail ([07bb41f](https://github.com/CodificationOrg/cutwater-core/commit/07bb41f))
+
+
+### Features
+
+* add IOUtils with method to convert Buffers to Streams ([1d0d628](https://github.com/CodificationOrg/cutwater-core/commit/1d0d628))
+
+
+
 <a name="0.2.0"></a>
 # [0.2.0](https://github.com/CodificationOrg/cutwater-core/compare/v0.1.5...v0.2.0) (2019-02-05)
 
