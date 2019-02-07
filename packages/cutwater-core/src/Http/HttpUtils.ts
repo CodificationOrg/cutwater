@@ -1,6 +1,4 @@
-import { removeAllListeners } from 'cluster';
 import { IncomingHttpHeaders, IncomingMessage, OutgoingHttpHeaders } from 'http';
-import { Readable } from 'stream';
 
 import { IOUtils } from '../';
 
