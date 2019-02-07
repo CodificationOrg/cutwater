@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.4.1"></a>
+## [0.4.1](https://github.com/CodificationOrg/cutwater-core/compare/v0.4.0...v0.4.1) (2019-02-07)
+
+
+### Bug Fixes
+
+* add missing export for new GotUtils class ([06205c0](https://github.com/CodificationOrg/cutwater-core/commit/06205c0))
+* remove use of follow-redirects package ([03701f1](https://github.com/CodificationOrg/cutwater-core/commit/03701f1))
+
+
+
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/CodificationOrg/cutwater-core/compare/v0.3.0...v0.4.0) (2019-02-07)
 
