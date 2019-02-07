@@ -10,8 +10,9 @@
   "typings": "lib-esm/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
-    "validate": "yarn lint && yarn test && yarn format",
-    "test": "gulp prepareTest && ts-node node_modules/tape/bin/tape \"src/**/*.spec.ts\" | tap-xunit > ./test-results/tap/results.xml",
+    "validate": "yarn lint && yarn test-xunit && yarn format",
+    "test": "gulp prepareTest && ts-node node_modules/tape/bin/tape -r dotenv/config \"src/**/*.spec.ts\"",
+    "test-xunit": "gulp prepareTest && ts-node node_modules/tape/bin/tape -r dotenv/config \"src/**/*.spec.ts\" | tap-xunit > ./test-results/tap/results.xml",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "docs": "typedoc --out ./lib/docs --excludePrivate --externalPattern **/lib/** --mode file --gitRevision master --name \"CutWater:Core API Documentation\"",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@types/date-fns": "^2.6.0",
+    "@types/got": "^9.4.0",
     "@types/node": "^8.0.16",
     "@types/tape": "^4.2.31",
     "awesome-typescript-loader": "^5.2.1",
@@ -75,6 +77,7 @@
     "webpack-cli": "^3.1.2"
   },
   "optionalDependencies": {
+    "got": "^9.6.0",
     "rxjs": "^6.3.2"
   }
 }
