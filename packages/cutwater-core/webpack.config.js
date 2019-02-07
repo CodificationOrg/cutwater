@@ -5,7 +5,7 @@ const ENTRY = path.resolve(SRC_DIR, 'index.ts');
 const OUT_DIR = path.resolve(__dirname, '_bundles');
 
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -23,12 +23,20 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
     },
+    node: {
+        fs: 'empty',
+        net: 'empty'
+    },
     devtool: 'source-map',
     optimization: {
         minimizer: [
-            new UglifyJsPlugin({
+            new TerserPlugin({
+                parallel: true,
                 sourceMap: true,
                 include: /\.min\.js$/,
+                terserOptions: {
+                    ecma: 6,
+                },
             })
         ]
     },
