@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/CodificationOrg/cutwater-core/compare/v0.3.0...v0.4.0) (2019-02-07)
+
+
+### Features
+
+* add support class for working with got ([0308e6b](https://github.com/CodificationOrg/cutwater-core/commit/0308e6b))
+* add support for got formatted response bodies ([f3f2d9e](https://github.com/CodificationOrg/cutwater-core/commit/f3f2d9e))
+* add utility method for stream to buffer conversion ([2e92d5b](https://github.com/CodificationOrg/cutwater-core/commit/2e92d5b))
+
+
+
 <a name="0.3.0"></a>
 # [0.3.0](https://github.com/CodificationOrg/cutwater-core/compare/v0.2.0...v0.3.0) (2019-02-06)
 
