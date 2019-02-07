@@ -33,6 +33,7 @@ nb-configuration.xml
 .settings/
 .project
 .classpath
+.vscode
 
 #Local only
 .env
