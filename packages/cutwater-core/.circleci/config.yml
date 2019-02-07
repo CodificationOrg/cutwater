@@ -32,7 +32,7 @@ jobs:
           command: yarn build
       - run:
           name: 'Run Tests'
-          command: yarn test
+          command: yarn test-xunit
       - store_test_results:
           path: test-results
       - persist_to_workspace:
