@@ -1,7 +1,8 @@
-import { request as HttpRequest } from 'follow-redirects/https';
 import * as got from 'got';
 import { IncomingMessage } from 'http';
+import { request as HttpRequest } from 'https';
 import * as test from 'tape';
+
 import { HttpUtils } from './HttpUtils';
 
 const GOOGLE_URL = 'https://www.google.com';
