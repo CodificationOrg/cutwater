@@ -1,19 +1,38 @@
 import { request as HttpRequest } from 'follow-redirects/https';
+import * as got from 'got';
 import { IncomingMessage } from 'http';
 import * as test from 'tape';
-
 import { HttpUtils } from './HttpUtils';
 
+const GOOGLE_URL = 'https://www.google.com';
+
 test('HttpUtils Unit Tests', assert => {
-  assert.plan(1);
-  const req = HttpRequest('https://www.google.com', (response: IncomingMessage) => {
+  assert.plan(3);
+
+  const req = HttpRequest(GOOGLE_URL, (response: IncomingMessage) => {
     if (HttpUtils.isResponseOk(response)) {
       HttpUtils.toBodyText(response).then(html => {
-        assert.ok(html.indexOf('<html') > -1, 'correctly returns html page source for Google');
+        assert.ok(html.indexOf('<html') > -1, 'correctly returns html page source for Google from node http request');
       });
     } else {
       assert.comment('failed to reach Google to perform test');
     }
   });
   req.end();
+
+  got(GOOGLE_URL)
+    .then(response => {
+      HttpUtils.toBodyText(response).then(html => {
+        assert.ok(html.indexOf('<html') > -1, 'correctly returns html page source for Google from got request');
+      });
+    })
+    .catch(err => assert.error(err));
+
+  got(GOOGLE_URL, { encoding: null })
+    .then(response => {
+      HttpUtils.toBodyText(response).then(html => {
+        assert.ok(html.indexOf('<html') > -1, 'correctly returns html page source for Google from got buffer request');
+      });
+    })
+    .catch(err => assert.error(err));
 });

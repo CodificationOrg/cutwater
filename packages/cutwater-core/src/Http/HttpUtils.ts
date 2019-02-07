@@ -1,4 +1,10 @@
+import { removeAllListeners } from 'cluster';
 import { IncomingHttpHeaders, IncomingMessage, OutgoingHttpHeaders } from 'http';
+import { Readable } from 'stream';
+
+import { IOUtils } from '../';
+
+const GOT_RESPONSE_BODY = 'body';
 
 export class HttpUtils {
   /**
@@ -29,6 +35,9 @@ export class HttpUtils {
    * @param response - Response from the Node.js `http` module.
    */
   public static toBuffer(response: IncomingMessage): Promise<Buffer> {
+    if (this.isGotResponse(response)) {
+      return this.gotResponseToBuffer(response);
+    }
     let rval = '';
     return new Promise<Buffer>((resolve, reject) => {
       response.setEncoding('binary');
@@ -79,5 +88,26 @@ export class HttpUtils {
 
   private static toNormalizedHeaderValue(value: string | string[] | number | undefined): string | string[] | undefined {
     return typeof value === 'number' ? value.toString() : value;
+  }
+
+  private static isGotResponse(response: IncomingMessage): boolean {
+    return response[GOT_RESPONSE_BODY];
+  }
+
+  private static gotResponseToBuffer(response: IncomingMessage): Promise<Buffer> {
+    let rval: Promise<Buffer>;
+    const body = response[GOT_RESPONSE_BODY];
+
+    if (typeof body === 'string') {
+      rval = Promise.resolve(new Buffer(body));
+    } else if (Buffer.isBuffer(body)) {
+      rval = Promise.resolve(body);
+    } else {
+      rval = new Promise((resolve, reject) => {
+        IOUtils.readableToBuffer(body).subscribe(buffer => resolve(buffer), err => reject(err));
+      });
+    }
+
+    return rval;
   }
 }
