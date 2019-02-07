@@ -16,8 +16,9 @@
   "typings": "lib-esm/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
-    "validate": "yarn lint && yarn test && yarn format",
-    "test": "gulp prepareTest && ts-node node_modules/tape/bin/tape \"src/**/*.spec.ts\" | tap-xunit > ./test-results/tap/results.xml",
+    "validate": "yarn lint && yarn test-xunit && yarn format",
+    "test": "gulp prepareTest && ts-node node_modules/tape/bin/tape \"src/**/*.spec.ts\"",
+    "test-xunit": "gulp prepareTest && ts-node node_modules/tape/bin/tape \"src/**/*.spec.ts\" | tap-xunit > ./test-results/tap/results.xml",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "docs": "typedoc --out ./lib/docs --excludePrivate --externalPattern **/lib/** --mode file --gitRevision master --name \"CutWater:Core API Documentation\"",
@@ -54,16 +55,17 @@
     "tslint-config-prettier": "^1.14.0",
     "typedoc": "^0.13.0",
     "typescript": "^3.0.3",
-    "uglifyjs-webpack-plugin": "^2.0.1",
+    "terser-webpack-plugin": "^1.2.2",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2"
   },
   "optionalDependencies": {
     "aws-lambda": "^0.1.2",
-    "middy": "^0.18.1"
+    "middy": "^0.18.1",
+    "gm": "^1.23.1"
   },
   "dependencies": {
     "aws-sdk": "^2.321.0",
-    "cutwater-core": "^0.1.5"
+    "cutwater-core": "^0.4.0"
   }
 }
