@@ -4,7 +4,6 @@ const SRC_DIR = path.resolve(__dirname, 'src');
 const ENTRY = path.resolve(SRC_DIR, 'index.ts');
 const OUT_DIR = path.resolve(__dirname, '_bundles');
 
-const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
@@ -22,10 +21,6 @@ module.exports = {
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
-    },
-    node: {
-        fs: 'empty',
-        net: 'empty'
     },
     devtool: 'source-map',
     optimization: {
