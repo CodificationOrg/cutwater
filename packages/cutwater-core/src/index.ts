@@ -1,5 +1,3 @@
-import { IOUtils } from './IOUtils';
-
 export { Env } from './Env';
 export { Config } from './Config';
 
