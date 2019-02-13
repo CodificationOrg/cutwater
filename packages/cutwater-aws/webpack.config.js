@@ -20,11 +20,7 @@ module.exports = {
         globalObject: "(typeof window !== 'undefined' ? window : this)",
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
-    },
-    node: {
-        fs: 'empty',
-        net: 'empty'
+        extensions: ['.ts', '.tsx', '.js', '.json']
     },
     devtool: 'source-map',
     optimization: {
@@ -44,9 +40,7 @@ module.exports = {
             test: /\.tsx?$/,
             loader: 'awesome-typescript-loader',
             exclude: /node_modules/,
-            query: {
-                declaration: false,
-            }
         }]
-    }
+    },
+    target: 'node'
 }
