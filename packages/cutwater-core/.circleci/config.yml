@@ -1,6 +1,6 @@
 defaults: &defaults
   docker:
-    - image: circleci/node:8.11.1
+    - image: billyboingo/circleci-node-awscli
 
   working_directory: ~/codification/cutwater-core
   parallelism: 1
