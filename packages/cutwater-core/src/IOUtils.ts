@@ -8,9 +8,9 @@ export class IOUtils {
    * @param buffer - The `Buffer` containing the data to be streamed.
    */
   public static bufferToReadable(buffer: Buffer): Readable {
-    const rval = new Readable();
+    const rval: Readable = new Readable();
     rval.push(buffer);
-    rval.push(null);
+    rval.push(undefined);
     return rval;
   }
 
@@ -20,7 +20,8 @@ export class IOUtils {
    * @param stream - The `Readable` containing the data to be buffered.
    */
   public static readableToBuffer(stream: Readable): Observable<Buffer> {
-    const rval = [];
+    // tslint:disable-next-line: no-any
+    const rval: any[] = [];
     return Observable.create((observer: Observer<Buffer>) => {
       stream.on('data', data => rval.push(data));
       stream.on('error', err => observer.error(err));

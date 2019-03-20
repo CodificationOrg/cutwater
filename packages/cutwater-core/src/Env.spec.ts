@@ -1,18 +1,18 @@
-import * as test from 'tape';
-
 import { Config } from './Config';
 import { Env } from './Env';
 
-test('Env Unit Tests', assert => {
-  Config.put(Env.ENV_STAGE, 'dev');
-  assert.is(Env.isDev(), true, 'correctly returns dev status');
+describe('Env Unit Tests', () => {
+  test('isDev', () => {
+    Config.put(Env.ENV_STAGE, 'dev');
+    expect(Env.isDev()).toBeTruthy();
+  });
 
-  Config.put(Env.ENV_STAGE, Env.DEFAULT_PROD_STAGE);
-  assert.is(Env.isProd(), true, 'correctly returns prod status');
+  test('isProd', () => {
+    Config.put(Env.ENV_STAGE, Env.DEFAULT_PROD_STAGE);
+    expect(Env.isProd()).toBeTruthy();
 
-  Config.put(Env.ENV_PROD_STAGE, 'production');
-  Config.put(Env.ENV_STAGE, 'production');
-  assert.is(Env.isProd(), true, 'correctly returns prod with custom production stage');
-
-  assert.end();
+    Config.put(Env.ENV_PROD_STAGE, 'production');
+    Config.put(Env.ENV_STAGE, 'production');
+    expect(Env.isProd()).toBeTruthy();
+  });
 });

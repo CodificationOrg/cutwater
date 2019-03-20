@@ -2,6 +2,7 @@ import { Config } from './Config';
 
 /**
  * Utility for simple detection of the current execution environment.
+ * @beta
  */
 export class Env {
   /**
@@ -29,16 +30,17 @@ export class Env {
   /**
    * Returns `true` if the `STAGE` value in [[Config]] indicates a production environment.
    *
-   * @returns {boolean}
+   * @returns true if a production environment is detected
    */
   public static isProd(): boolean {
     return Config.get(Env.ENV_STAGE) === Config.get(Env.ENV_PROD_STAGE, Env.DEFAULT_PROD_STAGE);
   }
 
   /**
-   * Returns `true` if the `STAGE` value in [[Config]] does not indicate a production environment. In other words: `!Env.isProd()`.
+   * Returns `true` if the `STAGE` value in [[Config]] does not indicate a production environment. In other words:
+   * `!Env.isProd()`.
    *
-   * @returns {boolean}
+   * @returns true if a development environment is detected
    */
   public static isDev(): boolean {
     return !this.isProd();
