@@ -1,6 +1,6 @@
 import * as fmt from 'date-fns/format';
 
-import { Config } from '../Config';
+import { Config } from './Config';
 import { TimeUnit } from './TimeUnit';
 
 export class TZUtils {
