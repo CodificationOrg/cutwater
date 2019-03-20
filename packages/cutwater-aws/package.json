@@ -1,9 +1,9 @@
 {
-  "name": "cutwater-aws",
+  "name": "@codification/cutwater-aws",
   "version": "0.0.0",
   "description": "A library providing general functionality for TypeScript based AWS projects.",
-  "homepage": "https://github.com/CodificationOrg/cutwater-aws",
-  "bugs": "https://github.com/CodificationOrg/cutwater-aws/issues",
+  "homepage": "https://github.com/CodificationOrg/cutwater",
+  "bugs": "https://github.com/CodificationOrg/cutwater/issues",
   "author": {
     "name": "William Weiss",
     "url": "https://github.com/wweiss"
@@ -35,7 +35,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:CodificationOrg/cutwater-aws.git"
+    "url": "https://github.com/CodificationOrg/cutwater.git",
+    "directory": "packages/cutwater-aws"
   },
   "keywords": [
     "common",
