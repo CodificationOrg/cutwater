@@ -1,0 +1,10 @@
+src/
+.circleci
+.publish
+test-results
+.*
+*.log
+tsconfig.json
+tslint.json
+yarn.lock
+gulpfile.js

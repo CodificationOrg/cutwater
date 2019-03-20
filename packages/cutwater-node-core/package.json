@@ -1,0 +1,85 @@
+{
+  "name": "@codification/cutwater-node-core",
+  "version": "0.4.2",
+  "description": "A library providing the basic utility classes for node.",
+  "homepage": "https://github.com/CodificationOrg/cutwater",
+  "bugs": "https://github.com/CodificationOrg/cutwater/issues",
+  "main": "_bundles/cutwater-core.min.js",
+  "module": "lib-esm/index.js",
+  "types": "lib-esm/index.d.ts",
+  "typings": "lib-esm/index.d.ts",
+  "scripts": {
+    "clean": "gulp clean",
+    "validate": "npm run lint && npm run test-xunit && npm run format",
+    "test": "gulp prepareTest && ts-node node_modules/tape/bin/tape -r dotenv/config \"src/**/*.spec.ts\"",
+    "test-xunit": "gulp prepareTest && ts-node node_modules/tape/bin/tape -r dotenv/config \"src/**/*.spec.ts\" | tap-xunit > ./test-results/tap/results.xml",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "docs": "typedoc --out ./lib/docs --excludePrivate --externalPattern **/lib/** --mode file --gitRevision master --name \"CutWater:Core API Documentation\"",
+    "publish:docs": "gulp clean && npm run docs && gulp publishDocs",
+    "build": "gulp clean && npm-run-all --parallel build:esm build:cjs build:umd",
+    "build:esm": "tsc -m es6 --outDir lib-esm",
+    "build:cjs": "tsc",
+    "build:umd": "webpack --mode=production",
+    "release:before": "npm run validate && git add -A .",
+    "release:after": "git push origin --tags",
+    "release:dev": "npm run release:before && standard-version -a --prerelease beta && npm run release:after",
+    "release:prod": "npm run release:before && standard-version -a && npm run release:after && npm run publish:docs",
+    "release:dry": "npm run validate && standard-version -a --dry-run --prerelease beta"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodificationOrg/cutwater.git",
+    "directory": "packages/cutwater-node-core"
+  },
+  "keywords": [
+    "common",
+    "cutwater",
+    "utilities",
+    "support",
+    "logging",
+    "md5",
+    "codification"
+  ],
+  "author": {
+    "name": "William Weiss",
+    "url": "https://github.com/wweiss"
+  },
+  "license": "Apache-2.0",
+  "private": false,
+  "dependencies": {
+    "date-fns": "^1.29.0"
+  },
+  "devDependencies": {
+    "@types/gm": "^1.18.2",
+    "@types/got": "^9.4.0",
+    "@types/jest": "^24.0.11",
+    "@types/node": "^11.11.3",
+    "@types/tape": "^4.2.31",
+    "awesome-typescript-loader": "^5.2.1",
+    "del": "^4.0.0",
+    "dotenv": "^7.0.0",
+    "got": "^9.6.0",
+    "gulp": "^4.0.0",
+    "gulp-gh-pages": "^0.5.4",
+    "gulp-markdown": "^3.0.0",
+    "jest": "^24.5.0",
+    "merge2": "^1.2.3",
+    "npm-run-all": "^4.1.3",
+    "prettier": "^1.14.0",
+    "standard-version": "^5.0.2",
+    "tap-xunit": "^2.3.0",
+    "tape": "^4.8.0",
+    "terser-webpack-plugin": "^1.2.2",
+    "ts-node": "^8.0.3",
+    "tslint": "^5.7.0",
+    "tslint-config-prettier": "^1.14.0",
+    "typedoc": "^0.14.2",
+    "typescript": "^3.0.3",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2"
+  },
+  "optionalDependencies": {
+    "rxjs": "^6.4.0"
+  }
+}
