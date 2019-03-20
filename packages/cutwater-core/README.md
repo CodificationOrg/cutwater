@@ -10,13 +10,13 @@ A library providing the functionality that we always seem to need in every Types
 Via npm:
 
 ```bash
-npm install cutwater-core
+npm install @codification/cutwater-core
 ```
 
 Via yarn:
 
 ```bash
-yarn add cutwater-core
+yarn add @codification/cutwater-core
 ```
 
 ## Documentation
