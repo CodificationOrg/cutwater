@@ -4,14 +4,12 @@
   "description": "A library providing the basic utility classes for both the browser and node environments.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
-  "main": "_bundles/cutwater-core.min.js",
-  "module": "lib-esm/index.js",
-  "types": "lib-esm/index.d.ts",
-  "typings": "lib-esm/index.d.ts",
+  "main": "lib/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
     "validate": "npm run lint && npm run test-xunit && npm run format",
-    "test": "jest",
+    "test": "gulp test --clean",
     "test-xunit": "gulp prepareTest && ts-node node_modules/tape/bin/tape -r dotenv/config \"src/**/*.spec.ts\" | tap-xunit > ./test-results/tap/results.xml",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
@@ -57,7 +55,6 @@
     "testURL": "http://localhost"
   },
   "devDependencies": {
-    "@microsoft/gulp-core-build": "^3.9.18",
-    "@microsoft/rush-stack-compiler-3.2": "^0.2.14"
+    "@microsoft/rush-stack-compiler-3.2": "^0.2.16"
   }
 }
