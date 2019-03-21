@@ -1,11 +1,3 @@
-#Test Results
-test-results
-
-#Compiled Libraries
-lib
-lib-esm
-_bundles
-
 # Logs
 *.log
 npm-debug.log*
@@ -64,7 +56,13 @@ jspm_packages/
 .next
 
 # Common toolchain intermediate files
+lib
+lib-amd
+lib-es6
+dist
 temp
+*.scss.ts
+*.sass.ts
 
 # Rush files
 common/temp/**
