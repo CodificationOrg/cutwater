@@ -3,7 +3,9 @@ import { LoggingEvent } from './LoggingEvent';
 
 /**
  * A destination for [[LoggingEvent]]s.
+ * @beta
  */
+// tslint:disable-next-line: interface-name
 export interface Appender {
   /**
    * The name of this appender.
@@ -18,7 +20,7 @@ export interface Appender {
   /**
    * Append the specified [[LoggingEvent]] using the configured [[Layout]].
    *
-   * @param event - The event to be appended.
+   * @param event - the event to be appended
    */
   doAppend(event: LoggingEvent): void;
 }

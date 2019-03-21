@@ -1,0 +1,45 @@
+{
+  "name": "cutwater-logging",
+  "version": "0.4.2",
+  "description": "Yet another simple logging utility.",
+  "homepage": "https://github.com/CodificationOrg/cutwater",
+  "bugs": "https://github.com/CodificationOrg/cutwater/issues",
+  "keywords": [
+    "log",
+    "logs",
+    "logging",
+    "codification",
+    "cutwater",
+    "utility",
+    "simple",
+    "console",
+    "debug"
+  ],
+  "author": {
+    "name": "William Weiss",
+    "url": "https://github.com/wweiss"
+  },
+  "license": "Apache-2.0",
+  "private": false,
+  "main": "lib/index.js",
+  "typings": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodificationOrg/cutwater.git",
+    "directory": "packages/cutwater-logging"
+  },
+  "scripts": {
+    "clean": "gulp clean",
+    "test": "gulp test --clean",
+    "build": "gulp test --clean"
+  },
+  "devDependencies": {
+    "@microsoft/rush-stack-compiler-3.2": "^0.2.16"
+  },
+  "dependencies": {
+    "@codification/cutwater-core": "^0.4.2"
+  },
+  "jest": {
+    "testURL": "http://localhost"
+  }
+}
