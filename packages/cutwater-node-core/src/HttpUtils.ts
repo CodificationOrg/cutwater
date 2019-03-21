@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders, IncomingMessage, OutgoingHttpHeaders } from 'http';
 
-import { IOUtils } from '../';
+import { IOUtils } from '.';
 
 const GOT_RESPONSE_BODY = 'body';
 
