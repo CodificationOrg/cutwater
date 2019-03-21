@@ -57,7 +57,7 @@ export class TZUtils {
    * @returns a string timestamp reflecting the current timezone offset
    */
   public static timestamp(format: string = this.FORMAT_TIMESTAMP): string {
-    return fmt(new Date(TZUtils.now), format);
+    return fmt(TZUtils.now, format);
   }
 
   /**
@@ -69,8 +69,8 @@ export class TZUtils {
     const rval: Date = new Date();
     return new Date(
       rval.getTime() +
-      TimeUnit.minutes(rval.getTimezoneOffset()).toMillis() +
-      TimeUnit.minutes(TZUtils.timezoneOffset).toMillis()
+        TimeUnit.minutes(rval.getTimezoneOffset()).toMillis() +
+        TimeUnit.minutes(TZUtils.timezoneOffset).toMillis()
     );
   }
 }

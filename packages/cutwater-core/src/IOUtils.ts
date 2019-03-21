@@ -1,6 +1,9 @@
-import { Observable, Observer } from 'rxjs';
 import { Readable } from 'stream';
 
+/**
+ * Utility for handling common IO related tasks.
+ * @beta
+ */
 export class IOUtils {
   /**
    * Returns a `Readable` stream containing the data from the specified `Buffer`.
@@ -19,15 +22,14 @@ export class IOUtils {
    *
    * @param stream - The `Readable` containing the data to be buffered.
    */
-  public static readableToBuffer(stream: Readable): Observable<Buffer> {
+  public static readableToBuffer(stream: Readable): Promise<Buffer> {
     // tslint:disable-next-line: no-any
     const rval: any[] = [];
-    return Observable.create((observer: Observer<Buffer>) => {
+    return new Promise((resolve, reject) => {
       stream.on('data', data => rval.push(data));
-      stream.on('error', err => observer.error(err));
+      stream.on('error', err => reject(err));
       stream.on('end', () => {
-        observer.next(Buffer.concat(rval));
-        observer.complete();
+        resolve(Buffer.concat(rval));
       });
     });
   }

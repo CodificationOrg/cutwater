@@ -1,5 +1,6 @@
 /**
  * A singleton to provide easy access to mutable configuration values.
+ * @beta
  */
 export class Config {
 
