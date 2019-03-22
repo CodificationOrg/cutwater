@@ -1,24 +1,3 @@
-Skip to content
- 
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@wweiss Sign out
-41
-672 126 Microsoft/web-build-tools
- Code  Issues 116  Pull requests 6  Wiki  Insights
-web-build-tools/libraries/package-deps-hash/.npmignore
-@nickpape-msft nickpape-msft Fix npmignore
-adb716c on Oct 2, 2018
-@iclanton
-@pgonzal
-@nickpape-msft
-24 lines (19 sloc)  511 Bytes
-    
 # Ignore everything by default
 **
 
@@ -43,15 +22,3 @@ adb716c on Oct 2, 2018
 # -----------------------------
 
 # (Add your exceptions here)
-© 2019 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
