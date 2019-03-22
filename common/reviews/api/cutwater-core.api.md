@@ -4,8 +4,6 @@
 
 ```ts
 
-import { Readable } from 'stream';
-
 // @beta
 export class Config {
     static get(key: string, defaultValue?: string): string;
@@ -20,12 +18,6 @@ export class Env {
     static readonly ENV_STAGE: string;
     static isDev(): boolean;
     static isProd(): boolean;
-}
-
-// @beta
-export class IOUtils {
-    static bufferToReadable(buffer: Buffer): Readable;
-    static readableToBuffer(stream: Readable): Promise<Buffer>;
 }
 
 // @beta
@@ -60,6 +52,12 @@ export class TZUtils {
     static resetTimezoneOffset(): void;
     static timestamp(format?: string): string;
     static timezoneOffset: number;
+}
+
+// @beta
+export class VarUtils {
+    static isMissing(value?: any): boolean;
+    static isPresent(value?: any): boolean;
 }
 
 
