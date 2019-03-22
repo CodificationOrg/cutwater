@@ -7,29 +7,32 @@ import { HttpUtils } from './HttpUtils';
 const GOOGLE_URL: string = 'https://www.google.com';
 
 describe('HttpUtils Unit Tests', () => {
-
-  test('toBodyText', () => {
-    expect.assertions(2);
+  test('toBodyText', done => {
     const req: ClientRequest = HttpRequest(GOOGLE_URL, (response: IncomingMessage) => {
       expect(HttpUtils.isResponseOk(response)).toBeTruthy();
-      return expect(HttpUtils.toBodyText(response)).resolves.toMatch('<html');
+      HttpUtils.toBodyText(response).then(html => {
+        expect(html).toMatch(/<html/);
+        done();
+      });
     });
     req.end();
   });
 
-  got(GOOGLE_URL)
-    .then(response => {
+  it('correctly returns html content from a got request', done => {
+    got(GOOGLE_URL).then(response => {
       HttpUtils.toBodyText(response).then(html => {
-        assert.ok(html.indexOf('<html') > -1, 'correctly returns html page source for Google from got request');
+        expect(html).toMatch(/<html/);
+        done();
       });
-    })
-    .catch(err => assert.error(err));
+    });
+  });
 
-  got(GOOGLE_URL, { encoding: null })
-    .then(response => {
+  it('correctly returns html content from a got buffer response', done => {
+    got(GOOGLE_URL, { encoding: undefined }).then(response => {
       HttpUtils.toBodyText(response).then(html => {
-        assert.ok(html.indexOf('<html') > -1, 'correctly returns html page source for Google from got buffer request');
+        expect(html).toMatch(/<html/);
+        done();
       });
-    })
-    .catch(err => assert.error(err));
+    });
+  });
 });
