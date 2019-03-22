@@ -1,25 +1,21 @@
 import * as got from 'got';
-import { IncomingMessage } from 'http';
+import { ClientRequest, IncomingMessage } from 'http';
 import { request as HttpRequest } from 'https';
-import * as test from 'tape';
 
 import { HttpUtils } from './HttpUtils';
 
-const GOOGLE_URL = 'https://www.google.com';
+const GOOGLE_URL: string = 'https://www.google.com';
 
-test('HttpUtils Unit Tests', assert => {
-  assert.plan(3);
+describe('HttpUtils Unit Tests', () => {
 
-  const req = HttpRequest(GOOGLE_URL, (response: IncomingMessage) => {
-    if (HttpUtils.isResponseOk(response)) {
-      HttpUtils.toBodyText(response).then(html => {
-        assert.ok(html.indexOf('<html') > -1, 'correctly returns html page source for Google from node http request');
-      });
-    } else {
-      assert.comment('failed to reach Google to perform test');
-    }
+  test('toBodyText', () => {
+    expect.assertions(2);
+    const req: ClientRequest = HttpRequest(GOOGLE_URL, (response: IncomingMessage) => {
+      expect(HttpUtils.isResponseOk(response)).toBeTruthy();
+      return expect(HttpUtils.toBodyText(response)).resolves.toMatch('<html');
+    });
+    req.end();
   });
-  req.end();
 
   got(GOOGLE_URL)
     .then(response => {

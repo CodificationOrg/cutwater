@@ -1,8 +1,10 @@
 import { IncomingHttpHeaders, IncomingMessage, OutgoingHttpHeaders } from 'http';
 
-import { IOUtils } from '.';
+import { VarUtils } from '@codification/cutwater-core';
 
-const GOT_RESPONSE_BODY = 'body';
+import { IOUtils } from './IOUtils';
+
+const GOT_RESPONSE_BODY: string = 'body';
 
 export class HttpUtils {
   /**
@@ -11,7 +13,7 @@ export class HttpUtils {
    * @param response - Response from the Node.js `http` module.
    */
   public static isResponseOk(response: IncomingMessage): boolean {
-    return response.statusCode > 199 && response.statusCode < 400;
+    return VarUtils.isPresent(response.statusCode) && (response.statusCode > 199 && response.statusCode < 400);
   }
 
   /**
@@ -36,7 +38,7 @@ export class HttpUtils {
     if (this.isGotResponse(response)) {
       return this.gotResponseToBuffer(response);
     }
-    let rval = '';
+    let rval: string = '';
     return new Promise<Buffer>((resolve, reject) => {
       response.setEncoding('binary');
       response.on('data', chunk => {
@@ -60,9 +62,9 @@ export class HttpUtils {
   public static mergeHeaders(
     dst: IncomingHttpHeaders | OutgoingHttpHeaders,
     src: IncomingHttpHeaders | OutgoingHttpHeaders,
-    overwrite = true,
+    overwrite: boolean = true,
   ): IncomingHttpHeaders {
-    const rval = this.toIncomingHttpHeaders(dst);
+    const rval: IncomingHttpHeaders = this.toIncomingHttpHeaders(dst);
     Object.keys(src).forEach(headerName => {
       if (!dst[headerName] || overwrite) {
         rval[headerName] = this.toNormalizedHeaderValue(src[headerName]);
@@ -72,12 +74,13 @@ export class HttpUtils {
   }
 
   /**
-   * Converts a set of headers, either incoming or outgoing, to the incoming format used by the `http` module in Node.js.
+   * Converts a set of headers, either incoming or outgoing, to the incoming format used by the `http` module in
+   * Node.js.
    *
    * @param headers - Headers to be converted to the incoming format.
    */
   public static toIncomingHttpHeaders(headers: IncomingHttpHeaders | OutgoingHttpHeaders): IncomingHttpHeaders {
-    const rval = {};
+    const rval: IncomingHttpHeaders = {};
     Object.keys(headers).forEach(headerName => {
       rval[headerName] = this.toNormalizedHeaderValue(headers[headerName]);
     });
@@ -94,16 +97,14 @@ export class HttpUtils {
 
   private static gotResponseToBuffer(response: IncomingMessage): Promise<Buffer> {
     let rval: Promise<Buffer>;
-    const body = response[GOT_RESPONSE_BODY];
+    const body: string = response[GOT_RESPONSE_BODY];
 
     if (typeof body === 'string') {
       rval = Promise.resolve(new Buffer(body));
     } else if (Buffer.isBuffer(body)) {
       rval = Promise.resolve(body);
     } else {
-      rval = new Promise((resolve, reject) => {
-        IOUtils.readableToBuffer(body).subscribe(buffer => resolve(buffer), err => reject(err));
-      });
+      rval = IOUtils.readableToBuffer(body);
     }
 
     return rval;
