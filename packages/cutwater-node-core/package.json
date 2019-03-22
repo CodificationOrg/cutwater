@@ -4,28 +4,12 @@
   "description": "A library providing the basic utility classes for node.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
-  "main": "_bundles/cutwater-core.min.js",
-  "module": "lib-esm/index.js",
-  "types": "lib-esm/index.d.ts",
-  "typings": "lib-esm/index.d.ts",
+  "main": "lib/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
-    "validate": "npm run lint && npm run test-xunit && npm run format",
-    "test": "gulp prepareTest && ts-node node_modules/tape/bin/tape -r dotenv/config \"src/**/*.spec.ts\"",
-    "test-xunit": "gulp prepareTest && ts-node node_modules/tape/bin/tape -r dotenv/config \"src/**/*.spec.ts\" | tap-xunit > ./test-results/tap/results.xml",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json",
-    "docs": "typedoc --out ./lib/docs --excludePrivate --externalPattern **/lib/** --mode file --gitRevision master --name \"CutWater:Core API Documentation\"",
-    "publish:docs": "gulp clean && npm run docs && gulp publishDocs",
-    "build": "gulp clean && npm-run-all --parallel build:esm build:cjs build:umd",
-    "build:esm": "tsc -m es6 --outDir lib-esm",
-    "build:cjs": "tsc",
-    "build:umd": "webpack --mode=production",
-    "release:before": "npm run validate && git add -A .",
-    "release:after": "git push origin --tags",
-    "release:dev": "npm run release:before && standard-version -a --prerelease beta && npm run release:after",
-    "release:prod": "npm run release:before && standard-version -a && npm run release:after && npm run publish:docs",
-    "release:dry": "npm run validate && standard-version -a --dry-run --prerelease beta"
+    "test": "gulp test --clean",
+    "build": "gulp test --clean"
   },
   "repository": {
     "type": "git",
@@ -48,7 +32,7 @@
   "license": "Apache-2.0",
   "private": false,
   "dependencies": {
-    "@codification/cutwater-core": "~0.4.2",
+    "@codification/cutwater-core": "0.4.2",
     "@microsoft/gulp-core-build": "^3.9.20",
     "@types/jest": "^24.0.11",
     "@types/node": "^11.11.4",
@@ -58,7 +42,9 @@
     "rxjs": "^6.4.0"
   },
   "devDependencies": {
-    "@microsoft/gulp-core-build-typescript": "^8.0.17",
     "@microsoft/rush-stack-compiler-3.2": "^0.2.16"
+  },
+  "jest": {
+    "testURL": "http://localhost"
   }
 }
