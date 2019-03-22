@@ -8,19 +8,20 @@ export class IOUtils {
   /**
    * Returns a `Readable` stream containing the data from the specified `Buffer`.
    *
-   * @param buffer - The `Buffer` containing the data to be streamed.
+   * @param buffer - the `Buffer` containing the data to be streamed
    */
   public static bufferToReadable(buffer: Buffer): Readable {
     const rval: Readable = new Readable();
     rval.push(buffer);
-    rval.push(undefined);
+    // tslint:disable-next-line: no-null-keyword
+    rval.push(null);
     return rval;
   }
 
   /**
    * Returns a `Buffer`  containing the data from the specified `Readable`.
    *
-   * @param stream - The `Readable` containing the data to be buffered.
+   * @param stream - the `Readable` containing the data to be buffered
    */
   public static readableToBuffer(stream: Readable): Promise<Buffer> {
     // tslint:disable-next-line: no-any

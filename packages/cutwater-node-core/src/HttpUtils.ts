@@ -1,25 +1,28 @@
 import { IncomingHttpHeaders, IncomingMessage, OutgoingHttpHeaders } from 'http';
 
-import { VarUtils } from '@codification/cutwater-core';
-
 import { IOUtils } from './IOUtils';
 
 const GOT_RESPONSE_BODY: string = 'body';
 
+/**
+ * Utility for handling common HTTP related tasks.
+ * @beta
+ */
 export class HttpUtils {
   /**
    * Returns `true` if the response status is between 200 and 399 inclusive.
    *
-   * @param response - Response from the Node.js `http` module.
+   * @param response - response from the Node.js `http` module
    */
   public static isResponseOk(response: IncomingMessage): boolean {
-    return VarUtils.isPresent(response.statusCode) && (response.statusCode > 199 && response.statusCode < 400);
+    const statusCode: number = response.statusCode || 500;
+    return statusCode > 199 && statusCode < 400;
   }
 
   /**
    * Returns a `Promise` that resolves to the text data contained in the response body.
    *
-   * @param response - Response from the Node.js `http` module.
+   * @param response - response from the Node.js `http` module
    */
   public static toBodyText(response: IncomingMessage): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -32,7 +35,7 @@ export class HttpUtils {
   /**
    * Returns a `Promise` that resolves to the raw data contained in the response body.
    *
-   * @param response - Response from the Node.js `http` module.
+   * @param response - response from the Node.js `http` module
    */
   public static toBuffer(response: IncomingMessage): Promise<Buffer> {
     if (this.isGotResponse(response)) {
@@ -54,15 +57,15 @@ export class HttpUtils {
   /**
    * Returns the result of merging the `src` headers into the initial `dst` headers.
    *
-   * @param dst - The initial set of headers.
-   * @param src - The headers to be merged into the `dst`.
-   * @param overwrite - If `true`, headers in the `src` will overwrite existing headers in the `dst`.
-   * @return A new object containing the results of the merge.
+   * @param dst - the initial set of headers
+   * @param src - the headers to be merged into the `dst`
+   * @param overwrite - if `true`, headers in the `src` will overwrite existing headers in the `dst`
+   * @returns a new object containing the results of the merge
    */
   public static mergeHeaders(
     dst: IncomingHttpHeaders | OutgoingHttpHeaders,
     src: IncomingHttpHeaders | OutgoingHttpHeaders,
-    overwrite: boolean = true,
+    overwrite: boolean = true
   ): IncomingHttpHeaders {
     const rval: IncomingHttpHeaders = this.toIncomingHttpHeaders(dst);
     Object.keys(src).forEach(headerName => {
@@ -77,7 +80,7 @@ export class HttpUtils {
    * Converts a set of headers, either incoming or outgoing, to the incoming format used by the `http` module in
    * Node.js.
    *
-   * @param headers - Headers to be converted to the incoming format.
+   * @param headers - headers to be converted to the incoming format
    */
   public static toIncomingHttpHeaders(headers: IncomingHttpHeaders | OutgoingHttpHeaders): IncomingHttpHeaders {
     const rval: IncomingHttpHeaders = {};
