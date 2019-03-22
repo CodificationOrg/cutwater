@@ -1,10 +1,57 @@
-src/
-.circleci
-.publish
-test-results
-.*
-*.log
-tsconfig.json
-tslint.json
-yarn.lock
-gulpfile.js
+Skip to content
+ 
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@wweiss Sign out
+41
+672 126 Microsoft/web-build-tools
+ Code  Issues 116  Pull requests 6  Wiki  Insights
+web-build-tools/libraries/package-deps-hash/.npmignore
+@nickpape-msft nickpape-msft Fix npmignore
+adb716c on Oct 2, 2018
+@iclanton
+@pgonzal
+@nickpape-msft
+24 lines (19 sloc)  511 Bytes
+    
+# Ignore everything by default
+**
+
+# Use negative patterns to bring back the specific things we want to publish
+!/bin/**
+!/lib/**
+!/dist/**
+!ThirdPartyNotice.txt
+
+# Ignore certain files in the above folder
+/dist/*.stats.*
+/lib/**/test/*
+
+# NOTE: These don't need to be specified, because NPM includes them automatically.
+#
+# package.json
+# README (and its variants)
+# CHANGELOG (and its variants)
+# LICENSE / LICENCE
+
+## Project specific definitions
+# -----------------------------
+
+# (Add your exceptions here)
+© 2019 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
