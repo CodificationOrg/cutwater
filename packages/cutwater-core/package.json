@@ -8,22 +8,8 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
-    "validate": "npm run lint && npm run test-xunit && npm run format",
     "test": "gulp test --clean",
-    "test-xunit": "gulp prepareTest && ts-node node_modules/tape/bin/tape -r dotenv/config \"src/**/*.spec.ts\" | tap-xunit > ./test-results/tap/results.xml",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json",
-    "docs": "typedoc --out ./lib/docs --excludePrivate --externalPattern **/lib/** --mode file --gitRevision master --name \"CutWater:Core API Documentation\"",
-    "publish:docs": "gulp clean && npm run docs && gulp publishDocs",
-    "build": "gulp test --clean",
-    "build:esm": "tsc -m es6 --outDir lib-esm",
-    "build:cjs": "tsc",
-    "build:umd": "webpack --mode=production",
-    "release:before": "npm run validate && git add -A .",
-    "release:after": "git push origin --tags",
-    "release:dev": "npm run release:before && standard-version -a --prerelease beta && npm run release:after",
-    "release:prod": "npm run release:before && standard-version -a && npm run release:after && npm run publish:docs",
-    "release:dry": "npm run validate && standard-version -a --dry-run --prerelease beta"
+    "build": "gulp --production --clean"
   },
   "repository": {
     "type": "git",
