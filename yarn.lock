@@ -930,7 +930,7 @@
   resolved "https://registry.yarnpkg.com/@types/assertion-error/-/assertion-error-1.0.30.tgz#f3d0d5da2ec87b514e30db3ff9a01887b5619c29"
   integrity sha1-89DV2i7Ie1FOMNs/+aAYh7VhnCk=
 
-"@types/aws-lambda@^8.10.1":
+"@types/aws-lambda@^8.10.1", "@types/aws-lambda@^8.10.19", "@types/aws-lambda@^8.10.23":
   version "8.10.23"
   resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.23.tgz#ab90be8ee3d8796b35df0acef5d17d71c8928d97"
   integrity sha512-erfexxfuc1+T7b4OswooKwpIjpdgEOVz6ZrDDWSR+3v7Kjhs4EVowfUkF9KuLKhpcjz+VVHQ/pWIl7zSVbKbFQ==
@@ -1169,12 +1169,12 @@ agentkeepalive@^3.4.1:
   dependencies:
     humanize-ms "^1.2.1"
 
-ajv-i18n@^3.1.0:
+ajv-i18n@^3.1.0, ajv-i18n@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/ajv-i18n/-/ajv-i18n-3.4.0.tgz#d2ff5cf5279550aa03d54a03aa9bb7c3c01cbe41"
   integrity sha512-le1nxncADqYS+iriLqxnR3iRpyoLQLsnrc7CbbJ8K/E+75kn7uxPH3sz2/n3h5FFLT2cTXP4zDi4uTA2xNt4zQ==
 
-ajv-keywords@^3.0.0, ajv-keywords@^3.1.0:
+ajv-keywords@^3.0.0, ajv-keywords@^3.1.0, ajv-keywords@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.4.0.tgz#4b831e7b531415a7cc518cd404e73f6193c6349d"
   integrity sha512-aUjdRFISbuFOl0EIZc+9e4FfZp0bDZgAdOOf30bJmw8VM9v84SHyVyxDfbWxpGYbdZD/9XoKxfHVNmxPkhwyGw==
@@ -1189,7 +1189,7 @@ ajv@^5.1.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-ajv@^6.0.0, ajv@^6.1.0, ajv@^6.5.5:
+ajv@^6.0.0, ajv@^6.1.0, ajv@^6.5.5, ajv@^6.9.1:
   version "6.10.0"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.10.0.tgz#90d0d54439da587cd7e843bfb7045f50bd22bdf1"
   integrity sha512-nffhOpkymDECQyR0mnsUtoCE8RlX38G0rYP+wgLWFyZuUyuuojSSvi/+euOiQBIn63whYwYVIIH1TvE3tu4OEg==
@@ -1498,6 +1498,21 @@ aws-sdk@^*, aws-sdk@^2.321.0:
   version "2.425.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.425.0.tgz#8f125e5783646b54658b91c80881a3b14955f11c"
   integrity sha512-SM2qZJPlZUKVzSSqNuCvONOhJ2kcFvU+hAwutjQeje2VKpSAbUbFCFWl6cki2FjiyGZYEPfl0Q+3ANJO8gx9BA==
+  dependencies:
+    buffer "4.9.1"
+    events "1.1.1"
+    ieee754 "1.1.8"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.3.2"
+    xml2js "0.4.19"
+
+aws-sdk@^2.427.0:
+  version "2.427.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.427.0.tgz#74c3d7d3d57229ea07eb19232a9310b3b775ddf6"
+  integrity sha512-NpFNZa7Wt9fQ8hRLt40OD1ii3qnIhUkpXH4fMSjXP2YqGxCYAHYRj2yARN86YJKCMH566+QobTRyPjtgEWmMKA==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -3115,6 +3130,11 @@ dotenv@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-0.4.0.tgz#f6fb351363c2d92207245c737802c9ab5ae1495a"
   integrity sha1-9vs1E2PC2SIHJFxzeALJq1rhSVo=
+
+dotenv@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-7.0.0.tgz#a2be3cd52736673206e8a85fb5210eea29628e7c"
+  integrity sha512-M3NhsLbV1i6HuGzBUH8vXrtxOk+tWmzWKDMbAVSUp3Zsjm7ywFeuwrUXhmhQyRK1q5B5GGy7hcXPbj3bnfZg2g==
 
 duplexer2@0.0.2:
   version "0.0.2"
@@ -4739,7 +4759,7 @@ http-errors@1.6.3, http-errors@~1.6.2, http-errors@~1.6.3:
     setprototypeof "1.1.0"
     statuses ">= 1.4.0 < 2"
 
-http-errors@^1.6.2:
+http-errors@^1.6.2, http-errors@^1.7.1:
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.7.2.tgz#4f5029cf13239f31036e5b2e55292bcfbcc85c8f"
   integrity sha512-uUQBt3H/cSIVfch6i1EuPNy/YsRSOUBXTVfZ+yR7Zjez3qjBz6i9+i4zjNaoqcoFVI4lQJ5plg63TvGfRSDCRg==
@@ -6971,6 +6991,24 @@ middy@^0.18.1:
     qs "^6.5.0"
     querystring "^0.2.0"
 
+middy@^0.23.0:
+  version "0.23.0"
+  resolved "https://registry.yarnpkg.com/middy/-/middy-0.23.0.tgz#9b4f65d41c50494f53ab5afff91be3f2e601d930"
+  integrity sha512-XEabSuGr41qFs8QBdolZe91eq5+4sZxwziCdYg6/PEuswKG/Zo/BLY66AZHDRpwATEoZASdtCpkR11ajytb0FQ==
+  dependencies:
+    "@types/aws-lambda" "^8.10.19"
+    "@types/http-errors" "^1.6.1"
+    ajv "^6.9.1"
+    ajv-i18n "^3.4.0"
+    ajv-keywords "^3.4.0"
+    content-type "^1.0.4"
+    http-errors "^1.7.1"
+    json-mask "^0.3.8"
+    negotiator "^0.6.1"
+    once "^1.4.0"
+    qs "^6.6.0"
+    querystring "^0.2.0"
+
 miller-rabin@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/miller-rabin/-/miller-rabin-4.0.1.tgz#f080351c865b0dc562a8462966daa53543c78a4d"
@@ -8292,6 +8330,11 @@ preserve@^0.2.0:
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
   integrity sha1-gV7R9uvGWSb4ZbMQwHE7yzMVzks=
 
+prettier@^1.16.4:
+  version "1.16.4"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.16.4.tgz#73e37e73e018ad2db9c76742e2647e21790c9717"
+  integrity sha512-ZzWuos7TI5CKUeQAtFd6Zhm2s6EpAD/ZLApIhsF9pRvRtM1RFo61dM/4MSRUA0SuLugA/zgrZD8m0BaY46Og7g==
+
 pretty-format@^22.4.0, pretty-format@^22.4.3:
   version "22.4.3"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-22.4.3.tgz#f873d780839a9c02e9664c8a082e9ee79eaac16f"
@@ -8467,6 +8510,11 @@ qs@^6.5.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.6.0.tgz#a99c0f69a8d26bf7ef012f871cdabb0aee4424c2"
   integrity sha512-KIJqT9jQJDQx5h5uAVPimw6yVg2SekOKu959OCtktD3FjzbpvaPr8i4zzg07DOMz+igA4W/aNM7OV8H37pFYfA==
+
+qs@^6.6.0:
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
+  integrity sha512-VCdBRNFTX1fyE7Nb6FYoURo/SPe62QCaAyzJvUjwRaIsc+NePBEniHlvxFmmX56+HZphIGtV0XeCirBtpDrTyQ==
 
 qs@~5.1.0:
   version "5.1.0"
