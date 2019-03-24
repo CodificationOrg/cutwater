@@ -1,48 +1,42 @@
-const gulp = require('gulp');
-const del = require('del');
-const merge = require('merge2');
-const ghPages = require('gulp-gh-pages');
-const markdown = require('gulp-markdown');
+'use strict';
 
-const paths = {
-    src: 'src',
-    lib: ['lib', 'lib-esm', '_bundles'],
-    test: 'test-results/tap',
-    publish: '.publish'
-};
+const build = require('@microsoft/web-library-build');
+const path = require('path');
 
-const clean = () => {
-    return del([...paths.lib, paths.publish]);
-}
-exports.clean = clean;
+build.tscCmd = 'tsc-commonjs';
 
-const prepareTest = () => {
-    return gulp
-        .src('package.json', {
-            read: false
-        })
-        .pipe(gulp.dest(paths.test));
-};
-exports.prepareTest = prepareTest;
+const tscAmdTask = new build.TscCmdTask();
+tscAmdTask.name = 'tsc-amd';
+tscAmdTask.cleanMatch = [path.join(__dirname, 'lib-amd')];
+tscAmdTask.setConfig({
+    customArgs: [
+        '--outDir', './lib-amd',
+        '--module', 'amd',
+    ]
+});
 
-const prepareDocs = () => {
-    const docs = gulp
-        .src('./src/docs/**/*', {
-            dot: true
-        }).pipe(gulp.dest(`./lib/docs/`));
-    const notes = gulp.src('./CHANGELOG.md')
-        .pipe(markdown())
-        .pipe(gulp.dest('./lib/docs/'));
-    return merge(docs, notes);
-};
-exports.prepareDocs = prepareDocs;
+const tscEsnextTask = new build.TscCmdTask();
+tscEsnextTask.name = 'tsc-es6';
+tscEsnextTask.cleanMatch = [path.join(__dirname, 'lib-es6')];
+tscEsnextTask.setConfig({
+    customArgs: [
+        '--outDir', './lib-es6',
+        '--module', 'esnext',
+    ]
+});
 
-const publishGHPages = () => {
-    return gulp
-        .src('./lib/docs/**/*', {
-            dot: true
-        }).pipe(ghPages());
-};
-exports.publishGHPages = publishGHPages;
+build.defaultTasks = build.task(
+    'default',
+    build.parallel(
+        build.defaultTasks,
+        tscAmdTask,
+        tscEsnextTask
+    )
+);
 
-exports.publishDocs = gulp.series(prepareDocs, publishGHPages);
+build.setConfig({
+    libAMDFolder: 'lib-amd',
+    libES6Folder: 'lib-es6'
+});
+
+build.initialize(require('gulp'));

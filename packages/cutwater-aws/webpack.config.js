@@ -1,46 +1,51 @@
-const path = require('path');
-
-const SRC_DIR = path.resolve(__dirname, 'src');
-const ENTRY = path.resolve(SRC_DIR, 'index.ts');
-const OUT_DIR = path.resolve(__dirname, '_bundles');
-
-const TerserPlugin = require('terser-webpack-plugin');
-
-module.exports = {
+"use strict";
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+const path = require("path");
+// Note: this require may need to be fixed to point to the build that exports the gulp-core-build-webpack instance.
+const webpackTask = require('@microsoft/web-library-build').webpack;
+const uglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const isProduction = webpackTask.buildConfig.production;
+const webpackConfiguration = {
+    context: __dirname,
+    devtool: (isProduction) ? undefined : 'source-map',
     entry: {
-        'cutwater-aws': ENTRY,
-        'cutwater-aws.min': ENTRY
+        'cutwater-aws': path.join(__dirname, webpackTask.buildConfig.libFolder, 'index.js')
     },
     output: {
-        path: OUT_DIR,
-        filename: '[name].js',
         libraryTarget: 'umd',
-        library: 'Cutwater-AWS',
-        umdNamedDefine: true,
-        globalObject: "(typeof window !== 'undefined' ? window : this)",
+        path: path.join(__dirname, webpackTask.buildConfig.distFolder),
+        filename: `[name]${isProduction ? '.min' : ''}.js`
     },
-    resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.json']
+    devServer: {
+        stats: 'none'
     },
-    devtool: 'source-map',
-    optimization: {
-        minimizer: [
-            new TerserPlugin({
-                parallel: true,
-                sourceMap: true,
-                include: /\.min\.js$/,
-                terserOptions: {
-                    ecma: 6,
-                },
-            })
-        ]
+    // The typings are missing the "object" option here (https://webpack.js.org/configuration/externals/#object)
+    externals: {
+        'react': {
+            amd: 'react',
+            commonjs: 'react'
+        },
+        'react-dom': {
+            amd: 'react-dom',
+            commonjs: 'react-dom'
+        }
     },
-    module: {
-        rules: [{
-            test: /\.tsx?$/,
-            loader: 'awesome-typescript-loader',
-            exclude: /node_modules/,
-        }]
-    },
-    target: 'node'
+    plugins: [
+        // new WebpackNotifierPlugin()
+    ]
+};
+if (isProduction && webpackConfiguration.plugins) {
+    webpackConfiguration.plugins.push(new uglifyJsPlugin({
+        uglifyOptions: {
+            mangle: true,
+            compress: {
+                dead_code: true,
+                warnings: false
+            }
+        }
+    }));
 }
+module.exports = webpackConfiguration;
+//# sourceMappingURL=webpack.config.js.map

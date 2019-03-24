@@ -16,22 +16,8 @@
   "typings": "lib-esm/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
-    "validate": "npm run lint && npm run test-xunit && npm run format",
-    "test": "gulp prepareTest && ts-node node_modules/tape/bin/tape \"src/**/*.spec.ts\"",
-    "test-xunit": "gulp prepareTest && ts-node node_modules/tape/bin/tape \"src/**/*.spec.ts\" | tap-xunit > ./test-results/tap/results.xml",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json",
-    "docs": "typedoc --out ./lib/docs --excludePrivate --externalPattern **/lib/** --mode file --gitRevision master --name \"CutWater:Core API Documentation\"",
-    "publish:docs": "gulp clean && npm run docs && gulp publishDocs",
-    "build": "gulp clean && npm-run-all --parallel build:esm build:cjs build:umd",
-    "build:esm": "tsc -m es6 --outDir lib-esm",
-    "build:cjs": "tsc",
-    "build:umd": "webpack --mode=production",
-    "release:before": "npm run validate && git add -A .",
-    "release:after": "git push origin --tags",
-    "release:dev": "npm run release:before && standard-version -a --prerelease beta && npm run release:after",
-    "release:prod": "npm run release:before && standard-version -a && npm run release:after && npm run publish:docs",
-    "release:dry": "npm run validate && standard-version -a --dry-run --prerelease beta"
+    "test": "gulp test --clean",
+    "build": "gulp --production --clean"
   },
   "repository": {
     "type": "git",
@@ -51,17 +37,13 @@
     "middy": "^0.18.1"
   },
   "dependencies": {
-    "@microsoft/gulp-core-build": "^3.9.20",
-    "@types/jest": "^24.0.11",
-    "@types/node": "^11.11.4",
     "aws-sdk": "^2.321.0",
-    "@codification/cutwater-core": "^0.4.2",
+    "@codification/cutwater-core": "0.4.2",
     "got": "^9.6.0",
     "mime": "^2.4.0",
     "rxjs": "^6.4.0"
   },
   "devDependencies": {
-    "@microsoft/gulp-core-build-typescript": "^8.0.17",
     "@microsoft/rush-stack-compiler-3.2": "^0.2.16"
   }
 }
