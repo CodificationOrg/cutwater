@@ -1,41 +1,21 @@
-import { CloudFrontRequestEvent } from 'aws-lambda';
+import { CloudFrontHeaders, CloudFrontRequestEvent } from 'aws-lambda';
 import { IncomingHttpHeaders } from 'http';
-import * as test from 'tape';
 
+import { mockCloudFrontRequestEvent } from './CloudFront.mock';
 import {
   isCustomOriginRequestEvent,
   stripOriginRequestHeaders,
   toCloudFrontHeaders,
-  toIncomingHttpHeaders,
+  toIncomingHttpHeaders
 } from './LambdaEdgeUtils';
 
-test('LambdaEdgeUtils Unit Tests', assert => {
-  const req = createCFRequest();
-  assert.ok(isCustomOriginRequestEvent(req), 'correctly identifies CF custom origin-request event');
-  req.Records[0].cf.config.eventType = 'origin-response';
-  assert.notOk(isCustomOriginRequestEvent(req), 'correctly identifies CF event that is not a custom origin-request');
-
-  let headers = toCloudFrontHeaders(createHeaders('Connection', 'Content-Length', 'X-Custom-Header'));
-  assert.equal(headers.connection[0].value, 'Value0', 'can properly convert IncomingHttpHeaders to CloudFrontHeaders');
-
-  headers = stripOriginRequestHeaders(headers);
-  assert.equal(Object.keys(headers).length, 1, 'correctly removes invalid headers for orgin-request event');
-
-  assert.equal(
-    toIncomingHttpHeaders(headers)['x-custom-header'],
-    'Value2',
-    'correctly converts CloudFrontHeaders to IncomingHttpHeaders.',
-  );
-  assert.end();
-});
-
-const createCFRequest = (): CloudFrontRequestEvent =>
-  ({
+const createCFRequest: Function = (): CloudFrontRequestEvent =>
+  mockCloudFrontRequestEvent({
     Records: [
       {
         cf: {
           config: {
-            eventType: 'origin-request',
+            eventType: 'origin-request'
           },
           request: {
             origin: {
@@ -44,24 +24,49 @@ const createCFRequest = (): CloudFrontRequestEvent =>
                   'my-origin-custom-header': [
                     {
                       key: 'My-Origin-Custom-Header',
-                      value: 'Test',
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-    ],
-  } as CloudFrontRequestEvent);
+                      value: 'Test'
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  });
 
-const createHeaders = (...headerNames: string[]): IncomingHttpHeaders => {
-  const rval = {} as IncomingHttpHeaders;
-  let counter = 0;
+const createHeaders: Function = (...headerNames: string[]): IncomingHttpHeaders => {
+  const rval: IncomingHttpHeaders = {} as IncomingHttpHeaders;
+  let counter: number = 0;
   headerNames.forEach(header => {
     rval[header.toLowerCase()] = `Value${counter}`;
     counter++;
   });
   return rval;
 };
+
+describe('LambdaEdgeUtils Unit Tests', () => {
+  test('isCustomOriginRequestEvent', () => {
+    const req: CloudFrontRequestEvent = createCFRequest();
+    expect(isCustomOriginRequestEvent(req)).toBeTruthy();
+    req.Records[0].cf.config.eventType = 'origin-response';
+    expect(isCustomOriginRequestEvent(req)).toBeFalsy();
+  });
+
+  const headers: CloudFrontHeaders = toCloudFrontHeaders(
+    createHeaders('Connection', 'Content-Length', 'X-Custom-Header')
+  );
+
+  test('toCloudFrontHeaders', () => {
+    expect(headers.connection[0].value).toBe('Value0');
+  });
+
+  test('stripOriginRequestHeaders', () => {
+    expect(Object.keys(stripOriginRequestHeaders(headers)).length).toBe(1);
+  });
+
+  test('toIncomingHttpHeaders', () => {
+    expect(toIncomingHttpHeaders(headers)['x-custom-header']).toBe('Value2');
+  });
+});

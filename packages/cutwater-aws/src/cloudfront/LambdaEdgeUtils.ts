@@ -1,8 +1,15 @@
-import { CloudFrontHeaders, CloudFrontRequestEvent, CloudFrontResponseEvent, CloudFrontResultResponse } from 'aws-lambda';
-import { HttpUtils, LoggerFactory } from 'cutwater-core';
+import {
+  CloudFrontCustomOrigin,
+  CloudFrontHeaders,
+  CloudFrontRequestEvent,
+  CloudFrontResponseEvent,
+  CloudFrontResultResponse
+} from 'aws-lambda';
 import { IncomingHttpHeaders, IncomingMessage } from 'http';
 
-const BLACK_LISTED_HEADERS = [
+import { HttpUtils } from '@codification/cutwater-node-core';
+
+const BLACK_LISTED_HEADERS: string[] = [
   'Connection',
   'Expect',
   'Keep-alive',
@@ -17,14 +24,14 @@ const BLACK_LISTED_HEADERS = [
   'X-Accel-Redirect',
   'X-Cache',
   'X-Forwarded-Proto',
-  'X-Real-IP',
+  'X-Real-IP'
 ].map(header => header.toLowerCase());
 
-const READ_ONLY_HEADERS_VIEWER_REQUEST = ['Content-Length', 'Host', 'Transfer-Encoding', 'Via'].map(header =>
-  header.toLowerCase(),
+const READ_ONLY_HEADERS_VIEWER_REQUEST: string[] = ['Content-Length', 'Host', 'Transfer-Encoding', 'Via'].map(header =>
+  header.toLowerCase()
 );
 
-const READ_ONLY_HEADERS_ORIGIN_REQUEST = [
+const READ_ONLY_HEADERS_ORIGIN_REQUEST: string[] = [
   'Accept-Encoding',
   'Content-Length',
   'If-Modified-Since',
@@ -33,36 +40,22 @@ const READ_ONLY_HEADERS_ORIGIN_REQUEST = [
   'If-Unmodified-Since',
   'Range',
   'Transfer-Encoding',
-  'Via',
+  'Via'
 ].map(header => header.toLowerCase());
 
-const READ_ONLY_HEADERS_ORIGIN_RESPONSE = ['Transfer-Encoding', 'Via'].map(header => header.toLowerCase());
+const READ_ONLY_HEADERS_ORIGIN_RESPONSE: string[] = ['Transfer-Encoding', 'Via'].map(header => header.toLowerCase());
 
-const READ_ONLY_HEADERS_VIEWER_RESPONSE = ['Content-Encoding', 'Content-Length', 'Transfer-Encoding', 'Warning', 'Via'].map(
-  header => header.toLowerCase(),
-);
+const READ_ONLY_HEADERS_VIEWER_RESPONSE: string[] = [
+  'Content-Encoding',
+  'Content-Length',
+  'Transfer-Encoding',
+  'Warning',
+  'Via'
+].map(header => header.toLowerCase());
 
-const LOG = LoggerFactory.getLogger();
-
-export const stripViewerRequestHeaders = (headers: CloudFrontHeaders): CloudFrontHeaders => {
-  return stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_REQUEST);
-};
-
-export const stripOriginRequestHeaders = (headers: CloudFrontHeaders): CloudFrontHeaders => {
-  return stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_REQUEST);
-};
-
-export const stripViewerResponseHeaders = (headers: CloudFrontHeaders): CloudFrontHeaders => {
-  return stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_RESPONSE);
-};
-
-export const stripOriginResponseHeaders = (headers: CloudFrontHeaders): CloudFrontHeaders => {
-  return stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_RESPONSE);
-};
-
-const stripHeaders = (headers: CloudFrontHeaders, headerList: string[]): CloudFrontHeaders => {
+const stripHeaders: Function = (headers: CloudFrontHeaders, headerList: string[]): CloudFrontHeaders => {
   const rval: CloudFrontHeaders = {};
-  const fullHeaderList = [];
+  const fullHeaderList: string[] = [];
   fullHeaderList.push(...headerList, ...BLACK_LISTED_HEADERS);
   Object.keys(headers)
     .filter(headerName => fullHeaderList.indexOf(headerName) === -1)
@@ -72,11 +65,42 @@ const stripHeaders = (headers: CloudFrontHeaders, headerList: string[]): CloudFr
   return rval;
 };
 
-export const originResponseToCloudFrontResultResponse = (
-  originResponse: IncomingMessage,
+export const stripViewerRequestHeaders: Function = (headers: CloudFrontHeaders): CloudFrontHeaders => {
+  return stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_REQUEST);
+};
+
+export const stripOriginRequestHeaders: Function = (headers: CloudFrontHeaders): CloudFrontHeaders => {
+  return stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_REQUEST);
+};
+
+export const stripViewerResponseHeaders: Function = (headers: CloudFrontHeaders): CloudFrontHeaders => {
+  return stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_RESPONSE);
+};
+
+export const stripOriginResponseHeaders: Function = (headers: CloudFrontHeaders): CloudFrontHeaders => {
+  return stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_RESPONSE);
+};
+
+export const toCloudFrontHeaders: Function = (headers: IncomingHttpHeaders): CloudFrontHeaders => {
+  const rval: CloudFrontHeaders = {};
+  let value: string | undefined | string[];
+  Object.keys(headers).forEach(headerName => {
+    value = headers[headerName];
+    if (typeof value === 'string') {
+      value = [value];
+    }
+    if (typeof value !== 'undefined') {
+      rval[headerName.toLowerCase()] = value.map(headerValue => ({ key: headerName, value: headerValue }));
+    }
+  });
+  return rval;
+};
+
+export const originResponseToCloudFrontResultResponse: Function = (
+  originResponse: IncomingMessage
 ): Promise<CloudFrontResultResponse> => {
-  const rval = {} as CloudFrontResultResponse;
-  rval.status = originResponse.statusCode.toString();
+  const rval: CloudFrontResultResponse = {} as CloudFrontResultResponse;
+  rval.status = (originResponse.statusCode ? originResponse.statusCode : 500).toString();
   rval.statusDescription = originResponse.statusMessage;
   rval.headers = stripOriginRequestHeaders(toCloudFrontHeaders(originResponse.headers));
   if (HttpUtils.isResponseOk(originResponse)) {
@@ -94,40 +118,25 @@ export const originResponseToCloudFrontResultResponse = (
   }
 };
 
-export const isCustomOriginRequestEvent = (event: CloudFrontRequestEvent): boolean => {
+export const isCustomOriginRequestEvent: Function = (event: CloudFrontRequestEvent): boolean => {
   const { config, request } = event.Records[0].cf;
-  const origin = request.origin ? request.origin.custom : undefined;
+  const origin: CloudFrontCustomOrigin | undefined = request.origin ? request.origin.custom : undefined;
   return config.eventType === 'origin-request' && origin ? true : false;
 };
 
-export const isCustomOriginResponseEvent = (event: CloudFrontResponseEvent): boolean => {
+export const isCustomOriginResponseEvent: Function = (event: CloudFrontResponseEvent): boolean => {
   const { config } = event.Records[0].cf;
   return config.eventType === 'origin-response';
 };
 
-export const toIncomingHttpHeaders = (headers?: CloudFrontHeaders): IncomingHttpHeaders => {
+export const toIncomingHttpHeaders: Function = (headers?: CloudFrontHeaders): IncomingHttpHeaders => {
   const rval: IncomingHttpHeaders = {};
   if (headers) {
     Object.keys(headers).forEach(name => {
+      // tslint:disable-next-line:typedef
       const header = headers[name];
       rval[header[0].key] = header.length > 1 ? header.map(obj => obj.value) : header[0].value;
     });
   }
-  return rval;
-};
-
-export const toCloudFrontHeaders = (headers: IncomingHttpHeaders): CloudFrontHeaders => {
-  const rval: CloudFrontHeaders = {};
-  let value: string | number | string[];
-  Object.keys(headers).forEach(headerName => {
-    value = headers[headerName];
-    if (typeof value === 'number') {
-      value = headers[headerName].toString();
-    }
-    if (typeof value === 'string') {
-      value = [value];
-    }
-    rval[headerName.toLowerCase()] = value.map(headerValue => ({ key: headerName, value: headerValue }));
-  });
   return rval;
 };
