@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 const path = require("path");
-// Note: this require may need to be fixed to point to the build that exports the gulp-core-build-webpack instance.
 const webpackTask = require('@microsoft/web-library-build').webpack;
 const uglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const isProduction = webpackTask.buildConfig.production;
@@ -18,23 +17,9 @@ const webpackConfiguration = {
         path: path.join(__dirname, webpackTask.buildConfig.distFolder),
         filename: `[name]${isProduction ? '.min' : ''}.js`
     },
-    devServer: {
-        stats: 'none'
-    },
-    // The typings are missing the "object" option here (https://webpack.js.org/configuration/externals/#object)
     externals: {
-        'react': {
-            amd: 'react',
-            commonjs: 'react'
-        },
-        'react-dom': {
-            amd: 'react-dom',
-            commonjs: 'react-dom'
-        }
-    },
-    plugins: [
-        // new WebpackNotifierPlugin()
-    ]
+        'aws-sdk': 'aws-sdk'
+    }
 };
 if (isProduction && webpackConfiguration.plugins) {
     webpackConfiguration.plugins.push(new uglifyJsPlugin({
