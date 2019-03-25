@@ -6,7 +6,6 @@
 
 // @beta
 export interface Appender {
-    // Warning: (ae-forgotten-export) The symbol "LoggingEvent" needs to be exported by the entry point index.d.ts
     doAppend(event: LoggingEvent): void;
     layout: Layout;
     name: string;
@@ -60,6 +59,17 @@ export class LoggerFactory {
     static GLOBAL_LEVEL: Level;
     static logEnabledLevels(logger: Logger): void;
     }
+
+// @beta
+export class LoggingEvent {
+    constructor(logger: Logger, level: Level, message: any);
+    // (undocumented)
+    readonly level: Level;
+    // (undocumented)
+    readonly logger: Logger;
+    // (undocumented)
+    readonly message: any;
+}
 
 
 // (No @packageDocumentation comment for this package)

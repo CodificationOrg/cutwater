@@ -3,6 +3,7 @@ import { Logger } from './Logger';
 
 /**
  * Represents a logging message and all required context.
+ * @beta
  */
 export class LoggingEvent {
   /**
