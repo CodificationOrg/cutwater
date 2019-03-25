@@ -1,5 +1,5 @@
 {
-  "name": "cutwater-logging",
+  "name": "@codification/cutwater-logging",
   "version": "0.4.2",
   "description": "Yet another simple logging utility.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
