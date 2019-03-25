@@ -4,19 +4,19 @@ import { bindNodeCallback, Observable, Observer } from 'rxjs';
 import { Readable } from 'stream';
 
 export class S3Bucket {
+  private bucketName: string;
+  private s3Client: S3;
+
   public static toMimeType(key: string): string {
     return mime.getType(key);
   }
-
-  private bucketName: string;
-  private s3Client: S3;
 
   public constructor(bucketName: string, client?: S3) {
     this.bucketName = bucketName;
     this.s3Client = client ? client : new S3();
   }
 
-  public setBucketName(name: string) {
+  public setBucketName(name: string): void {
     if (!name) {
       throw new Error('Bucket name is required.');
     }
@@ -38,7 +38,11 @@ export class S3Bucket {
     });
   }
 
-  public store(fileName: string, content: string | Buffer | Readable, mimeType?: string): Observable<S3.Types.PutObjectOutput> {
+  public store(
+    fileName: string,
+    content: string | Buffer | Readable,
+    mimeType?: string
+  ): Observable<S3.Types.PutObjectOutput> {
     const rval = bindNodeCallback<S3.Types.PutObjectRequest, S3.Types.PutObjectOutput>(this.s3Client.putObject);
     return rval(this.toPutObjectRequest(fileName, content, mimeType));
   }
@@ -48,7 +52,7 @@ export class S3Bucket {
       Body: content,
       Bucket: this.bucketName,
       ContentType: mimeType ? mimeType : S3Bucket.toMimeType(key),
-      Key: key,
+      Key: key
     };
     return rval;
   }

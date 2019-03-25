@@ -15,6 +15,21 @@ const defaultCloudFrontEvent: Function = (): CloudFrontEvent => ({
   }
 });
 
+const defaultCloudFrontHeaders: Function = (): CloudFrontHeaders => ({
+  host: [
+    {
+      key: 'Host',
+      value: 'd111111abcdef8.cloudfront.net'
+    }
+  ],
+  'user-agent': [
+    {
+      key: 'User-Agent',
+      value: 'curl/7.51.0'
+    }
+  ]
+});
+
 const defaultCloudFrontRequest: Function = (
   headers: CloudFrontHeaders = defaultCloudFrontHeaders(),
   origin?: CloudFrontOrigin
@@ -27,28 +42,16 @@ const defaultCloudFrontRequest: Function = (
   origin: origin
 });
 
-const defaultCloudFrontRequestEvent: Function = (): CloudFrontRequestEvent => ({
+const defaultCloudFrontRequestEvent: Function = (
+  headers: CloudFrontHeaders = defaultCloudFrontHeaders(),
+  origin?: CloudFrontOrigin
+): CloudFrontRequestEvent => ({
   Records: [
     {
       cf: {
         ...defaultCloudFrontEvent(),
         request: defaultCloudFrontRequest()
       }
-    }
-  ]
-});
-
-const defaultCloudFrontHeaders: Function = (): CloudFrontHeaders => ({
-  host: [
-    {
-      key: 'Host',
-      value: 'd111111abcdef8.cloudfront.net'
-    }
-  ],
-  'user-agent': [
-    {
-      key: 'User-Agent',
-      value: 'curl/7.51.0'
     }
   ]
 });
@@ -77,6 +80,6 @@ const defaultCloudFrontOrigin: Function = (): CloudFrontOrigin => ({
 export const mockCloudFrontRequestEvent: Function = (
   requestEvent?: Partial<CloudFrontRequestEvent>
 ): CloudFrontRequestEvent => ({
-  ...defaultCloudFrontRequestEvent(),
+  ...defaultCloudFrontRequestEvent(defaultCloudFrontHeaders(), defaultCloudFrontOrigin()),
   ...requestEvent
 });
