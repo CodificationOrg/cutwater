@@ -1,6 +1,7 @@
 import {
   CloudFrontCustomOrigin,
   CloudFrontHeaders,
+  CloudFrontRequest,
   CloudFrontRequestEvent,
   CloudFrontResponseEvent,
   CloudFrontResultResponse
@@ -118,10 +119,16 @@ export const originResponseToCloudFrontResultResponse: Function = (
   }
 };
 
+export const toCloudFrontCustomOrigin: Function = (request: CloudFrontRequest): CloudFrontCustomOrigin | undefined => {
+  if (request && request.origin && request.origin.custom) {
+    return request.origin.custom;
+  }
+  return undefined;
+};
+
 export const isCustomOriginRequestEvent: Function = (event: CloudFrontRequestEvent): boolean => {
   const { config, request } = event.Records[0].cf;
-  const origin: CloudFrontCustomOrigin | undefined = request.origin ? request.origin.custom : undefined;
-  return config.eventType === 'origin-request' && origin ? true : false;
+  return config.eventType === 'origin-request' && toCloudFrontCustomOrigin(request) ? true : false;
 };
 
 export const isCustomOriginResponseEvent: Function = (event: CloudFrontResponseEvent): boolean => {
