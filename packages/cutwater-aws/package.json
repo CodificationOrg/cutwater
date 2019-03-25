@@ -10,10 +10,8 @@
   },
   "license": "Apache-2.0",
   "private": false,
-  "main": "_bundles/cutwater-aws.min.js",
-  "module": "lib-esm/index.js",
-  "types": "lib-esm/index.d.ts",
-  "typings": "lib-esm/index.d.ts",
+  "main": "lib/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
     "test": "gulp test --clean",
@@ -37,13 +35,18 @@
     "middy": "^0.18.1"
   },
   "dependencies": {
-    "aws-sdk": "^2.321.0",
     "@codification/cutwater-core": "0.4.2",
+    "@codification/cutwater-logging": "0.4.2",
+    "@codification/cutwater-node-core": "0.4.2",
+    "aws-sdk": "^2.321.0",
     "got": "^9.6.0",
     "mime": "^2.4.0",
     "rxjs": "^6.4.0"
   },
   "devDependencies": {
     "@microsoft/rush-stack-compiler-3.2": "^0.2.16"
+  },
+  "jest": {
+    "testURL": "http://localhost"
   }
 }
