@@ -6,6 +6,7 @@
     "nohoist": ["**/@microsoft/rush-stack-compiler-3.2"]
   },
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "compile": "lerna run compile",
     "clean": "lerna run clean",
     "lint": "lerna run lint",
