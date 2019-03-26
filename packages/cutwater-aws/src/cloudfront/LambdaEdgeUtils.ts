@@ -54,6 +54,9 @@ const READ_ONLY_HEADERS_VIEWER_RESPONSE: string[] = [
   'Via'
 ].map(header => header.toLowerCase());
 
+/**
+ * @beta
+ */
 export class LambdaEdgeUtils {
   public static stripHeaders(headers: CloudFrontHeaders, headerList: string[]): CloudFrontHeaders {
     const rval: CloudFrontHeaders = {};
@@ -122,11 +125,12 @@ export class LambdaEdgeUtils {
     }
   }
 
-  public static toCloudFrontCustomOrigin(request: CloudFrontRequest): CloudFrontCustomOrigin | undefined {
+  public static toCloudFrontCustomOrigin(request: CloudFrontRequest): CloudFrontCustomOrigin {
     if (request && request.origin && request.origin.custom) {
       return request.origin.custom;
+    } else {
+      throw new Error('Request does not contain a custom origin.');
     }
-    return undefined;
   }
 
   public static isCustomOriginRequestEvent(event: CloudFrontRequestEvent): boolean {
