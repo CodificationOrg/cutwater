@@ -2,12 +2,7 @@ import { CloudFrontHeaders, CloudFrontRequestEvent } from 'aws-lambda';
 import { IncomingHttpHeaders } from 'http';
 
 import { mockCloudFrontRequestEvent } from './CloudFront.mock';
-import {
-  isCustomOriginRequestEvent,
-  stripOriginRequestHeaders,
-  toCloudFrontHeaders,
-  toIncomingHttpHeaders
-} from './LambdaEdgeUtils';
+import { LambdaEdgeUtils as lambda } from './LambdaEdgeUtils';
 
 const createCFRequest: Function = (): CloudFrontRequestEvent =>
   mockCloudFrontRequestEvent({
@@ -49,12 +44,12 @@ const createHeaders: Function = (...headerNames: string[]): IncomingHttpHeaders 
 describe('LambdaEdgeUtils Unit Tests', () => {
   test('isCustomOriginRequestEvent', () => {
     const req: CloudFrontRequestEvent = createCFRequest();
-    expect(isCustomOriginRequestEvent(req)).toBeTruthy();
+    expect(lambda.isCustomOriginRequestEvent(req)).toBeTruthy();
     req.Records[0].cf.config.eventType = 'origin-response';
-    expect(isCustomOriginRequestEvent(req)).toBeFalsy();
+    expect(lambda.isCustomOriginRequestEvent(req)).toBeFalsy();
   });
 
-  const headers: CloudFrontHeaders = toCloudFrontHeaders(
+  const headers: CloudFrontHeaders = lambda.toCloudFrontHeaders(
     createHeaders('Connection', 'Content-Length', 'X-Custom-Header')
   );
 
@@ -63,10 +58,10 @@ describe('LambdaEdgeUtils Unit Tests', () => {
   });
 
   test('stripOriginRequestHeaders', () => {
-    expect(Object.keys(stripOriginRequestHeaders(headers)).length).toBe(1);
+    expect(Object.keys(lambda.stripOriginRequestHeaders(headers)).length).toBe(1);
   });
 
   test('toIncomingHttpHeaders', () => {
-    expect(toIncomingHttpHeaders(headers)['x-custom-header']).toBe('Value2');
+    expect(lambda.toIncomingHttpHeaders(headers)['x-custom-header']).toBe('Value2');
   });
 });

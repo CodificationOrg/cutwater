@@ -4,35 +4,57 @@
 
 ```ts
 
+import { CloudFrontCustomOrigin } from 'aws-lambda';
+import { CloudFrontHeaders } from 'aws-lambda';
 import { CloudFrontRequest } from 'aws-lambda';
 import { CloudFrontRequestEvent } from 'aws-lambda';
+import { CloudFrontResponseEvent } from 'aws-lambda';
 import { CloudFrontResultResponse } from 'aws-lambda';
+import { IncomingHttpHeaders } from 'http';
+import { IncomingMessage } from 'http';
 import { Observable } from 'rxjs';
 import { Readable } from 'stream';
 import { S3 } from 'aws-sdk';
 
-// @public (undocumented)
+// @beta (undocumented)
 export interface CloudFrontOriginRequestEvent extends CloudFrontRequestEvent {
     // (undocumented)
     originResponse?: CloudFrontResultResponse;
 }
 
-// @public (undocumented)
-export const isCustomOriginRequestEvent: Function;
+// @beta (undocumented)
+export class LambdaEdgeUtils {
+    // (undocumented)
+    static isCustomOriginRequestEvent(event: CloudFrontRequestEvent): boolean;
+    // (undocumented)
+    static isCustomOriginResponseEvent(event: CloudFrontResponseEvent): boolean;
+    // (undocumented)
+    static originResponseToCloudFrontResultResponse(originResponse: IncomingMessage): Promise<CloudFrontResultResponse>;
+    // (undocumented)
+    static stripHeaders(headers: CloudFrontHeaders, headerList: string[]): CloudFrontHeaders;
+    // (undocumented)
+    static stripOriginRequestHeaders(headers: CloudFrontHeaders): CloudFrontHeaders;
+    // (undocumented)
+    static stripOriginResponseHeaders(headers: CloudFrontHeaders): CloudFrontHeaders;
+    // (undocumented)
+    static stripViewerRequestHeaders(headers: CloudFrontHeaders): CloudFrontHeaders;
+    // (undocumented)
+    static stripViewerResponseHeaders(headers: CloudFrontHeaders): CloudFrontHeaders;
+    // (undocumented)
+    static toCloudFrontCustomOrigin(request: CloudFrontRequest): CloudFrontCustomOrigin;
+    // (undocumented)
+    static toCloudFrontHeaders(headers: IncomingHttpHeaders): CloudFrontHeaders;
+    // (undocumented)
+    static toIncomingHttpHeaders(headers?: CloudFrontHeaders): IncomingHttpHeaders;
+}
 
-// @public (undocumented)
-export const isCustomOriginResponseEvent: Function;
-
-// @public (undocumented)
+// @beta (undocumented)
 export interface OriginRequestConfig {
     // (undocumented)
     filter: (request: CloudFrontRequest) => void;
 }
 
-// @public (undocumented)
-export const originResponseToCloudFrontResultResponse: Function;
-
-// @public (undocumented)
+// @beta (undocumented)
 export class S3Bucket {
     // (undocumented)
     constructor(bucketName: string, client?: S3);
@@ -46,37 +68,16 @@ export class S3Bucket {
     static toMimeType(key: string): string;
     }
 
-// @public (undocumented)
-export const stripOriginRequestHeaders: Function;
-
-// @public (undocumented)
-export const stripOriginResponseHeaders: Function;
-
-// @public (undocumented)
-export const stripViewerRequestHeaders: Function;
-
-// @public (undocumented)
-export const stripViewerResponseHeaders: Function;
-
-// @public (undocumented)
-export const toCloudFrontCustomOrigin: Function;
-
-// @public (undocumented)
-export const toCloudFrontHeaders: Function;
-
-// @public (undocumented)
-export const toIncomingHttpHeaders: Function;
-
-// @public (undocumented)
+// @beta (undocumented)
 export const withCustomOriginRequestHeaders: Function;
 
-// @public (undocumented)
+// @beta (undocumented)
 export const withOriginRequestResponse: Function;
 
-// @public (undocumented)
+// @beta (undocumented)
 export const withOriginResponseHeaders: Function;
 
-// @public (undocumented)
+// @beta (undocumented)
 export const withRequestHeaderConfig: Function;
 
 

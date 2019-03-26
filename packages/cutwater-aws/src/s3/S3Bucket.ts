@@ -3,6 +3,9 @@ import * as mime from 'mime';
 import { bindNodeCallback, Observable, Observer } from 'rxjs';
 import { Readable } from 'stream';
 
+/**
+ * @beta
+ */
 export class S3Bucket {
   private bucketName: string;
   private s3Client: S3;

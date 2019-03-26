@@ -17,11 +17,17 @@ import { LambdaEdgeUtils } from './LambdaEdgeUtils';
 
 const LOG: Logger = LoggerFactory.getLogger();
 
+/**
+ * @beta
+ */
 // tslint:disable: interface-name
 export interface OriginRequestConfig {
   filter: (request: CloudFrontRequest) => void;
 }
 
+/**
+ * @beta
+ */
 export interface CloudFrontOriginRequestEvent extends CloudFrontRequestEvent {
   originResponse?: CloudFrontResultResponse;
 }
@@ -41,6 +47,9 @@ const toRequestOptions: Function = (req: CloudFrontRequest, origin: CloudFrontCu
   return rval;
 };
 
+/**
+ * @beta
+ */
 export const withOriginRequestResponse: Function = (config?: OriginRequestConfig): IMiddyMiddlewareObject => {
   return {
     before: (
@@ -89,6 +98,9 @@ const findPrefixedHeaders: Function = (
   return rval;
 };
 
+/**
+ * @beta
+ */
 export const withCustomOriginRequestHeaders: Function = (customHeaderPrefix = 'x-custom-'): IMiddyMiddlewareObject => {
   return {
     before: (handler: IHandlerLambda<CloudFrontRequestEvent, CloudFrontResultResponse>, next: IMiddyNextFunction) => {
@@ -110,6 +122,9 @@ export const withCustomOriginRequestHeaders: Function = (customHeaderPrefix = 'x
   };
 };
 
+/**
+ * @beta
+ */
 export const withRequestHeaderConfig: Function = (customHeaderPrefix = 'x-config-'): IMiddyMiddlewareObject => {
   return {
     before: (handler: IHandlerLambda<CloudFrontRequestEvent, CloudFrontResultResponse>, next: IMiddyNextFunction) => {
@@ -134,6 +149,9 @@ export const withRequestHeaderConfig: Function = (customHeaderPrefix = 'x-config
   };
 };
 
+/**
+ * @beta
+ */
 export const withOriginResponseHeaders: Function = (config: IncomingHttpHeaders): IMiddyMiddlewareObject => {
   return {
     before: (handler: IHandlerLambda<CloudFrontResponseEvent, CloudFrontResponse>, next: IMiddyNextFunction) => {
