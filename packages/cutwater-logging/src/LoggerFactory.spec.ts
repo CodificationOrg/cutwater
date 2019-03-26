@@ -1,53 +1,63 @@
-import { Appender } from './Appender';
-import { Layout } from './Layout';
+import { Config } from '@codification/cutwater-core';
+
 import { Level } from './Level';
 import { Logger } from './Logger';
 import { LoggerFactory } from './LoggerFactory';
-import { LoggingEvent } from './LoggingEvent';
-import { SimpleLayout } from './SimpleLayout';
 
-class MockAppender implements Appender {
-  public name: string = 'mock';
-  public layout: Layout = new SimpleLayout();
-  public entries: string[] = [];
-
-  public doAppend(event: LoggingEvent): void {
-    this.entries.push(this.layout.format(event));
-  }
-}
-
-test('LoggerFactory Unit Tests', () => {
-  const appender: MockAppender = new MockAppender();
+describe('LoggerFactory Unit Tests', () => {
+  const logEntries: string[] = [];
+  // tslint:disable-next-line: missing-optional-annotation no-any typedef
+  const writeEntry = (message?: any, ...optionalParams: any[]): void => {
+    const value: string = message ? message.toString() : '';
+    logEntries.push(value);
+  };
+  // tslint:disable-next-line: no-string-literal
+  console['log'] = jest.fn(writeEntry);
   const logger: Logger = LoggerFactory.getLogger('Foo');
 
-  logger.level = Level.INFO;
-  logger.appender = appender;
+  beforeEach(() => {
+    logEntries.length = 0;
+  });
 
-  expect(logger.name).toBe('Foo');
+  it('returns the proper logger name', () => {
+    expect(logger.name).toBe('Foo');
+  });
 
-  logger.error('Test entry: %j', { id: 'Foo', data: 7 });
-  expect(appender.entries.length).toBe(1);
+  it('returns logger with level set by environment variables', () => {
+    Config.put(LoggerFactory.ENV_LOGGING_LEVEL_PREFIX + 'baz', 'fatal');
+    expect(LoggerFactory.getLogger('baz').level).toBe(Level.FATAL);
+  });
 
-  logger.debug('Test entry');
-  expect(appender.entries.length).toBe(1);
+  it('logs entries in enabled levels', () => {
+    logger.level = Level.INFO;
+    logger.error('Test entry: %j', { id: 'Foo', data: 7 });
+    expect(logEntries.length).toBe(1);
+    logger.debug('Test entry');
+    expect(logEntries.length).toBe(1);
+  });
 
-  logger.level = undefined;
-  LoggerFactory.GLOBAL_LEVEL = Level.ALL;
-  appender.entries = [];
-  expect(logger.level).toBe(LoggerFactory.GLOBAL_LEVEL);
+  it('properly uses the GLOBAL_LEVEL when no level is speicified', () => {
+    logger.level = undefined;
+    LoggerFactory.GLOBAL_LEVEL = Level.ALL;
+    expect(logger.level).toBe(LoggerFactory.GLOBAL_LEVEL);
+  });
 
-  logger.debug('Debug test entry');
-  expect(appender.entries.length).toBe(1);
+  it('properly logs when ALL levels are enabled', () => {
+    logger.level = Level.ALL;
+    logger.trace('Trace test entry');
+    expect(logEntries.length).toBe(1);
+    logger.fatal('Fatal test entry');
+    expect(logEntries.length).toBe(2);
+  });
 
-  logger.trace('Trace test entry');
-  expect(appender.entries.length).toBe(2);
+  it('properly logs enabled log levels', () => {
+    LoggerFactory.logEnabledLevels(logger);
+    expect(logEntries.length).toBe(6);
+  });
 
-  appender.entries = [];
-  LoggerFactory.logEnabledLevels(logger);
-  expect(appender.entries.length).toBe(6);
-
-  appender.entries = [];
-  logger.level = Level.OFF;
-  LoggerFactory.logEnabledLevels(logger);
-  expect(appender.entries.length).toBe(0);
+  it('properly disables all logging when level is OFF', () => {
+    logger.level = Level.OFF;
+    LoggerFactory.logEnabledLevels(logger);
+    expect(logEntries.length).toBe(0);
+  });
 });
