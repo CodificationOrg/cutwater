@@ -4,6 +4,7 @@
   "private": true,
   "description": "Commons tools used to build the Cutwater packages.",
   "dependencies": {
+    "@microsoft/api-documenter": "^7.0.24",
     "@microsoft/gulp-core-build": "^3.9.20",
     "@microsoft/gulp-core-build-typescript": "^8.0.17",
     "@microsoft/node-library-build": "^6.0.43",
