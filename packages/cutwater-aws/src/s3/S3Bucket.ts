@@ -43,10 +43,13 @@ export class S3Bucket {
     content: string | Buffer | Readable,
     mimeType?: string
   ): Observable<S3.Types.PutObjectOutput> {
-    const rval = bindNodeCallback<S3.Types.PutObjectRequest, S3.Types.PutObjectOutput>(this.s3Client.putObject);
+    const rval: Function = bindNodeCallback<S3.Types.PutObjectRequest, S3.Types.PutObjectOutput>(
+      this.s3Client.putObject
+    );
     return rval(this.toPutObjectRequest(fileName, content, mimeType));
   }
 
+  // tslint:disable-next-line:no-any
   private toPutObjectRequest(key: string, content: any, mimeType?: string): S3.Types.PutObjectRequest {
     const rval: S3.Types.PutObjectRequest = {
       Body: content,
