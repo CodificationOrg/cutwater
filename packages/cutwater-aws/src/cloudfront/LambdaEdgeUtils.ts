@@ -54,96 +54,100 @@ const READ_ONLY_HEADERS_VIEWER_RESPONSE: string[] = [
   'Via'
 ].map(header => header.toLowerCase());
 
-const stripHeaders: Function = (headers: CloudFrontHeaders, headerList: string[]): CloudFrontHeaders => {
-  const rval: CloudFrontHeaders = {};
-  const fullHeaderList: string[] = [];
-  fullHeaderList.push(...headerList, ...BLACK_LISTED_HEADERS);
-  Object.keys(headers)
-    .filter(headerName => fullHeaderList.indexOf(headerName) === -1)
-    .forEach(headerName => {
-      rval[headerName] = headers[headerName];
+export class LambdaEdgeUtils {
+  public static stripHeaders(headers: CloudFrontHeaders, headerList: string[]): CloudFrontHeaders {
+    const rval: CloudFrontHeaders = {};
+    const fullHeaderList: string[] = [];
+    fullHeaderList.push(...headerList, ...BLACK_LISTED_HEADERS);
+    Object.keys(headers)
+      .filter(headerName => fullHeaderList.indexOf(headerName) === -1)
+      .forEach(headerName => {
+        rval[headerName] = headers[headerName];
+      });
+    return rval;
+  }
+
+  public static stripViewerRequestHeaders(headers: CloudFrontHeaders): CloudFrontHeaders {
+    return LambdaEdgeUtils.stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_REQUEST);
+  }
+
+  public static stripOriginRequestHeaders(headers: CloudFrontHeaders): CloudFrontHeaders {
+    return LambdaEdgeUtils.stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_REQUEST);
+  }
+
+  public static stripViewerResponseHeaders(headers: CloudFrontHeaders): CloudFrontHeaders {
+    return LambdaEdgeUtils.stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_RESPONSE);
+  }
+
+  public static stripOriginResponseHeaders(headers: CloudFrontHeaders): CloudFrontHeaders {
+    return LambdaEdgeUtils.stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_RESPONSE);
+  }
+
+  public static toCloudFrontHeaders(headers: IncomingHttpHeaders): CloudFrontHeaders {
+    const rval: CloudFrontHeaders = {};
+    let value: string | undefined | string[];
+    Object.keys(headers).forEach(headerName => {
+      value = headers[headerName];
+      if (typeof value === 'string') {
+        value = [value];
+      }
+      if (typeof value !== 'undefined') {
+        rval[headerName.toLowerCase()] = value.map(headerValue => ({ key: headerName, value: headerValue }));
+      }
     });
-  return rval;
-};
+    return rval;
+  }
 
-export const stripViewerRequestHeaders: Function = (headers: CloudFrontHeaders): CloudFrontHeaders => {
-  return stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_REQUEST);
-};
-
-export const stripOriginRequestHeaders: Function = (headers: CloudFrontHeaders): CloudFrontHeaders => {
-  return stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_REQUEST);
-};
-
-export const stripViewerResponseHeaders: Function = (headers: CloudFrontHeaders): CloudFrontHeaders => {
-  return stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_RESPONSE);
-};
-
-export const stripOriginResponseHeaders: Function = (headers: CloudFrontHeaders): CloudFrontHeaders => {
-  return stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_RESPONSE);
-};
-
-export const toCloudFrontHeaders: Function = (headers: IncomingHttpHeaders): CloudFrontHeaders => {
-  const rval: CloudFrontHeaders = {};
-  let value: string | undefined | string[];
-  Object.keys(headers).forEach(headerName => {
-    value = headers[headerName];
-    if (typeof value === 'string') {
-      value = [value];
+  public static originResponseToCloudFrontResultResponse(
+    originResponse: IncomingMessage
+  ): Promise<CloudFrontResultResponse> {
+    const rval: CloudFrontResultResponse = {} as CloudFrontResultResponse;
+    rval.status = (originResponse.statusCode ? originResponse.statusCode : 500).toString();
+    rval.statusDescription = originResponse.statusMessage;
+    rval.headers = LambdaEdgeUtils.stripOriginRequestHeaders(
+      LambdaEdgeUtils.toCloudFrontHeaders(originResponse.headers)
+    );
+    if (HttpUtils.isResponseOk(originResponse)) {
+      return new Promise((resolve, reject) => {
+        HttpUtils.toBodyText(originResponse)
+          .then(bodyText => {
+            rval.bodyEncoding = 'text';
+            rval.body = bodyText;
+            resolve(rval);
+          })
+          .catch(reason => reject(reason));
+      });
+    } else {
+      return Promise.resolve(rval);
     }
-    if (typeof value !== 'undefined') {
-      rval[headerName.toLowerCase()] = value.map(headerValue => ({ key: headerName, value: headerValue }));
+  }
+
+  public static toCloudFrontCustomOrigin(request: CloudFrontRequest): CloudFrontCustomOrigin | undefined {
+    if (request && request.origin && request.origin.custom) {
+      return request.origin.custom;
     }
-  });
-  return rval;
-};
-
-export const originResponseToCloudFrontResultResponse: Function = (
-  originResponse: IncomingMessage
-): Promise<CloudFrontResultResponse> => {
-  const rval: CloudFrontResultResponse = {} as CloudFrontResultResponse;
-  rval.status = (originResponse.statusCode ? originResponse.statusCode : 500).toString();
-  rval.statusDescription = originResponse.statusMessage;
-  rval.headers = stripOriginRequestHeaders(toCloudFrontHeaders(originResponse.headers));
-  if (HttpUtils.isResponseOk(originResponse)) {
-    return new Promise((resolve, reject) => {
-      HttpUtils.toBodyText(originResponse)
-        .then(bodyText => {
-          rval.bodyEncoding = 'text';
-          rval.body = bodyText;
-          resolve(rval);
-        })
-        .catch(reason => reject(reason));
-    });
-  } else {
-    return Promise.resolve(rval);
+    return undefined;
   }
-};
 
-export const toCloudFrontCustomOrigin: Function = (request: CloudFrontRequest): CloudFrontCustomOrigin | undefined => {
-  if (request && request.origin && request.origin.custom) {
-    return request.origin.custom;
+  public static isCustomOriginRequestEvent(event: CloudFrontRequestEvent): boolean {
+    const { config, request } = event.Records[0].cf;
+    return config.eventType === 'origin-request' && LambdaEdgeUtils.toCloudFrontCustomOrigin(request) ? true : false;
   }
-  return undefined;
-};
 
-export const isCustomOriginRequestEvent: Function = (event: CloudFrontRequestEvent): boolean => {
-  const { config, request } = event.Records[0].cf;
-  return config.eventType === 'origin-request' && toCloudFrontCustomOrigin(request) ? true : false;
-};
-
-export const isCustomOriginResponseEvent: Function = (event: CloudFrontResponseEvent): boolean => {
-  const { config } = event.Records[0].cf;
-  return config.eventType === 'origin-response';
-};
-
-export const toIncomingHttpHeaders: Function = (headers?: CloudFrontHeaders): IncomingHttpHeaders => {
-  const rval: IncomingHttpHeaders = {};
-  if (headers) {
-    Object.keys(headers).forEach(name => {
-      // tslint:disable-next-line:typedef
-      const header = headers[name];
-      rval[header[0].key] = header.length > 1 ? header.map(obj => obj.value) : header[0].value;
-    });
+  public static isCustomOriginResponseEvent(event: CloudFrontResponseEvent): boolean {
+    const { config } = event.Records[0].cf;
+    return config.eventType === 'origin-response';
   }
-  return rval;
-};
+
+  public static toIncomingHttpHeaders(headers?: CloudFrontHeaders): IncomingHttpHeaders {
+    const rval: IncomingHttpHeaders = {};
+    if (headers) {
+      Object.keys(headers).forEach(name => {
+        // tslint:disable-next-line:typedef
+        const header = headers[name];
+        rval[header[0].key] = header.length > 1 ? header.map(obj => obj.value) : header[0].value;
+      });
+    }
+    return rval;
+  }
+}
