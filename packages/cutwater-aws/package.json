@@ -10,7 +10,7 @@
   },
   "license": "Apache-2.0",
   "private": false,
-  "main": "dist/cutwater-aws.min.js",
+  "main": "lib/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
