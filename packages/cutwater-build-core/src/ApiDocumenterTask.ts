@@ -8,7 +8,7 @@ export interface ApiDocumenterConfig {
   outputFolder: string;
 }
 
-export class ApiDocumenterTaskextends extends GulpTask<ApiDocumenterConfig> {
+export class ApiDocumenterTask extends GulpTask<ApiDocumenterConfig> {
   constructor() {
     super('api-documenter', {
       format: 'markdown',
