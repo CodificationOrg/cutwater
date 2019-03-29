@@ -1,7 +1,7 @@
 {
-  "name": "@codification/cutwater-core",
+  "name": "@codification/cutwater-build-core",
   "version": "0.4.2",
-  "description": "A library providing the basic utility classes for both the browser and node environments.",
+  "description": "A library providing basic build tasks.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
   "main": "lib/index.js",
@@ -9,21 +9,21 @@
   "scripts": {
     "clean": "gulp clean",
     "test": "gulp test --clean",
-    "build": "gulp --production --clean",
-    "docs": "api-documenter markdown -i ./temp -o ../../docs/cutwater-core"
+    "build": "gulp test --clean"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/CodificationOrg/cutwater.git",
-    "directory": "packages/cutwater-core"
+    "directory": "packages/cutwater-build-core"
   },
   "keywords": [
     "common",
     "cutwater",
     "utilities",
     "support",
-    "logging",
-    "md5",
+    "build",
+    "gulp",
+    "task",
     "codification"
   ],
   "author": {
@@ -33,15 +33,13 @@
   "license": "Apache-2.0",
   "private": false,
   "dependencies": {
-    "date-fns": "^1.29.0"
-  },
-  "optionalDependencies": {
-    "rxjs": "^6.4.0"
-  },
-  "jest": {
-    "testURL": "http://localhost"
+    "@microsoft/api-documenter": "^7.0.24",
+    "@microsoft/gulp-core-build": "^3.9.23"
   },
   "devDependencies": {
     "@microsoft/rush-stack-compiler-3.2": "^0.2.19"
+  },
+  "jest": {
+    "testURL": "http://localhost"
   }
 }
