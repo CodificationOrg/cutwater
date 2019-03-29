@@ -2,8 +2,12 @@
   "name": "root",
   "private": true,
   "workspaces": {
-    "packages": ["packages/*"],
-    "nohoist": ["**/@microsoft/rush-stack-compiler-3.2"]
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/@microsoft/rush-stack-compiler-3.2"
+    ]
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
