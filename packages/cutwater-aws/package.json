@@ -44,6 +44,7 @@
     "rxjs": "^6.4.0"
   },
   "devDependencies": {
+    "@codification/cutwater-build-core": "0.4.2",
     "@microsoft/rush-stack-compiler-3.2": "^0.2.16"
   },
   "jest": {

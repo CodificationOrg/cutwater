@@ -1,6 +1,7 @@
 'use strict';
 
-const build = require('@microsoft/node-library-build');
+const build = require('@microsoft/web-library-build');
+const apiDoc = require('@codification/cutwater-build-core');
 const path = require('path');
 
 build.tscCmd = 'tsc-commonjs';
@@ -11,7 +12,7 @@ tscAmdTask.cleanMatch = [path.join(__dirname, 'lib-amd')];
 tscAmdTask.setConfig({
     customArgs: [
         '--outDir', './lib-amd',
-        '--module', 'amd'
+        '--module', 'amd',
     ]
 });
 
@@ -21,17 +22,20 @@ tscEsnextTask.cleanMatch = [path.join(__dirname, 'lib-es6')];
 tscEsnextTask.setConfig({
     customArgs: [
         '--outDir', './lib-es6',
-        '--module', 'esnext'
+        '--module', 'esnext',
     ]
 });
 
+const buildTasks = build.task('build', build.parallel(
+    build.defaultTasks,
+    tscAmdTask,
+    tscEsnextTask
+));
+const apiDocTask = new apiDoc.ApiDocumenterTask();
+
 build.defaultTasks = build.task(
     'default',
-    build.parallel(
-        build.defaultTasks,
-        tscAmdTask,
-        tscEsnextTask
-    )
+    build.serial(buildTasks, apiDocTask)
 );
 
 build.setConfig({

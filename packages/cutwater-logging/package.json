@@ -31,9 +31,10 @@
   "scripts": {
     "clean": "gulp clean",
     "test": "gulp test --clean",
-    "build": "gulp test --clean"
+    "build": "gulp --production --clean"
   },
   "devDependencies": {
+    "@codification/cutwater-build-core": "0.4.2",
     "@microsoft/rush-stack-compiler-3.2": "^0.2.19"
   },
   "dependencies": {
