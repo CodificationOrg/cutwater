@@ -56,7 +56,6 @@ export interface OriginRequestConfig {
 
 // @beta (undocumented)
 export class S3Bucket {
-    // (undocumented)
     constructor(bucketName: string, client?: S3);
     // (undocumented)
     exists(fileName: string): Observable<boolean>;
