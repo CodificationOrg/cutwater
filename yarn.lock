@@ -1025,15 +1025,7 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.8.tgz#92509422653f10e9c0ac18d87e0610b39f9821c7"
   integrity sha512-8KmlRxwbKZfjUHFIt3q8TF5S2B+/E5BaAoo/3mgc5h6FJzqxXkCK/VMetO+IRDtwtU6HUvovHMBn+XRj7SV9Qg==
 
-"@types/orchestrator@*":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@types/orchestrator/-/orchestrator-0.3.2.tgz#cd15c6cea978a32b98e5054239cbcc78e55671f1"
-  integrity sha512-cKB4yTX0wGaRCSkdHDX2fkGQbMAA8UOshC2U7DQky1CE5o+5q2iQQ8VkbPbE/88uaTtsusvBPMcCX7dgmjxBhQ==
-  dependencies:
-    "@types/node" "*"
-    "@types/q" "*"
-
-"@types/orchestrator@0.0.30":
+"@types/orchestrator@*", "@types/orchestrator@0.0.30":
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/orchestrator/-/orchestrator-0.0.30.tgz#dcdda8d647b568b7b1e34178cb1f0b44ac9a98e5"
   integrity sha1-3N2o1ke1aLex40F4yx8LRKyamOU=

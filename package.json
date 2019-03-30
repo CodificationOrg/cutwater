@@ -21,5 +21,8 @@
   },
   "devDependencies": {
     "lerna": "3.13.1"
+  },
+  "resolutions": {
+    "**/@types/orchestrator": "0.0.30"
   }
 }
