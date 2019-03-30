@@ -1,6 +1,9 @@
 import { ApiDocumenterCommandLine } from '@microsoft/api-documenter/lib/cli/ApiDocumenterCommandLine';
 import { GulpTask } from '@microsoft/gulp-core-build';
 
+/**
+ * @beta
+ */
 // tslint:disable-next-line: interface-name
 export interface ApiDocumenterConfig {
   format: 'markdown' | 'yaml';
@@ -8,6 +11,9 @@ export interface ApiDocumenterConfig {
   outputFolder: string;
 }
 
+/**
+ * @beta
+ */
 export class ApiDocumenterTask extends GulpTask<ApiDocumenterConfig> {
   constructor() {
     super('api-documenter', {
