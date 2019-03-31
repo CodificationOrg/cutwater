@@ -2,6 +2,7 @@
 
 const build = require('@microsoft/web-library-build');
 const apiDoc = require('@codification/cutwater-build-core');
+const packageName = require('./package.json').name;
 const path = require('path');
 
 build.tscCmd = 'tsc-commonjs';
@@ -26,7 +27,7 @@ tscEsnextTask.setConfig({
     ]
 });
 
-const apiDocTask = new apiDoc.ApiDocumenterTask();
+const apiDocTask = new apiDoc.ApiDocumenterTask(packageName);
 
 build.defaultTasks = build.task(
     'default',
