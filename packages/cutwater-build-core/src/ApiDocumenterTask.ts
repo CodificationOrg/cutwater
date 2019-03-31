@@ -11,15 +11,26 @@ export interface ApiDocumenterConfig {
   outputFolder: string;
 }
 
+const toSimplePackageName: Function = (packageName: string): string => {
+  let rval: string = packageName;
+  const sepIndex: number = packageName.indexOf('/');
+  if (sepIndex !== -1 && packageName.indexOf('@') === 0) {
+    rval = packageName.substring(sepIndex + 1);
+  }
+  return rval;
+};
+
 /**
  * @beta
  */
 export class ApiDocumenterTask extends GulpTask<ApiDocumenterConfig> {
-  constructor() {
+  constructor(packageName?: string) {
     super('api-documenter', {
       format: 'markdown',
       inputFolder: './temp',
-      outputFolder: './docs'
+      outputFolder: packageName
+        ? `../../docs/${toSimplePackageName(packageName)}`
+        : './temp/docs'
     });
   }
 

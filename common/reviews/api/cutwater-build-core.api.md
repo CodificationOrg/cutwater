@@ -21,7 +21,7 @@ export interface ApiDocumenterConfig {
 
 // @beta (undocumented)
 export class ApiDocumenterTask extends GulpTask<ApiDocumenterConfig> {
-    constructor();
+    constructor(packageName?: string);
     // (undocumented)
     executeTask(): Promise<void>;
 }
