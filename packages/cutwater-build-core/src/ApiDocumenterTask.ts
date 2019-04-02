@@ -1,6 +1,8 @@
 import { ApiDocumenterCommandLine } from '@microsoft/api-documenter/lib/cli/ApiDocumenterCommandLine';
 import { GulpTask } from '@microsoft/gulp-core-build';
 
+import { ApiDocumenterToDocusaurusTask } from './ApiDocumenterToDocusaurusTask';
+
 /**
  * @beta
  */
@@ -35,12 +37,20 @@ export class ApiDocumenterTask extends GulpTask<ApiDocumenterConfig> {
   }
 
   public executeTask(): Promise<void> {
-    return new ApiDocumenterCommandLine().executeWithoutErrorHandling([
-      this.taskConfig.format,
-      '--input-folder',
-      this.taskConfig.inputFolder,
-      '--output-folder',
+    return new ApiDocumenterCommandLine()
+      .executeWithoutErrorHandling([
+        this.taskConfig.format,
+        '--input-folder',
+        this.taskConfig.inputFolder,
+        '--output-folder',
+        this.taskConfig.outputFolder
+      ])
+      .then(() => this.formatForDocusaurus());
+  }
+
+  private formatForDocusaurus(): Promise<void> {
+    return new ApiDocumenterToDocusaurusTask(
       this.taskConfig.outputFolder
-    ]);
+    ).executeTask();
   }
 }
