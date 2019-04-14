@@ -33,8 +33,9 @@
   "license": "Apache-2.0",
   "private": false,
   "dependencies": {
-    "@microsoft/api-documenter": "^7.0.24",
-    "@microsoft/gulp-core-build": "^3.9.23"
+    "@microsoft/gulp-core-build": "^3.9.23",
+    "typedoc": "^0.14.2",
+    "typedoc-plugin-markdown": "^1.2.0"
   },
   "devDependencies": {
     "@microsoft/rush-stack-compiler-3.2": "^0.2.19"

@@ -42,29 +42,6 @@ export class ApiDocumenterToDocusaurusTask extends GulpTask<
     });
   }
 
-  private processFile(file: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      fs.readFile(file, { encoding: 'utf8' }, (readErr, content) => {
-        if (readErr) {
-          reject(readErr);
-        } else {
-          this.log(`Writing file: ${file}`);
-          fs.writeFile(
-            file,
-            this.parseAndConvert(path.basename(file), content),
-            writeErr => {
-              if (writeErr) {
-                reject(writeErr);
-              } else {
-                resolve();
-              }
-            }
-          );
-        }
-      });
-    });
-  }
-
   private toLines(fileContent: string): string[] {
     return fileContent.split('\n');
   }
@@ -73,35 +50,63 @@ export class ApiDocumenterToDocusaurusTask extends GulpTask<
     return lines.length >= 3 && lines[0].indexOf('[Home](./index) &gt;') === 0;
   }
 
-  private toId(fileName: string): string {
-    return fileName.replace('.md', '').replace(/\.|_/g, '-');
+  private toId(file: string): string {
+    let rval: string = path.basename(file).replace('.md', '');
+    const prefixIndex: number = rval.indexOf('.');
+    if (prefixIndex !== -1) {
+      rval = rval.substr(rval.indexOf('.') + 1).replace(/\.|_/g, '-');
+    }
+    return rval;
+  }
+
+  private processFile(file: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      fs.readFile(file, { encoding: 'utf8' }, (readErr, content) => {
+        if (readErr) {
+          reject(readErr);
+        } else {
+          const lines: string[] = this.toLines(content);
+          if (this.isApiDocumenterFile(lines)) {
+            fs.writeFile(
+              file,
+              this.parseAndConvert(this.toId(file), lines),
+              writeErr => {
+                if (writeErr) {
+                  reject(writeErr);
+                } else {
+                  resolve();
+                }
+              }
+            );
+          } else {
+            resolve();
+          }
+        }
+      });
+    });
   }
 
   private toTitle(headerTitle: string): string {
-    const rval: string = headerTitle.substr(3).replace(/\\_/g, '_');
+    let rval: string = headerTitle.substr(3).replace(/\\_/g, '_');
     const lastWord: string = rval.substr(rval.lastIndexOf(' ') + 1);
-    return rval.replace(
+    rval = rval.replace(
       lastWord,
       `${lastWord.substr(0, 1).toUpperCase()}${lastWord.substr(1)}`
     );
+    return rval;
   }
 
-  private toHeader(fileName: string, heading: string): string[] {
+  private toHeader(id: string, title: string): string[] {
     const rval: string[] = ['---'];
-    rval.push(`id: ${this.toId(fileName)}`);
-    rval.push(`title: ${this.toTitle(heading)}`);
+    rval.push(`id: ${id}`);
+    rval.push(`title: ${title}`);
     rval.push('---');
     return rval;
   }
 
-  private parseAndConvert(fileName: string, fileContent: string): Buffer {
-    let rval: string = fileContent;
-    const lines: string[] = this.toLines(fileContent);
-    if (this.isApiDocumenterFile(lines)) {
-      const header: string[] = this.toHeader(fileName, lines[2]);
-      lines.splice(1, 2);
-      rval = [...header, ...lines].join('\n');
-    }
-    return Buffer.from(rval, 'utf8');
+  private parseAndConvert(id: string, lines: string[]): Buffer {
+    const header: string[] = this.toHeader(id, this.toTitle(lines[2]));
+    lines.splice(1, 2);
+    return Buffer.from([...header, ...lines].join('\n'), 'utf8');
   }
 }
