@@ -1,17 +1,25 @@
-import { TypeDocConfig, TypeDocTask } from './TypeDocTask';
+import { BaseTypeDocTask, TypeDocConfig } from './BaseTypeDocTask';
+import { defaultConfig } from './TypeDocTask';
 
+/**
+ * @beta
+ */
 // tslint:disable-next-line: interface-name
 export interface MarkdownTypeDocConfig extends TypeDocConfig {
-    mdEngine?: 'github' | 'bitbucket' | 'gitbook';
-    mdDocusaurus?: boolean;
-    mdHideSources?: boolean;
-    mdSourceRepo?: string;
+  mdEngine?: 'github' | 'bitbucket' | 'gitbook';
+  mdDocusaurus?: boolean;
+  mdHideSources?: boolean;
+  mdSourceRepo?: string;
 }
 
-export class MarkdownTypeDocTask extends TypeDocTask<MarkdownTypeDocConfig> {
-    constructor(packageName?: string) {
-        super(packageName);
-        this.name = 'markdown-typedoc';
-        this.setConfig({theme: 'markdown'});
-    }
+/**
+ * @beta
+ */
+export class MarkdownTypeDocTask extends BaseTypeDocTask<
+  MarkdownTypeDocConfig
+> {
+  constructor(packageName?: string) {
+    super('markdown-typedoc', defaultConfig(packageName));
+    this.setConfig({ theme: 'markdown' });
+  }
 }

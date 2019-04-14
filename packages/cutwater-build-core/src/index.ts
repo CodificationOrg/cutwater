@@ -1,20 +1,31 @@
-import { ApiDocumenterConfig, ApiDocumenterTask } from './ApiDocumenterTask';
+import { TypeDocConfig } from './BaseTypeDocTask';
 import {
   MarkdownTypeDocConfig,
   MarkdownTypeDocTask
 } from './MarkdownTypeDocTask';
-import { TypeDocConfig, TypeDocTask } from './TypeDocTask';
+import { TypeDocTask } from './TypeDocTask';
 
-export { ApiDocumenterTask, ApiDocumenterConfig };
 export { TypeDocConfig, TypeDocTask };
 export { MarkdownTypeDocTask, MarkdownTypeDocConfig };
 
 /**
  * @beta
  */
-export const typeDoc: TypeDocTask<TypeDocConfig> = new TypeDocTask();
+// tslint:disable-next-line: typedef
+export const typeDoc = (packageName?: string): TypeDocTask =>
+  new TypeDocTask(packageName);
 
 /**
  * @beta
  */
-export const mdTypeDoc: MarkdownTypeDocTask = new MarkdownTypeDocTask();
+// tslint:disable-next-line: typedef
+export const mdTypeDoc = (
+  packageName?: string,
+  docusaurus: boolean = false
+): MarkdownTypeDocTask => {
+  const rval: MarkdownTypeDocTask = new MarkdownTypeDocTask(packageName);
+  if (docusaurus) {
+    rval.setConfig({ mdDocusaurus: true });
+  }
+  return rval;
+};

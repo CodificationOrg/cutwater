@@ -7,23 +7,87 @@
 import { GulpTask } from '@microsoft/gulp-core-build';
 
 // @beta (undocumented)
-export const apiDocumenter: ApiDocumenterTask;
+export interface MarkdownTypeDocConfig extends TypeDocConfig {
+    // (undocumented)
+    mdDocusaurus?: boolean;
+    // (undocumented)
+    mdEngine?: 'github' | 'bitbucket' | 'gitbook';
+    // (undocumented)
+    mdHideSources?: boolean;
+    // (undocumented)
+    mdSourceRepo?: string;
+}
 
+// Warning: (ae-forgotten-export) The symbol "BaseTypeDocTask" needs to be exported by the entry point index.d.ts
+// 
 // @beta (undocumented)
-export interface ApiDocumenterConfig {
-    // (undocumented)
-    format: 'markdown' | 'yaml';
-    // (undocumented)
-    inputFolder: string;
-    // (undocumented)
-    outputFolder: string;
+export class MarkdownTypeDocTask extends BaseTypeDocTask<MarkdownTypeDocConfig> {
+    constructor(packageName?: string);
 }
 
 // @beta (undocumented)
-export class ApiDocumenterTask extends GulpTask<ApiDocumenterConfig> {
-    constructor(packageName?: string);
+export const mdTypeDoc: (packageName?: string | undefined, docusaurus?: boolean) => MarkdownTypeDocTask;
+
+// @beta (undocumented)
+export const typeDoc: (packageName?: string | undefined) => TypeDocTask;
+
+// @beta (undocumented)
+export interface TypeDocConfig {
     // (undocumented)
-    executeTask(): Promise<void>;
+    entryPoint?: string;
+    // (undocumented)
+    exclude?: string;
+    // (undocumented)
+    excludeNotExported?: boolean;
+    // (undocumented)
+    excludePrivate?: boolean;
+    // (undocumented)
+    excludeProtected?: boolean;
+    // (undocumented)
+    externalPattern?: string;
+    // (undocumented)
+    gaId?: string;
+    // (undocumented)
+    gitRevision?: string;
+    // (undocumented)
+    hideGenerator?: boolean;
+    // (undocumented)
+    ignoreCompilerErrors?: boolean;
+    // (undocumented)
+    includeDeclarations?: boolean;
+    // (undocumented)
+    includes?: string;
+    // (undocumented)
+    json?: string;
+    // (undocumented)
+    media?: string;
+    // (undocumented)
+    mode?: 'file' | 'modules';
+    // (undocumented)
+    module?: 'commonjs' | 'amd' | 'system' | 'umd';
+    // (undocumented)
+    name?: string;
+    // (undocumented)
+    options?: string;
+    // (undocumented)
+    out?: string;
+    // (undocumented)
+    plugin?: string;
+    // (undocumented)
+    readme?: string;
+    // (undocumented)
+    src: string;
+    // (undocumented)
+    target?: 'ES3' | 'ES5' | 'ES6';
+    // (undocumented)
+    theme?: string;
+    // (undocumented)
+    tsconfig?: string;
+}
+
+// @beta (undocumented)
+export class TypeDocTask extends BaseTypeDocTask<TypeDocConfig> {
+    constructor(packageName?: string);
 }
 
 
