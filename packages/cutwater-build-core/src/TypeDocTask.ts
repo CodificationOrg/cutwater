@@ -13,14 +13,15 @@ const toSimplePackageName: Function = (packageName: string): string => {
 export const defaultConfig = (packageName?: string): Partial<TypeDocConfig> => {
   return {
     out: packageName
-      ? `../../docs/${toSimplePackageName(packageName)}`
+      ? `../../docs/api/${toSimplePackageName(packageName)}`
       : './temp/docs',
     mode: 'file',
     readme: './README.md',
     includeDeclarations: true,
     ignoreCompilerErrors: false,
     exclude: '**/+(*test*|node_modules)/**',
-    excludePrivate: true
+    excludePrivate: true,
+    excludeNotExported: true
   };
 };
 
