@@ -63,6 +63,9 @@ dist
 temp
 *.scss.ts
 *.sass.ts
+website/build
+website/i18n
+docs/api
 
 # Rush files
 common/temp/**

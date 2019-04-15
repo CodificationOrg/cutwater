@@ -1,10 +1,11 @@
 {
   "docs": {
-    "Docusaurus": ["doc1"],
-    "First Category": ["doc2"],
-    "Second Category": ["doc3"]
-  },
-  "docs-other": {
-    "First Category": ["doc4", "doc5"]
+    "Introduction": ["getting-started"],
+    "API Reference": [
+      "api/cutwater-core/api-readme",
+      "api/cutwater-node-core/api-readme",
+      "api/cutwater-logging/api-readme",
+      "api/cutwater-aws/api-readme"
+    ]
   }
 }

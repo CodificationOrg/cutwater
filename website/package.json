@@ -3,7 +3,7 @@
   "version": "0.4.2",
   "private": true,
   "scripts": {
-    "examples": "docusaurus-examples",
+    "clean": "rimraf ./build",
     "start": "docusaurus-start",
     "build": "docusaurus-build",
     "publish-gh-pages": "docusaurus-publish",
@@ -12,6 +12,7 @@
     "rename-version": "docusaurus-rename-version"
   },
   "devDependencies": {
-    "docusaurus": "^1.8.0"
+    "docusaurus": "^1.8.0",
+    "rimraf": "^2.6.3"
   }
 }
