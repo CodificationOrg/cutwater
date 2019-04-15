@@ -1,14 +1,13 @@
 'use strict';
 
 const build = require('@microsoft/node-library-build');
-const apiDoc = require('@codification/cutwater-build-core');
-
-const apiDocTask = new apiDoc.ApiDocumenterTask();
+const docs = require('@codification/cutwater-build-core');
+const packageName = require('./package.json').name;
 
 build.defaultTasks = build.task(
     'default',
     build.serial(
-        build.defaultTasks, apiDocTask)
+        build.defaultTasks, docs.mdTypeDoc(packageName,true))
 );
 
 build.initialize(require('gulp'));

@@ -1,7 +1,8 @@
 'use strict';
 
 const build = require('@microsoft/web-library-build');
-const apiDoc = require('@codification/cutwater-build-core');
+const docs = require('@codification/cutwater-build-core');
+const packageName = require('./package.json').name;
 const path = require('path');
 
 build.tscCmd = 'tsc-commonjs';
@@ -31,11 +32,10 @@ const buildTasks = build.task('build', build.parallel(
     tscAmdTask,
     tscEsnextTask
 ));
-const apiDocTask = new apiDoc.ApiDocumenterTask();
 
 build.defaultTasks = build.task(
     'default',
-    build.serial(buildTasks, apiDocTask)
+    build.serial(buildTasks, docs.mdTypeDoc(packageName,true))
 );
 
 build.setConfig({
