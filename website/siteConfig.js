@@ -25,7 +25,7 @@ const siteConfig = {
   headerLinks: [
     {doc: 'getting-started', label: 'Docs'},
     {page: 'help', label: 'Help'},
-    {blog: true, label: 'Blog'},
+    //{blog: true, label: 'Blog'},
     {search: true},
   ],
 

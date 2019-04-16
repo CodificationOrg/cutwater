@@ -11,21 +11,17 @@ export { MarkdownTypeDocTask, MarkdownTypeDocConfig };
 /**
  * @beta
  */
-// tslint:disable-next-line: typedef
-export const typeDoc = (packageName?: string): TypeDocTask =>
+export const typeDoc: Function = (packageName?: string): TypeDocTask =>
   new TypeDocTask(packageName);
 
 /**
  * @beta
  */
-// tslint:disable-next-line: typedef
-export const mdTypeDoc = (
+export const mdTypeDoc: Function = (
   packageName?: string,
   docusaurus: boolean = false
 ): MarkdownTypeDocTask => {
   const rval: MarkdownTypeDocTask = new MarkdownTypeDocTask(packageName);
-  if (docusaurus) {
-    rval.setConfig({ mdDocusaurus: true });
-  }
+  rval.setConfig({ mdDocusaurus: docusaurus });
   return rval;
 };
