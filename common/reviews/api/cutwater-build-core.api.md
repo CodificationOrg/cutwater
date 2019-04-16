@@ -26,10 +26,10 @@ export class MarkdownTypeDocTask extends BaseTypeDocTask<MarkdownTypeDocConfig> 
 }
 
 // @beta (undocumented)
-export const mdTypeDoc: (packageName?: string | undefined, docusaurus?: boolean) => MarkdownTypeDocTask;
+export const mdTypeDoc: Function;
 
 // @beta (undocumented)
-export const typeDoc: (packageName?: string | undefined) => TypeDocTask;
+export const typeDoc: Function;
 
 // @beta (undocumented)
 export interface TypeDocConfig {
