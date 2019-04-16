@@ -14,3 +14,11 @@
 
 @media only screen and (min-width: 1500px) {
 }
+
+a {
+    font-weight: bold;
+}
+
+a:hover {
+    color: #f2b632;
+}

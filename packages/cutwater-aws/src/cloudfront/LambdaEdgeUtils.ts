@@ -58,6 +58,18 @@ const READ_ONLY_HEADERS_VIEWER_RESPONSE: string[] = [
  * @beta
  */
 export class LambdaEdgeUtils {
+  // tslint:disable: max-line-length
+  /**
+   * Returns a new `CloudFrontHeaders` object with the specified `headerList` removed.
+   *
+   * This method also removes all headers that are black listed, as found
+   * [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}.
+   *
+   * @param headers - the `CloudFrontHeaders` to be filtered
+   * @param headerList - names of the headers to be removed
+   * @returns a new filtered `CloudFrontHeaders` object
+   */
+  // tslint:enable: max-line-length
   public static stripHeaders(headers: CloudFrontHeaders, headerList: string[]): CloudFrontHeaders {
     const rval: CloudFrontHeaders = {};
     const fullHeaderList: string[] = [];
@@ -70,22 +82,80 @@ export class LambdaEdgeUtils {
     return rval;
   }
 
+  // tslint:disable: max-line-length
+  /**
+   * Returns a new `CloudFrontHeaders` object with the read-only viewer request headers
+   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}) 
+   * removed.
+   *
+   * This method also removes all headers that are black listed, as found 
+   * [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}.
+   *
+   * @param headers - the `CloudFrontHeaders` to be filtered
+   * @returns a new filtered `CloudFrontHeaders` object
+   */
+  // tslint:enable: max-line-length
   public static stripViewerRequestHeaders(headers: CloudFrontHeaders): CloudFrontHeaders {
     return LambdaEdgeUtils.stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_REQUEST);
   }
 
+  // tslint:disable: max-line-length
+  /**
+   * Returns a new `CloudFrontHeaders` object with the read-only origin request headers
+   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}) 
+   * removed.
+   *
+   * This method also removes all headers that are black listed, as found 
+   * [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}.
+   *
+   * @param headers - the `CloudFrontHeaders` to be filtered
+   * @returns a new filtered `CloudFrontHeaders` object
+   */
+  // tslint:enable: max-line-length
   public static stripOriginRequestHeaders(headers: CloudFrontHeaders): CloudFrontHeaders {
     return LambdaEdgeUtils.stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_REQUEST);
   }
 
+  // tslint:disable: max-line-length
+  /**
+   * Returns a new `CloudFrontHeaders` object with the read-only viewer response headers
+   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}) 
+   * removed.
+   *
+   * This method also removes all headers that are black listed, as found 
+   * [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}.
+   *
+   * @param headers - the `CloudFrontHeaders` to be filtered
+   * @returns a new filtered `CloudFrontHeaders` object
+   */
+  // tslint:enable: max-line-length
   public static stripViewerResponseHeaders(headers: CloudFrontHeaders): CloudFrontHeaders {
     return LambdaEdgeUtils.stripHeaders(headers, READ_ONLY_HEADERS_VIEWER_RESPONSE);
   }
 
+  // tslint:disable: max-line-length
+  /**
+   * Returns a new `CloudFrontHeaders` object with the read-only origin response headers
+   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}) 
+   * removed.
+   *
+   * This method also removes all headers that are black listed, as found 
+   * [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}.
+   *
+   * @param headers - the `CloudFrontHeaders` to be filtered
+   * @returns a new filtered `CloudFrontHeaders` object
+   */
+  // tslint:enable: max-line-length
   public static stripOriginResponseHeaders(headers: CloudFrontHeaders): CloudFrontHeaders {
     return LambdaEdgeUtils.stripHeaders(headers, READ_ONLY_HEADERS_ORIGIN_RESPONSE);
   }
 
+  /**
+   * Converts `CloudFrontHeaders` to `IncomingHttpHeaders` provided by node.
+   *
+   * @param headers - the headers from CloudFront to be converted
+   * @returns the converted headers
+   */
   public static toCloudFrontHeaders(headers: IncomingHttpHeaders): CloudFrontHeaders {
     const rval: CloudFrontHeaders = {};
     let value: string | undefined | string[];
@@ -101,6 +171,12 @@ export class LambdaEdgeUtils {
     return rval;
   }
 
+  /**
+   * Converts an origin's response (`IncomingMessage`) to a response that can be returned to a CloudFront viewer.
+   *
+   * @param originResponse - the response recieved from the origin
+   * @returns a response to be returned to a CloudFront viewer
+   */
   public static originResponseToCloudFrontResultResponse(
     originResponse: IncomingMessage
   ): Promise<CloudFrontResultResponse> {
