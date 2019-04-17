@@ -1,9 +1,6 @@
-# Cutwater:Core
+# @codification/cutwater-core
 
-[![CircleCI](https://img.shields.io/circleci/project/github/CodificationOrg/cutwater-core.svg)](https://circleci.com/gh/CodificationOrg/cutwater-core)
-[![NPM](https://img.shields.io/npm/v/cutwater-core.svg)](https://www.npmjs.com/package/cutwater-core)
-
-A library providing the functionality that we always seem to need in every Typescript/Javascript project.
+Provides utilities for easily handling configuration, environment detection, timezone adjustments and string validation suitable for use in the browser or server-side.
 
 ## Installation
 
@@ -22,14 +19,14 @@ yarn add @codification/cutwater-core
 ## Documentation
 
 * [Release Notes](https://codificationorg.github.io/cutwater-core/CHANGELOG.html)
-* [API Documentation](https://codificationorg.github.io/cutwater-core/index.html)
+* [API Documentation](https://cutwater.codification.org/docs/api/cutwater-core/api-readme)
 
 ## Quick Start Guide
 
 ### Configuration
 
 ```typescript
-import { Config } from 'cutwater-core';
+import { Config } from '@codification/cutwater-core';
 
 const url = Config.get('API_URL', 'https://api.example.com');
 // Returns 'https://api.example.com' if there is no value for API_URL
@@ -45,7 +42,7 @@ Config.put('BACKUP_API_URL', 'https://api-backup.example.com');
 ### Environment
 
 ```typescript
-import { Env } from 'cutwater-core';
+import { Env } from '@codification/cutwater-core';
 
 if (Env.isProd()) {
   console.log('Yeah, we made it to production!');
@@ -60,15 +57,15 @@ if (Env.isDev()) {
 ### String Utility Functions
 
 ```typescript
-import { contains, startWith, endsWith } from 'cutwater-core';
+import { StringUtils } from '@codification/cutwater-core';
 
-if (contains('Check This', 'This')) {
+if (StringUtils/contains('Check This', 'This')) {
   console.log('Yes, it contains it.');
 }
-if (startsWith('x-forward', 'x-')) {
+if (StringUtils.startsWith('x-forward', 'x-')) {
   console.log('A custom header.');
 }
-if (endsWith('x-Forward-Cookies', 'cookies', true)) {
+if (StringUtils.endsWith('x-Forward-Cookies', 'cookies', true)) {
   console.log('Case insensitivity FTW.');
 }
 ```
@@ -78,7 +75,7 @@ if (endsWith('x-Forward-Cookies', 'cookies', true)) {
 ### Time
 
 ```typescript
-import { TimeUnit, TZUtils } from 'cutwater-core';
+import { TimeUnit, TZUtils } from '@codification/cutwater-core';
 
 const oneDayInSeconds = TimeUnit.days(1).toSeconds();
 const fiveMinutesInMillis = TimeUnit.minutes(5).toMillis();
@@ -92,43 +89,4 @@ console.log(TZUtils.timestamp());
 
 const localizedDate = TZUtils.now();
 // localizedDate is the current date/time based on the timezoneOffset, Ecuador in this case.
-```
-
----
-
-### Logging
-
-```typescript
-import { LoggerFactory } from 'cutwater-core';
-
-const LOG = LoggerFactory.getLogger();
-LOG.info('Hey, here is a log message.');
-LOG.debug('Examine this object: %j', someObj);
-```
-
----
-
-### Http
-
-**Note:** The `http` related functions are designed to simplify aspects of working with the [http module in Node.js](https://nodejs.org/api/http.html)
-
-```typescript
-import { isResponseOk, LoggerFactory, mergeHeaders, toBodyText } from 'cutwater-core';
-
-const LOG = LoggerFactory.getLogger();
-const response = magicalHttpRequestFunction();
-if(isResponseOk(response)){
-  toBodyText(response).then(
-    bodyTxt => {
-      LOG.info('The body text was: %s', bodyTxt);
-    }
-  ).catch(
-    err => {
-      LOG.error('Oops! Problem reading the body: %j',err);
-    }
-  )
-
-  const nextRequestHeaders = mergeHeaders(response.headers,{'x-custom-header':'Custom Value'},true);
-  // Will add the 'x-custom-header' to the received headers, or overwrite if it already exists.
-}
 ```
