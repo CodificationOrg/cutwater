@@ -2,7 +2,7 @@
 
 **This is a monorepo containing a collection of tools and libraries used in Codification's projects.**
 
-Please visit the full documentation site at: https://cutwater.codification.org
+Please visit the full documentation site at: <https://cutwater.codification.org>
 
 ## Projects
 

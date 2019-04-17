@@ -11,22 +11,25 @@
 // List of projects/orgs using your project for the users page.
 const users = [];
 
+const repoUrl = 'https://github.com/CodificationOrg/cutwater';
+
 const siteConfig = {
-  title: 'Cutwater', 
+  title: 'Cutwater',
   tagline: 'Tools to cut through the initial hassles of development.',
-  url: 'https://cutwater.codification.org', 
+  url: 'https://cutwater.codification.org',
   cname: 'cutwater.codification.org',
-  baseUrl: '/', 
+  baseUrl: '/',
 
   // Used for publishing and more
   projectName: 'cutwater',
   organizationName: 'CodificationOrg',
 
   headerLinks: [
-    {doc: 'getting-started', label: 'Docs'},
-    {page: 'help', label: 'Help'},
+    { doc: 'getting-started', label: 'Docs' },
+    { page: 'help', label: 'Help' },
     //{blog: true, label: 'Blog'},
-    {search: true},
+    { search: true },
+    { href: repoUrl, label: 'GitHub' }
   ],
 
   //users,
@@ -39,14 +42,14 @@ const siteConfig = {
   /* Colors for website */
   colors: {
     primaryColor: '#252839',
-    secondaryColor: '#f2b632',
+    secondaryColor: '#f2b632'
   },
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
   copyright: `Copyright © ${new Date().getFullYear()} Codification.org`,
 
   highlight: {
-    theme: 'default',
+    theme: 'default'
   },
 
   // Add custom scripts here that would be placed in <script> tags.
@@ -64,7 +67,7 @@ const siteConfig = {
   // Show documentation's last contributor's name.
   // enableUpdateBy: true,
 
-  enableUpdateTime: true,
+  enableUpdateTime: true
 
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...

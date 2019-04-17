@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "clean": "rimraf ./build",
-    "start": "docusaurus-start",
-    "build": "docusaurus-build",
-    "publish-gh-pages": "set \"USE_SSH=true\" && docusaurus-publish",
-    "write-translations": "docusaurus-write-translations",
-    "version": "docusaurus-version",
-    "rename-version": "docusaurus-rename-version"
+    "start": "node -r ../node_modules/dotenv/config ../node_modules/docusaurus/lib/start-server",
+    "build": "node -r ../node_modules/dotenv/config ../node_modules/docusaurus/lib/build-files",
+    "publish-gh-pages": "node -r ../node_modules/dotenv/config ../node_modules/docusaurus/lib/publish-gh-pages",
+    "write-translations": "node -r ../node_modules/dotenv/config ../node_modules/docusaurus/lib/write-translations",
+    "version": "node -r ../node_modules/dotenv/config ../node_modules/docusaurus/lib/version",
+    "rename-version": "node -r ../node_modules/dotenv/config ../node_modules/docusaurus/lib/rename-version"
   }
 }
