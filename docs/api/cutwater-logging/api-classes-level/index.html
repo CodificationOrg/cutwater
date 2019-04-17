@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Level · Cutwater</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;p&gt;&lt;a href=&quot;/docs/api/cutwater-logging/api-readme&quot;&gt;@codification/cutwater-logging&lt;/a&gt; &amp;gt; &lt;a href=&quot;/docs/api/cutwater-logging/api-classes-level&quot;&gt;Level&lt;/a&gt;&lt;/p&gt;
+"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Level · Cutwater"/><meta property="og:type" content="website"/><meta property="og:url" content="https://cutwater.codification.org/"/><meta property="og:description" content="&lt;p&gt;&lt;a href=&quot;/docs/api/cutwater-logging/api-readme&quot;&gt;@codification/cutwater-logging&lt;/a&gt; &amp;gt; &lt;a href=&quot;/docs/api/cutwater-logging/api-classes-level&quot;&gt;Level&lt;/a&gt;&lt;/p&gt;
+"/><meta property="og:image" content="https://cutwater.codification.org/img/docusaurus.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://cutwater.codification.org/img/docusaurus.png"/><link rel="shortcut icon" href="/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/logo.svg" alt="Cutwater"/><h2 class="headerTitleWithLogo">Cutwater</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/getting-started" target="_self">Docs</a></li><li class=""><a href="/help" target="_self">Help</a></li><li class=""><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Level</h1></header><article><div><span><p><a href="/docs/api/cutwater-logging/api-readme">@codification/cutwater-logging</a> &gt; <a href="/docs/api/cutwater-logging/api-classes-level">Level</a></p>
+<h2><a class="anchor" aria-hidden="true" id="class"></a><a href="#class" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Class</h2>
+<p>Defines a set of standard logging levels that can be used to control logging output. The logging Level objects are ordered and are specified by ordered integers. Enabling logging at a given level also enables logging at all higher levels.</p>
+<p><em><strong>beta</strong></em>:</p>
+<h2><a class="anchor" aria-hidden="true" id="hierarchy"></a><a href="#hierarchy" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Hierarchy</h2>
+<p><strong>Level</strong></p>
+<h3><a class="anchor" aria-hidden="true" id="properties"></a><a href="#properties" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Properties</h3>
+<ul>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#all">ALL</a></li>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#debug">DEBUG</a></li>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#error">ERROR</a></li>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#fatal">FATAL</a></li>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#info">INFO</a></li>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#levels">LEVELS</a></li>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#off">OFF</a></li>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#trace">TRACE</a></li>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#warn">WARN</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="accessors"></a><a href="#accessors" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Accessors</h3>
+<ul>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#name">name</a></li>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#priority">priority</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="methods"></a><a href="#methods" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Methods</h3>
+<ul>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#isgreaterorequal">isGreaterOrEqual</a></li>
+<li><a href="/docs/api/cutwater-logging/api-classes-level#tolevel">toLevel</a></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="properties-1"></a><a href="#properties-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Properties</h2>
+<p><a id="all"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-all"></a><a href="#static-all" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> ALL</h3>
+<p><strong>● ALL</strong>: <em><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></em> =  new Level('ALL', 7)</p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L48">Level.ts:48</a></em></p>
+<p>Level indicating that ALL messages will be output.</p>
+<p><em><strong>readonly</strong></em>:</p>
+<hr>
+<p><a id="debug"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-debug"></a><a href="#static-debug" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> DEBUG</h3>
+<p><strong>● DEBUG</strong>: <em><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></em> =  new Level('DEBUG', 5)</p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L38">Level.ts:38</a></em></p>
+<p>Level indicating only debug messages or worse will be output.</p>
+<p><em><strong>readonly</strong></em>:</p>
+<hr>
+<p><a id="error"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-error"></a><a href="#static-error" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> ERROR</h3>
+<p><strong>● ERROR</strong>: <em><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></em> =  new Level('ERROR', 2)</p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L23">Level.ts:23</a></em></p>
+<p>Level indicating only error messages or worse will be output.</p>
+<p><em><strong>readonly</strong></em>:</p>
+<hr>
+<p><a id="fatal"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-fatal"></a><a href="#static-fatal" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> FATAL</h3>
+<p><strong>● FATAL</strong>: <em><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></em> =  new Level('FATAL', 1)</p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L18">Level.ts:18</a></em></p>
+<p>Level indicating only fatal messages will be output.</p>
+<p><em><strong>readonly</strong></em>:</p>
+<hr>
+<p><a id="info"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-info"></a><a href="#static-info" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> INFO</h3>
+<p><strong>● INFO</strong>: <em><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></em> =  new Level('INFO', 4)</p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L33">Level.ts:33</a></em></p>
+<p>Level indicating only info messages or worse will be output.</p>
+<p><em><strong>readonly</strong></em>:</p>
+<hr>
+<p><a id="levels"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-levels"></a><a href="#static-levels" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> LEVELS</h3>
+<p><strong>● LEVELS</strong>: <em><a href="/docs/api/cutwater-logging/api-classes-level">Level</a>[]</em> =  [
+Level.FATAL,
+Level.ERROR,
+Level.WARN,
+Level.INFO,
+Level.DEBUG,
+Level.TRACE
+]</p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L54">Level.ts:54</a></em></p>
+<p>An array containing all <a href="/docs/api/cutwater-logging/api-classes-level">Level</a>s.</p>
+<p><em><strong>readonly</strong></em>:</p>
+<hr>
+<p><a id="off"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-off"></a><a href="#static-off" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> OFF</h3>
+<p><strong>● OFF</strong>: <em><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></em> =  new Level('OFF', 0)</p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L13">Level.ts:13</a></em></p>
+<p>Level inidicating all logging is disabled.</p>
+<p><em><strong>readonly</strong></em>:</p>
+<hr>
+<p><a id="trace"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-trace"></a><a href="#static-trace" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> TRACE</h3>
+<p><strong>● TRACE</strong>: <em><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></em> =  new Level('TRACE', 6)</p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L43">Level.ts:43</a></em></p>
+<p>Level indicating trace messages or worse will be output.</p>
+<p><em><strong>readonly</strong></em>:</p>
+<hr>
+<p><a id="warn"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-warn"></a><a href="#static-warn" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> WARN</h3>
+<p><strong>● WARN</strong>: <em><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></em> =  new Level('WARN', 3)</p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L28">Level.ts:28</a></em></p>
+<p>Level indicating only warning messages or worse will be output.</p>
+<p><em><strong>readonly</strong></em>:</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="accessors-1"></a><a href="#accessors-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Accessors</h2>
+<p><a id="name"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="name"></a><a href="#name" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>name</h3>
+<p><strong>get name</strong>(): <code>string</code></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L117">Level.ts:117</a></em></p>
+<p>Human readable name of this <a href="/docs/api/cutwater-logging/api-classes-level">Level</a>.</p>
+<p><em><strong>readonly</strong></em>:</p>
+<p><strong>Returns:</strong> <code>string</code></p>
+<hr>
+<p><a id="priority"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="priority"></a><a href="#priority" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>priority</h3>
+<p><strong>get priority</strong>(): <code>number</code></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L126">Level.ts:126</a></em></p>
+<p>The numeric priority of this <a href="/docs/api/cutwater-logging/api-classes-level">Level</a>. Higher values indicate a higher level of detail.</p>
+<p><em><strong>readonly</strong></em>:</p>
+<p><strong>Returns:</strong> <code>number</code></p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="methods-1"></a><a href="#methods-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Methods</h2>
+<p><a id="isgreaterorequal"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="isgreaterorequal"></a><a href="#isgreaterorequal" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>isGreaterOrEqual</h3>
+<p>▸ <strong>isGreaterOrEqual</strong>(level: <em><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></em>): <code>boolean</code></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L103">Level.ts:103</a></em></p>
+<p>Returns <code>true</code> if this <a href="/docs/api/cutwater-logging/api-classes-level">Level</a> is greater or equal to the priority of the supplied level.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>level</td><td><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></td><td>the level to be compared</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>boolean</code>
+true if this level is greater than the one supplied</p>
+<hr>
+<p><a id="tolevel"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-tolevel"></a><a href="#static-tolevel" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> toLevel</h3>
+<p>▸ <strong>toLevel</strong>(level: <em><code>string</code> | <code>number</code></em>, defaultLevel?: <em><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></em>): <a href="/docs/api/cutwater-logging/api-classes-level">Level</a></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/0f9f508/packages/cutwater-logging/src/Level.ts#L78">Level.ts:78</a></em></p>
+<p>Returns a <a href="/docs/api/cutwater-logging/api-classes-level">Level</a> object representing the <code>string</code> or <code>number</code> speicified.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Default value</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>level</td><td><code>string</code> \</td><td><code>number</code></td><td>-</td><td>a value corresponding to a Level</td></tr>
+<tr><td><code>Default value</code> defaultLevel</td><td><a href="/docs/api/cutwater-logging/api-classes-level">Level</a></td><td>Level.ERROR</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <a href="/docs/api/cutwater-logging/api-classes-level">Level</a>
+the represented Level, or the defaul if it does not exist</p>
+<hr>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#class">Class</a></li><li><a href="#hierarchy">Hierarchy</a><ul class="toc-headings"><li><a href="#properties">Properties</a></li><li><a href="#accessors">Accessors</a></li><li><a href="#methods">Methods</a></li></ul></li><li><a href="#properties-1">Properties</a><ul class="toc-headings"><li><a href="#static-all">`` ALL</a></li><li><a href="#static-debug">`` DEBUG</a></li><li><a href="#static-error">`` ERROR</a></li><li><a href="#static-fatal">`` FATAL</a></li><li><a href="#static-info">`` INFO</a></li><li><a href="#static-levels">`` LEVELS</a></li><li><a href="#static-off">`` OFF</a></li><li><a href="#static-trace">`` TRACE</a></li><li><a href="#static-warn">`` WARN</a></li></ul></li><li><a href="#accessors-1">Accessors</a><ul class="toc-headings"><li><a href="#name">name</a></li><li><a href="#priority">priority</a></li></ul></li><li><a href="#methods-1">Methods</a><ul class="toc-headings"><li><a href="#isgreaterorequal">isGreaterOrEqual</a></li><li><a href="#static-tolevel">`` toLevel</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/logo.svg" alt="Cutwater" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/getting-started.html">Getting Started</a></div><div><h5>Community</h5><a href="http://stackoverflow.com/questions/tagged/cutwater" target="_blank" rel="noreferrer noopener">Stack Overflow</a></div><div><h5>More</h5><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/CodificationOrg/cutwater" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 Codification.org</section></footer></div></body></html>
