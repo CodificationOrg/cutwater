@@ -28,21 +28,14 @@ export class LambdaEdgeUtils {
     static isCustomOriginRequestEvent(event: CloudFrontRequestEvent): boolean;
     // (undocumented)
     static isCustomOriginResponseEvent(event: CloudFrontResponseEvent): boolean;
-    // (undocumented)
     static originResponseToCloudFrontResultResponse(originResponse: IncomingMessage): Promise<CloudFrontResultResponse>;
-    // (undocumented)
     static stripHeaders(headers: CloudFrontHeaders, headerList: string[]): CloudFrontHeaders;
-    // (undocumented)
     static stripOriginRequestHeaders(headers: CloudFrontHeaders): CloudFrontHeaders;
-    // (undocumented)
     static stripOriginResponseHeaders(headers: CloudFrontHeaders): CloudFrontHeaders;
-    // (undocumented)
     static stripViewerRequestHeaders(headers: CloudFrontHeaders): CloudFrontHeaders;
-    // (undocumented)
     static stripViewerResponseHeaders(headers: CloudFrontHeaders): CloudFrontHeaders;
     // (undocumented)
     static toCloudFrontCustomOrigin(request: CloudFrontRequest): CloudFrontCustomOrigin;
-    // (undocumented)
     static toCloudFrontHeaders(headers: IncomingHttpHeaders): CloudFrontHeaders;
     // (undocumented)
     static toIncomingHttpHeaders(headers?: CloudFrontHeaders): IncomingHttpHeaders;

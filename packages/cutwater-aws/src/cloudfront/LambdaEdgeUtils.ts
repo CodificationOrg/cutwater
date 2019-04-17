@@ -85,10 +85,10 @@ export class LambdaEdgeUtils {
   // tslint:disable: max-line-length
   /**
    * Returns a new `CloudFrontHeaders` object with the read-only viewer request headers
-   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}) 
+   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions})
    * removed.
    *
-   * This method also removes all headers that are black listed, as found 
+   * This method also removes all headers that are black listed, as found
    * [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}.
    *
    * @param headers - the `CloudFrontHeaders` to be filtered
@@ -102,10 +102,10 @@ export class LambdaEdgeUtils {
   // tslint:disable: max-line-length
   /**
    * Returns a new `CloudFrontHeaders` object with the read-only origin request headers
-   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}) 
+   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions})
    * removed.
    *
-   * This method also removes all headers that are black listed, as found 
+   * This method also removes all headers that are black listed, as found
    * [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}.
    *
    * @param headers - the `CloudFrontHeaders` to be filtered
@@ -119,10 +119,10 @@ export class LambdaEdgeUtils {
   // tslint:disable: max-line-length
   /**
    * Returns a new `CloudFrontHeaders` object with the read-only viewer response headers
-   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}) 
+   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions})
    * removed.
    *
-   * This method also removes all headers that are black listed, as found 
+   * This method also removes all headers that are black listed, as found
    * [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}.
    *
    * @param headers - the `CloudFrontHeaders` to be filtered
@@ -136,10 +136,10 @@ export class LambdaEdgeUtils {
   // tslint:disable: max-line-length
   /**
    * Returns a new `CloudFrontHeaders` object with the read-only origin response headers
-   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}) 
+   * (as specified [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions})
    * removed.
    *
-   * This method also removes all headers that are black listed, as found 
+   * This method also removes all headers that are black listed, as found
    * [here]{@link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-header-restrictions}.
    *
    * @param headers - the `CloudFrontHeaders` to be filtered
