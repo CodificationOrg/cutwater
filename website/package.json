@@ -6,7 +6,7 @@
     "clean": "rimraf ./build",
     "start": "docusaurus-start",
     "build": "docusaurus-build",
-    "publish-gh-pages": "set GIT_USER=docusaurus && docusaurus-publish",
+    "publish-gh-pages": "set \"USE_SSH=true\" && docusaurus-publish",
     "write-translations": "docusaurus-write-translations",
     "version": "docusaurus-version",
     "rename-version": "docusaurus-rename-version"
