@@ -1,6 +1,21 @@
-# Cutwater AWS
+# @codification/cutwater-aws
 
-[![CircleCI](https://img.shields.io/circleci/project/github/CodificationOrg/cutwater-aws.svg)](https://circleci.com/gh/CodificationOrg/cutwater-aws)
-[![NPM](https://img.shields.io/npm/v/cutwater-aws.svg)](https://www.npmjs.com/package/cutwater-aws)
+A library of tools for solving common tasks when working with Amazon's [AWS](https://aws.amazon.com) cloud service.
 
-A library providing general functionality for TypeScript based AWS projects.
+## Installation
+
+Via npm:
+
+```bash
+npm install @codification/cutwater-aws
+```
+
+Via yarn:
+
+```bash
+yarn add @codification/cutwater-aws
+```
+
+## Documentation
+
+* [API Documentation](https://cutwater.codification.org/docs/api/cutwater-aws/api-readme)
