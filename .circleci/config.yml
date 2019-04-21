@@ -32,7 +32,7 @@ jobs:
       - save-cache: *save-cache
       - run:
           name: 'Run Tests'
-          command: yarn test
+          command: yarn test-ci
       - store_test_results:
           path: reports/junit
 
