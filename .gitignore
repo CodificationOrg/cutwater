@@ -66,6 +66,7 @@ temp
 website/build
 website/i18n
 docs/api
+reports
 
 # Rush files
 common/temp/**
