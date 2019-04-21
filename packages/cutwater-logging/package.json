@@ -31,7 +31,8 @@
   "scripts": {
     "clean": "gulp clean",
     "test": "gulp test --clean",
-    "build": "gulp --production --clean"
+    "build": "gulp --clean",
+    "build-prod": "gulp --production --clean"
   },
   "devDependencies": {
     "@codification/cutwater-build-core": "0.4.2",

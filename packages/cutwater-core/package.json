@@ -10,8 +10,8 @@
   "scripts": {
     "clean": "gulp clean",
     "test": "gulp test --clean",
-    "build": "gulp --production --clean",
-    "docs": "api-documenter markdown -i ./temp -o ../../docs/cutwater-core"
+    "build": "gulp --clean",
+    "build-prod": "gulp --production --clean"
   },
   "repository": {
     "type": "git",

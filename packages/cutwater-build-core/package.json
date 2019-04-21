@@ -9,7 +9,8 @@
   "scripts": {
     "clean": "gulp clean",
     "test": "gulp test --clean",
-    "build": "gulp test --clean"
+    "build": "gulp --clean",
+    "build-prod": "gulp --production --clean"
   },
   "repository": {
     "type": "git",
