@@ -1,6 +1,11 @@
 {
   "lerna": "3.13.1",
   "npmClient": "yarn",
+  "command": {
+    "version": {
+      "allowBranch": "master"
+    }
+  },
   "packages": [
     "packages/*"
   ],
