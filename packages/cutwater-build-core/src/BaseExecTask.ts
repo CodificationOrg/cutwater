@@ -52,7 +52,7 @@ export abstract class BaseExecTask<T> extends GulpTask<T> {
           rval.push(arg);
         }
       });
-    return rval.length > 0 ? ' ' + rval.join(' ') : '';
+    return rval.length > 0 ? ` ${rval.join(' ')}` : '';
   }
 
   private options(): string {
@@ -68,18 +68,18 @@ export abstract class BaseExecTask<T> extends GulpTask<T> {
           rval.push(element);
         }
       });
-    return rval.length > 0 ? ' ' + rval.join(' ') : '';
+    return rval.length > 0 ? ` ${rval.join(' ')}` : '';
   }
 
   // tslint:disable-next-line: no-any
   private toOption(argName: string, value: any): string {
     let rval: string = `${argName}`;
-    if (value && typeof value === 'string') {
-      rval = `${rval}${this.optsUseEquals ? '=' : ' '}"${value}"`;
-    } else if (value && Array.isArray(value)) {
-      rval = value.map(val => this.toOption(argName, val)).join(' ');
-    } else if (!value) {
+    if (!value) {
       rval = '';
+    } else if (typeof value === 'string') {
+      rval = `${rval}${this.optsUseEquals ? '=' : ' '}"${value}"`;
+    } else if (Array.isArray(value)) {
+      rval = value.map(val => this.toOption(argName, val)).join(' ');
     }
     return rval;
   }
