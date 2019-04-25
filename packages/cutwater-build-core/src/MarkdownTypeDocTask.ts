@@ -19,7 +19,7 @@ export class MarkdownTypeDocTask extends BaseTypeDocTask<
   MarkdownTypeDocConfig
 > {
   constructor(packageName?: string) {
-    super('markdown-typedoc', defaultConfig(packageName));
+    super('cutwater-markdown-typedoc', defaultConfig(packageName));
     this.setConfig({ theme: 'markdown' });
   }
 }

@@ -1,19 +1,11 @@
 import { BaseTypeDocTask, TypeDocConfig } from './BaseTypeDocTask';
-
-const toSimplePackageName: Function = (packageName: string): string => {
-  let rval: string = packageName;
-  const sepIndex: number = packageName.indexOf('/');
-  if (sepIndex !== -1 && packageName.indexOf('@') === 0) {
-    rval = packageName.substring(sepIndex + 1);
-  }
-  return rval;
-};
+import { BuildUtils } from './BuildUtils';
 
 // tslint:disable-next-line: typedef
 export const defaultConfig = (packageName?: string): Partial<TypeDocConfig> => {
   return {
     out: packageName
-      ? `../../docs/api/${toSimplePackageName(packageName)}`
+      ? `../../docs/api/${BuildUtils.toSimplePackageName(packageName)}`
       : './temp/docs',
     mode: 'file',
     readme: './README.md',
@@ -30,6 +22,6 @@ export const defaultConfig = (packageName?: string): Partial<TypeDocConfig> => {
  */
 export class TypeDocTask extends BaseTypeDocTask<TypeDocConfig> {
   constructor(packageName?: string) {
-    super('typedoc', defaultConfig(packageName));
+    super('cutwater-typedoc', defaultConfig(packageName));
   }
 }

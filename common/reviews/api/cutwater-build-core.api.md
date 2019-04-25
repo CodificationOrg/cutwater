@@ -5,6 +5,113 @@
 ```ts
 
 import { GulpTask } from '@microsoft/gulp-core-build';
+import { IExecutable } from '@microsoft/gulp-core-build';
+
+// @beta (undocumented)
+export const ciTasks: Function;
+
+// @beta (undocumented)
+export interface JestConfig {
+    // (undocumented)
+    bail?: number;
+    // (undocumented)
+    cache?: boolean;
+    // (undocumented)
+    changedFilesWithAncestor?: boolean;
+    // (undocumented)
+    changedSince?: boolean;
+    // (undocumented)
+    ci?: boolean;
+    // (undocumented)
+    clearCache?: boolean;
+    // (undocumented)
+    collectCoverageFrom?: string;
+    // (undocumented)
+    colors?: boolean;
+    // (undocumented)
+    config?: string;
+    // (undocumented)
+    coverage?: boolean;
+    // (undocumented)
+    debug?: boolean;
+    // (undocumented)
+    detectOpenHandles?: boolean;
+    // (undocumented)
+    env?: string;
+    // (undocumented)
+    errorOnDeprecated?: boolean;
+    // (undocumented)
+    expand?: boolean;
+    // (undocumented)
+    file?: string;
+    // (undocumented)
+    findRelatedTests?: string;
+    // (undocumented)
+    forceExit?: boolean;
+    // (undocumented)
+    help?: boolean;
+    // (undocumented)
+    init?: boolean;
+    // (undocumented)
+    json?: boolean;
+    // (undocumented)
+    lastCommit?: boolean;
+    // (undocumented)
+    listTests?: boolean;
+    // (undocumented)
+    logHeapUsage?: boolean;
+    // (undocumented)
+    maxConcurrency?: number;
+    // (undocumented)
+    maxWorkers?: number | string;
+    // (undocumented)
+    noStackTrace?: boolean;
+    // (undocumented)
+    notify?: boolean;
+    // (undocumented)
+    onlyChanged?: boolean;
+    // (undocumented)
+    outputFile?: string;
+    // (undocumented)
+    passWithNoTests?: boolean;
+    // (undocumented)
+    projects?: string;
+    // (undocumented)
+    reporters?: string[];
+    // (undocumented)
+    runInBand?: boolean;
+    // (undocumented)
+    runTestsByPath?: boolean;
+    // (undocumented)
+    setupTestFrameworkScriptFile?: string;
+    // (undocumented)
+    showConfig?: boolean;
+    // (undocumented)
+    silent?: boolean;
+    // (undocumented)
+    testLocationInResults?: boolean;
+    // (undocumented)
+    testNamePattern?: string;
+    // (undocumented)
+    testPathPattern?: string;
+    // (undocumented)
+    testRunner?: string;
+    // (undocumented)
+    updateSnapshot?: boolean;
+    // (undocumented)
+    useStderr?: boolean;
+    // (undocumented)
+    verbose?: boolean;
+}
+
+// Warning: (ae-forgotten-export) The symbol "BaseExecTask" needs to be exported by the entry point index.d.ts
+// 
+// @beta (undocumented)
+export class JestTask extends BaseExecTask<JestConfig> {
+    constructor(packageName?: string);
+    // (undocumented)
+    junitOutputFile: string;
+}
 
 // @beta (undocumented)
 export interface MarkdownTypeDocConfig extends TypeDocConfig {
@@ -27,6 +134,49 @@ export class MarkdownTypeDocTask extends BaseTypeDocTask<MarkdownTypeDocConfig> 
 
 // @beta (undocumented)
 export const mdTypeDoc: Function;
+
+// @beta (undocumented)
+export const tscTask: IExecutable;
+
+// @beta (undocumented)
+export interface TSLintConfig {
+    // (undocumented)
+    config?: string;
+    // (undocumented)
+    exclude?: string[];
+    // (undocumented)
+    file?: string;
+    // (undocumented)
+    fix?: boolean;
+    // (undocumented)
+    force?: boolean;
+    // (undocumented)
+    format?: string;
+    // (undocumented)
+    'formatters-dir'?: string;
+    // (undocumented)
+    init?: boolean;
+    // (undocumented)
+    out?: string;
+    // (undocumented)
+    outputAbsolutePaths?: boolean;
+    // (undocumented)
+    project?: string;
+    // (undocumented)
+    quiet?: boolean;
+    // (undocumented)
+    'rules-dir'?: string;
+    // (undocumented)
+    test?: boolean;
+}
+
+// @beta (undocumented)
+export class TSLintTask extends BaseExecTask<TSLintConfig> {
+    constructor(packageName?: string);
+}
+
+// @beta (undocumented)
+export const tsLintTask: IExecutable;
 
 // @beta (undocumented)
 export const typeDoc: Function;
