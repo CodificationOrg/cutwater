@@ -30,6 +30,7 @@
   },
   "scripts": {
     "clean": "gulp clean",
+    "ci": "gulp cutwater-ci --clean",
     "test": "gulp test --clean",
     "build": "gulp --clean",
     "build-prod": "gulp --production --clean"
