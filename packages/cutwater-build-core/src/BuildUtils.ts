@@ -20,11 +20,8 @@ export class BuildUtils {
     if (maxElements && elements.length > maxElements) {
       elements = elements.slice(0, maxElements);
     }
-    let rval: string = elements.join(path.sep);
-    if (!rval) {
-      rval = path.sep;
-    }
-    return elements.join(path.sep);
+    const rval: string = elements.join(path.sep);
+    return rval ? rval : path.sep;
   }
 
   public static createDirectoryPath(dirPath: string): void {
