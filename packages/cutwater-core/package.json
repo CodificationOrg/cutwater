@@ -9,10 +9,11 @@
   "module": "dist/cutwater-core.min.js",
   "scripts": {
     "clean": "gulp clean",
-    "ci": "gulp cutwater-ci --clean",
+    "ci:lint": "gulp cutwater-ci-tslint --clean",
+    "ci:test": "gulp cutwater-ci-test --clean ",
     "test": "gulp test --clean",
     "build": "gulp --clean",
-    "build-prod": "gulp --production --clean"
+    "build:prod": "gulp --production --clean"
   },
   "repository": {
     "type": "git",

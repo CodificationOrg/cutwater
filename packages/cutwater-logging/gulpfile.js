@@ -2,7 +2,6 @@
 
 const build = require('@microsoft/web-library-build');
 const cutwater = require('@codification/cutwater-build-core');
-const packageName = require('./package.json').name;
 const path = require('path');
 
 build.tscCmd = 'tsc-commonjs';
@@ -21,17 +20,9 @@ tscEsnextTask.setConfig({
   customArgs: ['--outDir', './lib-es6', '--module', 'esnext']
 });
 
-const buildTasks = build.task(
-  'build',
-  build.parallel(build.defaultTasks, tscAmdTask, tscEsnextTask)
-);
+cutwater.registerCiTasks(require('./package.json'));
 
-cutwater.ciTasks(packageName);
-
-build.defaultTasks = build.task(
-  'default',
-  build.serial(buildTasks, cutwater.mdTypeDoc(packageName, true))
-);
+build.defaultTasks = build.task('default', build.parallel(build.defaultTasks, tscAmdTask, tscEsnextTask));
 
 build.setConfig({
   libAMDFolder: 'lib-amd',

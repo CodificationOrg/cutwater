@@ -41,7 +41,6 @@ export class TSLintTask extends BaseExecTask<TSLintConfig> {
 
   public executeTask(): Promise<void> {
     if (this.taskConfig.out) {
-      this.log(`Current out: ${path.resolve(this.taskConfig.out)}`);
       BuildUtils.createFilePath(this.taskConfig.out);
     }
     return super.executeTask();

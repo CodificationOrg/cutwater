@@ -1,7 +1,6 @@
 defaults: &defaults
   docker:
     - image: billyboingo/circleci-node-awscli
-
   working_directory: ~/cutwater
   parallelism: 1
   shell: /bin/bash --login
@@ -18,29 +17,44 @@ aliases:
       - website/node_modules
     key: v2-dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
 
+  - &install yarn --no-progress --frozen-lockfile
+  - &timezone
+      name: 'Set Pacific Time Zone'
+      command: "echo 'America/Los_Angeles' | sudo tee -a /etc/timezone; sudo dpkg-reconfigure -f noninteractive tzdata;"
+
 version: 2
 jobs:
-  build:
+  lint:
     <<: *defaults
     steps:
       - checkout
-      - run:
-          name: 'Set Pacific Time Zone'
-          command: "echo 'America/Los_Angeles' | sudo tee -a /etc/timezone; sudo dpkg-reconfigure -f noninteractive tzdata;"
+      - run: *timezone
       - restore-cache: *restore-cache
-      - run: yarn --no-progress --frozen-lockfile
+      - run: *install
+      - save-cache: *save-cache
+      - run:
+          name: 'Lint'
+          command: yarn ci:lint
+      - store_test_results:
+          path: reports/junit
+
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: *timezone
+      - restore-cache: *restore-cache
+      - run: *install
       - save-cache: *save-cache
       - run:
           name: 'Run Tests'
-          command: yarn test-ci
+          command: yarn ci:test
       - store_test_results:
           path: reports/junit
 
 workflows:
   version: 2
-  build-test-deploy:
+  lint-test-doc:
     jobs:
-      - build:
-          filters:
-            branches:
-              only: dev
+      - lint
+      - test

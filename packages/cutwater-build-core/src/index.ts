@@ -45,9 +45,9 @@ export const tsLintTask: IExecutable = task('tslint', tslintCmd);
 /**
  * @beta
  */
-export const ciTasks: Function = (packageName: string): IExecutable => {
-  return task(
-    'cutwater-ci',
-    serial(tscTask, new TSLintTask(packageName), new JestTask(packageName))
-  );
+export const registerCiTasks: Function = (packageObj: {}): void => {
+  // tslint:disable-next-line: no-string-literal
+  const packageName: string = packageObj['name'];
+  task('cutwater-ci-tslint', new TSLintTask(packageName));
+  task('cutwater-ci-jest', serial(tscTask, new JestTask(packageName)));
 };
