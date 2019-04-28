@@ -173,6 +173,8 @@ export interface TSLintConfig {
 // @beta (undocumented)
 export class TSLintTask extends BaseExecTask<TSLintConfig> {
     constructor(packageName?: string);
+    // (undocumented)
+    executeTask(): Promise<void>;
 }
 
 // @beta (undocumented)

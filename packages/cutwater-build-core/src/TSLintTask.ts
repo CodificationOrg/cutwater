@@ -1,5 +1,6 @@
 import { BaseExecTask } from './BaseExecTask';
 import { BuildUtils } from './BuildUtils';
+import * as path from 'path';
 
 /**
  * @beta
@@ -36,5 +37,13 @@ export class TSLintTask extends BaseExecTask<TSLintConfig> {
         )}-lint-results.xml`
       });
     }
+  }
+
+  public executeTask(): Promise<void> {
+    if (this.taskConfig.out) {
+      this.log(`Current out: ${path.resolve(this.taskConfig.out)}`);
+      BuildUtils.createFilePath(this.taskConfig.out);
+    }
+    return super.executeTask();
   }
 }
