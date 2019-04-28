@@ -16,11 +16,15 @@ export class BuildUtils {
   }
 
   public static toPath(filePath: string[], maxElements?: number): string {
-    let rval: string[] = [...filePath];
-    if (maxElements && rval.length > maxElements) {
-      rval = rval.slice(0, maxElements);
+    let elements: string[] = [...filePath];
+    if (maxElements && elements.length > maxElements) {
+      elements = elements.slice(0, maxElements);
     }
-    return rval.join(path.sep);
+    let rval: string = elements.join(path.sep);
+    if (!rval) {
+      rval = path.sep;
+    }
+    return elements.join(path.sep);
   }
 
   public static createDirectoryPath(dirPath: string): void {
