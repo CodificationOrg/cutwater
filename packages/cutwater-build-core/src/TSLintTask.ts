@@ -1,6 +1,5 @@
 import { BaseExecTask } from './BaseExecTask';
 import { BuildUtils } from './BuildUtils';
-import * as path from 'path';
 
 /**
  * @beta
