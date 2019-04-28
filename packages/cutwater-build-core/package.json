@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "gulp clean",
     "ci:lint": "yarn build && gulp cutwater-ci-tslint --gulpfile ./ci-gulpfile.js",
-    "ci:test": "yarn build && gulp cutwater-ci-test --gulpfile ./ci-gulpfile.js",
+    "ci:test": "yarn build && gulp cutwater-ci-jest --gulpfile ./ci-gulpfile.js",
     "test": "gulp test --clean",
     "build": "gulp --clean",
     "build:prod": "gulp --production --clean"
