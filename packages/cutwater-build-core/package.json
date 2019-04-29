@@ -10,6 +10,7 @@
     "clean": "gulp clean",
     "ci:lint": "yarn build && gulp cutwater-ci-tslint --gulpfile ./ci-gulpfile.js",
     "ci:test": "yarn build && gulp cutwater-ci-jest --gulpfile ./ci-gulpfile.js",
+    "ci:docs": "yarn build && gulp cutwater-ci-docs --gulpfile ./ci-gulpfile.js",
     "test": "gulp test --clean",
     "build": "gulp --clean",
     "build:prod": "gulp --production --clean"

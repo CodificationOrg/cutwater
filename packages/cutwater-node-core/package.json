@@ -10,6 +10,7 @@
     "clean": "gulp clean",
     "ci:lint": "gulp cutwater-ci-tslint --clean",
     "ci:test": "gulp cutwater-ci-jest --clean ",
+    "ci:docs": "gulp cutwater-ci-docs",
     "test": "gulp test --clean",
     "build": "gulp --clean",
     "build:prod": "gulp --production --clean"

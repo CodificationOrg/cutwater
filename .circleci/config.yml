@@ -22,6 +22,10 @@ aliases:
       name: 'Set Pacific Time Zone'
       command: "echo 'America/Los_Angeles' | sudo tee -a /etc/timezone; sudo dpkg-reconfigure -f noninteractive tzdata;"
 
+  - &filter-ignore-gh-pages
+    branches:
+      ignore: gh-pages
+
 version: 2
 jobs:
   lint:
@@ -52,9 +56,30 @@ jobs:
       - store_test_results:
           path: reports/junit
 
+  deploy-site:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: *timezone
+      - restore-cache: *restore-cache
+      - run: *install
+      - save-cache: *save-cache
+      - run:
+          name: 'Generate API Docs'
+          command: yarn ci:docs
+      - run:
+          name: 'Deploying to GitHub Pages'
+          command: |
+            git config --global user.email "$GIT_USER@users.noreply.github.com"
+            git config --global user.name "$GIT_NAME"
+            echo "machine github.com login $GIT_USER password $GITHUB_TOKEN" > ~/.netrc
+            cd website && yarn install && GIT_USER=$GIT_USER yarn run publish-gh-pages
+
 workflows:
   version: 2
   lint-test-doc:
     jobs:
       - lint
       - test
+      - deploy-site
+          filters: *filter-ignore-gh-pages
