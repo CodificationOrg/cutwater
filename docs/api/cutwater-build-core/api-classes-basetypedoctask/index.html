@@ -1,0 +1,457 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>BaseTypeDocTask · Cutwater</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;p&gt;&lt;a href=&quot;/docs/api/cutwater-build-core/api-readme&quot;&gt;@codification/cutwater-build-core&lt;/a&gt; &amp;gt; &lt;a href=&quot;/docs/api/cutwater-build-core/api-classes-basetypedoctask&quot;&gt;BaseTypeDocTask&lt;/a&gt;&lt;/p&gt;
+"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="BaseTypeDocTask · Cutwater"/><meta property="og:type" content="website"/><meta property="og:url" content="https://cutwater.codification.org/"/><meta property="og:description" content="&lt;p&gt;&lt;a href=&quot;/docs/api/cutwater-build-core/api-readme&quot;&gt;@codification/cutwater-build-core&lt;/a&gt; &amp;gt; &lt;a href=&quot;/docs/api/cutwater-build-core/api-classes-basetypedoctask&quot;&gt;BaseTypeDocTask&lt;/a&gt;&lt;/p&gt;
+"/><meta property="og:image" content="https://cutwater.codification.org/img/docusaurus.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://cutwater.codification.org/img/docusaurus.png"/><link rel="shortcut icon" href="/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/logo.svg" alt="Cutwater"/><h2 class="headerTitleWithLogo">Cutwater</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/getting-started" target="_self">Docs</a></li><li class=""><a href="/help" target="_self">Help</a></li><li class=""><a target="_self"></a></li><li class=""><a href="https://github.com/CodificationOrg/cutwater" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">BaseTypeDocTask</h1></header><article><div><span><p><a href="/docs/api/cutwater-build-core/api-readme">@codification/cutwater-build-core</a> &gt; <a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask">BaseTypeDocTask</a></p>
+<h2><a class="anchor" aria-hidden="true" id="class"></a><a href="#class" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Class</h2>
+<p><em><strong>beta</strong></em>:</p>
+<h2><a class="anchor" aria-hidden="true" id="type-parameters"></a><a href="#type-parameters" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Type parameters</h2>
+<h4><a class="anchor" aria-hidden="true" id="t-typedocconfig-docs-api-cutwater-build-core-api-interfaces-typedocconfig"></a><a href="#t-typedocconfig-docs-api-cutwater-build-core-api-interfaces-typedocconfig" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>T :  <a href="/docs/api/cutwater-build-core/api-interfaces-typedocconfig">TypeDocConfig</a></h4>
+<h2><a class="anchor" aria-hidden="true" id="hierarchy"></a><a href="#hierarchy" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Hierarchy</h2>
+<p>↳  <a href="/docs/api/cutwater-build-core/api-classes-baseexectask">BaseExecTask</a>&lt;<code>T</code>&gt;</p>
+<p><strong>↳ BaseTypeDocTask</strong></p>
+<p>↳  <a href="/docs/api/cutwater-build-core/api-classes-typedoctask">TypeDocTask</a></p>
+<p>↳  <a href="/docs/api/cutwater-build-core/api-classes-markdowntypedoctask">MarkdownTypeDocTask</a></p>
+<h2><a class="anchor" aria-hidden="true" id="implements"></a><a href="#implements" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Implements</h2>
+<ul>
+<li><code>IExecutable</code></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="constructors"></a><a href="#constructors" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Constructors</h3>
+<ul>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#constructor">constructor</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="properties"></a><a href="#properties" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Properties</h3>
+<ul>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#argnames">argNames</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#buildconfig">buildConfig</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#cleanmatch">cleanMatch</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#cmdname">cmdName</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#enabled">enabled</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#name">name</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#optsuseequals">optsUseEquals</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#schema">schema</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#taskconfig">taskConfig</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="methods"></a><a href="#methods" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Methods</h3>
+<ul>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#_getconfigfilepath">_getConfigFilePath</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#copyfile">copyFile</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#execute">execute</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#executetask">executeTask</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#fileerror">fileError</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#fileexists">fileExists</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#filewarning">fileWarning</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#getcleanmatch">getCleanMatch</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#isenabled">isEnabled</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#loadschema">loadSchema</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#log">log</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#logerror">logError</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#logverbose">logVerbose</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#logwarning">logWarning</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#mergeconfig">mergeConfig</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#onregister">onRegister</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#readjsonsync">readJSONSync</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#replaceconfig">replaceConfig</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#resolvepath">resolvePath</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask#setconfig">setConfig</a></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="constructors-1"></a><a href="#constructors-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Constructors</h2>
+<p><a id="constructor"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="constructor"></a><a href="#constructor" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>constructor</h3>
+<p>⊕ <strong>new BaseTypeDocTask</strong>(taskName: <em><code>string</code></em>, defaultConfig: <em><code>Partial</code>&lt;<code>T</code>&gt;</em>): <a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask">BaseTypeDocTask</a></p>
+<p><em>Overrides <a href="/docs/api/cutwater-build-core/api-classes-baseexectask">BaseExecTask</a>.<a href="/docs/api/cutwater-build-core/api-classes-baseexectask#constructor">constructor</a></em></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/a8c4d50/packages/cutwater-build-core/src/BaseTypeDocTask.ts#L40">BaseTypeDocTask.ts:40</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td>taskName</td><td><code>string</code></td></tr>
+<tr><td>defaultConfig</td><td><code>Partial</code>&lt;<code>T</code>&gt;</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <a href="/docs/api/cutwater-build-core/api-classes-basetypedoctask">BaseTypeDocTask</a></p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="properties-1"></a><a href="#properties-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Properties</h2>
+<p><a id="argnames"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="protected-argnames"></a><a href="#protected-argnames" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Protected&gt;</code> argNames</h3>
+<p><strong>● argNames</strong>: <em><code>string</code>[]</em></p>
+<p><em>Inherited from <a href="/docs/api/cutwater-build-core/api-classes-baseexectask">BaseExecTask</a>.<a href="/docs/api/cutwater-build-core/api-classes-baseexectask#argnames">argNames</a></em></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/a8c4d50/packages/cutwater-build-core/src/BaseExecTask.ts#L10">BaseExecTask.ts:10</a></em></p>
+<hr>
+<p><a id="buildconfig"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="buildconfig"></a><a href="#buildconfig" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>buildConfig</h3>
+<p><strong>● buildConfig</strong>: <em><code>IBuildConfig</code></em></p>
+<p><em>Inherited from GulpTask.buildConfig</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:20</em></p>
+<p>The global build configuration object. Will be the same for all task instances.</p>
+<hr>
+<p><a id="cleanmatch"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="cleanmatch"></a><a href="#cleanmatch" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>cleanMatch</h3>
+<p><strong>● cleanMatch</strong>: <em><code>string</code>[]</em></p>
+<p><em>Inherited from GulpTask.cleanMatch</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:30</em></p>
+<p>An overridable array of file patterns which will be utilized by the CleanTask to determine which files to delete. Unless overridden, the getCleanMatch() function will return this value.</p>
+<hr>
+<p><a id="cmdname"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="protected-cmdname"></a><a href="#protected-cmdname" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Protected&gt;</code> cmdName</h3>
+<p><strong>● cmdName</strong>: <em><code>string</code></em></p>
+<p><em>Inherited from <a href="/docs/api/cutwater-build-core/api-classes-baseexectask">BaseExecTask</a>.<a href="/docs/api/cutwater-build-core/api-classes-baseexectask#cmdname">cmdName</a></em></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/a8c4d50/packages/cutwater-build-core/src/BaseExecTask.ts#L9">BaseExecTask.ts:9</a></em></p>
+<hr>
+<p><a id="enabled"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="enabled"></a><a href="#enabled" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>enabled</h3>
+<p><strong>● enabled</strong>: <em><code>boolean</code></em></p>
+<p><em>Inherited from GulpTask.enabled</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:36</em></p>
+<p>Indicates whether this task should be executed or not. This toggle is used by isEnabled() to determine if the task should run. Since some tasks have more complex logic to determine if they should run or not, the isEnabled() function can be overridden.</p>
+<hr>
+<p><a id="name"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="name"></a><a href="#name" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>name</h3>
+<p><strong>● name</strong>: <em><code>string</code></em></p>
+<p><em>Inherited from GulpTask.name</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:16</em></p>
+<p>The name of the task. The configuration file with this name will be loaded and applied to the task.</p>
+<hr>
+<p><a id="optsuseequals"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="protected-optsuseequals"></a><a href="#protected-optsuseequals" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Protected&gt;</code> optsUseEquals</h3>
+<p><strong>● optsUseEquals</strong>: <em><code>boolean</code></em></p>
+<p><em>Inherited from <a href="/docs/api/cutwater-build-core/api-classes-baseexectask">BaseExecTask</a>.<a href="/docs/api/cutwater-build-core/api-classes-baseexectask#optsuseequals">optsUseEquals</a></em></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/a8c4d50/packages/cutwater-build-core/src/BaseExecTask.ts#L11">BaseExecTask.ts:11</a></em></p>
+<hr>
+<p><a id="schema"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="schema"></a><a href="#schema" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>schema</h3>
+<p><strong>● schema</strong>: <em><code>Object</code> | <code>undefined</code></em></p>
+<p><em>Inherited from GulpTask.schema</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:55</em></p>
+<p>A JSON Schema object which will be used to validate this task's configuration file.</p>
+<p><em><strong>returns</strong></em>: a z-schema schema definition</p>
+<hr>
+<p><a id="taskconfig"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="taskconfig"></a><a href="#taskconfig" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>taskConfig</h3>
+<p><strong>● taskConfig</strong>: <em><code>T</code></em></p>
+<p><em>Inherited from GulpTask.taskConfig</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:24</em></p>
+<p>The configuration for this task instance.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="methods-1"></a><a href="#methods-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Methods</h2>
+<p><a id="_getconfigfilepath"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="protected-_getconfigfilepath"></a><a href="#protected-_getconfigfilepath" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Protected&gt;</code> _getConfigFilePath</h3>
+<p>▸ <strong>_getConfigFilePath</strong>(): <code>string</code></p>
+<p><em>Inherited from GulpTask._getConfigFilePath</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:172</em></p>
+<p>Returns the path to the config file used to configure this task</p>
+<p><strong>Returns:</strong> <code>string</code></p>
+<hr>
+<p><a id="copyfile"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="copyfile"></a><a href="#copyfile" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>copyFile</h3>
+<p>▸ <strong>copyFile</strong>(localSourcePath: <em><code>string</code></em>, localDestPath?: <em><code>undefined</code> | <code>string</code></em>): <code>void</code></p>
+<p><em>Inherited from GulpTask.copyFile</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:157</em></p>
+<p>Copy a file from one location to another.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>localSourcePath</td><td><code>string</code></td><td>path to the source file</td></tr>
+<tr><td><code>Optional</code> localDestPath</td><td><code>undefined</code> \</td><td><code>string</code></td><td>path to the destination file</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="execute"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="execute"></a><a href="#execute" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>execute</h3>
+<p>▸ <strong>execute</strong>(config: <em><code>IBuildConfig</code></em>): <code>Promise</code>&lt;<code>void</code>&gt;</p>
+<p><em>Inherited from GulpTask.execute</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:139</em></p>
+<p>This function is called once to execute the task. It calls executeTask() and handles the return value from that function. It also provides some utilities such as logging how long each task takes to execute.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>config</td><td><code>IBuildConfig</code></td><td>the buildConfig which is applied to the task instance before execution</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>Promise</code>&lt;<code>void</code>&gt;
+a Promise which is completed when the task is finished executing</p>
+<hr>
+<p><a id="executetask"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="executetask"></a><a href="#executetask" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>executeTask</h3>
+<p>▸ <strong>executeTask</strong>(): <code>Promise</code>&lt;<code>void</code>&gt;</p>
+<p><em>Inherited from <a href="/docs/api/cutwater-build-core/api-classes-baseexectask">BaseExecTask</a>.<a href="/docs/api/cutwater-build-core/api-classes-baseexectask#executetask">executeTask</a></em></p>
+<p><em>Overrides GulpTask.executeTask</em></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/a8c4d50/packages/cutwater-build-core/src/BaseExecTask.ts#L29">BaseExecTask.ts:29</a></em></p>
+<p><strong>Returns:</strong> <code>Promise</code>&lt;<code>void</code>&gt;</p>
+<hr>
+<p><a id="fileerror"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="fileerror"></a><a href="#fileerror" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>fileError</h3>
+<p>▸ <strong>fileError</strong>(filePath: <em><code>string</code></em>, line: <em><code>number</code></em>, column: <em><code>number</code></em>, errorCode: <em><code>string</code></em>, message: <em><code>string</code></em>): <code>void</code></p>
+<p><em>Inherited from GulpTask.fileError</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:115</em></p>
+<p>Logs an error regarding a specific file to standard error and causes the build to fail.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>filePath</td><td><code>string</code></td><td>the path to the file which encountered an issue</td></tr>
+<tr><td>line</td><td><code>number</code></td><td>the line in the file which had an issue</td></tr>
+<tr><td>column</td><td><code>number</code></td><td>the column in the file which had an issue</td></tr>
+<tr><td>errorCode</td><td><code>string</code></td><td>the custom error code representing this error</td></tr>
+<tr><td>message</td><td><code>string</code></td><td>a description of the error</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="fileexists"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="fileexists"></a><a href="#fileexists" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>fileExists</h3>
+<p>▸ <strong>fileExists</strong>(localPath: <em><code>string</code></em>): <code>boolean</code></p>
+<p><em>Inherited from GulpTask.fileExists</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:151</em></p>
+<p>Synchronously detect if a file exists.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>localPath</td><td><code>string</code></td><td>the path to the file [resolved using resolvePath()]</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>boolean</code>
+true if the file exists, false otherwise</p>
+<hr>
+<p><a id="filewarning"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="filewarning"></a><a href="#filewarning" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>fileWarning</h3>
+<p>▸ <strong>fileWarning</strong>(filePath: <em><code>string</code></em>, line: <em><code>number</code></em>, column: <em><code>number</code></em>, warningCode: <em><code>string</code></em>, message: <em><code>string</code></em>): <code>void</code></p>
+<p><em>Inherited from GulpTask.fileWarning</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:124</em></p>
+<p>Logs a warning regarding a specific file.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>filePath</td><td><code>string</code></td><td>the path to the file which encountered an issue</td></tr>
+<tr><td>line</td><td><code>number</code></td><td>the line in the file which had an issue</td></tr>
+<tr><td>column</td><td><code>number</code></td><td>the column in the file which had an issue</td></tr>
+<tr><td>warningCode</td><td><code>string</code></td><td>the custom warning code representing this warning</td></tr>
+<tr><td>message</td><td><code>string</code></td><td>a description of the warning</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="getcleanmatch"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="getcleanmatch"></a><a href="#getcleanmatch" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>getCleanMatch</h3>
+<p>▸ <strong>getCleanMatch</strong>(buildConfig: <em><code>IBuildConfig</code></em>, taskConfig?: <em><code>TTaskConfig</code></em>): <code>string</code>[]</p>
+<p><em>Inherited from GulpTask.getCleanMatch</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:131</em></p>
+<p>An overridable function which returns a list of glob patterns representing files that should be deleted by the CleanTask.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>buildConfig</td><td><code>IBuildConfig</code></td><td>the current build configuration</td></tr>
+<tr><td><code>Optional</code> taskConfig</td><td><code>TTaskConfig</code></td><td>a task instance's configuration</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>string</code>[]</p>
+<hr>
+<p><a id="isenabled"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="isenabled"></a><a href="#isenabled" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>isEnabled</h3>
+<p>▸ <strong>isEnabled</strong>(buildConfig: <em><code>IBuildConfig</code></em>): <code>boolean</code></p>
+<p><em>Inherited from GulpTask.isEnabled</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:50</em></p>
+<p>Overridable function which returns true if this task should be executed, or false if it should be skipped.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>buildConfig</td><td><code>IBuildConfig</code></td><td>the build configuration which should be used when determining if the task is enabled</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>boolean</code>
+true if the build is not redundant and the enabled toggle is true</p>
+<hr>
+<p><a id="loadschema"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="protected-loadschema"></a><a href="#protected-loadschema" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Protected&gt;</code> loadSchema</h3>
+<p>▸ <strong>loadSchema</strong>(): <code>Object</code> | <code>undefined</code></p>
+<p><em>Inherited from GulpTask.loadSchema</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:168</em></p>
+<p>Override this function to provide a schema which will be used to validate the task's configuration file. This function is called once per task instance.</p>
+<p><strong>Returns:</strong> <code>Object</code> | <code>undefined</code>
+a z-schema schema definition</p>
+<hr>
+<p><a id="log"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="log"></a><a href="#log" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>log</h3>
+<p>▸ <strong>log</strong>(message: <em><code>string</code></em>): <code>void</code></p>
+<p><em>Inherited from GulpTask.log</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:90</em></p>
+<p>Logs a message to standard output.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>message</td><td><code>string</code></td><td>the message to log to standard output.</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="logerror"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="logerror"></a><a href="#logerror" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>logError</h3>
+<p>▸ <strong>logError</strong>(message: <em><code>string</code></em>): <code>void</code></p>
+<p><em>Inherited from GulpTask.logError</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:106</em></p>
+<p>Logs an error to standard error and causes the build to fail.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>message</td><td><code>string</code></td><td>the error description</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="logverbose"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="logverbose"></a><a href="#logverbose" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>logVerbose</h3>
+<p>▸ <strong>logVerbose</strong>(message: <em><code>string</code></em>): <code>void</code></p>
+<p><em>Inherited from GulpTask.logVerbose</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:95</em></p>
+<p>Logs a message to standard output if the verbose flag is specified.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>message</td><td><code>string</code></td><td>the message to log when in verbose mode</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="logwarning"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="logwarning"></a><a href="#logwarning" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>logWarning</h3>
+<p>▸ <strong>logWarning</strong>(message: <em><code>string</code></em>): <code>void</code></p>
+<p><em>Inherited from GulpTask.logWarning</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:101</em></p>
+<p>Logs a warning. It will be logged to standard error and cause the build to fail if buildConfig.shouldWarningsFailBuild is true, otherwise it will be logged to standard output.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>message</td><td><code>string</code></td><td>the warning description</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="mergeconfig"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="mergeconfig"></a><a href="#mergeconfig" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>mergeConfig</h3>
+<p>▸ <strong>mergeConfig</strong>(taskConfig: <em><code>Partial</code>&lt;<code>T</code>&gt;</em>): <code>void</code></p>
+<p><em>Inherited from GulpTask.mergeConfig</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:67</em></p>
+<p>Deep merges config settings into task config. Do not use this function if the configuration contains complex objects that cannot be merged.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>taskConfig</td><td><code>Partial</code>&lt;<code>T</code>&gt;</td><td>configuration settings which should be applied</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="onregister"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="onregister"></a><a href="#onregister" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>onRegister</h3>
+<p>▸ <strong>onRegister</strong>(): <code>void</code></p>
+<p><em>Inherited from GulpTask.onRegister</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:77</em></p>
+<p>This function is called when the task is initially registered into gulp-core-build as a task or subtask. It reads the configuration file, validates it against the schema, then applies it to the task instance's configuration.</p>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="readjsonsync"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="readjsonsync"></a><a href="#readjsonsync" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>readJSONSync</h3>
+<p>▸ <strong>readJSONSync</strong>(localPath: <em><code>string</code></em>): <code>Object</code> | <code>undefined</code></p>
+<p><em>Inherited from GulpTask.readJSONSync</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:162</em></p>
+<p>Read a JSON file into an object</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>localPath</td><td><code>string</code></td><td>the path to the JSON file</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>Object</code> | <code>undefined</code></p>
+<hr>
+<p><a id="replaceconfig"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="replaceconfig"></a><a href="#replaceconfig" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>replaceConfig</h3>
+<p>▸ <strong>replaceConfig</strong>(taskConfig: <em><code>T</code></em>): <code>void</code></p>
+<p><em>Inherited from GulpTask.replaceConfig</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:72</em></p>
+<p>Replaces all of the task config settings with new settings.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>taskConfig</td><td><code>T</code></td><td>the new task configuration</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="resolvepath"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="resolvepath"></a><a href="#resolvepath" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>resolvePath</h3>
+<p>▸ <strong>resolvePath</strong>(localPath: <em><code>string</code></em>): <code>string</code></p>
+<p><em>Inherited from GulpTask.resolvePath</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:145</em></p>
+<p>Resolves a path relative to the buildConfig.rootPath.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>localPath</td><td><code>string</code></td><td>a relative or absolute path</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>string</code>
+If localPath is relative, returns an absolute path relative to the rootPath. Otherwise, returns localPath.</p>
+<hr>
+<p><a id="setconfig"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="setconfig"></a><a href="#setconfig" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>setConfig</h3>
+<p>▸ <strong>setConfig</strong>(taskConfig: <em><code>Partial</code>&lt;<code>T</code>&gt;</em>): <code>void</code></p>
+<p><em>Inherited from GulpTask.setConfig</em></p>
+<p><em>Defined in /home/circleci/cutwater/node_modules/@microsoft/gulp-core-build/lib/tasks/GulpTask.d.ts:61</em></p>
+<p>Shallow merges config settings into the task config. Note this will override configuration options for those which are objects.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>taskConfig</td><td><code>Partial</code>&lt;<code>T</code>&gt;</td><td>configuration settings which should be applied</td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#class">Class</a></li><li><a href="#type-parameters">Type parameters</a></li><li><a href="#hierarchy">Hierarchy</a></li><li><a href="#implements">Implements</a><ul class="toc-headings"><li><a href="#constructors">Constructors</a></li><li><a href="#properties">Properties</a></li><li><a href="#methods">Methods</a></li></ul></li><li><a href="#constructors-1">Constructors</a><ul class="toc-headings"><li><a href="#constructor">constructor</a></li></ul></li><li><a href="#properties-1">Properties</a><ul class="toc-headings"><li><a href="#protected-argnames">`` argNames</a></li><li><a href="#buildconfig">buildConfig</a></li><li><a href="#cleanmatch">cleanMatch</a></li><li><a href="#protected-cmdname">`` cmdName</a></li><li><a href="#enabled">enabled</a></li><li><a href="#name">name</a></li><li><a href="#protected-optsuseequals">`` optsUseEquals</a></li><li><a href="#schema">schema</a></li><li><a href="#taskconfig">taskConfig</a></li></ul></li><li><a href="#methods-1">Methods</a><ul class="toc-headings"><li><a href="#protected-_getconfigfilepath">`` _getConfigFilePath</a></li><li><a href="#copyfile">copyFile</a></li><li><a href="#execute">execute</a></li><li><a href="#executetask">executeTask</a></li><li><a href="#fileerror">fileError</a></li><li><a href="#fileexists">fileExists</a></li><li><a href="#filewarning">fileWarning</a></li><li><a href="#getcleanmatch">getCleanMatch</a></li><li><a href="#isenabled">isEnabled</a></li><li><a href="#protected-loadschema">`` loadSchema</a></li><li><a href="#log">log</a></li><li><a href="#logerror">logError</a></li><li><a href="#logverbose">logVerbose</a></li><li><a href="#logwarning">logWarning</a></li><li><a href="#mergeconfig">mergeConfig</a></li><li><a href="#onregister">onRegister</a></li><li><a href="#readjsonsync">readJSONSync</a></li><li><a href="#replaceconfig">replaceConfig</a></li><li><a href="#resolvepath">resolvePath</a></li><li><a href="#setconfig">setConfig</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/logo.svg" alt="Cutwater" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/getting-started.html">Getting Started</a></div><div><h5>Community</h5><a href="http://stackoverflow.com/questions/tagged/cutwater" target="_blank" rel="noreferrer noopener">Stack Overflow</a></div><div><h5>More</h5><a href="https://github.com/CodificationOrg/cutwater">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/CodificationOrg/cutwater/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Codification/cutwater on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 Codification.org</section></footer></div></body></html>

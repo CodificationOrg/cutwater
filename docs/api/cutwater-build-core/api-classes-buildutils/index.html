@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>BuildUtils · Cutwater</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;p&gt;&lt;a href=&quot;/docs/api/cutwater-build-core/api-readme&quot;&gt;@codification/cutwater-build-core&lt;/a&gt; &amp;gt; &lt;a href=&quot;/docs/api/cutwater-build-core/api-classes-buildutils&quot;&gt;BuildUtils&lt;/a&gt;&lt;/p&gt;
+"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="BuildUtils · Cutwater"/><meta property="og:type" content="website"/><meta property="og:url" content="https://cutwater.codification.org/"/><meta property="og:description" content="&lt;p&gt;&lt;a href=&quot;/docs/api/cutwater-build-core/api-readme&quot;&gt;@codification/cutwater-build-core&lt;/a&gt; &amp;gt; &lt;a href=&quot;/docs/api/cutwater-build-core/api-classes-buildutils&quot;&gt;BuildUtils&lt;/a&gt;&lt;/p&gt;
+"/><meta property="og:image" content="https://cutwater.codification.org/img/docusaurus.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://cutwater.codification.org/img/docusaurus.png"/><link rel="shortcut icon" href="/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/logo.svg" alt="Cutwater"/><h2 class="headerTitleWithLogo">Cutwater</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/getting-started" target="_self">Docs</a></li><li class=""><a href="/help" target="_self">Help</a></li><li class=""><a target="_self"></a></li><li class=""><a href="https://github.com/CodificationOrg/cutwater" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">BuildUtils</h1></header><article><div><span><p><a href="/docs/api/cutwater-build-core/api-readme">@codification/cutwater-build-core</a> &gt; <a href="/docs/api/cutwater-build-core/api-classes-buildutils">BuildUtils</a></p>
+<h2><a class="anchor" aria-hidden="true" id="class"></a><a href="#class" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Class</h2>
+<h2><a class="anchor" aria-hidden="true" id="hierarchy"></a><a href="#hierarchy" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Hierarchy</h2>
+<p><strong>BuildUtils</strong></p>
+<h3><a class="anchor" aria-hidden="true" id="methods"></a><a href="#methods" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Methods</h3>
+<ul>
+<li><a href="/docs/api/cutwater-build-core/api-classes-buildutils#createdirectorypath">createDirectoryPath</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-buildutils#createfilepath">createFilePath</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-buildutils#topath">toPath</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-buildutils#topathelements">toPathElements</a></li>
+<li><a href="/docs/api/cutwater-build-core/api-classes-buildutils#tosimplepackagename">toSimplePackageName</a></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="methods-1"></a><a href="#methods-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Methods</h2>
+<p><a id="createdirectorypath"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-createdirectorypath"></a><a href="#static-createdirectorypath" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> createDirectoryPath</h3>
+<p>▸ <strong>createDirectoryPath</strong>(dirPath: <em><code>string</code></em>): <code>void</code></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/a8c4d50/packages/cutwater-build-core/src/BuildUtils.ts#L27">BuildUtils.ts:27</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td>dirPath</td><td><code>string</code></td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="createfilepath"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-createfilepath"></a><a href="#static-createfilepath" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> createFilePath</h3>
+<p>▸ <strong>createFilePath</strong>(filePath: <em><code>string</code></em>): <code>void</code></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/a8c4d50/packages/cutwater-build-core/src/BuildUtils.ts#L39">BuildUtils.ts:39</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td>filePath</td><td><code>string</code></td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>void</code></p>
+<hr>
+<p><a id="topath"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-topath"></a><a href="#static-topath" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> toPath</h3>
+<p>▸ <strong>toPath</strong>(filePath: <em><code>string</code>[]</em>, maxElements?: <em><code>undefined</code> | <code>number</code></em>): <code>string</code></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/a8c4d50/packages/cutwater-build-core/src/BuildUtils.ts#L18">BuildUtils.ts:18</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td>filePath</td><td><code>string</code>[]</td></tr>
+<tr><td><code>Optional</code> maxElements</td><td><code>undefined</code> \</td><td><code>number</code></td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>string</code></p>
+<hr>
+<p><a id="topathelements"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-topathelements"></a><a href="#static-topathelements" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> toPathElements</h3>
+<p>▸ <strong>toPathElements</strong>(filePath: <em><code>string</code></em>): <code>string</code>[]</p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/a8c4d50/packages/cutwater-build-core/src/BuildUtils.ts#L14">BuildUtils.ts:14</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td>filePath</td><td><code>string</code></td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>string</code>[]</p>
+<hr>
+<p><a id="tosimplepackagename"></a></p>
+<h3><a class="anchor" aria-hidden="true" id="static-tosimplepackagename"></a><a href="#static-tosimplepackagename" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> toSimplePackageName</h3>
+<p>▸ <strong>toSimplePackageName</strong>(packageName: <em><code>string</code></em>): <code>string</code></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/a8c4d50/packages/cutwater-build-core/src/BuildUtils.ts#L5">BuildUtils.ts:5</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr><th>Name</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td>packageName</td><td><code>string</code></td></tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>string</code></p>
+<hr>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#class">Class</a></li><li><a href="#hierarchy">Hierarchy</a><ul class="toc-headings"><li><a href="#methods">Methods</a></li></ul></li><li><a href="#methods-1">Methods</a><ul class="toc-headings"><li><a href="#static-createdirectorypath">`` createDirectoryPath</a></li><li><a href="#static-createfilepath">`` createFilePath</a></li><li><a href="#static-topath">`` toPath</a></li><li><a href="#static-topathelements">`` toPathElements</a></li><li><a href="#static-tosimplepackagename">`` toSimplePackageName</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/logo.svg" alt="Cutwater" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/getting-started.html">Getting Started</a></div><div><h5>Community</h5><a href="http://stackoverflow.com/questions/tagged/cutwater" target="_blank" rel="noreferrer noopener">Stack Overflow</a></div><div><h5>More</h5><a href="https://github.com/CodificationOrg/cutwater">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/CodificationOrg/cutwater/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Codification/cutwater on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 Codification.org</section></footer></div></body></html>
