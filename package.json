@@ -19,7 +19,7 @@
     "changed": "lerna changed",
     "ci:lint": "lerna run --no-private ci:lint",
     "ci:test": "lerna run --no-private ci:test",
-    "ci:docs": "lerna run --no-private ci:docs",
+    "ci:docs": "yarn build && lerna run --no-private ci:docs",
     "update-version": "lerna publish --skip-git --skip-npm --force-publish '*'",
     "check-packages": "yarn clean && yarn compile && yarn test && yarn lint",
     "publish-packages": "./scripts/publish"
