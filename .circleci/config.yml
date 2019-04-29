@@ -81,5 +81,5 @@ workflows:
     jobs:
       - lint
       - test
-      - deploy-site
+      - deploy-site:
           filters: *filter-ignore-gh-pages
