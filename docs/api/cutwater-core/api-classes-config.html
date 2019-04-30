@@ -17,7 +17,7 @@
 <p><a id="get"></a></p>
 <h3><a class="anchor" aria-hidden="true" id="static-get"></a><a href="#static-get" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> get</h3>
 <p>▸ <strong>get</strong>(key: <em><code>string</code></em>, defaultValue?: <em><code>string</code></em>): <code>string</code></p>
-<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/9630769/packages/cutwater-core/src/Config.ts#L31">Config.ts:31</a></em></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/84ea5a9/packages/cutwater-core/src/Config.ts#L31">Config.ts:31</a></em></p>
 <p>Returns the value associated with the <code>key</code>, checking first for values provided by the <a href="/docs/api/cutwater-core/api-classes-config#put">Config.put</a> method and then from <code>process.env</code>. If the value is not found, the <code>defaultValue</code> is returned, or an empty string if that is not provided.</p>
 <p><strong>Parameters:</strong></p>
 <table>
@@ -34,7 +34,7 @@
 <p><a id="getrequired"></a></p>
 <h3><a class="anchor" aria-hidden="true" id="static-getrequired"></a><a href="#static-getrequired" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> getRequired</h3>
 <p>▸ <strong>getRequired</strong>(key: <em><code>string</code></em>, errorMsg?: <em><code>undefined</code> | <code>string</code></em>): <code>string</code></p>
-<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/9630769/packages/cutwater-core/src/Config.ts#L48">Config.ts:48</a></em></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/84ea5a9/packages/cutwater-core/src/Config.ts#L48">Config.ts:48</a></em></p>
 <p>Returns the value associated with the <code>key</code>, checking first for values provided by the <a href="/docs/api/cutwater-core/api-classes-config#put">Config.put</a> method and then from <code>process.env</code>. Unlike the <a href="/docs/api/cutwater-core/api-classes-config#get">Config.get</a> method, an error is thrown if the value is not found, using the message specified if provided.</p>
 <p><strong>Parameters:</strong></p>
 <table>
@@ -51,7 +51,7 @@
 <p><a id="put"></a></p>
 <h3><a class="anchor" aria-hidden="true" id="static-put"></a><a href="#static-put" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>&lt;Static&gt;</code> put</h3>
 <p>▸ <strong>put</strong>(key: <em><code>string</code></em>, value: <em><code>string</code></em>): <code>string</code></p>
-<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/9630769/packages/cutwater-core/src/Config.ts#L17">Config.ts:17</a></em></p>
+<p><em>Defined in <a href="https://github.com/CodificationOrg/cutwater/blob/84ea5a9/packages/cutwater-core/src/Config.ts#L17">Config.ts:17</a></em></p>
 <p>This will set the provided configuration <code>key</code> to the specified <code>value</code>. This does not make any changes to <code>process.env</code>, the key/value pair is stored in memory only.</p>
 <p><strong>Parameters:</strong></p>
 <table>
