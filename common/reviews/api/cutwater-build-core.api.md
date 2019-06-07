@@ -8,9 +8,6 @@ import { GulpTask } from '@microsoft/gulp-core-build';
 import { IExecutable } from '@microsoft/gulp-core-build';
 
 // @beta (undocumented)
-export const ciTasks: Function;
-
-// @beta (undocumented)
 export interface JestConfig {
     // (undocumented)
     bail?: number;
@@ -135,6 +132,9 @@ export class MarkdownTypeDocTask extends BaseTypeDocTask<MarkdownTypeDocConfig> 
 // @beta (undocumented)
 export const mdTypeDoc: Function;
 
+// @beta
+export const registerCiTasks: Function;
+
 // @beta (undocumented)
 export const tscTask: IExecutable;
 
@@ -173,6 +173,8 @@ export interface TSLintConfig {
 // @beta (undocumented)
 export class TSLintTask extends BaseExecTask<TSLintConfig> {
     constructor(packageName?: string);
+    // (undocumented)
+    executeTask(): Promise<void>;
 }
 
 // @beta (undocumented)

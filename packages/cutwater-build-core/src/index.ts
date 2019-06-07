@@ -43,11 +43,23 @@ export const tscTask: IExecutable = task('tsc', tscCmd);
 export const tsLintTask: IExecutable = task('tslint', tslintCmd);
 
 /**
+ * Registers various tasks for use during common CI usage scenarios using the package name
+ * (without the scope, if present) to determine the output location.
+ *
+ * - __cutwater-ci-docs__: Generates [__Docusaurus__](https://docusaurus.io/) style documentation from TypeDoc comments
+ * - __cutwater-ci-typedocs__: Generates default style documentaiton using TypeDoc
+ * - __cutwater-ci-mdtypedocs__: Generates documentation from TypeDoc comment in the Markdown format
+ * - __cutwater-ci-tslint__: Runs TSLint and send output to a junit formatted file
+ * - __cutwater-ci-jest__: Runs [__jest__](https://jestjs.io/) unit tests, sending output to a junit formatted file
+ *
  * @beta
  */
-export const ciTasks: Function = (packageName: string): IExecutable => {
-  return task(
-    'cutwater-ci',
-    serial(tscTask, new TSLintTask(packageName), new JestTask(packageName))
-  );
+export const registerCiTasks: Function = (packageObj: {}): void => {
+  // tslint:disable-next-line: no-string-literal
+  const packageName: string = packageObj['name'];
+  task('cutwater-ci-docs', mdTypeDoc(packageName, true));
+  task('cutwater-ci-typedocs', typeDoc(packageName));
+  task('cutwater-ci-mdtypedocs', mdTypeDoc(packageName));
+  task('cutwater-ci-tslint', new TSLintTask(packageName));
+  task('cutwater-ci-jest', serial(tscTask, new JestTask(packageName)));
 };

@@ -30,10 +30,12 @@
   },
   "scripts": {
     "clean": "gulp clean",
-    "ci": "gulp cutwater-ci --clean",
+    "ci:lint": "gulp cutwater-ci-tslint --clean",
+    "ci:test": "gulp cutwater-ci-jest --clean ",
+    "ci:docs": "gulp cutwater-ci-docs",
     "test": "gulp test --clean",
     "build": "gulp --clean",
-    "build-prod": "gulp --production --clean"
+    "build:prod": "gulp --production --clean"
   },
   "devDependencies": {
     "@codification/cutwater-build-core": "0.4.2",

@@ -37,4 +37,11 @@ export class TSLintTask extends BaseExecTask<TSLintConfig> {
       });
     }
   }
+
+  public executeTask(): Promise<void> {
+    if (this.taskConfig.out) {
+      BuildUtils.createFilePath(this.taskConfig.out);
+    }
+    return super.executeTask();
+  }
 }
