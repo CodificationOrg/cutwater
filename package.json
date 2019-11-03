@@ -5,29 +5,16 @@
     "packages": [
       "packages/*",
       "website"
-    ],
-    "nohoist": [
-      "**/@microsoft/rush-stack-compiler-3.2"
     ]
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "clean": "lerna clean",
-    "build": "lerna run --no-private build",
-    "test": "lerna run test",
-    "start": "lerna run --scope *website start",
-    "changed": "lerna changed",
-    "ci:lint": "lerna run --no-private ci:lint",
-    "ci:test": "lerna run --no-private ci:test",
-    "ci:docs": "yarn build && lerna run --no-private ci:docs",
+    "clean": "lerna run clean",
+    "build": "lerna run build",
     "update-version": "lerna publish --skip-git --skip-npm --force-publish '*'",
     "check-packages": "yarn clean && yarn compile && yarn test && yarn lint",
     "publish-packages": "./scripts/publish"
   },
   "devDependencies": {
-    "lerna": "3.13.1"
-  },
-  "resolutions": {
-    "**/@types/orchestrator": "0.0.30"
+    "lerna": "^3.13.1"
   }
 }
