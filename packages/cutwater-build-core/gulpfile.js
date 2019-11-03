@@ -1,6 +1,8 @@
 'use strict';
 
-const build = require('@microsoft/node-library-build');
+const del = require('del');
 
-build.mocha.enabled = false;
-build.initialize(require('gulp'));
+const clean = () => {
+    return del(['lib']);
+}
+exports.clean = clean;
