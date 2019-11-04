@@ -1,5 +1,5 @@
-import * as globEscape from 'glob-escape';
-import * as Gulp from 'gulp';
+import { default as globEscape } from 'glob-escape';
+import { Gulp } from 'gulp';
 import * as path from 'path';
 
 import { GulpTask } from './GulpTask';
@@ -21,7 +21,7 @@ export class CopyStaticAssetsTask extends GulpTask<CopyStaticAssetsTaskConfig> {
     });
   }
 
-  public executeTask(gulp: typeof Gulp, completeCallback: (error?: string) => void): NodeJS.ReadWriteStream {
+  public executeTask(gulp: Gulp): NodeJS.ReadWriteStream {
     const rootPath: string = path.join(this.buildConfig.rootPath, this.buildConfig.srcFolder || 'src');
     const libPath: string = path.join(this.buildConfig.rootPath, this.buildConfig.libFolder || 'lib');
 
@@ -52,9 +52,6 @@ export class CopyStaticAssetsTask extends GulpTask<CopyStaticAssetsTaskConfig> {
       globPatterns.push(`!${path.join(rootPath, file)}`);
     }
 
-    return gulp
-      .src(globPatterns, { base: rootPath })
-      .pipe(gulp.dest(libPath))
-      .on('finish', () => completeCallback());
+    return gulp.src(globPatterns, { base: rootPath }).pipe(gulp.dest(libPath));
   }
 }
