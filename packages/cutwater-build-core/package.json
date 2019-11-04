@@ -5,7 +5,7 @@
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
   "main": "lib/index.js",
-  "typings": "dist/index.d.ts",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
