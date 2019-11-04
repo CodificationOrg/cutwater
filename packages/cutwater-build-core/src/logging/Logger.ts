@@ -1,6 +1,6 @@
-import * as colors from 'colors';
+import { default as colors } from 'colors';
 import * as path from 'path';
-import * as prettyTime from 'pretty-hrtime';
+import { default as prettyTime } from 'pretty-hrtime';
 
 import { getFlagValue } from '../State';
 

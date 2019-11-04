@@ -1,3 +1,3 @@
 module.exports = {
-  roots: ['<rooDir>/lib'],
-};
+  roots: ['<rootDir>/lib']
+}

@@ -1,5 +1,5 @@
 import { default as Ajv } from 'ajv';
-import * as eos from 'end-of-stream';
+import { default as eos } from 'end-of-stream';
 import * as gulp from 'gulp';
 import * as path from 'path';
 import * as through2 from 'through2';

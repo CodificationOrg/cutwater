@@ -2,9 +2,8 @@ if (process.argv.indexOf('--no-color') === -1) {
   process.argv.push('--color');
 }
 
-import * as gulp from 'gulp';
+import { Gulp } from 'gulp';
 import * as path from 'path';
-
 import { BuildConfig } from './BuildConfig';
 import { BuildContext, createContext } from './BuildContext';
 import { ExecutableTask } from './ExecutableTask';
@@ -15,8 +14,14 @@ import { CleanTask } from './tasks/CleanTask';
 import { CopyStaticAssetsTask } from './tasks/CopyStaticAssetsTask';
 import { GulpTask } from './tasks/GulpTask';
 import { isJestEnabled, JestTask } from './tasks/JestTask';
+import { PrettierTask } from './tasks/PrettierTask';
 
-export * from './BuildConfig';
+export { BuildConfig } from './BuildConfig';
+export { BuildContext, BuildMetrics, BuildState } from './BuildContext';
+export { ExecutableTask } from './ExecutableTask';
+export * from './tasks';
+export { Logger } from './logging/Logger';
+export { IOUtils } from './utilities/IOUtils';
 
 const taskMap: { [key: string]: ExecutableTask } = {};
 const uniqueTasks: ExecutableTask[] = [];
@@ -80,7 +85,7 @@ export function task(taskName: string, taskExecutable: ExecutableTask): Executab
 }
 
 export type CustomGulpTask = (
-  gulp: gulp.Gulp,
+  gulp: Gulp,
   buildConfig: BuildConfig,
   done?: (failure?: string | Error) => void,
 ) => Promise<object> | NodeJS.ReadWriteStream | void;
@@ -93,7 +98,7 @@ class CustomTask extends GulpTask<void> {
   }
 
   public executeTask(
-    localGulp: gulp.Gulp,
+    localGulp: Gulp,
     completeCallback?: (error?: string | Error) => void,
   ): Promise<object> | NodeJS.ReadWriteStream | void {
     return this.customTask(localGulp, getConfig(), completeCallback);
@@ -104,85 +109,6 @@ export function subTask(taskName: string, fn: CustomGulpTask): ExecutableTask {
   const customTask: CustomTask = new CustomTask(taskName, fn);
   return customTask;
 }
-
-// export function watch(
-//   watchMatch: string | string[],
-//   taskExecutable: ExecutableTask
-// ): ExecutableTask {
-//   trackTask(taskExecutable);
-
-//   let isWatchRunning: boolean = false;
-//   let shouldRerunWatch: boolean = false;
-//   let lastError: Error | undefined;
-
-//   const successMessage: string = 'Build succeeded';
-//   const failureMessage: string = 'Build failed';
-
-//   return {
-//     execute: (localBuildConfig: BuildConfig): Promise<void> => {
-//       return new Promise<void>(() => {
-//         function _runWatch(): Promise<void> {
-//           if (isWatchRunning) {
-//             shouldRerunWatch = true;
-//             return Promise.resolve();
-//           } else {
-//             isWatchRunning = true;
-
-//             return executeTask(taskExecutable, localBuildConfig)
-//               .then(() => {
-//                 if (lastError) {
-//                   lastError = undefined;
-
-//                   if (localBuildConfig.showToast) {
-//                     notifier.notify({
-//                       title: successMessage,
-//                       message: builtPackage ? builtPackage.name : '',
-//                       icon: localBuildConfig.buildSuccessIconPath
-//                     });
-//                   } else {
-//                     log(successMessage);
-//                   }
-//                 }
-//                 return _finalizeWatch();
-//               })
-//               .catch((error: Error) => {
-//                 if (!lastError || lastError !== error) {
-//                   lastError = error;
-
-//                   if (localBuildConfig.showToast) {
-//                     notifier.notify({
-//                       title: failureMessage,
-//                       message: error.toString(),
-//                       icon: localBuildConfig.buildErrorIconPath
-//                     });
-//                   } else {
-//                     log(failureMessage);
-//                   }
-//                 }
-
-//                 return _finalizeWatch();
-//               });
-//           }
-//         }
-
-//         function _finalizeWatch(): Promise<void> {
-//           isWatchRunning = false;
-
-//           if (shouldRerunWatch) {
-//             shouldRerunWatch = false;
-//             return _runWatch();
-//           }
-//           return Promise.resolve();
-//         }
-
-//         setWatchMode();
-//         localBuildConfig.gulp.watch(watchMatch, _runWatch);
-
-//         _runWatch().catch(console.error);
-//       });
-//     }
-//   };
-// }
 
 export function serial(...tasks: Array<ExecutableTask[] | ExecutableTask>): ExecutableTask {
   const flatTasks: ExecutableTask[] = flatten(tasks).filter(taskExecutable => {
@@ -234,7 +160,7 @@ export function parallel(...tasks: Array<ExecutableTask[] | ExecutableTask>): Ex
   };
 }
 
-export function initialize(localGulp: gulp.Gulp): void {
+export function initialize(localGulp: Gulp): void {
   buildContext = createContext(buildConfig, localGulp, logger);
 
   getConfig().rootPath = process.cwd();
@@ -390,7 +316,10 @@ function handleTasksListArguments(): void {
 }
 
 export const clean: ExecutableTask = new CleanTask();
+export const prettier: ExecutableTask = new PrettierTask();
 export const copyStaticAssets: CopyStaticAssetsTask = new CopyStaticAssetsTask();
 export const jest: JestTask = new JestTask();
 
 task('clean', clean);
+task('jest', jest);
+task('prettier', prettier);

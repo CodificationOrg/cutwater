@@ -1,6 +1,8 @@
 import * as gulp from 'gulp';
-
+import { initialize } from '..';
 import { RunCommandTask, RunCommandTaskConfig } from './RunCommandTask';
+
+initialize(gulp);
 
 test('can run echo', done => {
   const task: RunCommandTask<RunCommandTaskConfig> = new RunCommandTask();

@@ -1,33 +1,31 @@
-import * as del from 'del';
+import { default as del } from 'del';
 import * as gulp from 'gulp';
 
 import { BuildConfig } from '../BuildConfig';
 import { GulpTask } from './GulpTask';
 
-export class CleanTask extends GulpTask<void> {
+export interface CleanTaskConfig {
+  force: boolean;
+}
+
+export class CleanTask extends GulpTask<CleanTaskConfig> {
   constructor() {
     super('clean');
   }
 
-  public executeTask(localGulp: gulp.Gulp, completeCallback: (error?: string | Error) => void): void {
+  public executeTask(localGulp: gulp.Gulp): Promise<string[]> {
     const { distFolder, libFolder, libAMDFolder, tempFolder }: BuildConfig = this.buildConfig;
-    let cleanPaths: string[] = [distFolder, libFolder, tempFolder];
+    const cleanPaths: Set<string> = new Set([distFolder, libFolder, tempFolder]);
 
     if (libAMDFolder) {
-      cleanPaths.push(libAMDFolder);
+      cleanPaths.add(libAMDFolder);
     }
 
     (this.buildConfig.uniqueTasks || []).forEach(executable => {
-      if (executable.getCleanMatch) {
-        cleanPaths = cleanPaths.concat(executable.getCleanMatch(this.buildConfig));
+      if (executable.getCleanMatch && executable.getCleanMatch(this.buildConfig)) {
+        executable.getCleanMatch(this.buildConfig).forEach(path => cleanPaths.add(path));
       }
     });
-
-    try {
-      del.sync([...new Set(cleanPaths)]);
-      completeCallback();
-    } catch (e) {
-      completeCallback(e);
-    }
+    return del(Array.from(cleanPaths), this.config);
   }
 }

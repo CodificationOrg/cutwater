@@ -1,7 +1,4 @@
-import * as colors from 'colors';
-import * as gulp from 'gulp';
-import * as prettyTime from 'pretty-hrtime';
-
+import { Gulp } from 'gulp';
 import { BuildConfig } from './BuildConfig';
 import { BuildSummary } from './logging/BuildSummary';
 import { Logger } from './logging/Logger';
@@ -43,7 +40,7 @@ export interface BuildContext {
   exitCode: number;
   writeSummaryLogs: string[];
   buildConfig: BuildConfig;
-  gulp: gulp.Gulp;
+  gulp: Gulp;
   gulpErrorCallback: undefined | ((err: object) => void);
   gulpStopCallback: undefined | ((err: object) => void);
   errorAndWarningSuppressions: Array<string | RegExp>;
@@ -51,7 +48,7 @@ export interface BuildContext {
   shouldLogErrorsDuringSummary: boolean;
 }
 
-export const createContext = (buildConfig: BuildConfig, localGulp: gulp.Gulp, logger: Logger): BuildContext => {
+export const createContext = (buildConfig: BuildConfig, localGulp: Gulp, logger: Logger): BuildContext => {
   return new BuildContextImpl(buildConfig, localGulp, logger);
 };
 
@@ -59,7 +56,7 @@ export const createContext = (buildConfig: BuildConfig, localGulp: gulp.Gulp, lo
 
 class BuildContextImpl implements BuildContext {
   public buildConfig: BuildConfig;
-  public readonly gulp: gulp.Gulp;
+  public readonly gulp: Gulp;
   public readonly logger: Logger;
   public warnings: string[] = [];
   public errors: string[] = [];
@@ -93,71 +90,11 @@ class BuildContextImpl implements BuildContext {
   public shouldLogWarningsDuringSummary: boolean = false;
   public shouldLogErrorsDuringSummary: boolean = false;
 
-  public constructor(config: BuildConfig, localGulp: gulp.Gulp, logger: Logger) {
+  public constructor(config: BuildConfig, localGulp: Gulp, logger: Logger) {
     this.buildConfig = config;
     this.gulp = localGulp || config.gulp;
     this.logger = logger;
-
-    this.initialize();
-  }
-
-  private initialize(): void {
-    this.wireUpProcessErrorHandling(this.buildConfig.shouldWarningsFailBuild);
-
-    this.gulp.on('start', (err: object) => {
-      this.logger.log('Starting gulp');
-    });
-
-    this.gulp.on('stop', (err: object) => {
-      BuildSummary.write(this, () => {
-        // error if we have any errors
-        if (
-          this.metrics.taskErrors > 0 ||
-          (this.warnings.length && this.buildConfig.shouldWarningsFailBuild) ||
-          this.errors.length ||
-          this.metrics.testsFailed > 0
-        ) {
-          this.exitProcess(1);
-        }
-
-        if (this.gulpStopCallback) {
-          this.gulpStopCallback(err);
-        }
-        this.exitProcess(0);
-      });
-    });
-
-    this.gulp.on('err', (err: object) => {
-      this.logger.writeTaskError(err);
-      this.metrics.taskErrors++;
-      BuildSummary.write(this, () => {
-        this.exitProcess(1);
-        if (this.gulpErrorCallback) {
-          this.gulpErrorCallback(err);
-        }
-      });
-    });
-
-    this.gulp.on('task_stop', (e: any) => {
-      const time: string = prettyTime(e.hrDuration);
-
-      if (this.state.fromRunGulp) {
-        this.logger.log('Finished', "'" + colors.cyan(e.task) + "'", 'after', colors.magenta(time));
-      }
-    });
-
-    this.gulp.on('task_err', (err: any) => {
-      this.logger.writeTaskError(err);
-      this.metrics.taskErrors++;
-      BuildSummary.write(this, () => {
-        this.exitProcess(1);
-      });
-    });
-
-    this.gulp.on('task_not_found', (err: any) => {
-      this.logger.log(colors.red("Task '" + err.task + "' is not in your gulpfile"));
-      this.logger.log('Please check the documentation for proper gulpfile formatting');
-    });
+    this.wireUpProcessErrorHandling(config.shouldWarningsFailBuild);
   }
 
   private wireUpProcessErrorHandling(shouldWarningsFailBuild: boolean): void {
@@ -181,12 +118,11 @@ class BuildContextImpl implements BuildContext {
         this.state.duringFastExit = true;
         // tslint:disable-next-line: no-string-literal
         if (!global['dontWatchExit']) {
-          // tslint:disable-line:no-string-literal
           if (!this.state.wroteSummary) {
             this.state.wroteSummary = true;
             console.log('About to exit with code:', code);
             console.error(
-              'Process terminated before summary could be written, possible error in async code not ' + 'continuing!',
+              'Process terminated before summary could be written, possible error in async code not continuing!',
             );
             console.log('Trying to exit with exit code 1');
             this.exitProcess(1);

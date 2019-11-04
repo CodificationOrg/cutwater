@@ -2,6 +2,8 @@ import * as gulp from 'gulp';
 import { BuildConfig } from '../BuildConfig';
 import { CleanTask } from './CleanTask';
 
+const FLAGS: string[] = ['clean', 'c'];
+
 export class CleanFlagTask extends CleanTask {
   private finished: boolean = false;
 
@@ -10,16 +12,13 @@ export class CleanFlagTask extends CleanTask {
   }
 
   public isEnabled(buildConfig: BuildConfig): boolean {
-    return (
-      // tslint:disable-next-line: no-string-literal
-      (!!buildConfig.args['clean'] || !!buildConfig.args['c']) && this.finished === false
-    );
+    return (!!buildConfig.args[FLAGS[0]] || !!buildConfig.args[FLAGS[1]]) && !this.finished;
   }
 
-  public executeTask(localGulp: gulp.Gulp, completeCallback: (error?: string | Error) => void): void {
-    super.executeTask(localGulp, () => {
+  public executeTask(localGulp: gulp.Gulp): Promise<string[]> {
+    return super.executeTask(localGulp).then(result => {
       this.finished = true;
-      completeCallback();
+      return result;
     });
   }
 }

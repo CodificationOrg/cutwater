@@ -11,10 +11,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "build:compile": "yarn clean && yarn format && yarn lint && tsc",
-    "build": "yarn build:compile && jest --passWithNoTests",
-    "prepublishOnly": "yarn build && git add -A . && standard-version -a",
-    "publish": "git push origin --tags",
-    "publishDryRun": "yarn build && standard-version -a --dry-run"
+    "build": "yarn build:compile && jest"
   },
   "repository": {
     "type": "git",
@@ -46,19 +43,15 @@
     "end-of-stream": "^1.4.1",
     "glob-escape": "^0.0.2",
     "gulp": "^4.0.2",
+    "gulp-prettier": "^2.2.0",
     "jest": "^24.9.0",
+    "prettier": "^1.18.2",
     "pretty-hrtime": "^1.0.3",
     "spawn-args": "^0.2.0",
     "standard-version": "^7.0.0",
     "through2": "^3.0.1",
+    "tslint-config-prettier": "^1.18.0",
     "vinyl": "^2.2.0",
     "yargs": "^14.0.0"
-  },
-  "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "@types/node": "^12.7.4",
-    "prettier": "^1.18.2",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.6.4"
   }
 }
