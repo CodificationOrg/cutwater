@@ -1,0 +1,48 @@
+{
+  "name": "@codification/cutwater-build-typescript",
+  "version": "0.4.2",
+  "description": "Tasks for compiling and linting TypeScript.",
+  "homepage": "https://github.com/CodificationOrg/cutwater",
+  "bugs": "https://github.com/CodificationOrg/cutwater/issues",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "clean": "gulp clean",
+    "format": "gulp prettier  --verbose",
+    "lint": "tslint -p tsconfig.json",
+    "build:compile": "yarn clean && yarn format && yarn lint && tsc",
+    "build": "yarn build:compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodificationOrg/cutwater.git",
+    "directory": "packages/cutwater-build-typescript"
+  },
+  "keywords": [
+    "common",
+    "cutwater",
+    "utilities",
+    "support",
+    "build",
+    "gulp",
+    "task",
+    "codification",
+    "typescript",
+    "lint",
+    "tsc"
+  ],
+  "author": {
+    "name": "William Weiss",
+    "url": "https://github.com/wweiss"
+  },
+  "license": "Apache-2.0",
+  "private": false,
+  "prettier": "@codification/cutwater-build-core/includes/prettier-config",
+  "dependencies": {
+    "@codification/cutwater-build-core": "^0.4.2",
+    "gulp-tslint": "^8.1.4",
+    "gulp-typescript": "^5.0.1",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.2"
+  }
+}
