@@ -1,0 +1,10 @@
+- in: query
+  name: start
+  description: The index offset of the first id to be returned.
+  type: integer
+  allowEmptyValue: true
+- in: query
+  name: end
+  description: The index of the last id to be returned.
+  type: integer
+  allowEmptyValue: true
