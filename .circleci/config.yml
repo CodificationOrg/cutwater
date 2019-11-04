@@ -14,7 +14,6 @@ aliases:
   - &save-cache
     paths:
       - node_modules
-      - website/node_modules
     key: v2-dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
 
   - &install yarn --no-progress --frozen-lockfile
@@ -28,21 +27,7 @@ aliases:
 
 version: 2
 jobs:
-  lint:
-    <<: *defaults
-    steps:
-      - checkout
-      - run: *timezone
-      - restore-cache: *restore-cache
-      - run: *install
-      - save-cache: *save-cache
-      - run:
-          name: 'Lint'
-          command: yarn ci:lint
-      - store_test_results:
-          path: reports/junit
-
-  test:
+  build:
     <<: *defaults
     steps:
       - checkout
@@ -52,34 +37,10 @@ jobs:
       - save-cache: *save-cache
       - run:
           name: 'Run Tests'
-          command: yarn ci:test
-      - store_test_results:
-          path: reports/junit
-
-  deploy-site:
-    <<: *defaults
-    steps:
-      - checkout
-      - run: *timezone
-      - restore-cache: *restore-cache
-      - run: *install
-      - save-cache: *save-cache
-      - run:
-          name: 'Generate API Docs'
-          command: yarn ci:docs
-      - run:
-          name: 'Deploying to GitHub Pages'
-          command: |
-            git config --global user.email "$GIT_USER@users.noreply.github.com"
-            git config --global user.name "$GIT_NAME"
-            echo "machine github.com login $GIT_USER password $GITHUB_TOKEN" > ~/.netrc
-            cd website && yarn install && GIT_USER=$GIT_USER CUSTOM_COMMIT_MESSAGE="[skip ci]" yarn run publish-gh-pages
+          command: yarn build
 
 workflows:
   version: 2
-  lint-test-doc:
+  build:
     jobs:
-      - lint
-      - test
-      - deploy-site:
-          filters: *filter-ignore-gh-pages
+      - build
