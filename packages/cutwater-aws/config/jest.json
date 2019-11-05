@@ -1,4 +1,4 @@
 {
-    "isEnabled": true,
+    "isEnabled": false,
     "testMatch": ["**/*.(spec|test).js?(x)"]
 }

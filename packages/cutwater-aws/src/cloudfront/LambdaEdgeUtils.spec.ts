@@ -4,13 +4,13 @@ import { IncomingHttpHeaders } from 'http';
 import { mockCloudFrontRequestEvent } from './CloudFront.mock';
 import { LambdaEdgeUtils as lambda } from './LambdaEdgeUtils';
 
-const createCFRequest: Function = (): CloudFrontRequestEvent =>
+const createCFRequest = (): CloudFrontRequestEvent =>
   mockCloudFrontRequestEvent({
     Records: [
       {
         cf: {
           config: {
-            eventType: 'origin-request'
+            eventType: 'origin-request',
           },
           request: {
             origin: {
@@ -19,19 +19,19 @@ const createCFRequest: Function = (): CloudFrontRequestEvent =>
                   'my-origin-custom-header': [
                     {
                       key: 'My-Origin-Custom-Header',
-                      value: 'Test'
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    ]
+                      value: 'Test',
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    ],
   });
 
-const createHeaders: Function = (...headerNames: string[]): IncomingHttpHeaders => {
+const createHeaders = (...headerNames: string[]): IncomingHttpHeaders => {
   const rval: IncomingHttpHeaders = {} as IncomingHttpHeaders;
   let counter: number = 0;
   headerNames.forEach(header => {
@@ -50,7 +50,7 @@ describe('LambdaEdgeUtils Unit Tests', () => {
   });
 
   const headers: CloudFrontHeaders = lambda.toCloudFrontHeaders(
-    createHeaders('Connection', 'Content-Length', 'X-Custom-Header')
+    createHeaders('Connection', 'Content-Length', 'X-Custom-Header'),
   );
 
   test('toCloudFrontHeaders', () => {

@@ -4,7 +4,7 @@ import {
   CloudFrontRequestEvent,
   CloudFrontResponse,
   CloudFrontResponseEvent,
-  CloudFrontResultResponse
+  CloudFrontResultResponse,
 } from 'aws-lambda';
 import { ClientRequest, IncomingHttpHeaders, IncomingMessage, request as HttpRequest, RequestOptions } from 'http';
 import { IHandlerLambda, IMiddyMiddlewareObject, IMiddyNextFunction } from 'middy';
@@ -32,7 +32,7 @@ export interface CloudFrontOriginRequestEvent extends CloudFrontRequestEvent {
   originResponse?: CloudFrontResultResponse;
 }
 
-const toRequestOptions: Function = (req: CloudFrontRequest, origin: CloudFrontCustomOrigin): RequestOptions => {
+const toRequestOptions = (req: CloudFrontRequest, origin: CloudFrontCustomOrigin): RequestOptions => {
   const rval: RequestOptions = {};
   rval.protocol = origin.protocol + ':';
   rval.hostname = origin.domainName;
@@ -50,11 +50,11 @@ const toRequestOptions: Function = (req: CloudFrontRequest, origin: CloudFrontCu
 /**
  * @beta
  */
-export const withOriginRequestResponse: Function = (config?: OriginRequestConfig): IMiddyMiddlewareObject => {
+export const withOriginRequestResponse = (config?: OriginRequestConfig): IMiddyMiddlewareObject => {
   return {
     before: (
       handler: IHandlerLambda<CloudFrontOriginRequestEvent, CloudFrontResultResponse>,
-      next: IMiddyNextFunction
+      next: IMiddyNextFunction,
     ) => {
       if (LambdaEdgeUtils.isCustomOriginRequestEvent(handler.event)) {
         const request: CloudFrontRequest = handler.event.Records[0].cf.request;
@@ -79,14 +79,14 @@ export const withOriginRequestResponse: Function = (config?: OriginRequestConfig
         LOG.debug('Skipping middleware because event is not a custom Origin-Request.');
         next();
       }
-    }
+    },
   };
 };
 
-const findPrefixedHeaders: Function = (
+const findPrefixedHeaders = (
   headers: IncomingHttpHeaders,
   prefix: string,
-  stripPrefix = false
+  stripPrefix = false,
 ): IncomingHttpHeaders => {
   const rval: IncomingHttpHeaders = {};
   Object.keys(headers).forEach(header => {
@@ -101,7 +101,7 @@ const findPrefixedHeaders: Function = (
 /**
  * @beta
  */
-export const withCustomOriginRequestHeaders: Function = (customHeaderPrefix = 'x-custom-'): IMiddyMiddlewareObject => {
+export const withCustomOriginRequestHeaders = (customHeaderPrefix = 'x-custom-'): IMiddyMiddlewareObject => {
   return {
     before: (handler: IHandlerLambda<CloudFrontRequestEvent, CloudFrontResultResponse>, next: IMiddyNextFunction) => {
       if (LambdaEdgeUtils.isCustomOriginRequestEvent(handler.event)) {
@@ -111,21 +111,21 @@ export const withCustomOriginRequestHeaders: Function = (customHeaderPrefix = 'x
         const customHeaders: IncomingHttpHeaders = findPrefixedHeaders(
           LambdaEdgeUtils.toIncomingHttpHeaders(origin.customHeaders),
           customHeaderPrefix,
-          true
+          true,
         );
         request.headers = LambdaEdgeUtils.toCloudFrontHeaders(HttpUtils.mergeHeaders(headers, customHeaders, true));
       } else {
         LOG.debug('Skipping middleware because event is not a custom Origin-Request.');
       }
       next();
-    }
+    },
   };
 };
 
 /**
  * @beta
  */
-export const withRequestHeaderConfig: Function = (customHeaderPrefix = 'x-config-'): IMiddyMiddlewareObject => {
+export const withRequestHeaderConfig = (customHeaderPrefix = 'x-config-'): IMiddyMiddlewareObject => {
   return {
     before: (handler: IHandlerLambda<CloudFrontRequestEvent, CloudFrontResultResponse>, next: IMiddyNextFunction) => {
       if (LambdaEdgeUtils.isCustomOriginRequestEvent(handler.event)) {
@@ -134,7 +134,7 @@ export const withRequestHeaderConfig: Function = (customHeaderPrefix = 'x-config
         const customHeaders: IncomingHttpHeaders = findPrefixedHeaders(
           LambdaEdgeUtils.toIncomingHttpHeaders(origin.customHeaders),
           customHeaderPrefix,
-          true
+          true,
         );
         Object.keys(customHeaders).forEach(header => {
           const headerValue: string | string[] = customHeaders[header] || '';
@@ -145,29 +145,29 @@ export const withRequestHeaderConfig: Function = (customHeaderPrefix = 'x-config
         LOG.debug('Skipping middleware because event is not a custom Origin-Request.');
       }
       next();
-    }
+    },
   };
 };
 
 /**
  * @beta
  */
-export const withOriginResponseHeaders: Function = (config: IncomingHttpHeaders): IMiddyMiddlewareObject => {
+export const withOriginResponseHeaders = (config: IncomingHttpHeaders): IMiddyMiddlewareObject => {
   return {
     before: (handler: IHandlerLambda<CloudFrontResponseEvent, CloudFrontResponse>, next: IMiddyNextFunction) => {
       if (LambdaEdgeUtils.isCustomOriginResponseEvent(handler.event)) {
         const response: CloudFrontResponse = handler.event.Records[0].cf.response;
         const mergedHeaders: IncomingHttpHeaders = HttpUtils.mergeHeaders(
           LambdaEdgeUtils.toIncomingHttpHeaders(response.headers),
-          config
+          config,
         );
         response.headers = LambdaEdgeUtils.stripOriginResponseHeaders(
-          LambdaEdgeUtils.toCloudFrontHeaders(mergedHeaders)
+          LambdaEdgeUtils.toCloudFrontHeaders(mergedHeaders),
         );
       } else {
         LOG.debug('Skipping middleware because event is not a Origin-Response.');
       }
       next();
-    }
+    },
   };
 };

@@ -4,22 +4,12 @@
   "description": "A library providing general functionality for TypeScript based AWS projects.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
-  "author": {
-    "name": "William Weiss",
-    "url": "https://github.com/wweiss"
-  },
-  "license": "Apache-2.0",
-  "private": false,
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
-    "ci:lint": "gulp cutwater-ci-tslint --clean",
-    "ci:test": "gulp cutwater-ci-jest --clean ",
-    "ci:docs": "gulp cutwater-ci-docs",
     "test": "gulp test --clean",
-    "build": "gulp --clean",
-    "build:prod": "gulp --production --clean"
+    "build": "gulp --clean --production"
   },
   "repository": {
     "type": "git",
@@ -34,24 +24,30 @@
     "aws",
     "codification"
   ],
+  "author": {
+    "name": "William Weiss",
+    "url": "https://github.com/wweiss"
+  },
+  "license": "Apache-2.0",
+  "private": false,
+  "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "optionalDependencies": {
     "aws-lambda": "^0.1.2",
     "middy": "^0.18.1"
   },
   "dependencies": {
-    "@codification/cutwater-core": "0.4.2",
-    "@codification/cutwater-logging": "0.4.2",
-    "@codification/cutwater-node-core": "0.4.2",
-    "aws-sdk": "^2.321.0",
+    "@codification/cutwater-core": "^0.4.2",
+    "@codification/cutwater-logging": "^0.4.2",
+    "@codification/cutwater-node-core": "^0.4.2",
+    "aws-sdk": "^2.564.0",
     "got": "^9.6.0",
     "mime": "^2.4.0",
     "rxjs": "^6.4.0"
   },
   "devDependencies": {
-    "@codification/cutwater-build-core": "0.4.2",
-    "@microsoft/rush-stack-compiler-3.2": "^0.2.16"
-  },
-  "jest": {
-    "testURL": "http://localhost"
+    "aws-lambda": "^0.1.2",
+    "middy": "^0.18.1",
+    "@codification/cutwater-build-core": "^0.4.2",
+    "@codification/cutwater-build-node": "^0.4.2"
   }
 }

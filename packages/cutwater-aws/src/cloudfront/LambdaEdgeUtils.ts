@@ -4,7 +4,7 @@ import {
   CloudFrontRequest,
   CloudFrontRequestEvent,
   CloudFrontResponseEvent,
-  CloudFrontResultResponse
+  CloudFrontResultResponse,
 } from 'aws-lambda';
 import { IncomingHttpHeaders, IncomingMessage } from 'http';
 
@@ -25,11 +25,11 @@ const BLACK_LISTED_HEADERS: string[] = [
   'X-Accel-Redirect',
   'X-Cache',
   'X-Forwarded-Proto',
-  'X-Real-IP'
+  'X-Real-IP',
 ].map(header => header.toLowerCase());
 
 const READ_ONLY_HEADERS_VIEWER_REQUEST: string[] = ['Content-Length', 'Host', 'Transfer-Encoding', 'Via'].map(header =>
-  header.toLowerCase()
+  header.toLowerCase(),
 );
 
 const READ_ONLY_HEADERS_ORIGIN_REQUEST: string[] = [
@@ -41,7 +41,7 @@ const READ_ONLY_HEADERS_ORIGIN_REQUEST: string[] = [
   'If-Unmodified-Since',
   'Range',
   'Transfer-Encoding',
-  'Via'
+  'Via',
 ].map(header => header.toLowerCase());
 
 const READ_ONLY_HEADERS_ORIGIN_RESPONSE: string[] = ['Transfer-Encoding', 'Via'].map(header => header.toLowerCase());
@@ -51,7 +51,7 @@ const READ_ONLY_HEADERS_VIEWER_RESPONSE: string[] = [
   'Content-Length',
   'Transfer-Encoding',
   'Warning',
-  'Via'
+  'Via',
 ].map(header => header.toLowerCase());
 
 /**
@@ -178,13 +178,13 @@ export class LambdaEdgeUtils {
    * @returns a response to be returned to a CloudFront viewer
    */
   public static originResponseToCloudFrontResultResponse(
-    originResponse: IncomingMessage
+    originResponse: IncomingMessage,
   ): Promise<CloudFrontResultResponse> {
     const rval: CloudFrontResultResponse = {} as CloudFrontResultResponse;
     rval.status = (originResponse.statusCode ? originResponse.statusCode : 500).toString();
     rval.statusDescription = originResponse.statusMessage;
     rval.headers = LambdaEdgeUtils.stripOriginRequestHeaders(
-      LambdaEdgeUtils.toCloudFrontHeaders(originResponse.headers)
+      LambdaEdgeUtils.toCloudFrontHeaders(originResponse.headers),
     );
     if (HttpUtils.isResponseOk(originResponse)) {
       return new Promise((resolve, reject) => {
