@@ -11,7 +11,7 @@
   "license": "Apache-2.0",
   "private": false,
   "main": "lib/index.js",
-  "typings": "dist/index.d.ts",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
     "ci:lint": "gulp cutwater-ci-tslint --clean",
