@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 const path = require("path");
+const TerserPlugin = require("terser-webpack-plugin");
 // Note: this require may need to be fixed to point to the build that exports the gulp-core-build-webpack instance.
 const webpackTask = require('@codification/cutwater-build-webpack').webpack;
-const uglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const isProduction = webpackTask.buildConfig.production;
 const webpackConfiguration = {
     context: __dirname,
@@ -32,20 +32,21 @@ const webpackConfiguration = {
             commonjs: 'react-dom'
         }
     },
-    plugins: [
-        // new WebpackNotifierPlugin()
-    ]
+    optimization: {
+        minimizer: [],
+    },
 };
-if (isProduction && webpackConfiguration.plugins) {
-    webpackConfiguration.plugins.push(new uglifyJsPlugin({
-        uglifyOptions: {
-            mangle: true,
-            compress: {
-                dead_code: true,
-                warnings: false
-            }
-        }
-    }));
+if (isProduction && webpackConfiguration.optimization && webpackConfiguration.optimization.minimizer) {
+    webpackConfiguration.optimization.minimizer.push(
+        new TerserPlugin({
+            parallel: true,
+            sourceMap: true,
+            include: /\.min\.js$/,
+            terserOptions: {
+                ecma: 6,
+            },
+        }),
+    );
 }
 module.exports = webpackConfiguration;
 //# sourceMappingURL=webpack.config.js.map
