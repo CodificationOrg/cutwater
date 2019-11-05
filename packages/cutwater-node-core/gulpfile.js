@@ -1,9 +1,5 @@
 'use strict';
 
-const build = require('@microsoft/node-library-build');
-const cutwater = require('@codification/cutwater-build-core');
-
-build.mocha.enabled = false;
-cutwater.registerCiTasks(require('./package.json'));
+const build = require('@codification/cutwater-build-node');
 
 build.initialize(require('gulp'));

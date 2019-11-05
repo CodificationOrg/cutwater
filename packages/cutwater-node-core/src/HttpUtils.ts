@@ -65,7 +65,7 @@ export class HttpUtils {
   public static mergeHeaders(
     dst: IncomingHttpHeaders | OutgoingHttpHeaders,
     src: IncomingHttpHeaders | OutgoingHttpHeaders,
-    overwrite: boolean = true
+    overwrite: boolean = true,
   ): IncomingHttpHeaders {
     const rval: IncomingHttpHeaders = this.toIncomingHttpHeaders(dst);
     Object.keys(src).forEach(headerName => {

@@ -8,12 +8,8 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
-    "ci:lint": "gulp cutwater-ci-tslint --clean",
-    "ci:test": "gulp cutwater-ci-jest --clean ",
-    "ci:docs": "gulp cutwater-ci-docs",
     "test": "gulp test --clean",
-    "build": "gulp --clean",
-    "build:prod": "gulp --production --clean"
+    "build": "gulp --clean --production"
   },
   "repository": {
     "type": "git",
@@ -34,14 +30,12 @@
   },
   "license": "Apache-2.0",
   "private": false,
+  "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
-    "@codification/cutwater-core": "0.4.2"
+    "@codification/cutwater-core": "^0.4.2"
   },
   "devDependencies": {
-    "@codification/cutwater-build-core": "0.4.2",
-    "@microsoft/rush-stack-compiler-3.2": "^0.2.19"
-  },
-  "jest": {
-    "testURL": "http://localhost"
+    "@codification/cutwater-build-core": "^0.4.2",
+    "@codification/cutwater-build-node": "^0.4.2"
   }
 }
