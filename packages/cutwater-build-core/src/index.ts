@@ -19,8 +19,8 @@ import { PrettierTask } from './tasks/PrettierTask';
 export { BuildConfig } from './BuildConfig';
 export { BuildContext, BuildMetrics, BuildState } from './BuildContext';
 export { ExecutableTask } from './ExecutableTask';
-export * from './tasks';
 export { Logger } from './logging/Logger';
+export * from './tasks';
 export { IOUtils } from './utilities/IOUtils';
 
 const taskMap: { [key: string]: ExecutableTask } = {};
