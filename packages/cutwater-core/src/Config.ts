@@ -3,9 +3,6 @@
  * @beta
  */
 export class Config {
-
-  private static config: { [key: string]: string } = {};
-
   /**
    * This will set the provided configuration `key` to the specified `value`. This does not make any changes to
    * `process.env`, the key/value pair is stored in memory only.
@@ -52,4 +49,6 @@ export class Config {
     }
     return rval;
   }
+
+  private static config: { [key: string]: string } = {};
 }

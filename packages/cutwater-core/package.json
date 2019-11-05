@@ -13,7 +13,7 @@
     "ci:test": "gulp cutwater-ci-jest --clean ",
     "ci:docs": "gulp cutwater-ci-docs",
     "test": "gulp test --clean",
-    "build": "gulp --clean",
+    "build": "gulp --clean --verbose --production",
     "build:prod": "gulp --production --clean"
   },
   "repository": {
@@ -26,8 +26,9 @@
     "cutwater",
     "utilities",
     "support",
-    "logging",
-    "md5",
+    "core",
+    "browser",
+    "node",
     "codification"
   ],
   "author": {
@@ -36,16 +37,16 @@
   },
   "license": "Apache-2.0",
   "private": false,
+  "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
     "date-fns": "^1.29.0"
   },
   "optionalDependencies": {
     "rxjs": "^6.4.0"
   },
-  "jest": {
-    "testURL": "http://localhost"
-  },
   "devDependencies": {
-    "@codification/cutwater-build-core": "0.4.2"
+    "@codification/cutwater-build-node": "^0.4.2",
+    "@codification/cutwater-build-web": "^0.4.2",
+    "@codification/cutwater-build-core": "^0.4.2"
   }
 }

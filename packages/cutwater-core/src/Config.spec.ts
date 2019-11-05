@@ -2,7 +2,7 @@ import { Config } from './Config';
 
 describe('Config Unit Tests', () => {
   test('get', () => {
-    const expected: string = (process.env.foo || '');
+    const expected: string = process.env.foo || '';
     expect(Config.get('foo')).toBe(expected);
 
     Config.put('foo', 'bar');

@@ -4,8 +4,6 @@
  * @beta
  */
 export class TimeUnit {
-  private milliseconds: number;
-
   /**
    * Returns a [[TimeUnit]] representing the specified number of days.
    *
@@ -54,6 +52,12 @@ export class TimeUnit {
    */
   public static seconds(count: number): TimeUnit {
     return TimeUnit.millis(1000 * count);
+  }
+
+  private milliseconds: number;
+
+  private constructor(milliseconds: number) {
+    this.milliseconds = milliseconds;
   }
 
   /**
@@ -105,9 +109,4 @@ export class TimeUnit {
   public toDays(): number {
     return Math.floor(this.toHours() / 24);
   }
-
-  private constructor(milliseconds: number) {
-    this.milliseconds = milliseconds;
-  }
-
 }

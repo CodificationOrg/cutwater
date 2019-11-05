@@ -5,7 +5,6 @@ import { VarUtils } from './VarUtils';
  * @beta
  */
 export class StringUtils {
-
   /**
    * Returns `true` if the value is a string containing only whitespace or is empty.
    *
@@ -13,7 +12,7 @@ export class StringUtils {
    * @returns true if the value is blank
    */
   public static isBlank(value: string = ''): boolean {
-    return (StringUtils.isEmpty(value) || value.trim().length === 0);
+    return StringUtils.isEmpty(value) || value.trim().length === 0;
   }
 
   /**
@@ -23,7 +22,7 @@ export class StringUtils {
    * @returns true if the string is empty
    */
   public static isEmpty(value: string = ''): boolean {
-    return (value.length < 1);
+    return value.length < 1;
   }
 
   /**
@@ -38,8 +37,8 @@ export class StringUtils {
     return (
       VarUtils.isPresent(value) &&
       VarUtils.isPresent(searchTerm) &&
-      (value.indexOf(searchTerm) !== -1 || (caseInsensitive &&
-        value.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1))
+      (value.indexOf(searchTerm) !== -1 ||
+        (caseInsensitive && value.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1))
     );
   }
 
@@ -55,8 +54,8 @@ export class StringUtils {
     return (
       VarUtils.isPresent(value) &&
       VarUtils.isPresent(searchTerm) &&
-      (value.indexOf(searchTerm) === 0 || (caseInsensitive &&
-        value.toLowerCase().indexOf(searchTerm.toLowerCase()) === 0))
+      (value.indexOf(searchTerm) === 0 ||
+        (caseInsensitive && value.toLowerCase().indexOf(searchTerm.toLowerCase()) === 0))
     );
   }
 
@@ -69,8 +68,8 @@ export class StringUtils {
    * @returns true if the value ends with the search term
    */
   public static endsWith(value: string, searchTerm: string, caseInsensitive: boolean = false): boolean {
-    const index: number = value && searchTerm && value.length >= searchTerm.length ?
-      value.length - searchTerm.length : -1;
+    const index: number =
+      value && searchTerm && value.length >= searchTerm.length ? value.length - searchTerm.length : -1;
     return (
       index !== -1 &&
       (value.indexOf(searchTerm) === index ||

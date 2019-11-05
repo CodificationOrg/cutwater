@@ -70,7 +70,7 @@ export class TZUtils {
     return new Date(
       rval.getTime() +
         TimeUnit.minutes(rval.getTimezoneOffset()).toMillis() +
-        TimeUnit.minutes(TZUtils.timezoneOffset).toMillis()
+        TimeUnit.minutes(TZUtils.timezoneOffset).toMillis(),
     );
   }
 }

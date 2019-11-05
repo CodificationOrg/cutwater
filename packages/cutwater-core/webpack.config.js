@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 const path = require("path");
 // Note: this require may need to be fixed to point to the build that exports the gulp-core-build-webpack instance.
-const webpackTask = require('@microsoft/web-library-build').webpack;
+const webpackTask = require('@codification/cutwater-build-webpack').webpack;
 const uglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const isProduction = webpackTask.buildConfig.production;
 const webpackConfiguration = {
