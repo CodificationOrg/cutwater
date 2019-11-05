@@ -19,11 +19,7 @@ export class SimpleLayout implements Layout {
 
   public format(event: LoggingEvent): string {
     const loggerName: string =
-      event.logger.name && event.logger.name !== LoggerFactory.DEFAULT_LOGGER
-        ? `${event.logger.name} - `
-        : '';
-    return `${TZUtils.timestamp(this.timestampFormat)} -${loggerName}${
-      event.level.name
-    } - ${event.message}`;
+      event.logger.name && event.logger.name !== LoggerFactory.DEFAULT_LOGGER ? `${event.logger.name} - ` : '';
+    return `${TZUtils.timestamp(this.timestampFormat)} -${loggerName}${event.level.name} - ${event.message}`;
   }
 }

@@ -27,8 +27,7 @@ export class LoggerFactory {
    *
    * @readonly
    */
-  public static readonly ENV_LOGGING_LEVEL_PREFIX: string =
-    LoggerFactory.ENV_LOGGING_LEVEL + '_';
+  public static readonly ENV_LOGGING_LEVEL_PREFIX: string = LoggerFactory.ENV_LOGGING_LEVEL + '_';
 
   /**
    * The name of the default [[Logger]].
@@ -51,8 +50,6 @@ export class LoggerFactory {
    * The [[Appender]] used by all [[Logger]] instances that do not have one specified.
    */
   public static GLOBAL_APPENDER: Appender = new ConsoleAppender();
-
-  private static LOGGERS: object = [];
 
   /**
    * Returns the [[Logger]] instance with the specified name.  If no name is provided, the default will be returned.
@@ -84,19 +81,16 @@ export class LoggerFactory {
     });
   }
 
+  private static LOGGERS: object = [];
+
   private static init(): void {
     if (!this.GLOBAL_LEVEL) {
-      this.GLOBAL_LEVEL = Level.toLevel(
-        Config.get(this.ENV_LOGGING_LEVEL),
-        this.DEFAULT_LOGGING_LEVEL
-      );
+      this.GLOBAL_LEVEL = Level.toLevel(Config.get(this.ENV_LOGGING_LEVEL), this.DEFAULT_LOGGING_LEVEL);
     }
   }
 
   private static initialize(logger: DefaultLoggerImpl): Logger {
-    const levelName: string = Config.get(
-      this.ENV_LOGGING_LEVEL_PREFIX + logger.name
-    );
+    const levelName: string = Config.get(this.ENV_LOGGING_LEVEL_PREFIX + logger.name);
     if (levelName) {
       logger.level = Level.toLevel(levelName);
     }
@@ -109,6 +103,7 @@ export class LoggerFactory {
 /**
  * @ignore
  */
+// tslint:disable-next-line: max-classes-per-file
 class DefaultLoggerImpl implements Logger {
   private loggerName: string;
   private loggerLevel: Level;
@@ -131,9 +126,7 @@ class DefaultLoggerImpl implements Logger {
   }
 
   get appender(): Appender {
-    return !this.loggerAppender
-      ? LoggerFactory.GLOBAL_APPENDER
-      : this.loggerAppender;
+    return !this.loggerAppender ? LoggerFactory.GLOBAL_APPENDER : this.loggerAppender;
   }
 
   set appender(appender: Appender) {
@@ -183,9 +176,7 @@ class DefaultLoggerImpl implements Logger {
   private doLog(level: Level, input: any[]): boolean {
     const rval: boolean = this.isEnabled(level);
     if (rval) {
-      this.appender.doAppend(
-        new LoggingEvent(this, level, util.format.apply(undefined, input))
-      );
+      this.appender.doAppend(new LoggingEvent(this, level, util.format.apply(undefined, input)));
     }
     return rval;
   }

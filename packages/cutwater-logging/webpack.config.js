@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 const path = require("path");
-const webpackTask = require('@microsoft/web-library-build').webpack;
-const uglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
+// Note: this require may need to be fixed to point to the build that exports the gulp-core-build-webpack instance.
+const webpackTask = require('@codification/cutwater-build-webpack').webpack;
 const isProduction = webpackTask.buildConfig.production;
 const webpackConfiguration = {
     context: __dirname,
@@ -16,18 +17,36 @@ const webpackConfiguration = {
         libraryTarget: 'umd',
         path: path.join(__dirname, webpackTask.buildConfig.distFolder),
         filename: `[name]${isProduction ? '.min' : ''}.js`
-    }
-};
-if (isProduction && webpackConfiguration.plugins) {
-    webpackConfiguration.plugins.push(new uglifyJsPlugin({
-        uglifyOptions: {
-            mangle: true,
-            compress: {
-                dead_code: true,
-                warnings: false
-            }
+    },
+    devServer: {
+        stats: 'none'
+    },
+    // The typings are missing the "object" option here (https://webpack.js.org/configuration/externals/#object)
+    externals: {
+        'react': {
+            amd: 'react',
+            commonjs: 'react'
+        },
+        'react-dom': {
+            amd: 'react-dom',
+            commonjs: 'react-dom'
         }
-    }));
+    },
+    optimization: {
+        minimizer: [],
+    },
+};
+if (isProduction && webpackConfiguration.optimization && webpackConfiguration.optimization.minimizer) {
+    webpackConfiguration.optimization.minimizer.push(
+        new TerserPlugin({
+            parallel: true,
+            sourceMap: true,
+            include: /\.min\.js$/,
+            terserOptions: {
+                ecma: 6,
+            },
+        }),
+    );
 }
 module.exports = webpackConfiguration;
 //# sourceMappingURL=webpack.config.js.map

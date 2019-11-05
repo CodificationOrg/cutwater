@@ -4,6 +4,19 @@
   "description": "Yet another simple logging utility.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "module": "dist/cutwater-logging.min.js",
+  "scripts": {
+    "clean": "gulp clean",
+    "test": "gulp test --clean",
+    "build": "gulp --clean --production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodificationOrg/cutwater.git",
+    "directory": "packages/cutwater-logging"
+  },
   "keywords": [
     "log",
     "logs",
@@ -21,30 +34,13 @@
   },
   "license": "Apache-2.0",
   "private": false,
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/CodificationOrg/cutwater.git",
-    "directory": "packages/cutwater-logging"
-  },
-  "scripts": {
-    "clean": "gulp clean",
-    "ci:lint": "gulp cutwater-ci-tslint --clean",
-    "ci:test": "gulp cutwater-ci-jest --clean ",
-    "ci:docs": "gulp cutwater-ci-docs",
-    "test": "gulp test --clean",
-    "build": "gulp --clean",
-    "build:prod": "gulp --production --clean"
-  },
+  "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "devDependencies": {
-    "@codification/cutwater-build-core": "0.4.2",
-    "@microsoft/rush-stack-compiler-3.2": "^0.2.19"
+    "@codification/cutwater-build-node": "^0.4.2",
+    "@codification/cutwater-build-web": "^0.4.2",
+    "@codification/cutwater-build-core": "^0.4.2"
   },
   "dependencies": {
-    "@codification/cutwater-core": "0.4.2"
-  },
-  "jest": {
-    "testURL": "http://localhost"
+    "@codification/cutwater-core": "^0.4.2"
   }
 }

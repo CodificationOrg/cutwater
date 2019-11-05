@@ -1,11 +1,7 @@
 {
-  "extends": "./node_modules/@microsoft/rush-stack-compiler-3.2/includes/tsconfig-node.json",
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "@codification/cutwater-build-core/includes/tsconfig-node.json",
   "compilerOptions": {
-    "moduleResolution": "node",
-    "types": [
-      "jest",
-      "node"
-    ],
-    "lib": ["es6"]
+      "outDir": "lib"
   }
 }

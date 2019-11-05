@@ -51,23 +51,7 @@ export class Level {
    * An array containing all [[Level]]s.
    * @readonly
    */
-  public static readonly LEVELS: Level[] = [
-    Level.FATAL,
-    Level.ERROR,
-    Level.WARN,
-    Level.INFO,
-    Level.DEBUG,
-    Level.TRACE
-  ];
-
-  private static readonly ALL_LEVELS: Level[] = [
-    Level.OFF,
-    ...Level.LEVELS,
-    Level.ALL
-  ];
-
-  private levelName: string;
-  private levelPriority: number;
+  public static readonly LEVELS: Level[] = [Level.FATAL, Level.ERROR, Level.WARN, Level.INFO, Level.DEBUG, Level.TRACE];
 
   /**
    * Returns a [[Level]] object representing the `string` or `number` speicified.
@@ -75,23 +59,24 @@ export class Level {
    * @param level - a value corresponding to a Level
    * @returns the represented Level, or the defaul if it does not exist
    */
-  public static toLevel(
-    level: string | number,
-    defaultLevel: Level = Level.ERROR
-  ): Level {
+  public static toLevel(level: string | number, defaultLevel: Level = Level.ERROR): Level {
     let rval: Level = defaultLevel;
-    if (
-      typeof level === 'number' &&
-      level >= this.OFF.priority &&
-      level <= this.ALL.priority
-    ) {
+    if (typeof level === 'number' && level >= this.OFF.priority && level <= this.ALL.priority) {
       rval = this.ALL_LEVELS[level];
     } else if (typeof level === 'string') {
-      rval =
-        this.ALL_LEVELS.find(lvl => lvl.name === level.toUpperCase()) ||
-        defaultLevel;
+      rval = this.ALL_LEVELS.find(lvl => lvl.name === level.toUpperCase()) || defaultLevel;
     }
     return rval;
+  }
+
+  private static readonly ALL_LEVELS: Level[] = [Level.OFF, ...Level.LEVELS, Level.ALL];
+
+  private levelName: string;
+  private levelPriority: number;
+
+  private constructor(name: string, priority: number) {
+    this.levelName = name;
+    this.levelPriority = priority;
   }
 
   /**
@@ -102,11 +87,6 @@ export class Level {
    */
   public isGreaterOrEqual(level: Level): boolean {
     return this.priority >= level.priority;
-  }
-
-  private constructor(name: string, priority: number) {
-    this.levelName = name;
-    this.levelPriority = priority;
   }
 
   /**

@@ -17,6 +17,6 @@ export class LoggingEvent {
     public readonly logger: Logger,
     public readonly level: Level,
     // tslint:disable-next-line: no-any
-    public readonly message: any
+    public readonly message: any,
   ) {}
 }
