@@ -1,6 +1,6 @@
 import { BuildConfig, GulpTask, IOUtils } from '@codification/cutwater-build-core';
 import * as colors from 'colors';
-import * as gulp from 'gulp';
+import { Gulp } from 'gulp';
 import { EOL } from 'os';
 import * as path from 'path';
 import * as Webpack from 'webpack';
@@ -43,12 +43,11 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
     return super.isEnabled(buildConfig) && this.config.configPath !== null;
   }
 
-  public executeTask(localGulp: gulp.Gulp, completeCallback: (error?: string) => void): void {
+  public executeTask(localGulp: Gulp, completeCallback: (error?: string) => void): void {
     const shouldInitWebpack: boolean = process.argv.indexOf('--initwebpack') > -1;
 
     if (shouldInitWebpack) {
-      // tslint:disable-next-line:no-console
-      console.info(
+      this.log(
         'Initializing a webpack.config.js, which bundles lib/index.js ' + 'into dist/packagename.js into a UMD module.',
       );
 
