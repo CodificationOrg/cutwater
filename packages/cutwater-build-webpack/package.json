@@ -36,13 +36,13 @@
   "private": false,
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
-    "terser-webpack-plugin": "^1.4.1",
-    "webpack": "^4.39.2",
     "@codification/cutwater-build-core": "^0.4.2",
-    "@codification/cutwater-build-node": "^0.4.2"
+    "@codification/cutwater-build-node": "^0.4.2",
+    "colors": "^1.4.0",
+    "terser-webpack-plugin": "^1.4.1",
+    "webpack": "^4.39.2"
   },
   "devDependencies": {
-    "@types/node": "^12.6.8",
     "@types/webpack": "^4.32.1"
   }
 }

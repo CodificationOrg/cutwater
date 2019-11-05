@@ -48,7 +48,7 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
 
     if (shouldInitWebpack) {
       this.log(
-        'Initializing a webpack.config.js, which bundles lib/index.js ' + 'into dist/packagename.js into a UMD module.',
+        'Initializing a webpack.config.js, which bundles lib/index.js into dist/packagename.js into a UMD module.',
       );
 
       IOUtils.copyFile(path.resolve(__dirname, 'webpack.config.js'));
@@ -77,6 +77,10 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
         const outputDir = this.buildConfig.distFolder;
 
         webpack(webpackConfig, (error, stats) => {
+          if (error) {
+            completeCallback(error.message);
+          }
+
           if (!this.buildConfig.properties) {
             this.buildConfig.properties = {};
           }
@@ -91,8 +95,7 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
           });
 
           if (statsResult.errors && statsResult.errors.length) {
-            // tslint:disable-next-line:no-console
-            console.error(`'${outputDir}':` + EOL + statsResult.errors.join(EOL) + EOL);
+            this.logError(`'${outputDir}':` + EOL + statsResult.errors.join(EOL) + EOL);
           }
 
           if (statsResult.warnings && statsResult.warnings.length) {
@@ -110,8 +113,7 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
             });
 
             if (unsuppressedWarnings.length > 0) {
-              // tslint:disable-next-line:no-console
-              console.warn(`'${outputDir}':` + EOL + unsuppressedWarnings.join(EOL) + EOL);
+              this.logWarning(`'${outputDir}':` + EOL + unsuppressedWarnings.join(EOL) + EOL);
             }
           }
 
@@ -124,7 +126,7 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
                 if (chunk.files && this.config.printStats) {
                   chunk.files.forEach(file =>
                     // tslint:disable-next-line:no-console
-                    console.log(
+                    this.log(
                       `Bundled: '${colors.cyan(path.basename(file))}', ` +
                         `size: ${colors.magenta('' + chunk.size)} bytes, ` +
                         `took ${colors.magenta(duration.toString(10))} ms.`,
