@@ -5,7 +5,7 @@
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
   "main": "lib/index.js",
-  "typings": "dist/index.d.ts",
+  "typings": "lib/index.d.ts",
   "module": "dist/cutwater-core.min.js",
   "scripts": {
     "clean": "gulp clean",
@@ -46,7 +46,6 @@
     "testURL": "http://localhost"
   },
   "devDependencies": {
-    "@codification/cutwater-build-core": "0.4.2",
-    "@microsoft/rush-stack-compiler-3.2": "^0.2.19"
+    "@codification/cutwater-build-core": "0.4.2"
   }
 }
