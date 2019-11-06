@@ -76,7 +76,6 @@ const defaultCloudFrontOrigin = (): CloudFrontOrigin => ({
   },
 });
 
-// tslint:disable-next-line:export-name
 export const mockCloudFrontRequestEvent = (requestEvent?: Partial<CloudFrontRequestEvent>): CloudFrontRequestEvent => ({
   ...defaultCloudFrontRequestEvent(defaultCloudFrontHeaders(), defaultCloudFrontOrigin()),
   ...requestEvent,

@@ -5,7 +5,7 @@ import { mockCloudFrontRequestEvent } from './CloudFront.mock';
 import { LambdaEdgeUtils as lambda } from './LambdaEdgeUtils';
 
 const createCFRequest = (): CloudFrontRequestEvent =>
-  mockCloudFrontRequestEvent({
+  mockCloudFrontRequestEvent(({
     Records: [
       {
         cf: {
@@ -29,7 +29,7 @@ const createCFRequest = (): CloudFrontRequestEvent =>
         },
       },
     ],
-  });
+  } as unknown) as Partial<CloudFrontRequestEvent>);
 
 const createHeaders = (...headerNames: string[]): IncomingHttpHeaders => {
   const rval: IncomingHttpHeaders = {} as IncomingHttpHeaders;

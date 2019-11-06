@@ -223,9 +223,10 @@ export class LambdaEdgeUtils {
     const rval: IncomingHttpHeaders = {};
     if (headers) {
       Object.keys(headers).forEach(name => {
-        // tslint:disable-next-line:typedef
         const header = headers[name];
-        rval[header[0].key] = header.length > 1 ? header.map(obj => obj.value) : header[0].value;
+        if (header && header.length > 0 && header[0].key) {
+          rval[header[0].key] = header.length > 1 ? header.map(obj => obj.value) : header[0].value;
+        }
       });
     }
     return rval;
