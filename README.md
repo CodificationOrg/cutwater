@@ -1,8 +1,6 @@
 # cutwater
 
-**This is a monorepo containing a collection of tools and libraries used in Codification's projects.**
-
-Please visit the full documentation site at: <https://cutwater.codification.org>
+**This is a monorepo containing a collection of tools and libraries used in Codification projects.**
 
 ## Projects
 
@@ -24,7 +22,7 @@ A library providing easy logging capabilities for both the browser and server-si
 
 #### [@codification/cutwater-build-core](https://github.com/CodificationOrg/cutwater/tree/master/packages/cutwater-build-core/README.md)
 
-Building on Microsoft's [@microsoft/gulp-core-build](https://github.com/Microsoft/web-build-tools/blob/master/core-build/gulp-core-build/README.md) architecture, this project provides easy methods for building, validating and publishing project documentation.
+Inspired by Microsoft's [@microsoft/gulp-core-build](https://github.com/Microsoft/web-build-tools/blob/master/core-build/gulp-core-build/README.md) architecture, this project provides easy methods for building, testing, validating and publishing.
 
 ### Cloud Tools
 
