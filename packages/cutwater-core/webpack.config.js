@@ -16,7 +16,8 @@ const webpackConfiguration = {
     output: {
         libraryTarget: 'umd',
         path: path.join(__dirname, webpackTask.buildConfig.distFolder),
-        filename: `[name]${isProduction ? '.min' : ''}.js`
+        filename: `[name]${isProduction ? '.min' : ''}.js`,
+        globalObject: 'this',
     },
     devServer: {
         stats: 'none'
