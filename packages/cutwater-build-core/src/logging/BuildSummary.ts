@@ -1,4 +1,4 @@
-import * as prettyTime from 'pretty-hrtime';
+import { default as prettyTime } from 'pretty-hrtime';
 
 import { BuildContext } from '../BuildContext';
 import { builtPackage, coreBuildPackage, getFlagValue } from '../State';

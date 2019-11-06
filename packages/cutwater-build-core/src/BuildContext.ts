@@ -52,8 +52,6 @@ export const createContext = (buildConfig: BuildConfig, localGulp: Gulp, logger:
   return new BuildContextImpl(buildConfig, localGulp, logger);
 };
 
-// tslint:disable: no-console
-
 class BuildContextImpl implements BuildContext {
   public buildConfig: BuildConfig;
   public readonly gulp: Gulp;
@@ -119,34 +117,27 @@ class BuildContextImpl implements BuildContext {
         // tslint:disable-next-line: no-string-literal
         if (!global['dontWatchExit']) {
           if (!this.state.wroteSummary) {
-            this.state.wroteSummary = true;
-            console.log('About to exit with code:', code);
-            console.error(
-              'Process terminated before summary could be written, possible error in async code not continuing!',
-            );
-            console.log('Trying to exit with exit code 1');
-            this.exitProcess(1);
+            BuildSummary.write(this, () => {
+              this.exitProcess(code);
+            });
           } else {
-            if (this.exitCode !== 0) {
-              console.log(`Exiting with exit code: ${this.exitCode}`);
-              this.exitProcess(this.exitCode);
+            if (code !== 0) {
+              this.logger.log(`Exiting with exit code: ${code}`);
+              this.exitProcess(code);
             } else if (wroteToStdErr) {
-              console.error(`The build failed because a task wrote output to stderr.`);
-              console.log(`Exiting with exit code: 1`);
-              this.exitProcess(1);
+              this.logger.error(`The build failed because a task wrote output to stderr.`);
+              this.logger.log(`Exiting with exit code: 1`);
+              this.exitProcess(code);
             }
           }
         }
       });
 
       process.on('uncaughtException', (err: Error) => {
-        console.error(err);
-
         this.logger.writeTaskError(err);
         this.metrics.taskErrors++;
         BuildSummary.write(this, () => {
           this.exitProcess(1);
-
           if (this.gulpErrorCallback) {
             this.gulpErrorCallback(err);
           }
