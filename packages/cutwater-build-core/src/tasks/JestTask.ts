@@ -101,10 +101,10 @@ export class JestTask extends GulpTask<JestTaskConfig> {
   public constructor() {
     super('jest', {
       cache: true,
-      collectCoverageFrom: 'lib/**/*.js?(x), !lib/**/*.test.*',
+      collectCoverageFrom: '<rootDir>/lib/**/*.js?(x), !lib/**/*.test.*',
       coverage: true,
       coverageReporters: ['json', 'html'],
-      testMatch: ['lib/**/*.test.js?(x)'],
+      testMatch: ['<rootDir>/lib/**/*.(test|spec).js?(x)'],
       testPathIgnorePatterns: ['<rootDir>/(src|lib-amd|lib-es6|coverage|build|docs|node_modules)/'],
       modulePathIgnorePatterns: ['<rootDir>/(src|lib)/.*/package.json'],
     });
@@ -123,8 +123,9 @@ export class JestTask extends GulpTask<JestTaskConfig> {
     jestConfig.testEnvironment = require.resolve('jest-environment-jsdom');
     jestConfig.cacheDirectory = path.join(this.buildConfig.rootPath, this.buildConfig.tempFolder, 'jest-cache');
 
-    jest.runCLI(jestConfig as any, [this.buildConfig.rootPath]).then(
-      (result: { results: AggregatedResult; globalConfig: GlobalConfig }) => {
+    jest
+      .runCLI(jestConfig as any, [this.buildConfig.rootPath])
+      .then((result: { results: AggregatedResult; globalConfig: GlobalConfig }) => {
         if (result.results.numFailedTests || result.results.numFailedTestSuites) {
           completeCallback(new Error('Jest tests failed'));
         } else {
@@ -133,10 +134,7 @@ export class JestTask extends GulpTask<JestTaskConfig> {
           }
           completeCallback();
         }
-      },
-      err => {
-        completeCallback(err);
-      },
-    );
+      })
+      .catch(err => completeCallback(err));
   }
 }
