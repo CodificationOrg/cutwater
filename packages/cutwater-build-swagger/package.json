@@ -12,6 +12,9 @@
     "lint": "gulp tslint",
     "build": "gulp --clean"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/CodificationOrg/cutwater.git",
