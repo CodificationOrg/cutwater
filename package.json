@@ -10,7 +10,8 @@
     "clean": "lerna run clean",
     "build": "lerna run build",
     "release": "lerna version --conventional-commits --create-release github --yes",
-    "prepublishOnly": "yarn build && git add -A ."
+    "prepublishOnly": "yarn build && git add -A .",
+    "postpublish": "git push origin --tags && git reset --hard"
   },
   "devDependencies": {
     "@types/gulp": "^4.0.6",
