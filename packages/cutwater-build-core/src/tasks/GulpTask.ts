@@ -109,7 +109,6 @@ export abstract class GulpTask<T> implements ExecutableTask {
           }
         });
       } catch (e) {
-        this.logError(e);
         reject(e);
       }
 

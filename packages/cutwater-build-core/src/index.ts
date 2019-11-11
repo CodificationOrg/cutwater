@@ -203,14 +203,12 @@ const registerTask = (localContext: BuildContext, taskName: string, taskExecutab
         if (timer) {
           clearTimeout(timer);
         }
-
         cb();
       },
       (executionError: Error) => {
         if (timer) {
           clearTimeout(timer);
         }
-
         cb(generateGulpError(executionError));
       },
     );
