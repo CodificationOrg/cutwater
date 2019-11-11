@@ -9,9 +9,8 @@
   "scripts": {
     "clean": "lerna run clean",
     "build": "lerna run build",
-    "update-version": "lerna publish --skip-git --skip-npm --force-publish '*'",
-    "check-packages": "yarn clean && yarn compile && yarn test && yarn lint",
-    "publish-packages": "./scripts/publish"
+    "release": "lerna version --conventional-commits --create-release github --yes",
+    "preversion": "yarn build && git add -A ."
   },
   "devDependencies": {
     "@types/gulp": "^4.0.6",
