@@ -99,18 +99,7 @@ class BuildContextImpl implements BuildContext {
     if (!this.state.wiredUpErrorHandling) {
       this.state.wiredUpErrorHandling = true;
 
-      let wroteToStdErr: boolean = false;
-
-      if (shouldWarningsFailBuild) {
-        const oldStdErr = process.stderr.write;
-        process.stderr.write = (text: string | Buffer): boolean => {
-          if (!!text.toString()) {
-            wroteToStdErr = true;
-            return oldStdErr.apply(process.stderr);
-          }
-          return true;
-        };
-      }
+      const wroteToStdErr: boolean = false;
 
       process.on('exit', (code: number) => {
         this.state.duringFastExit = true;
