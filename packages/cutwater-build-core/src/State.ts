@@ -1,6 +1,5 @@
 import * as path from 'path';
 import { argv as clArgs } from 'yargs';
-
 import { getConfig } from './index';
 import { IOUtils } from './utilities/IOUtils';
 
@@ -29,7 +28,8 @@ try {
 }
 
 export const builtPackage: PackageJSON = packageJson;
-export const coreBuildPackage: PackageJSON | undefined = IOUtils.readJSONSync(path.resolve('../package.json'));
+// tslint:disable-next-line: no-var-requires
+export const coreBuildPackage: PackageJSON = require('../package.json');
 export const nodeVersion: string = process.version;
 
 const ENVIRONMENT_VARIABLE_PREFIX: string = 'CCB_';
