@@ -1,5 +1,42 @@
 # Change Log
 
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 0.5.0 (2019-11-11)
+
+
+### Bug Fixes
+
+* add fix for 'window' bug in webpack ([7513cc8](https://github.com/CodificationOrg/cutwater/commit/7513cc8))
+* add missing export for new GotUtils class ([9048c52](https://github.com/CodificationOrg/cutwater/commit/9048c52))
+* add missing exports ([bf48201](https://github.com/CodificationOrg/cutwater/commit/bf48201))
+* change default offset to be more universal ([8b32740](https://github.com/CodificationOrg/cutwater/commit/8b32740))
+* correct bad typings entry ([fafc449](https://github.com/CodificationOrg/cutwater/commit/fafc449))
+* correct issue causing some response Buffers to fail ([24376f6](https://github.com/CodificationOrg/cutwater/commit/24376f6))
+* remove extra import ([291a5a1](https://github.com/CodificationOrg/cutwater/commit/291a5a1))
+* remove use of follow-redirects package ([3ef5ef8](https://github.com/CodificationOrg/cutwater/commit/3ef5ef8))
+* remove useless imports ([92b588c](https://github.com/CodificationOrg/cutwater/commit/92b588c))
+
+
+### Features
+
+* add HttpUtil for buffering binary responses ([4823e4a](https://github.com/CodificationOrg/cutwater/commit/4823e4a))
+* add IOUtils with method to convert Buffers to Streams ([a3fbb07](https://github.com/CodificationOrg/cutwater/commit/a3fbb07))
+* add support class for working with got ([bb324ef](https://github.com/CodificationOrg/cutwater/commit/bb324ef))
+* add support for got formatted response bodies ([f6e23a0](https://github.com/CodificationOrg/cutwater/commit/f6e23a0))
+* add utilities missing from core language for working with strings ([294a653](https://github.com/CodificationOrg/cutwater/commit/294a653))
+* add utility method for stream to buffer conversion ([90e32f9](https://github.com/CodificationOrg/cutwater/commit/90e32f9))
+* add VarUtils export ([0e14adf](https://github.com/CodificationOrg/cutwater/commit/0e14adf))
+* initial import of cutwater-build-core ([0fad8b9](https://github.com/CodificationOrg/cutwater/commit/0fad8b9))
+* remove got related utils ([f0a5899](https://github.com/CodificationOrg/cutwater/commit/f0a5899))
+
+
+
+
+
+# Change Log
+
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 <a name="0.4.2"></a>
