@@ -1,6 +1,6 @@
 # @codification/cutwater-build-core
 
-Building on Microsoft's [@microsoft/gulp-core-build](https://github.com/Microsoft/web-build-tools/blob/master/core-build/gulp-core-build/README.md) architecture, this project provides easy methods for building, validating and publishing project documentation.
+Heavily inspired by Microsoft's [@microsoft/gulp-core-build](https://github.com/Microsoft/web-build-tools/blob/master/core-build/gulp-core-build/README.md), this project provides easy methods for more easily automating the build process on top of Gulp.
 
 ## Installation
 
