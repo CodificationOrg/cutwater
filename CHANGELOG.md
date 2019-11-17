@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/CodificationOrg/cutwater/compare/v0.5.0...v0.5.1) (2019-11-17)
+
+
+### Bug Fixes
+
+* ensure 'includes' file in published ([b9be588](https://github.com/CodificationOrg/cutwater/commit/b9be588))
+
+
+
+
+
 # 0.5.0 (2019-11-11)
 
 
