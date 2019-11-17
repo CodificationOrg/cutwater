@@ -51,7 +51,6 @@
     "prettier": "^1.18.2",
     "pretty-hrtime": "^1.0.3",
     "spawn-args": "^0.2.0",
-    "standard-version": "^7.0.0",
     "through2": "^3.0.1",
     "tslint-config-prettier": "^1.18.0",
     "vinyl": "^2.2.0",
