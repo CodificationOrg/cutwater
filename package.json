@@ -14,18 +14,10 @@
     "postpublish": "git push origin --tags && git reset --hard"
   },
   "devDependencies": {
-    "@types/gulp": "^4.0.6",
-    "@types/jest": "^24.0.18",
-    "@types/node": "^12.7.4",
-    "gulp": "^4.0.2",
-    "jest": "^24.9.0",
     "lerna": "^3.13.1",
-    "prettier": "^1.18.2",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.6.4",
-    "typescript-tslint-plugin": "^0.5.4",
-    "webpack": "^4.41.2",
-    "terser-webpack-plugin": "^1.4.1"
+    "typescript-tslint-plugin": "^0.5.4"
   }
 }
