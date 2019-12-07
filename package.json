@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "lerna run clean",
     "build": "lerna run build",
-    "release": "lerna version --conventional-commits --create-release github --yes",
+    "release": "lerna publish --conventional-commits",
     "prepublishOnly": "yarn build && git add -A .",
     "postpublish": "git push origin --tags && git reset --hard"
   },
