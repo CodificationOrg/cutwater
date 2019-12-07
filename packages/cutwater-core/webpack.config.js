@@ -8,6 +8,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const webpackTask = require('@codification/cutwater-build-webpack').webpack;
 const isProduction = webpackTask.buildConfig.production;
 const webpackConfiguration = {
+    mode: isProduction ? 'production' : 'development',
     context: __dirname,
     devtool: (isProduction) ? undefined : 'source-map',
     entry: {

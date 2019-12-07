@@ -8,7 +8,7 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "format": "prettier --loglevel warn --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "build:compile": "yarn clean && yarn format && yarn lint && tsc",
     "build": "yarn build:compile && jest"
