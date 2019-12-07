@@ -1,7 +1,6 @@
-import { default as colors } from 'colors';
+import { Color, default as colors } from 'colors';
 import * as path from 'path';
 import { default as prettyTime } from 'pretty-hrtime';
-
 import { getFlagValue } from '../State';
 
 export class Logger {
@@ -32,12 +31,12 @@ export class Logger {
 
   public warn(...args: string[]): void {
     args.splice(0, 0, 'Warning -');
-    this.log(colors.yellow.apply(args));
+    this.log(...this.colorize(colors.yellow, args));
   }
 
   public error(...args: string[]): void {
     args.splice(0, 0, 'Error -');
-    this.log(colors.red.apply(args));
+    this.log(...this.colorize(colors.red, args));
   }
 
   public log(...args: string[]): void {
@@ -155,6 +154,10 @@ export class Logger {
     } catch (e) {
       // Do Nothing
     }
+  }
+
+  private colorize(color: Color, args: string[]): string[] {
+    return args.map(arg => color(arg));
   }
 
   private formatError(e: any): string | undefined {
