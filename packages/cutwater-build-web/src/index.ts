@@ -10,7 +10,6 @@ import {
 } from '@codification/cutwater-build-core';
 import { tsc, TscTask, tslint } from '@codification/cutwater-build-typescript';
 import { webpack } from '@codification/cutwater-build-webpack';
-import * as path from 'path';
 
 export * from '@codification/cutwater-build-core';
 export * from '@codification/cutwater-build-typescript';
@@ -33,7 +32,6 @@ tsc.name = 'tsc-commonjs';
 
 const tscAmdTask: TscTask = new TscTask();
 tscAmdTask.name = 'tsc-amd';
-tscAmdTask.cleanMatch = [path.join(__dirname, 'lib-amd')];
 tscAmdTask.setConfig({
   customArgs: {
     outDir: './lib-amd',
@@ -43,7 +41,6 @@ tscAmdTask.setConfig({
 
 const tscEsnextTask: TscTask = new TscTask();
 tscEsnextTask.name = 'tsc-es6';
-tscEsnextTask.cleanMatch = [path.join(__dirname, 'lib-es6')];
 tscEsnextTask.setConfig({
   customArgs: {
     outDir: './lib-es6',

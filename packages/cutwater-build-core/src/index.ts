@@ -193,25 +193,24 @@ const registerTask = (localContext: BuildContext, taskName: string, taskExecutab
       maxBuildTimeMs === 0
         ? undefined
         : setTimeout(() => {
-            logger.error(
-              `Build ran for ${maxBuildTimeMs} milliseconds without completing. Cancelling build with error.`,
-            );
-            cb(new Error('Timeout'));
-          }, maxBuildTimeMs);
+          logger.error(
+            `Build ran for ${maxBuildTimeMs} milliseconds without completing. Cancelling build with error.`,
+          );
+          cb(new Error('Timeout'));
+        }, maxBuildTimeMs);
     executeTask(taskExecutable, localContext).then(
       () => {
         if (timer) {
           clearTimeout(timer);
         }
         cb();
-      },
-      (executionError: Error) => {
+      }).catch((executionError: Error) => {
         if (timer) {
           clearTimeout(timer);
         }
         cb(generateGulpError(executionError));
       },
-    );
+      );
   });
 };
 

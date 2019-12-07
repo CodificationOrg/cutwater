@@ -1,4 +1,4 @@
-import { GulpTask } from '@codification/cutwater-build-core';
+import { BuildConfig, GulpTask } from '@codification/cutwater-build-core';
 import * as gulp from 'gulp';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as ts from 'gulp-typescript';
@@ -11,8 +11,16 @@ export class TscTask extends GulpTask<any> {
     super('tsc', {});
   }
 
+  public getCleanMatch(buildConfig: BuildConfig, taskConfig: any = this.config): string[] {
+    const rval: string[] = super.getCleanMatch(buildConfig, taskConfig) || [];
+    if (rval.indexOf(this.outputFolder(buildConfig)) === -1) {
+      rval.push(this.outputFolder(buildConfig));
+    }
+    return rval;
+  }
+
   public executeTask(localGulp: gulp.Gulp): NodeJS.ReadWriteStream | void {
-    const tsProject: Project = ts.createProject('tsconfig.json', this.customArgs());
+    const tsProject: Project = ts.createProject('tsconfig.json', this.customArgs);
 
     let baseStream: any = localGulp.src(`${this.buildConfig.srcFolder}/**/*.ts`);
     if (this.sourceMapsEnabled(tsProject)) {
@@ -44,13 +52,12 @@ export class TscTask extends GulpTask<any> {
     );
   }
 
-  private outputFolder(): string {
-    const args: object = this.customArgs();
+  private outputFolder(buildConfig: BuildConfig = this.buildConfig): string {
     // tslint:disable-next-line: no-string-literal
-    return args['outDir'] ? args['outDir'] : this.buildConfig.libFolder;
+    return this.customArgs['outDir'] || buildConfig.libFolder;
   }
 
-  private customArgs(): object {
-    return this.config.customArgs ? this.config.customArgs : {};
+  private get customArgs(): object {
+    return this.config.customArgs || {};
   }
 }

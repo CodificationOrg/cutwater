@@ -1,6 +1,5 @@
 import { default as del } from 'del';
 import * as gulp from 'gulp';
-
 import { BuildConfig } from '../BuildConfig';
 import { GulpTask } from './GulpTask';
 
@@ -14,12 +13,8 @@ export class CleanTask extends GulpTask<CleanTaskConfig> {
   }
 
   public executeTask(localGulp: gulp.Gulp): Promise<string[]> {
-    const { distFolder, libFolder, libAMDFolder, tempFolder }: BuildConfig = this.buildConfig;
+    const { distFolder, libFolder, tempFolder }: BuildConfig = this.buildConfig;
     const cleanPaths: Set<string> = new Set([distFolder, libFolder, tempFolder]);
-
-    if (libAMDFolder) {
-      cleanPaths.add(libAMDFolder);
-    }
 
     (this.buildConfig.uniqueTasks || []).forEach(executable => {
       if (executable.getCleanMatch && executable.getCleanMatch(this.buildConfig)) {
