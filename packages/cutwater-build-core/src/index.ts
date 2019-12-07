@@ -193,24 +193,24 @@ const registerTask = (localContext: BuildContext, taskName: string, taskExecutab
       maxBuildTimeMs === 0
         ? undefined
         : setTimeout(() => {
-          logger.error(
-            `Build ran for ${maxBuildTimeMs} milliseconds without completing. Cancelling build with error.`,
-          );
-          cb(new Error('Timeout'));
-        }, maxBuildTimeMs);
-    executeTask(taskExecutable, localContext).then(
-      () => {
+            logger.error(
+              `Build ran for ${maxBuildTimeMs} milliseconds without completing. Cancelling build with error.`,
+            );
+            cb(new Error('Timeout'));
+          }, maxBuildTimeMs);
+    executeTask(taskExecutable, localContext)
+      .then(() => {
         if (timer) {
           clearTimeout(timer);
         }
         cb();
-      }).catch((executionError: Error) => {
+      })
+      .catch((executionError: Error) => {
         if (timer) {
           clearTimeout(timer);
         }
         cb(generateGulpError(executionError));
-      },
-      );
+      });
   });
 };
 
@@ -251,20 +251,19 @@ function executeTask(taskExecutable: ExecutableTask, localContext: BuildContext)
       localContext.buildConfig.onTaskStart(taskExecutable.name);
     }
 
-    const taskPromise: Promise<void> = taskExecutable.execute(localContext).then(
-      () => {
+    const taskPromise: Promise<void> = taskExecutable
+      .execute(localContext)
+      .then(() => {
         if (localContext.buildConfig.onTaskEnd && taskExecutable.name) {
           localContext.buildConfig.onTaskEnd(taskExecutable.name, process.hrtime(startTime));
         }
-      },
-      (promiseError: Error) => {
+      })
+      .catch((promiseError: Error) => {
         if (localContext.buildConfig.onTaskEnd && taskExecutable.name) {
           localContext.buildConfig.onTaskEnd(taskExecutable.name, process.hrtime(startTime), promiseError);
         }
-
         return Promise.reject(promiseError);
-      },
-    );
+      });
 
     return taskPromise;
   }

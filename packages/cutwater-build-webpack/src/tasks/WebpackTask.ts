@@ -125,7 +125,6 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
               child.chunks.forEach(chunk => {
                 if (chunk.files && this.config.printStats) {
                   chunk.files.forEach(file =>
-                    // tslint:disable-next-line:no-console
                     this.log(
                       `Bundled: '${colors.cyan(path.basename(file))}', ` +
                         `size: ${colors.magenta('' + chunk.size)} bytes, ` +
