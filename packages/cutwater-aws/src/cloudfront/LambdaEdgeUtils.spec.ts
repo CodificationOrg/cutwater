@@ -43,7 +43,7 @@ const createHeaders = (...headerNames: string[]): IncomingHttpHeaders => {
 
 describe('LambdaEdgeUtils Unit Tests', () => {
   test('isCustomOriginRequestEvent', () => {
-    const req: CloudFrontRequestEvent = createCFRequest();
+    const req: any = createCFRequest();
     expect(lambda.isCustomOriginRequestEvent(req)).toBeTruthy();
     req.Records[0].cf.config.eventType = 'origin-response';
     expect(lambda.isCustomOriginRequestEvent(req)).toBeFalsy();
