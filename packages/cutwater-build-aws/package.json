@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-aws",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Tasks for working with AWS.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -40,8 +40,8 @@
   "private": false,
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
-    "@codification/cutwater-build-core": "^0.5.4",
-    "@codification/cutwater-build-node": "^0.5.4"
+    "@codification/cutwater-build-core": "^0.5.5",
+    "@codification/cutwater-build-node": "^0.5.5"
   },
   "devDependencies": {
     "@types/node": "^12.6.8"

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.5](https://github.com/CodificationOrg/cutwater/compare/v0.5.4...v0.5.5) (2019-12-07)
+
+
+### Bug Fixes
+
+* correct issue with colorized logging output ([b9149d8](https://github.com/CodificationOrg/cutwater/commit/b9149d8bfc6c8271b3d6136e5eeb59f7168e274a))
+
+
+
+
+
 ## [0.5.4](https://github.com/CodificationOrg/cutwater/compare/v0.5.3...v0.5.4) (2019-12-07)
 
 
