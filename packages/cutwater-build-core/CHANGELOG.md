@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/CodificationOrg/cutwater/compare/v0.5.6...v0.6.0) (2019-12-08)
+
+
+### Features
+
+* add better options for handling args ([25df8c1](https://github.com/CodificationOrg/cutwater/commit/25df8c1804d9e55d97b221d62958d3c018a02bf4))
+
+
+
+
+
 ## [0.5.5](https://github.com/CodificationOrg/cutwater/compare/v0.5.4...v0.5.5) (2019-12-07)
 
 
