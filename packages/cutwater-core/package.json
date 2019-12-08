@@ -6,7 +6,6 @@
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "module": "dist/cutwater-core.min.js",
   "scripts": {
     "clean": "gulp clean",
     "test": "gulp test --clean",
@@ -45,7 +44,6 @@
   },
   "devDependencies": {
     "@codification/cutwater-build-core": "^0.5.5",
-    "@codification/cutwater-build-node": "^0.5.5",
-    "@codification/cutwater-build-web": "^0.5.5"
+    "@codification/cutwater-build-node": "^0.5.5"
   }
 }

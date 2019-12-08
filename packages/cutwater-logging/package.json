@@ -6,7 +6,6 @@
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "module": "dist/cutwater-logging.min.js",
   "scripts": {
     "clean": "gulp clean",
     "test": "gulp test --clean",
@@ -40,8 +39,7 @@
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "devDependencies": {
     "@codification/cutwater-build-core": "^0.5.5",
-    "@codification/cutwater-build-node": "^0.5.5",
-    "@codification/cutwater-build-web": "^0.5.5"
+    "@codification/cutwater-build-node": "^0.5.5"
   },
   "dependencies": {
     "@codification/cutwater-core": "^0.5.5"
