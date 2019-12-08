@@ -1,17 +1,26 @@
+import { initialize } from '@codification/cutwater-build-core';
 import * as gulp from 'gulp';
-
 import { CloudFormationPackageTask } from './CloudFormationPackageTask';
+
+beforeAll(() => {
+  initialize(gulp);
+});
 
 test('it properly fails with invalid arguments', done => {
   const task: CloudFormationPackageTask = new CloudFormationPackageTask();
-  task.setConfig({ quiet: true });
   task
     .executeTask(gulp)
-    .then(() => {
-      done.fail(new Error('should have thrown error'));
+    .then(result => {
+      // tslint:disable-next-line: no-console
+      console.log(result);
+      expect(false).toBeTruthy();
+      done();
     })
     .catch(err => {
-      expect(err).toBeTruthy();
+      // tslint:disable-next-line: no-console
+      console.log(err);
+      expect(err).toBeDefined();
       done();
     });
+  // return expect(task.executeTask(gulp)).rejects.toBeDefined();
 });
