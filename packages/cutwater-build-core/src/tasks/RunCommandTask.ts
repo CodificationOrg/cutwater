@@ -2,11 +2,11 @@ import { default as spawn } from 'cross-spawn';
 import * as gulp from 'gulp';
 import { delimiter, resolve as pathResolve } from 'path';
 import { default as spawnArgs } from 'spawn-args';
-
 import { GulpTask } from './GulpTask';
 
 export interface RunCommandTaskConfig {
   command: string;
+  args?: string | string[];
   quiet: boolean;
   ignoreErrors: boolean;
   cwd: string;
@@ -58,9 +58,14 @@ export class RunCommandTask<T extends RunCommandTaskConfig> extends GulpTask<T> 
     return this.config.command;
   }
 
+  protected preparedArgs(): string | string[] {
+    return this.config.args || '';
+  }
+
   private spawnProccess(): spawn {
     const cwd = this.config.cwd;
-    return spawn(this.args.shift(), this.args, {
+    this.logVerbose(`Running: ${this.preparedCommand()} ${this.args}`);
+    return spawn(this.preparedCommand(), this.args, {
       stdio: this.stdio,
       cwd,
       env: this.env,
@@ -68,7 +73,12 @@ export class RunCommandTask<T extends RunCommandTaskConfig> extends GulpTask<T> 
   }
 
   private get args(): string[] {
-    return spawnArgs(this.preparedCommand(), { removequotes: 'always' });
+    const args: string | string[] = this.preparedArgs();
+    if (typeof args === 'string') {
+      return spawnArgs(args, { removequotes: 'always' });
+    } else {
+      return args;
+    }
   }
 
   private get stdio(): string[] {
