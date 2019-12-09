@@ -1,3 +1,4 @@
+import { IOUtils } from '@codification/cutwater-build-core';
 import { AwsCliTask, AwsCliTaskConfig } from './AwsCliTask';
 
 export interface CloudFormationPackageTaskConfig extends AwsCliTaskConfig {
@@ -17,6 +18,7 @@ export class CloudFormationPackageTask extends AwsCliTask<CloudFormationPackageT
   }
 
   protected preparedParameters(): string {
+    IOUtils.mkdirs(this.config.outputFile, this.buildConfig);
     return `--template-file ${this.config.templateFile} \
     --output-template-file ${this.config.outputFile} \
     --s3-bucket ${this.config.s3Bucket}`;

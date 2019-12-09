@@ -11,6 +11,11 @@ export class IOUtils {
     return rval;
   }
 
+  public static mkdirs(localPath: string, buildConfig?: BuildConfig): void {
+    const dirsPath = path.dirname(this.resolvePath(localPath, buildConfig));
+    fs.mkdirSync(dirsPath, { recursive: true });
+  }
+
   public static fileExists(localPath: string, buildConfig?: BuildConfig): boolean {
     const fullPath: string = this.resolvePath(localPath, buildConfig);
     return fs.existsSync(fullPath);
