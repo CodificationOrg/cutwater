@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/CodificationOrg/cutwater/compare/v0.6.0...v0.6.1) (2019-12-09)
+
+
+### Bug Fixes
+
+* create missing folders for output ([fd72af8](https://github.com/CodificationOrg/cutwater/commit/fd72af84e4b0c83ee3be1467969706977573ebed))
+
+
+
+
+
 # [0.6.0](https://github.com/CodificationOrg/cutwater/compare/v0.5.6...v0.6.0) (2019-12-08)
 
 
