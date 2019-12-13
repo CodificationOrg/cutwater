@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/CodificationOrg/cutwater/compare/v0.6.1...v0.6.2) (2019-12-13)
+
+
+### Bug Fixes
+
+* add .tsx and .d.ts files for compile ([9c5f90e](https://github.com/CodificationOrg/cutwater/commit/9c5f90e75e79f8fbfd3eb8b2e9ff890e2f3383bf))
+
+
+
+
+
 ## [0.6.1](https://github.com/CodificationOrg/cutwater/compare/v0.6.0...v0.6.1) (2019-12-09)
 
 

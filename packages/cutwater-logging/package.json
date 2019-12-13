@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-logging",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Yet another simple logging utility.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -39,9 +39,9 @@
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "devDependencies": {
     "@codification/cutwater-build-core": "^0.6.1",
-    "@codification/cutwater-build-node": "^0.6.1"
+    "@codification/cutwater-build-node": "^0.6.2"
   },
   "dependencies": {
-    "@codification/cutwater-core": "^0.6.1"
+    "@codification/cutwater-core": "^0.6.2"
   }
 }
