@@ -22,7 +22,7 @@ export class TscTask extends GulpTask<any> {
   public executeTask(localGulp: gulp.Gulp): NodeJS.ReadWriteStream | void {
     const tsProject: Project = ts.createProject('tsconfig.json', this.customArgs);
 
-    let baseStream: any = localGulp.src(`${this.buildConfig.srcFolder}/**/*.ts`);
+    let baseStream: any = localGulp.src(this.srcGlobs);
     if (this.sourceMapsEnabled(tsProject)) {
       baseStream = baseStream.pipe(sourcemaps.init());
     }
@@ -55,6 +55,10 @@ export class TscTask extends GulpTask<any> {
   private outputFolder(buildConfig: BuildConfig = this.buildConfig): string {
     // tslint:disable-next-line: no-string-literal
     return this.customArgs['outDir'] || buildConfig.libFolder;
+  }
+
+  private get srcGlobs(): string[] {
+    return ['*.ts', '*.tsx', '*.d.ts'].map(ext => `${this.buildConfig.srcFolder}/**/${ext}`);
   }
 
   private get customArgs(): object {
