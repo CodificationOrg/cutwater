@@ -6,7 +6,7 @@ initialize(gulp);
 
 test('can run echo', done => {
   const task: RunCommandTask<RunCommandTaskConfig> = new RunCommandTask();
-  task.setConfig({ command: 'echo "Hello World!"' });
+  task.setConfig({ command: 'echo', args: '"Hello World!"' });
   task
     .executeTask(gulp)
     .then(() => {
