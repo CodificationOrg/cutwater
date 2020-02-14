@@ -35,7 +35,7 @@
   "private": false,
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "optionalDependencies": {
-    "aws-lambda": "^0.1.2",
+    "aws-lambda": "^1.0.5",
     "middy": "^0.18.1"
   },
   "dependencies": {
@@ -50,7 +50,7 @@
   "devDependencies": {
     "@codification/cutwater-build-core": "^0.6.1",
     "@codification/cutwater-build-node": "^0.6.2",
-    "aws-lambda": "^0.1.2",
+    "aws-lambda": "^1.0.5",
     "middy": "^0.18.1"
   }
 }
