@@ -1,6 +1,6 @@
 import { S3 } from 'aws-sdk';
+import { PutObjectOutput, PutObjectRequest } from 'aws-sdk/clients/s3';
 import * as mime from 'mime';
-import { bindNodeCallback, Observable, Observer } from 'rxjs';
 import { Readable } from 'stream';
 
 /**
@@ -8,7 +8,7 @@ import { Readable } from 'stream';
  */
 export class S3Bucket {
   public static toMimeType(key: string): string {
-    return mime.getType(key);
+    return mime.getType(key) || '';
   }
 
   private bucketName: string;
@@ -26,17 +26,16 @@ export class S3Bucket {
     this.bucketName = name;
   }
 
-  public exists(fileName: string): Observable<boolean> {
-    return Observable.create((observer: Observer<boolean>) => {
+  public exists(fileName: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
       this.s3Client.headObject({ Bucket: this.bucketName, Key: fileName }, (err, data) => {
+        let rval: boolean = true;
         if (err && err.code === 'NotFound') {
-          observer.next(false);
+          rval = false;
         } else if (err) {
-          observer.error(err);
-        } else {
-          observer.next(true);
+          return reject(err);
         }
-        observer.complete();
+        resolve(rval);
       });
     });
   }
@@ -45,14 +44,20 @@ export class S3Bucket {
     fileName: string,
     content: string | Buffer | Readable,
     mimeType?: string,
-  ): Observable<S3.Types.PutObjectOutput> {
-    const rval = bindNodeCallback<S3.Types.PutObjectRequest, S3.Types.PutObjectOutput>(this.s3Client.putObject);
-    return rval(this.toPutObjectRequest(fileName, content, mimeType));
+  ): Promise<PutObjectOutput> {
+    return new Promise((resolve, reject) => {
+      this.s3Client.putObject(this.toPutObjectRequest(fileName, content, mimeType), (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(data);
+      })
+    })
   }
 
   // tslint:disable-next-line:no-any
-  private toPutObjectRequest(key: string, content: any, mimeType?: string): S3.Types.PutObjectRequest {
-    const rval: S3.Types.PutObjectRequest = {
+  private toPutObjectRequest(key: string, content: any, mimeType?: string): PutObjectRequest {
+    const rval: PutObjectRequest = {
       Body: content,
       Bucket: this.bucketName,
       ContentType: mimeType ? mimeType : S3Bucket.toMimeType(key),
