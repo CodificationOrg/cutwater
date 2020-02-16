@@ -10,7 +10,8 @@
     "clean": "lerna run clean",
     "build": "lerna run build",
     "preversion": "yarn build",
-    "version": "git add -A .",
+    "release": "lerna version --conventional-commits",
+    "version": " git add -A .",
     "postversion": "git push && git push --tags"
   },
   "devDependencies": {

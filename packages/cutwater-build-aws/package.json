@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-aws",
-  "version": "0.7.0",
+  "version": "0.6.2",
   "description": "Tasks for working with AWS.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
