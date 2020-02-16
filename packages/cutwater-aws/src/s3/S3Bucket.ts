@@ -40,19 +40,15 @@ export class S3Bucket {
     });
   }
 
-  public store(
-    fileName: string,
-    content: string | Buffer | Readable,
-    mimeType?: string,
-  ): Promise<PutObjectOutput> {
+  public store(fileName: string, content: string | Buffer | Readable, mimeType?: string): Promise<PutObjectOutput> {
     return new Promise((resolve, reject) => {
       this.s3Client.putObject(this.toPutObjectRequest(fileName, content, mimeType), (err, data) => {
         if (err) {
           return reject(err);
         }
         resolve(data);
-      })
-    })
+      });
+    });
   }
 
   // tslint:disable-next-line:no-any
