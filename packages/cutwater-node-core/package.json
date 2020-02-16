@@ -40,6 +40,6 @@
   "devDependencies": {
     "@codification/cutwater-build-core": "^0.6.1",
     "@codification/cutwater-build-node": "^0.6.2",
-    "got": "^10.5.5"
+    "portable-fetch": "^3.0.0"
   }
 }

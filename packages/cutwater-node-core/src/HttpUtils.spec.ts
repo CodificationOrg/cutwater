@@ -1,6 +1,6 @@
-import { default as got } from 'got';
 import { ClientRequest, IncomingMessage } from 'http';
 import { request as HttpRequest } from 'https';
+import { default as fetch } from 'portable-fetch';
 import { HttpUtils } from './HttpUtils';
 
 const GOOGLE_URL: string = 'https://www.google.com';
@@ -19,13 +19,13 @@ describe('HttpUtils Unit Tests', () => {
     });
 
     it('correctly returns html content from a got request', async () => {
-      const response = await got(GOOGLE_URL);
+      const response = await fetch(GOOGLE_URL);
       const html = await HttpUtils.toBodyText(response);
       expect(html).toMatch(/<html/);
     });
 
     it('correctly returns html content from a got buffer response', async () => {
-      const response = await got(GOOGLE_URL, { encoding: undefined });
+      const response = await fetch(GOOGLE_URL, { encoding: undefined });
       const html = await HttpUtils.toBodyText(response);
       expect(html).toMatch(/<html/);
     });
