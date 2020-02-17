@@ -1,21 +1,16 @@
-import { ClientRequest, IncomingMessage } from 'http';
-import { request as HttpRequest } from 'https';
+import { IncomingMessage } from 'http';
 import { default as fetch } from 'portable-fetch';
 import { HttpUtils } from './HttpUtils';
 
 const GOOGLE_URL: string = 'https://www.google.com';
 
-describe('HttpUtils Unit Tests', () => {
+describe('HttpUtils', () => {
   describe('toBodyText', () => {
-    it('correctly returns html content from a node http request', done => {
-      const req: ClientRequest = HttpRequest(GOOGLE_URL, (response: IncomingMessage) => {
-        expect(HttpUtils.isResponseOk(response)).toBeTruthy();
-        HttpUtils.toBodyText(response).then(html => {
-          expect(html).toMatch(/<html/);
-          done();
-        });
-      });
-      req.end();
+    it('correctly returns html content from a node http request', async () => {
+      const response: IncomingMessage = await fetch(GOOGLE_URL);
+      expect(HttpUtils.isResponseOk(response)).toBeTruthy();
+      const body: string = await HttpUtils.toBodyText(response);
+      expect(body).toMatch(/<html/);
     });
 
     it('correctly returns html content from a got request', async () => {

@@ -1,24 +1,35 @@
 import { Config } from '@codification/cutwater-core';
-
 import { Level } from './Level';
 import { Logger } from './Logger';
 import { LoggerFactory } from './LoggerFactory';
 
-describe('LoggerFactory Unit Tests', () => {
-  const logEntries: string[] = [];
+const logEntries: string[] = [];
+let oldLog: any;
+let logger: Logger;
+
+beforeAll(() => {
   // tslint:disable-next-line: missing-optional-annotation no-any typedef
   const writeEntry = (message?: any, ...optionalParams: any[]): void => {
     const value: string = message ? message.toString() : '';
     logEntries.push(value);
   };
   // tslint:disable-next-line: no-string-literal
+  oldLog = console['log'];
+  // tslint:disable-next-line: no-string-literal
   console['log'] = jest.fn(writeEntry);
-  const logger: Logger = LoggerFactory.getLogger('Foo');
+  logger = LoggerFactory.getLogger('Foo');
+});
 
-  beforeEach(() => {
-    logEntries.length = 0;
-  });
+beforeEach(() => {
+  logEntries.length = 0;
+});
 
+afterAll(() => {
+  // tslint:disable-next-line: no-string-literal
+  console['log'] = oldLog;
+});
+
+describe('LoggerFactory', () => {
   it('returns the proper logger name', () => {
     expect(logger.name).toBe('Foo');
   });
