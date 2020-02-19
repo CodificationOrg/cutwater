@@ -7,6 +7,7 @@ import {
   serial,
   setConfig,
   task,
+  watch,
 } from '@codification/cutwater-build-core';
 import { tsc, TscTask, tslint } from '@codification/cutwater-build-typescript';
 import { webpack } from '@codification/cutwater-build-webpack';
@@ -22,11 +23,15 @@ setConfig({
   shouldWarningsFailBuild: PRODUCTION,
 });
 
-export const buildTasks: ExecutableTask = task('build', serial(prettier, parallel(tslint, tsc)));
+export const buildSubtask: ExecutableTask = parallel(tslint, tsc);
+
+export const buildTasks: ExecutableTask = task('build', serial(prettier, buildSubtask));
 
 export const bundleTasks: ExecutableTask = task('bundle', serial(buildTasks, webpack));
 
-export const testTasks: ExecutableTask = task('test', serial(buildTasks, jest));
+export const testTasks: ExecutableTask = task('test', serial(buildSubtask, jest));
+
+export const watchTasks: ExecutableTask = task('watch', watch('src/**.ts', serial(testTasks, webpack)));
 
 tsc.name = 'tsc-commonjs';
 
