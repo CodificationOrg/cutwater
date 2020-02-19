@@ -3,6 +3,7 @@ if (process.argv.indexOf('--no-color') === -1) {
 }
 
 import { Gulp } from 'gulp';
+import * as notifier from 'node-notifier';
 import * as path from 'path';
 import { BuildConfig } from './BuildConfig';
 import { BuildContext, createContext } from './BuildContext';
@@ -15,7 +16,6 @@ import { CopyStaticAssetsTask } from './tasks/CopyStaticAssetsTask';
 import { GulpTask } from './tasks/GulpTask';
 import { isJestEnabled, JestTask } from './tasks/JestTask';
 import { PrettierTask } from './tasks/PrettierTask';
-
 export { BuildConfig } from './BuildConfig';
 export { BuildContext, BuildMetrics, BuildState } from './BuildContext';
 export { ExecutableTask } from './ExecutableTask';
@@ -108,6 +108,80 @@ class CustomTask extends GulpTask<void> {
 export function subTask(taskName: string, fn: CustomGulpTask): ExecutableTask {
   const customTask: CustomTask = new CustomTask(taskName, fn);
   return customTask;
+}
+
+export function watch(watchMatch: string | string[], taskExecutable: ExecutableTask): ExecutableTask {
+  trackTask(taskExecutable);
+
+  let isWatchRunning: boolean = false;
+  let shouldRerunWatch: boolean = false;
+  let lastError: Error | undefined;
+
+  const successMessage: string = 'Build succeeded';
+  const failureMessage: string = 'Build failed';
+
+  return {
+    execute: (context: BuildContext): Promise<void> => {
+      return new Promise<void>(() => {
+        function runWatch(): Promise<void> {
+          if (isWatchRunning) {
+            shouldRerunWatch = true;
+            return Promise.resolve();
+          } else {
+            isWatchRunning = true;
+
+            return executeTask(taskExecutable, context)
+              .then(() => {
+                if (lastError) {
+                  lastError = undefined;
+
+                  if (context.buildConfig.showToast) {
+                    notifier.notify({
+                      title: successMessage,
+                      message: builtPackage ? builtPackage.name : '',
+                    });
+                  } else {
+                    logger.log(successMessage);
+                  }
+                }
+                return finalizeWatch();
+              })
+              .catch((error: Error) => {
+                if (!lastError || lastError !== error) {
+                  lastError = error;
+
+                  if (context.buildConfig.showToast) {
+                    notifier.notify({
+                      title: failureMessage,
+                      message: error.toString(),
+                    });
+                  } else {
+                    logger.log(failureMessage);
+                  }
+                }
+
+                return finalizeWatch();
+              });
+          }
+        }
+
+        function finalizeWatch(): Promise<void> {
+          isWatchRunning = false;
+
+          if (shouldRerunWatch) {
+            shouldRerunWatch = false;
+            return runWatch();
+          }
+          return Promise.resolve();
+        }
+
+        context.state.watchMode = true;
+        context.gulp.watch(watchMatch, runWatch);
+        // tslint:disable-next-line: no-console
+        runWatch().catch(console.error);
+      });
+    },
+  };
 }
 
 export function serial(...tasks: Array<ExecutableTask[] | ExecutableTask>): ExecutableTask {

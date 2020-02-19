@@ -9,6 +9,7 @@ import {
   task,
   tsc,
   tslint,
+  watch,
 } from '@codification/cutwater-build-typescript';
 
 export * from '@codification/cutwater-build-typescript';
@@ -19,8 +20,9 @@ setConfig({
   shouldWarningsFailBuild: PRODUCTION,
 });
 
-const buildSubtask: ExecutableTask = serial(prettier, parallel(tslint, tsc, copyStaticAssets));
+const buildSubtask: ExecutableTask = parallel(tslint, tsc, copyStaticAssets);
 
-export const buildTasks: ExecutableTask = task('build', buildSubtask);
+export const buildTasks: ExecutableTask = task('build', serial(prettier, buildSubtask));
 export const testTasks: ExecutableTask = task('test', serial(buildSubtask, jest));
-export const defaultTasks: ExecutableTask = task('default', serial(buildSubtask, jest));
+export const watchTask: ExecutableTask = task('watch', watch('src/**.ts', testTasks));
+export const defaultTasks: ExecutableTask = task('default', serial(prettier, buildTasks));

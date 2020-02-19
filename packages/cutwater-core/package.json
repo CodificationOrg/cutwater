@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "gulp clean",
     "test": "gulp test --clean",
+    "watch": "gulp watch",
     "build": "gulp --clean --production"
   },
   "publishConfig": {
