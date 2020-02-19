@@ -10,8 +10,8 @@ export class TestContext {
   public readonly tempDir: string;
   private destroyed: boolean = false;
 
-  private constructor(tempDirName: string = 'temp/test') {
-    const tempPath = path.resolve(path.join(process.cwd(), tempDirName)) + path.sep;
+  private constructor(tempDirName: string = 'temp/test-') {
+    const tempPath = path.resolve(path.join(process.cwd(), tempDirName));
     this.tempDir = FileUtils.createTempDir(tempPath);
   }
 

@@ -11,8 +11,8 @@ describe('TestUtils', () => {
     });
 
     it('can provide a custom package rooted temp directory', () => {
-      const tempDir = TestContext.createContext('temp/foo').tempDir;
-      expect(tempDir.startsWith(path.resolve('temp/foo'))).toBeTruthy();
+      const tempDir = TestContext.createContext('temp/foo-').tempDir;
+      expect(tempDir.startsWith(path.resolve('temp/foo-'))).toBeTruthy();
       expect(fs.existsSync(tempDir)).toBeTruthy();
     });
   });
