@@ -1,5 +1,4 @@
 import { IncomingHttpHeaders, IncomingMessage, OutgoingHttpHeaders } from 'http';
-
 import { IOUtils } from './IOUtils';
 
 const GOT_RESPONSE_BODY: string = 'body';
@@ -103,7 +102,7 @@ export class HttpUtils {
     const body: string = response[GOT_RESPONSE_BODY];
 
     if (typeof body === 'string') {
-      rval = Promise.resolve(new Buffer(body));
+      rval = Promise.resolve(Buffer.from(body));
     } else if (Buffer.isBuffer(body)) {
       rval = Promise.resolve(body);
     } else {

@@ -35,11 +35,12 @@
   "private": false,
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
-    "@codification/cutwater-core": "^0.7.1"
+    "@codification/cutwater-core": "^0.7.1",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@codification/cutwater-build-core": "^0.7.1",
     "@codification/cutwater-build-node": "^0.7.1",
-    "portable-fetch": "^3.0.0"
+    "got": "^10.5.7"
   }
 }
