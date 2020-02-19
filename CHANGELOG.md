@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/CodificationOrg/cutwater/compare/v0.7.1...v0.8.0) (2020-02-19)
+
+
+### Bug Fixes
+
+* correct double call to prettier in default ([9b38562](https://github.com/CodificationOrg/cutwater/commit/9b385628ecbaf8066e4b54c1fd815109db0c8f8c))
+
+
+### Features
+
+* add initial file utils ([42e4cfc](https://github.com/CodificationOrg/cutwater/commit/42e4cfc35ae39410183e9a08b1d04c7ad18ca124))
+* add initial work on new test utilities ([4d7a16a](https://github.com/CodificationOrg/cutwater/commit/4d7a16a3fd330b0e5bc2fc878a6bcd7b322bf19c))
+* add test watch task to node builds ([400ffc6](https://github.com/CodificationOrg/cutwater/commit/400ffc6a759fe93062a37ae14f065660468cd830))
+* add watch task for web centered builds ([7355819](https://github.com/CodificationOrg/cutwater/commit/7355819f2419b0da18d4d9ed476cda0e19c8c7cb))
+
+
+
+
+
+
 ## [0.6.3](https://github.com/CodificationOrg/cutwater/compare/v0.7.0...v0.6.3) (2020-02-16)
 
 **Note:** Version bump only for package root

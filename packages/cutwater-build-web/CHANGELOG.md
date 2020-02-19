@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/CodificationOrg/cutwater/compare/v0.7.1...v0.8.0) (2020-02-19)
+
+
+### Features
+
+* add watch task for web centered builds ([7355819](https://github.com/CodificationOrg/cutwater/commit/7355819f2419b0da18d4d9ed476cda0e19c8c7cb))
+
+
+
+
+
+
 ## [0.6.2](https://github.com/CodificationOrg/cutwater/compare/v0.6.1...v0.6.2) (2019-12-13)
 
 **Note:** Version bump only for package @codification/cutwater-build-web
