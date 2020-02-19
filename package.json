@@ -10,13 +10,11 @@
     "clean": "lerna run clean",
     "build": "lerna run build",
     "preversion": "yarn build",
-    "release": "dotenv lerna version --conventional-commits --create-release github",
+    "release": "lerna version --conventional-commits",
     "version": " git add -A .",
     "postversion": "git push && git push --tags"
   },
   "devDependencies": {
-    "cross-var": "^1.1.0",
-    "dotenv-cli": "^3.1.0",
     "lerna": "^3.13.1",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
