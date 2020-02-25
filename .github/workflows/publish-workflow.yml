@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  build:
+  publish:
 
     runs-on: ubuntu-latest
 
@@ -32,6 +32,6 @@ jobs:
       run: yarn install
 
     - name: lerna publish
-      run:  lerna publish from-git
+      run:  npx lerna publish from-git
       env:
         NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
