@@ -1,4 +1,5 @@
 import {
+  copyStaticAssets,
   ExecutableTask,
   getConfig,
   jest,
@@ -23,7 +24,7 @@ setConfig({
   shouldWarningsFailBuild: PRODUCTION,
 });
 
-export const buildSubtask: ExecutableTask = parallel(tslint, tsc);
+export const buildSubtask: ExecutableTask = parallel(tslint, tsc, copyStaticAssets);
 
 export const buildTasks: ExecutableTask = task('build', serial(prettier, buildSubtask));
 
