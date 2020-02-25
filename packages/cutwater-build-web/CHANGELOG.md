@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/CodificationOrg/cutwater/compare/v0.8.0...v0.9.0) (2020-02-25)
+
+
+### Features
+
+* include static asset copying for web builds ([9cfa954](https://github.com/CodificationOrg/cutwater/commit/9cfa954a900997a4499c50debbb6f20bdb5734ab))
+
+
+
+
+
 # [0.8.0](https://github.com/CodificationOrg/cutwater/compare/v0.7.1...v0.8.0) (2020-02-19)
 
 
