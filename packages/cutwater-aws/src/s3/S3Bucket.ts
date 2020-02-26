@@ -57,7 +57,7 @@ export class S3Bucket {
     });
   }
 
-  public get(fileName: string): Promise<GetObjectOutput> {
+  public load(fileName: string): Promise<GetObjectOutput> {
     return new Promise((resolve, reject) => {
       this.s3Client.getObject(this.toGetObjectRequest(fileName), (err, data) => {
         if (err) {
