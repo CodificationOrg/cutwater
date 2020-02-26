@@ -28,10 +28,13 @@ jobs:
       with:
         node-version: '10.x'
 
-    - name: yarn install
+    - name: Yarn install
       run: yarn install
 
-    - name: lerna publish
-      run:  npx lerna publish from-git --yes
+    - name: Create .npmrc
+      run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
       env:
-        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Publish
+      run:  npx lerna publish from-git --yes
