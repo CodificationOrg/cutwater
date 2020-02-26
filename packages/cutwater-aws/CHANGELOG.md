@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/CodificationOrg/cutwater/compare/v0.10.1...v0.11.0) (2020-02-26)
+
+
+### Features
+
+* add helper method to return Buffers ([c255098](https://github.com/CodificationOrg/cutwater/commit/c25509826c13ae9bb792f32ce93340ed1ad5c2f4))
+
+
+
+
+
 ## [0.10.1](https://github.com/CodificationOrg/cutwater/compare/v0.10.0...v0.10.1) (2020-02-26)
 
 **Note:** Version bump only for package @codification/cutwater-aws

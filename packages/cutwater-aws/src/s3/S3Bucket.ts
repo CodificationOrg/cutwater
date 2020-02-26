@@ -1,5 +1,11 @@
 import { S3 } from 'aws-sdk';
-import { DeleteObjectRequest, GetObjectOutput, GetObjectRequest, PutObjectOutput, PutObjectRequest } from 'aws-sdk/clients/s3';
+import {
+  DeleteObjectRequest,
+  GetObjectOutput,
+  GetObjectRequest,
+  PutObjectOutput,
+  PutObjectRequest,
+} from 'aws-sdk/clients/s3';
 import * as mime from 'mime';
 import { Readable } from 'stream';
 
