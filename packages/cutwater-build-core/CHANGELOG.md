@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/CodificationOrg/cutwater/compare/v0.11.0...v0.12.0) (2020-02-26)
+
+
+### Features
+
+* Enable logging by default during tests ([a0ce1df](https://github.com/CodificationOrg/cutwater/commit/a0ce1df1aabebaa4e110346d7ea500ea5db03cfd))
+
+
+
+
+
+
 # [0.11.0](https://github.com/CodificationOrg/cutwater/compare/v0.10.1...v0.11.0) (2020-02-26)
 
 **Note:** Version bump only for package @codification/cutwater-build-core

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/CodificationOrg/cutwater/compare/v0.11.0...v0.12.0) (2020-02-26)
+
+
+### Features
+
+* add file copy helper for tests ([584aacf](https://github.com/CodificationOrg/cutwater/commit/584aacfb8aaae453454699890fec7db05a2bc389))
+
+
+
+
+
+
 # [0.11.0](https://github.com/CodificationOrg/cutwater/compare/v0.10.1...v0.11.0) (2020-02-26)
 
 **Note:** Version bump only for package @codification/cutwater-test
