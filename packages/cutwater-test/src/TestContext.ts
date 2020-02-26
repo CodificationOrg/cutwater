@@ -20,6 +20,13 @@ export class TestContext {
     return FileUtils.createTempFilePath(this.tempDir, ext);
   }
 
+  public copyToTempFile(srcPath: string): string {
+    const ext = path.extname(srcPath).substring(1);
+    const rval = this.createTempFilePath(ext);
+    fs.copyFileSync(srcPath, rval);
+    return rval;
+  }
+
   public teardown(): Promise<void> {
     this.checkForDestroyed();
     this.destroyed = true;

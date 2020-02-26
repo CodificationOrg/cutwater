@@ -37,6 +37,7 @@
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
     "@codification/cutwater-core": "^0.11.0",
+    "@codification/cutwater-logging": "^0.11.0",
     "uuid": "^3.4.0"
   },
   "devDependencies": {

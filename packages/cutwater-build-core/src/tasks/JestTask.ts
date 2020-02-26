@@ -1,10 +1,8 @@
+import { AggregatedResult } from '@jest/test-result';
+import { GlobalConfig } from '@jest/types/build/Config';
 import * as gulp from 'gulp';
 import { default as jest } from 'jest-cli';
 import * as path from 'path';
-
-import { AggregatedResult } from '@jest/test-result';
-import { GlobalConfig } from '@jest/types/build/Config';
-
 import { BuildConfig } from '../';
 import { IOUtils } from '../utilities/IOUtils';
 import { GulpTask } from './GulpTask';
@@ -92,6 +90,9 @@ export interface JestTaskConfig {
   watchPathIgnorePatterns: string[];
 }
 
+const LOGGING_LEVEL_ENV = 'LOGGING_LEVEL';
+const DEFAULT_LOGGING_LEVEL = 'ALL';
+
 export function isJestEnabled(rootFolder: string): boolean {
   const taskConfigFile: string = path.join(rootFolder, 'config', 'jest.json');
   return IOUtils.fileExists(taskConfigFile) && IOUtils.readJSONSyncSafe<JestTaskConfig>(taskConfigFile).isEnabled;
@@ -123,6 +124,7 @@ export class JestTask extends GulpTask<JestTaskConfig> {
     jestConfig.testEnvironment = require.resolve('jest-environment-jsdom');
     jestConfig.cacheDirectory = path.join(this.buildConfig.rootPath, this.buildConfig.tempFolder, 'jest-cache');
 
+    process.env[LOGGING_LEVEL_ENV] = DEFAULT_LOGGING_LEVEL;
     jest
       .runCLI(jestConfig as any, [this.buildConfig.rootPath])
       .then((result: { results: AggregatedResult; globalConfig: GlobalConfig }) => {
