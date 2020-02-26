@@ -1,5 +1,11 @@
 import { S3 } from 'aws-sdk';
-import { PutObjectOutput, PutObjectRequest } from 'aws-sdk/clients/s3';
+import {
+  DeleteObjectRequest,
+  GetObjectOutput,
+  GetObjectRequest,
+  PutObjectOutput,
+  PutObjectRequest,
+} from 'aws-sdk/clients/s3';
 import * as mime from 'mime';
 import { Readable } from 'stream';
 
@@ -40,6 +46,28 @@ export class S3Bucket {
     });
   }
 
+  public remove(fileName: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.s3Client.deleteObject(this.toDeleteObjectRequest(fileName), (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  }
+
+  public get(fileName: string): Promise<GetObjectOutput> {
+    return new Promise((resolve, reject) => {
+      this.s3Client.getObject(this.toGetObjectRequest(fileName), (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(data);
+      });
+    });
+  }
+
   public store(fileName: string, content: string | Buffer | Readable, mimeType?: string): Promise<PutObjectOutput> {
     return new Promise((resolve, reject) => {
       this.s3Client.putObject(this.toPutObjectRequest(fileName, content, mimeType), (err, data) => {
@@ -51,12 +79,27 @@ export class S3Bucket {
     });
   }
 
-  // tslint:disable-next-line:no-any
-  private toPutObjectRequest(key: string, content: any, mimeType?: string): PutObjectRequest {
+  private toPutObjectRequest(key: string, content: string | Buffer | Readable, mimeType?: string): PutObjectRequest {
     const rval: PutObjectRequest = {
       Body: content,
       Bucket: this.bucketName,
       ContentType: mimeType ? mimeType : S3Bucket.toMimeType(key),
+      Key: key,
+    };
+    return rval;
+  }
+
+  private toGetObjectRequest(key: string): GetObjectRequest {
+    const rval: GetObjectRequest = {
+      Bucket: this.bucketName,
+      Key: key,
+    };
+    return rval;
+  }
+
+  private toDeleteObjectRequest(key: string): DeleteObjectRequest {
+    const rval: DeleteObjectRequest = {
+      Bucket: this.bucketName,
       Key: key,
     };
     return rval;
