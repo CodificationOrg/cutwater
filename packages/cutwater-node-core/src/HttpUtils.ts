@@ -1,6 +1,8 @@
+import { LoggerFactory } from '@codification/cutwater-logging';
 import { IncomingHttpHeaders, IncomingMessage, OutgoingHttpHeaders } from 'http';
 import { IOUtils } from './IOUtils';
 
+const LOG = LoggerFactory.getLogger();
 const GOT_RESPONSE_BODY: string = 'body';
 
 /**
@@ -38,10 +40,12 @@ export class HttpUtils {
    */
   public static toBuffer(response: IncomingMessage): Promise<Buffer> {
     if (this.isGotResponse(response)) {
+      LOG.debug(`Processing toBuffer as a GOT response...`);
       return this.gotResponseToBuffer(response);
     }
     let rval: string = '';
     return new Promise<Buffer>((resolve, reject) => {
+      LOG.debug(`Processing toBuffer as standard IncomingMessage...`);
       response.setEncoding('binary');
       response.on('data', chunk => {
         rval += chunk;
@@ -99,8 +103,9 @@ export class HttpUtils {
 
   private static gotResponseToBuffer(response: IncomingMessage): Promise<Buffer> {
     let rval: Promise<Buffer>;
-    const body: string = response[GOT_RESPONSE_BODY];
+    const body: any = response[GOT_RESPONSE_BODY];
 
+    LOG.debug(`Got response body is of type: ${typeof body}`);
     if (typeof body === 'string') {
       rval = Promise.resolve(Buffer.from(body));
     } else if (Buffer.isBuffer(body)) {
