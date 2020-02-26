@@ -27,6 +27,13 @@ describe('TestUtils', () => {
     expect(tempPath.endsWith('.jpg')).toBeTruthy();
   });
 
+  it('can copy a file to a temp file with unique name', () => {
+    const ctx = TestContext.createContext();
+    const tempPath = ctx.copyToTempFile(path.resolve(process.cwd(),'package.json'));
+    expect(tempPath.endsWith('.json')).toBeTruthy();
+    expect(fs.existsSync(tempPath)).toBeTruthy();
+  });
+
   it('can create unique temp file paths', () => {
     const ctx = TestContext.createContext();
     const history: string[] = [];
