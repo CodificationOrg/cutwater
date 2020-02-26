@@ -12,7 +12,8 @@
     "preversion": "yarn build",
     "release": "lerna version --conventional-commits",
     "version": " git add -A .",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "prepublish": "yarn build"
   },
   "devDependencies": {
     "lerna": "^3.13.1",
