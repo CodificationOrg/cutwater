@@ -1,11 +1,5 @@
 import { S3 } from 'aws-sdk';
-import {
-  DeleteObjectRequest,
-  GetObjectOutput,
-  GetObjectRequest,
-  PutObjectOutput,
-  PutObjectRequest,
-} from 'aws-sdk/clients/s3';
+import { DeleteObjectRequest, GetObjectOutput, GetObjectRequest, PutObjectOutput, PutObjectRequest } from 'aws-sdk/clients/s3';
 import * as mime from 'mime';
 import { Readable } from 'stream';
 
@@ -55,6 +49,14 @@ export class S3Bucket {
         resolve();
       });
     });
+  }
+
+  public async loadBuffer(fileName: string): Promise<Buffer> {
+    const output = await this.load(fileName);
+    if (!Buffer.isBuffer(output.Body)) {
+      throw new Error(`Object is ${typeof output.Body},not a Buffer.`);
+    }
+    return output.Body;
   }
 
   public load(fileName: string): Promise<GetObjectOutput> {
