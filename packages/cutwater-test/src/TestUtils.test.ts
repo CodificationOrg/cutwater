@@ -15,6 +15,12 @@ describe('TestUtils', () => {
       expect(tempDir.startsWith(path.resolve('temp/foo-'))).toBeTruthy();
       expect(fs.existsSync(tempDir)).toBeTruthy();
     });
+
+    it('can provide a custom package rooted temp directory recursively', () => {
+      const tempDir = TestContext.createContext('temp//tests/foo-').tempDir;
+      expect(tempDir.startsWith(path.resolve('temp/tests/foo-'))).toBeTruthy();
+      expect(fs.existsSync(tempDir)).toBeTruthy();
+    });
   });
 
   it('can create a temp file path', () => {
@@ -37,7 +43,7 @@ describe('TestUtils', () => {
   it('can create unique temp file paths', () => {
     const ctx = TestContext.createContext();
     const history: string[] = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10; i++) {
       const tempPath = ctx.createTempFilePath();
       expect(history.indexOf(tempPath)).toEqual(-1);
       history.push(tempPath);

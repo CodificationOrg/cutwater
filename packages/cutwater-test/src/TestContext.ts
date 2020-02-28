@@ -3,15 +3,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export class TestContext {
-  public static createContext(tempDirName?: string): TestContext {
-    return new TestContext(tempDirName);
+  public static createContext(tempDirPrefix?: string): TestContext {
+    return new TestContext(tempDirPrefix);
   }
 
   public readonly tempDir: string;
   private destroyed: boolean = false;
 
-  private constructor(tempDirName: string = 'temp/test-') {
-    const tempPath = path.resolve(path.join(process.cwd(), tempDirName));
+  private constructor(tempDirPrefix: string = 'temp/test-') {
+    const tempPath = path.resolve(path.join(process.cwd(), tempDirPrefix));
     this.tempDir = FileUtils.createTempDir(tempPath);
   }
 
@@ -21,6 +21,7 @@ export class TestContext {
   }
 
   public copyToTempFile(srcPath: string): string {
+    this.checkForDestroyed();
     const ext = path.extname(srcPath).substring(1);
     const rval = this.createTempFilePath(ext);
     fs.copyFileSync(srcPath, rval);

@@ -7,10 +7,17 @@ import * as uuid from 'uuid/v4';
 const LOG = LoggerFactory.getLogger();
 
 export class FileUtils {
-  public static createTempDir(prefix: string = path.join(os.tmpdir(), 'cutwater-')): string {
+  public static createTempDir(prefix: string = path.join(os.tmpdir(), 'cutwater-'), recursive: boolean = true): string {
+    if (recursive && !this.doesParentDirectoryExist(prefix)) {
+      fs.mkdirSync(path.resolve(path.dirname(prefix)), { recursive: true });
+    }
     const rval = fs.mkdtempSync(prefix);
     LOG.debug(`Created temp directory: ${rval}`);
     return rval;
+  }
+
+  public static doesParentDirectoryExist(filePath: string): boolean {
+    return fs.existsSync(path.dirname(path.resolve(filePath)));
   }
 
   public static createTempFilePath(tempDir?: string, ext: string = 'tmp'): string {
