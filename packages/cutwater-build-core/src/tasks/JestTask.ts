@@ -1,7 +1,7 @@
 import { AggregatedResult } from '@jest/test-result';
 import { GlobalConfig } from '@jest/types/build/Config';
 import * as gulp from 'gulp';
-import { default as jest } from 'jest-cli';
+import { runCLI } from 'jest';
 import * as path from 'path';
 import { BuildConfig } from '../';
 import { IOUtils } from '../utilities/IOUtils';
@@ -126,8 +126,7 @@ export class JestTask extends GulpTask<JestTaskConfig> {
 
     process.env[ENV_LOGGING_LEVEL] = jestConfig.logLevel ? jestConfig.logLevel.toUpperCase() : 'ALL';
 
-    jest
-      .runCLI(jestConfig as any, [this.buildConfig.rootPath])
+    runCLI(jestConfig as any, [this.buildConfig.rootPath])
       .then((result: { results: AggregatedResult; globalConfig: GlobalConfig }) => {
         if (result.results.numFailedTests || result.results.numFailedTestSuites) {
           completeCallback(new Error('Jest tests failed'));
