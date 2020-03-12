@@ -4,7 +4,6 @@ import * as gulp from 'gulp';
 import * as path from 'path';
 import * as through2 from 'through2';
 import * as Vinyl from 'vinyl';
-
 import { BuildConfig } from '../BuildConfig';
 import { BuildContext } from '../BuildContext';
 import { ExecutableTask } from '../ExecutableTask';
@@ -12,6 +11,8 @@ import { getLogger, Logger } from '../logging/Logger';
 import { IOUtils } from '../utilities/IOUtils';
 
 export abstract class GulpTask<T> implements ExecutableTask {
+  public readonly CONFIG_ENV_VAR: string = 'CUTWATER_BUILD_CONFIG';
+
   public name: string;
   public buildConfig: BuildConfig;
   public config: T;
@@ -41,11 +42,7 @@ export abstract class GulpTask<T> implements ExecutableTask {
   }
 
   public onRegister(): void {
-    const configFilename: string = this.getConfigFilePath();
-    const schema: object | undefined = this.schema;
-
-    const rawConfig: T | undefined = this.readConfigFile(configFilename, schema);
-
+    const rawConfig: T | undefined = this.readConfigs();
     if (rawConfig) {
       this.setConfig(rawConfig);
     }
@@ -166,27 +163,57 @@ export abstract class GulpTask<T> implements ExecutableTask {
     return undefined;
   }
 
-  protected getConfigFilePath(): string {
-    return path.join(process.cwd(), 'config', `${this.name}.json`);
+  protected getConfigFilePaths(): string[] {
+    return ['config', '.config'].map(directory => path.join(process.cwd(), directory, `${this.name}.json`));
   }
 
   protected logger(): Logger {
     return getLogger();
   }
 
+  private readConfigs(): T | undefined {
+    const configFiles: string[] = this.getConfigFilePaths();
+    const schema: object | undefined = this.schema;
+
+    let rval: T | undefined = this.readConfigFiles(configFiles, schema);
+    if (!!process.env[this.CONFIG_ENV_VAR]) {
+      const envConfig = JSON.parse(process.env[this.CONFIG_ENV_VAR] || '');
+      if (!!envConfig[this.name]) {
+        const verifiedConfig: T | undefined = this.verifyConfig(envConfig[this.name], schema);
+        rval = !rval ? verifiedConfig : { ...rval, ...verifiedConfig };
+      }
+    }
+
+    return rval;
+  }
+
+  private readConfigFiles(filePaths: string[], schema?: object): T | undefined {
+    let rval: T | undefined;
+    filePaths
+      .map(configPath => this.readConfigFile(configPath))
+      .forEach(config => {
+        if (!!config) {
+          rval = !rval ? { ...config } : { ...rval, ...config };
+        }
+      });
+    return rval;
+  }
+
   private readConfigFile(filePath: string, schema?: object): T | undefined {
     if (!IOUtils.fileExists(filePath)) {
       return undefined;
     } else {
-      const rawData: T = IOUtils.readJSONSyncSafe(filePath);
-
-      if (schema) {
-        const ajv = new Ajv();
-        if (!ajv.validate(schema, rawData)) {
-          throw new Error(`Configuration error: ${ajv.errors}`);
-        }
-      }
-      return rawData;
+      return this.verifyConfig(IOUtils.readJSONSyncSafe(filePath));
     }
+  }
+
+  private verifyConfig(rawData: T | undefined, schema?: object): T | undefined {
+    if (!!rawData && !!schema) {
+      const ajv = new Ajv();
+      if (!ajv.validate(schema, rawData)) {
+        throw new Error(`Configuration error: ${ajv.errors}`);
+      }
+    }
+    return rawData;
   }
 }
