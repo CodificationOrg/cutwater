@@ -1,26 +1,22 @@
-import { IOUtils } from '@codification/cutwater-build-core';
-import { AwsCliTask, AwsCliTaskConfig } from './AwsCliTask';
+import { AwsCliTask } from './AwsCliTask';
 
-export interface CloudFormationPackageTaskConfig extends AwsCliTaskConfig {
+export interface CloudFormationPackageParameters {
   templateFile: string;
-  outputFile: string;
   s3Bucket: string;
+  s3Prefix?: string;
+  kmsKeyId?: string;
+  outputTempateFile?: string;
+  useJson?: boolean;
+  forceUpload?: boolean;
+  metadata?: { [key: string]: string };
 }
 
-export class CloudFormationPackageTask extends AwsCliTask<CloudFormationPackageTaskConfig> {
+export class CloudFormationPackageTask extends AwsCliTask<CloudFormationPackageParameters> {
   public constructor() {
-    super('cloudformation-package', {
-      awsCommand: 'cloudformation',
-      subCommand: 'package',
+    super('cloudformation-package', 'cloudformation', 'package');
+    this.setParameters({
       templateFile: './app.template.yaml',
-      outputFile: './temp/aws/cloudformation/app.template.yaml',
+      outputTempateFile: './temp/aws/cloudformation/app.template.yaml',
     });
-  }
-
-  protected preparedParameters(): string {
-    IOUtils.mkdirs(this.config.outputFile, this.buildConfig);
-    return `--template-file ${this.config.templateFile} \
-    --output-template-file ${this.config.outputFile} \
-    --s3-bucket ${this.config.s3Bucket}`;
   }
 }

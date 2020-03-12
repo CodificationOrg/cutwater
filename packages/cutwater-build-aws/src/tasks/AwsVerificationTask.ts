@@ -1,15 +1,8 @@
-import { RunCommandTask } from '@codification/cutwater-build-core';
+import { AwsCliTask } from './AwsCliTask';
 
-export class AwsVerificationTask extends RunCommandTask<any> {
+export class AwsVerificationTask extends AwsCliTask<void> {
   public constructor() {
     super('aws-verification');
-  }
-
-  protected preparedCommand(): string {
-    return 'aws';
-  }
-
-  protected preparedArgs(): string {
-    return '--version';
+    this.setOptions({ version: true });
   }
 }
