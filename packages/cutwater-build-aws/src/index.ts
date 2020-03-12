@@ -11,4 +11,4 @@ export const cfPackage: ExecutableTask = new CloudFormationPackageTask();
 export const cfDeploy: ExecutableTask = new CloudFormationDeployTask();
 
 task('cloudformation-package', cfPackage);
-task('cloudformation-deplooy', cfDeploy);
+task('cloudformation-deploy', cfDeploy);
