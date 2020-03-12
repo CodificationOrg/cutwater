@@ -19,7 +19,7 @@ export interface CloudFormationDeployParameters {
 
 export class CloudFormationDeployTask extends AwsCliTask<CloudFormationDeployParameters> {
   public constructor() {
-    super('cloudformation-package', 'cloudformation', 'package');
+    super('cloudformation-deploy', 'cloudformation', 'deploy');
     this.setParameters({
       templateFile: './temp/aws/cloudformation/app.template.yaml',
     });
