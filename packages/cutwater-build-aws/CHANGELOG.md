@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.1](https://github.com/CodificationOrg/cutwater/compare/v0.15.0...v0.15.1) (2020-03-12)
+
+
+### Bug Fixes
+
+* correct copy/paste errors ([cf92287](https://github.com/CodificationOrg/cutwater/commit/cf9228779cb4e99c044df01bafbf94e2056164a9))
+* correct task name typo ([b21cebc](https://github.com/CodificationOrg/cutwater/commit/b21cebcbf95f27b0d249feffa4dcf743cb63df7d))
+
+
+
+
+
 # [0.15.0](https://github.com/CodificationOrg/cutwater/compare/v0.14.2...v0.15.0) (2020-03-12)
 
 
