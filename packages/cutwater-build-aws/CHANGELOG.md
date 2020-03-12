@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/CodificationOrg/cutwater/compare/v0.14.2...v0.15.0) (2020-03-12)
+
+
+### Features
+
+* automate output directory creation ([d9cd96c](https://github.com/CodificationOrg/cutwater/commit/d9cd96cfc41754a24f2d73d9cd867feb284ab53b))
+
+
+
+
+
 ## [0.14.2](https://github.com/CodificationOrg/cutwater/compare/v0.14.1...v0.14.2) (2020-03-12)
 
 
