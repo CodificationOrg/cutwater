@@ -22,6 +22,8 @@ export { ExecutableTask } from './ExecutableTask';
 export { Logger } from './logging/Logger';
 export * from './tasks';
 export { IOUtils } from './utilities/IOUtils';
+export { RunCommand, RunCommandConfig } from './utilities/RunCommand';
+export { TextUtils } from './utilities/TextUtils';
 
 const taskMap: { [key: string]: ExecutableTask } = {};
 const uniqueTasks: ExecutableTask[] = [];

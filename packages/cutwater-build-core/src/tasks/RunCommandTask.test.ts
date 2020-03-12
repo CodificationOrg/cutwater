@@ -4,14 +4,15 @@ import { RunCommandTask, RunCommandTaskConfig } from './RunCommandTask';
 
 initialize(gulp);
 
-test('can run echo', done => {
+describe('RunCommandTask', () => {
   const task: RunCommandTask<RunCommandTaskConfig> = new RunCommandTask();
-  task.setConfig({ command: 'echo', args: '"Hello World!"' });
-  task
-    .executeTask(gulp)
-    .then(() => {
-      expect(true).toBeTruthy();
-      done();
-    })
-    .catch(err => done(err));
+
+  it('can run echo', async () => {
+    task.setConfig({ command: 'echo', args: '"Hello World!"' });
+    try {
+      await task.executeTask(gulp);
+    } catch (err) {
+      fail(err);
+    }
+  });
 });
