@@ -17,7 +17,7 @@ export interface CloudFormationDeployParameters {
   tags: string[];
 }
 
-export class CloudFormationPackageTask extends AwsCliTask<CloudFormationDeployParameters> {
+export class CloudFormationDeployTask extends AwsCliTask<CloudFormationDeployParameters> {
   public constructor() {
     super('cloudformation-package', 'cloudformation', 'package');
     this.setParameters({
