@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/CodificationOrg/cutwater/compare/v0.13.2...v0.14.0) (2020-03-12)
+
+
+### Features
+
+* add initial versions for deploy and copy ([b886a7a](https://github.com/CodificationOrg/cutwater/commit/b886a7ad1b8e5a34f00d4612ca90328255870b94))
+* add more config location options ([6fcfb5a](https://github.com/CodificationOrg/cutwater/commit/6fcfb5a5aa8b1bacd39514c79939b871276958c2))
+* improve base aws cli task ([32c8e16](https://github.com/CodificationOrg/cutwater/commit/32c8e166bd78ea94b113194fcebfd64843efae37))
+
+
+
+
+
+
 ## [0.13.2](https://github.com/CodificationOrg/cutwater/compare/v0.13.1...v0.13.2) (2020-03-06)
 
 **Note:** Version bump only for package root
