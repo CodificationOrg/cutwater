@@ -1,3 +1,5 @@
+import { IOUtils } from '@codification/cutwater-build-core';
+import * as gulp from 'gulp';
 import { AwsCliTask } from './AwsCliTask';
 
 export interface CloudFormationPackageParameters {
@@ -18,5 +20,12 @@ export class CloudFormationPackageTask extends AwsCliTask<CloudFormationPackageP
       templateFile: './app.template.yaml',
       outputTemplateFile: './temp/aws/cloudformation/app.template.yaml',
     });
+  }
+
+  public executeTask(localGulp: gulp.Gulp): Promise<void> {
+    if (!!this.config.parameters && !!this.config.parameters.outputTemplateFile) {
+      IOUtils.mkdirs(this.config.parameters.outputTemplateFile);
+    }
+    return super.executeTask(localGulp);
   }
 }
