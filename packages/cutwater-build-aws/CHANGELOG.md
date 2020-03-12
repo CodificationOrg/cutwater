@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.2](https://github.com/CodificationOrg/cutwater/compare/v0.14.1...v0.14.2) (2020-03-12)
+
+
+### Bug Fixes
+
+* correct typo in parameter name ([73f1285](https://github.com/CodificationOrg/cutwater/commit/73f12859a7e1a2672d42f352e3114186e0e51b9f))
+
+
+
+
+
 ## [0.14.1](https://github.com/CodificationOrg/cutwater/compare/v0.14.0...v0.14.1) (2020-03-12)
 
 
