@@ -1,15 +1,4 @@
-import {
-  copyStaticAssets,
-  ExecutableTask,
-  getConfig,
-  jest,
-  parallel,
-  prettier,
-  serial,
-  setConfig,
-  task,
-  watch,
-} from '@codification/cutwater-build-core';
+import { copyStaticAssets, ExecutableTask, getConfig, jest, jestIntegration, parallel, prettier, serial, setConfig, task, watch } from '@codification/cutwater-build-core';
 import { tsc, TscTask, tslint } from '@codification/cutwater-build-typescript';
 import { webpack } from '@codification/cutwater-build-webpack';
 
@@ -31,6 +20,7 @@ export const buildTasks: ExecutableTask = task('build', serial(prettier, buildSu
 export const bundleTasks: ExecutableTask = task('bundle', serial(buildTasks, webpack));
 
 export const testTasks: ExecutableTask = task('test', serial(buildSubtask, jest));
+export const integrationTask: ExecutableTask = task('test-integ', serial(buildSubtask, jestIntegration));
 
 export const watchTasks: ExecutableTask = task('watch', watch('src/**.ts', serial(testTasks, webpack)));
 
