@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0](https://github.com/CodificationOrg/cutwater/compare/v0.15.1...v0.16.0) (2020-03-13)
+
+
+### Features
+
+* add integration test task for jest ([56ecf65](https://github.com/CodificationOrg/cutwater/commit/56ecf65a880ce8824ea50485afde9e3e4db8f8a5))
+* update name and config for integration task ([565189f](https://github.com/CodificationOrg/cutwater/commit/565189f579cec1feff1eb56b32f2139e76c4bef6))
+
+
+
+
+
+
 ## [0.15.1](https://github.com/CodificationOrg/cutwater/compare/v0.15.0...v0.15.1) (2020-03-12)
 
 
