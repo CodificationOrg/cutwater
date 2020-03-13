@@ -1,4 +1,16 @@
-import { copyStaticAssets, ExecutableTask, getConfig, jest, jestIntegration, parallel, prettier, serial, setConfig, task, watch } from '@codification/cutwater-build-core';
+import {
+  copyStaticAssets,
+  ExecutableTask,
+  getConfig,
+  jest,
+  jestIntegration,
+  parallel,
+  prettier,
+  serial,
+  setConfig,
+  task,
+  watch,
+} from '@codification/cutwater-build-core';
 import { tsc, TscTask, tslint } from '@codification/cutwater-build-typescript';
 import { webpack } from '@codification/cutwater-build-webpack';
 
