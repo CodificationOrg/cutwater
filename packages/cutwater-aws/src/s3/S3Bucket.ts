@@ -1,5 +1,5 @@
 import { S3 } from 'aws-sdk';
-import { GetObjectOutput, GetObjectRequest, PutObjectOutput, PutObjectRequest } from 'aws-sdk/clients/s3';
+import { GetObjectOutput, GetObjectRequest, HeadObjectOutput, PutObjectOutput, PutObjectRequest } from 'aws-sdk/clients/s3';
 import * as mime from 'mime';
 import { Readable } from 'stream';
 
@@ -26,17 +26,13 @@ export class S3Bucket {
     this.bucketName = name;
   }
 
+  public async size(fileName: string): Promise<number | undefined> {
+    const head = await this.headObject(fileName);
+    return !!head ? head.ContentLength : undefined;
+  }
+
   public async exists(fileName: string): Promise<boolean> {
-    let rval: boolean = false;
-    try {
-      await this.s3Client.headObject({ Bucket: this.bucketName, Key: fileName }).promise();
-      rval = true;
-    } catch (err) {
-      if (err.code !== 'NotFound') {
-        throw err;
-      }
-    }
-    return rval;
+    return !!(await this.headObject(fileName));
   }
 
   public async remove(fileName: string): Promise<void> {
@@ -46,7 +42,7 @@ export class S3Bucket {
   public async loadBuffer(fileName: string): Promise<Buffer> {
     const output = await this.load(fileName);
     if (!Buffer.isBuffer(output.Body)) {
-      throw new Error(`Object is ${typeof output.Body},not a Buffer.`);
+      throw new Error(`Object is "${typeof output.Body}", not a Buffer.`);
     }
     return output.Body;
   }
@@ -61,6 +57,17 @@ export class S3Bucket {
     mimeType?: string,
   ): Promise<PutObjectOutput> {
     return await this.s3Client.putObject(this.toPutObjectRequest(fileName, content, mimeType)).promise();
+  }
+
+  private async headObject(fileName: string): Promise<HeadObjectOutput | undefined> {
+    try {
+      return await this.s3Client.headObject({ Bucket: this.bucketName, Key: fileName }).promise();
+    } catch (err) {
+      if (err.code !== 'NotFound') {
+        throw err;
+      }
+    }
+    return undefined;
   }
 
   private toPutObjectRequest(key: string, content: string | Buffer | Readable, mimeType?: string): PutObjectRequest {
