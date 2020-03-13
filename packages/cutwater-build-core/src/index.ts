@@ -395,3 +395,7 @@ export const jest: JestTask = new JestTask();
 task('clean', clean);
 task('jest', jest);
 task('prettier', prettier);
+
+export const jestIntegration: JestTask = new JestTask();
+jestIntegration.setConfig({ testMatch: ['<rootDir>/lib/**/*.(integ).js?(x)'] });
+task('jest-integration', jestIntegration);

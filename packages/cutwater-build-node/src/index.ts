@@ -2,6 +2,7 @@ import {
   copyStaticAssets,
   ExecutableTask,
   jest,
+  jestIntegration,
   parallel,
   prettier,
   serial,
@@ -24,5 +25,6 @@ const buildSubtask: ExecutableTask = parallel(tslint, tsc, copyStaticAssets);
 
 export const buildTasks: ExecutableTask = task('build', serial(prettier, buildSubtask));
 export const testTasks: ExecutableTask = task('test', serial(buildSubtask, jest));
+export const integrationTask: ExecutableTask = task('test-integ', serial(buildSubtask, jestIntegration));
 export const watchTask: ExecutableTask = task('watch', watch('src/**.ts', testTasks));
 export const defaultTasks: ExecutableTask = task('default', serial(buildTasks, jest));
