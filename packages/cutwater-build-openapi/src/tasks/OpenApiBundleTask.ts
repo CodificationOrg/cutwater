@@ -2,7 +2,7 @@ import { GulpTask } from '@codification/cutwater-build-core';
 import * as gulp from 'gulp';
 import { bundle } from 'swagger-cli';
 
-export interface SwaggerBundleTaskConfig {
+export interface OpenApiBundleTaskConfig {
   apiFile: string;
   outfile: string;
   dereference: boolean;
@@ -11,11 +11,11 @@ export interface SwaggerBundleTaskConfig {
   type: 'yaml' | 'json';
 }
 
-export class SwaggerBundleTask extends GulpTask<SwaggerBundleTaskConfig> {
+export class OpenApiBundleTask extends GulpTask<OpenApiBundleTaskConfig> {
   public constructor() {
-    super('swagger-bundle', {
-      apiFile: './swagger/swagger.yaml',
-      outfile: './temp/swagger.json',
+    super('openapi-bundle', {
+      apiFile: './openapi/openapi.yaml',
+      outfile: './temp/openapi/openapi.json',
       dereference: true,
     });
   }

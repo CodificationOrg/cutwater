@@ -2,16 +2,16 @@ import { GulpTask } from '@codification/cutwater-build-core';
 import { Gulp } from 'gulp';
 import { validate } from 'swagger-cli';
 
-export interface SwaggerValidateTaskConfig {
+export interface OpenApiValidateTaskConfig {
   apiFile: string;
   schema: boolean;
   spec: boolean;
 }
 
-export class SwaggerValidateTask extends GulpTask<SwaggerValidateTaskConfig> {
+export class OpenApiValidateTask extends GulpTask<OpenApiValidateTaskConfig> {
   public constructor() {
-    super('swagger-validate', {
-      apiFile: './swagger/swagger.json',
+    super('openapi-validate', {
+      apiFile: './openapi/openapi.json',
       schema: true,
       spec: true,
     });
