@@ -1,0 +1,7 @@
+Resource:
+  Property1: value1
+  PropertyObj: 
+    ObjectProp: value1
+  List:
+    - value1
+    - value2
