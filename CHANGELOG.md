@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.17.0](https://github.com/CodificationOrg/cutwater/compare/v0.16.0...v0.17.0) (2020-03-13)
+
+
+### Features
+
+* add ability to fetch S3 object size ([4be5285](https://github.com/CodificationOrg/cutwater/commit/4be52857cc6d888885b957b9e36a859f0ffaa897))
+
+
+
+
+
+
 # [0.16.0](https://github.com/CodificationOrg/cutwater/compare/v0.15.1...v0.16.0) (2020-03-13)
 
 
