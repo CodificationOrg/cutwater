@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Stage:
+    Type: String
+    Description: The current deploy stage.
+  LoggingLevel:
+    Type: String
+    Default: WARN
+    Description: Logging level for all Lambda functions.
+
+Globals:
+  Function:
+    Runtime: nodejs10.x
+    Tracing: Active
+    MemorySize: 256
+    Timeout: 5
+    Environment:
+      Variables:
+        LOGGING_LEVEL: !Ref LoggingLevel
+        DATA_BUCKET_NAME: !Ref DataBucket
+
+Resources:
+  DataBucket:
+    Type: AWS::S3::Bucket
+      
+  RestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Body:
+        Location: src/cloudformation/openapi-test.yaml
+  RestApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref RestApi
+  RestApiStage:
+    Type: AWS::ApiGateway::Stage
+    DependsOn: ApiGatewayAccount
+    Properties:
+      Description: !Sub 'Related to deployment: ${RestApiDeployment}'
+      DeploymentId: !Ref RestApiDeployment
+      RestApiId: !Ref RestApi
+      StageName: !Ref Stage
+  ApiGatewayCloudWatchRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - 'apigateway.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      Path: '/'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs'
+  ApiGatewayAccount:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn: !GetAtt ApiGatewayCloudWatchRole.Arn
+
+  GraphqlHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./packages/comix-lambda/dist/graphqlHandler.js
+      Handler: graphqlHandler.handler
