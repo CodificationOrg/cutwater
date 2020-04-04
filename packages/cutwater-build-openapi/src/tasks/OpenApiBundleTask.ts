@@ -1,4 +1,4 @@
-import { GulpTask } from '@codification/cutwater-build-core';
+import { GulpTask, IOUtils } from '@codification/cutwater-build-core';
 import * as gulp from 'gulp';
 import { bundle } from 'swagger-cli';
 
@@ -20,8 +20,13 @@ export class OpenApiBundleTask extends GulpTask<OpenApiBundleTaskConfig> {
     });
   }
 
-  public executeTask(localGulp: gulp.Gulp): Promise<object> {
+  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
     const { apiFile, ...bundleConfig } = this.config;
-    return bundle(apiFile, bundleConfig);
+    if (IOUtils.fileExists(apiFile)) {
+      this.createOutputDir(this.config.outfile);
+      await bundle(apiFile, bundleConfig);
+    } else {
+      this.log(`Skipping bundle, api file not found: ${IOUtils.resolvePath(apiFile)}`);
+    }
   }
 }

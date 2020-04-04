@@ -2,13 +2,19 @@ import { IOUtils } from '@codification/cutwater-build-core';
 import * as gulp from 'gulp';
 import { OpenApiBundleTask } from './OpenApiBundleTask';
 
-describe('OpenApiBundleTask', () => {
-  const task: OpenApiBundleTask = new OpenApiBundleTask();
-  task.setConfig({ apiFile: './test/openapi.yaml', outfile: './temp/compiled.yaml', type: 'yaml' });
+afterAll(() => IOUtils.rmdirs('temp/test'));
 
-  it('the openapi file is bundled', async () => {
-    const result = await task.executeTask(gulp);
-    expect(result).toBeTruthy();
-    expect(IOUtils.fileExists('./temp/compiled.yaml')).toBeTruthy();
+describe('OpenApiBundleTask', () => {
+  it('bundles the api files', async () => {
+    const task: OpenApiBundleTask = new OpenApiBundleTask();
+    task.setConfig({ apiFile: './test/openapi.yaml', outfile: 'temp/test/compiled.yaml', type: 'yaml' });
+    await task.executeTask(gulp);
+    expect(IOUtils.fileExists(task.config.outfile)).toBeTruthy();
+  });
+
+  it('skips the task when api file is not found', async () => {
+    const task: OpenApiBundleTask = new OpenApiBundleTask();
+    await task.executeTask(gulp);
+    expect(IOUtils.fileExists(task.config.outfile)).toBeFalsy();
   });
 });
