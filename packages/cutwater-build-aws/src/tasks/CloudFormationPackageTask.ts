@@ -1,5 +1,5 @@
-import { IOUtils } from '@codification/cutwater-build-core';
 import * as gulp from 'gulp';
+import { ApiGatewayDeploymentUpdater } from '../cloudformation/ApiGatewayDeploymentUpdater';
 import { AwsCliTask } from './AwsCliTask';
 
 export interface CloudFormationPackageParameters {
@@ -7,7 +7,7 @@ export interface CloudFormationPackageParameters {
   s3Bucket: string;
   s3Prefix?: string;
   kmsKeyId?: string;
-  outputTemplateFile?: string;
+  outputTemplateFile: string;
   useJson?: boolean;
   forceUpload?: boolean;
   metadata?: { [key: string]: string };
@@ -22,10 +22,15 @@ export class CloudFormationPackageTask extends AwsCliTask<CloudFormationPackageP
     });
   }
 
-  public executeTask(localGulp: gulp.Gulp): Promise<void> {
-    if (!!this.config.parameters && !!this.config.parameters.outputTemplateFile) {
-      IOUtils.mkdirs(this.config.parameters.outputTemplateFile);
+  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
+    if (!!this.config.parameters) {
+      this.createOutputDir(this.config.parameters.outputTemplateFile);
     }
-    return super.executeTask(localGulp);
+    await super.executeTask(localGulp);
+    if (!!this.config.parameters) {
+      const updater = new ApiGatewayDeploymentUpdater();
+      updater.load(this.config.parameters.outputTemplateFile);
+      updater.performOpenApiMerges(this.config.parameters.outputTemplateFile);
+    }
   }
 }
