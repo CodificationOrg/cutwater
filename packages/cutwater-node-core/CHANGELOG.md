@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/CodificationOrg/cutwater/compare/v0.17.0...v0.18.0) (2020-04-04)
+
+
+### Features
+
+* add recursive directory deletion ([aeddb01](https://github.com/CodificationOrg/cutwater/commit/aeddb0140a63a49fb312ea890b08042864f24cab))
+
+
+
+
+
+
 # [0.17.0](https://github.com/CodificationOrg/cutwater/compare/v0.16.0...v0.17.0) (2020-03-13)
 
 **Note:** Version bump only for package @codification/cutwater-node-core

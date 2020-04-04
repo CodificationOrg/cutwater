@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/CodificationOrg/cutwater/compare/v0.17.0...v0.18.0) (2020-04-04)
+
+
+### Features
+
+* add deploy updates and openapi integ ([fd2eca8](https://github.com/CodificationOrg/cutwater/commit/fd2eca8271d7f9350bc7fc0aecea265014f20886))
+* add helpers to deal with yaml files ([9ab083d](https://github.com/CodificationOrg/cutwater/commit/9ab083de5a1dfeaa75b86c31881938f9f96362c2))
+* add recursive directory deletion ([aeddb01](https://github.com/CodificationOrg/cutwater/commit/aeddb0140a63a49fb312ea890b08042864f24cab))
+* add support for versioning api deployments ([7179cc4](https://github.com/CodificationOrg/cutwater/commit/7179cc492e0b9abb21001e9b83eb40c5784eb9ef))
+* skip task on missing file ([e54d1f5](https://github.com/CodificationOrg/cutwater/commit/e54d1f52b2d059a666ea5752db6d3262f11d938f))
+
+
+
+
+
+
 # [0.17.0](https://github.com/CodificationOrg/cutwater/compare/v0.16.0...v0.17.0) (2020-03-13)
 
 

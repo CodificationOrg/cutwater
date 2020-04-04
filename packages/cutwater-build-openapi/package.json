@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-openapi",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "Tasks for processing swagger files.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -40,8 +40,8 @@
   "private": false,
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
-    "@codification/cutwater-build-core": "^0.17.0",
-    "@codification/cutwater-build-node": "^0.17.0",
+    "@codification/cutwater-build-core": "^0.18.0",
+    "@codification/cutwater-build-node": "^0.18.0",
     "swagger-cli": "^2.3.0"
   },
   "devDependencies": {
