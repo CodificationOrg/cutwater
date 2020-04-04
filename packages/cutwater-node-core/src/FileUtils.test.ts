@@ -33,6 +33,20 @@ describe('FileUtils', () => {
     }
   });
 
+  it('can delete directory recursively', () => {
+    FileUtils.createTempDir('temp/tests/sub/foo-');
+    FileUtils.deleteDirectory('temp/tests/sub');
+    expect(fs.existsSync('temp/tests/sub')).toBeFalsy();
+  });
+
+  it('properly fails to delete non-empty directory when not recursive', () => {
+    FileUtils.createTempDir('temp/tests/sub/foo-');
+    expect(() => {
+      FileUtils.deleteDirectory('temp/tests/sub', false);
+    }).toThrow();
+    FileUtils.deleteDirectory('temp/tests/sub');
+  });
+
   it('can corretly identify a missing parent directory', () => {
     expect(FileUtils.doesParentDirectoryExist('temp/foo/text.txt')).toBeFalsy();
   });
