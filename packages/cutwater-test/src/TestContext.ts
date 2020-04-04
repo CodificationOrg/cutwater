@@ -28,26 +28,10 @@ export class TestContext {
     return rval;
   }
 
-  public teardown(): Promise<void> {
+  public teardown(): void {
     this.checkForDestroyed();
     this.destroyed = true;
-    return new Promise((resolve, reject) => {
-      fs.readdir(this.tempDir, (err, files) => {
-        if (!err) {
-          try {
-            files.forEach(file => {
-              fs.unlinkSync(path.join(this.tempDir, file));
-            });
-            fs.rmdirSync(this.tempDir);
-            resolve();
-          } catch (removalErr) {
-            reject(removalErr);
-          }
-        } else {
-          reject(err);
-        }
-      });
-    });
+    FileUtils.deleteDirectory(this.tempDir);
   }
 
   private checkForDestroyed(): void {

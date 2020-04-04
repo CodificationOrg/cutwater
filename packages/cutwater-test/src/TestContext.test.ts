@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { TestContext } from './TestContext';
 
-describe('TestUtils', () => {
+describe('TestContext', () => {
   describe('getTempDir()', () => {
     it('can provide a default temp directory', () => {
       const tempDir = TestContext.createContext().tempDir;
@@ -50,7 +50,7 @@ describe('TestUtils', () => {
     }
   });
 
-  it('can remove the temp directory and all contents', async () => {
+  it('can remove the temp directory and all contents', () => {
     const ctx = TestContext.createContext();
     for (let i = 0; i < 4; i++) {
       const tempFile = ctx.createTempFilePath();
@@ -58,7 +58,7 @@ describe('TestUtils', () => {
       expect(fs.existsSync(tempFile)).toBeTruthy();
       expect(path.dirname(tempFile)).toEqual(ctx.tempDir);
     }
-    await ctx.teardown();
+    ctx.teardown();
     expect(fs.existsSync(ctx.tempDir)).toBeFalsy();
   });
 });
