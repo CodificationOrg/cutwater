@@ -15,8 +15,25 @@ export class IOUtils {
   }
 
   public static mkdirs(localPath: string, buildConfig?: BuildConfig): void {
-    const dirsPath = path.dirname(this.resolvePath(localPath, buildConfig));
-    fs.mkdirSync(dirsPath, { recursive: true });
+    const dirsPath = this.resolvePath(localPath, buildConfig);
+    if (!fs.existsSync(dirsPath)) {
+      fs.mkdirSync(dirsPath, { recursive: true });
+    }
+  }
+
+  public static rmdirs(localPath: string, buildConfig?: BuildConfig): void {
+    const dirsPath = this.resolvePath(localPath, buildConfig);
+    if (fs.existsSync(dirsPath)) {
+      fs.readdirSync(dirsPath).forEach(name => {
+        const p = path.join(dirsPath, name);
+        if (fs.statSync(p).isFile()) {
+          fs.unlinkSync(p);
+        } else {
+          this.rmdirs(p);
+        }
+      });
+      fs.rmdirSync(dirsPath);
+    }
   }
 
   public static fileExists(localPath: string, buildConfig?: BuildConfig): boolean {

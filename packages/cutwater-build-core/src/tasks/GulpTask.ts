@@ -159,6 +159,11 @@ export abstract class GulpTask<T> implements ExecutableTask {
     );
   }
 
+  protected createOutputDir(outputPath: string): void {
+    const outputDir = !!path.extname(outputPath) ? path.dirname(outputPath) : outputPath;
+    IOUtils.mkdirs(outputDir);
+  }
+
   protected loadSchema(): object | undefined {
     return undefined;
   }

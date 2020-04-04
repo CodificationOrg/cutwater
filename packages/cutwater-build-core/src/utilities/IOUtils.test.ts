@@ -2,14 +2,11 @@ import * as fs from 'fs';
 import { IOUtils } from '..';
 
 beforeAll(() => {
-  if (!fs.existsSync('./temp')) {
-    fs.mkdirSync('./temp');
-  }
+  IOUtils.mkdirs('temp/test');
 });
 
 afterAll(() => {
-  fs.readdirSync('./temp').forEach(file => fs.unlinkSync(`./temp/${file}`));
-  fs.rmdirSync('./temp');
+  IOUtils.rmdirs('temp/test');
 });
 
 describe('IOUtils', () => {
@@ -30,8 +27,8 @@ describe('IOUtils', () => {
 
   it('can properly write an object to a file', () => {
     const obj = IOUtils.readObjectFromFileSyncSafe<any>('src/utilities/test.json');
-    IOUtils.writeObjectToFileSync(obj, './temp/test.yaml');
-    expect(fs.existsSync('./temp/test.yaml'));
-    expect(IOUtils.readObjectFromFileSyncSafe<any>('./temp/test.yaml').Resource).toBeDefined();
+    IOUtils.writeObjectToFileSync(obj, 'temp/test/test.yaml');
+    expect(fs.existsSync('temp/test/test.yaml'));
+    expect(IOUtils.readObjectFromFileSyncSafe<any>('temp/test/test.yaml').Resource).toBeDefined();
   });
 });
