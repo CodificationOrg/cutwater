@@ -1,7 +1,6 @@
 import { default as globEscape } from 'glob-escape';
 import { Gulp } from 'gulp';
 import * as path from 'path';
-
 import { GulpTask } from './GulpTask';
 
 export interface CopyStaticAssetsTaskConfig {
@@ -52,6 +51,13 @@ export class CopyStaticAssetsTask extends GulpTask<CopyStaticAssetsTaskConfig> {
       globPatterns.push(`!${path.join(rootPath, file)}`);
     }
 
-    return gulp.src(globPatterns, { base: rootPath }).pipe(gulp.dest(libPath));
+    let rval: NodeJS.ReadWriteStream = gulp.src(globPatterns, { base: rootPath }).pipe(gulp.dest(libPath));
+    ['libAMDFolder', 'libES6Folder', 'libESNextFolder']
+      .filter(dest => !!this.buildConfig[dest])
+      .forEach(dest => {
+        rval = rval.pipe(gulp.dest(path.join(this.buildConfig.rootPath, this.buildConfig[dest])));
+      });
+
+    return rval;
   }
 }
