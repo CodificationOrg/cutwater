@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.20.0](https://github.com/CodificationOrg/cutwater/compare/v0.19.0...v0.20.0) (2020-05-05)
+
+
+### Features
+
+* add support for webpack-dev-server ([3fac3a4](https://github.com/CodificationOrg/cutwater/commit/3fac3a431b584c7557d8c00100bcbd3f9b21fde7))
+
+
+
+
+
+
 # [0.19.0](https://github.com/CodificationOrg/cutwater/compare/v0.18.0...v0.19.0) (2020-04-22)
 
 **Note:** Version bump only for package @codification/cutwater-build-web
