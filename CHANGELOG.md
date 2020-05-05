@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.4](https://github.com/CodificationOrg/cutwater/compare/v0.20.3...v0.20.4) (2020-05-05)
+
+
+### Bug Fixes
+
+* pass webpack config to server ([fbd200c](https://github.com/CodificationOrg/cutwater/commit/fbd200ce60c1364de582ea4b1f72a3a3e7bf40cb))
+
+
+
+
+
 ## [0.20.3](https://github.com/CodificationOrg/cutwater/compare/v0.20.2...v0.20.3) (2020-05-05)
 
 
