@@ -3,10 +3,10 @@ import { WebpackResources, WebpackTaskConfig, WebpackUtils } from '@codification
 import { Gulp } from 'gulp';
 import * as Webpack from 'webpack';
 import * as Server from 'webpack-dev-server/lib/Server';
+import * as processOptions from 'webpack-dev-server/lib/utils/processOptions';
 
 export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfig & TExtendedConfig> {
   private readonly EXIT_IMMEDIATELY_FLAG: string = 'exitImmediately';
-  private readonly DEV_SERVER_CONFIG: string = 'devServer';
   private wpResources: WebpackResources;
 
   constructor(extendedConfig?: TExtendedConfig) {
@@ -48,33 +48,8 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
     }
 
     if (webpackConfig) {
-      const webpack: typeof Webpack = this.config.webpack || Webpack;
-
-      let compiler: Webpack.Compiler;
-      try {
-        this.log('Creating Webpack compiler...');
-        compiler = webpack(webpackConfig);
-        this.log('Compiler created.');
-      } catch (err) {
-        completeCallback(`Error creating Webpack compiler[${this.config.configPath}]: ${err}`);
-        return;
-      }
-
       let server: Server;
-      try {
-        this.log('Starting Webpack dev server...');
-        const options: any = webpackConfig[this.DEV_SERVER_CONFIG] || {};
-        server = new Server(compiler, options);
-        if (!!this.config[this.EXIT_IMMEDIATELY_FLAG]) {
-          server.close(() => {
-            completeCallback();
-            return;
-          });
-        }
-      } catch (err) {
-        completeCallback(`Error creating Webpack DevServer[${this.config.configPath}]: ${err}`);
-        return;
-      }
+
       ['SIGINT', 'SIGTERM'].forEach((signal: any) => {
         process.on(signal, () => {
           server.close(() => {
@@ -82,6 +57,33 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
             return;
           });
         });
+      });
+
+      this.log('Starting Webpack dev server...');
+      processOptions(webpackConfig, {}, (config, options) => {
+        const webpack: typeof Webpack = this.config.webpack || Webpack;
+
+        let compiler: Webpack.Compiler;
+        try {
+          this.log('Creating Webpack compiler...');
+          compiler = webpack(config);
+          this.log('Compiler created.');
+        } catch (err) {
+          completeCallback(`Error creating Webpack compiler[${this.config.configPath}]: ${err}`);
+          return;
+        }
+        try {
+          server = new Server(compiler, options);
+          if (!!this.config[this.EXIT_IMMEDIATELY_FLAG]) {
+            server.close(() => {
+              completeCallback();
+              return;
+            });
+          }
+        } catch (err) {
+          completeCallback(`Error creating Webpack DevServer[${this.config.configPath}]: ${err}`);
+          return;
+        }
       });
     }
   }
