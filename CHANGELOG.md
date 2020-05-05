@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.1](https://github.com/CodificationOrg/cutwater/compare/v0.20.0...v0.20.1) (2020-05-05)
+
+
+### Bug Fixes
+
+* adding startup progress messages ([df2c20f](https://github.com/CodificationOrg/cutwater/commit/df2c20ff56b6e39480d67aa46d568ff78a125b2b))
+
+
+
+
+
 # [0.20.0](https://github.com/CodificationOrg/cutwater/compare/v0.19.0...v0.20.0) (2020-05-05)
 
 
