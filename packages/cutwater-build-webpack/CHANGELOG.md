@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.2](https://github.com/CodificationOrg/cutwater/compare/v0.20.1...v0.20.2) (2020-05-05)
+
+
+### Bug Fixes
+
+* remove dependence on specific task for config ([8d46c0c](https://github.com/CodificationOrg/cutwater/commit/8d46c0c3568d3281b42673a7a2f7856cd472289a))
+
+
+
+
+
 # [0.20.0](https://github.com/CodificationOrg/cutwater/compare/v0.19.0...v0.20.0) (2020-05-05)
 
 
