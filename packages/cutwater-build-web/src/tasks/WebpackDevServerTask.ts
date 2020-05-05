@@ -51,7 +51,9 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
 
       let compiler: Webpack.Compiler;
       try {
+        this.log('Creating Webpack compiler...');
         compiler = webpack(webpackConfig);
+        this.log('Compiler created.');
       } catch (err) {
         completeCallback(`Error creating Webpack compiler[${this.config.configPath}]: ${err}`);
         return;
@@ -59,6 +61,7 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
 
       let server: Server;
       try {
+        this.log('Starting Webpack dev server...');
         server = new Server(compiler);
         if (!!this.config[this.EXIT_IMMEDIATELY_FLAG]) {
           server.listeningApp.close(() => {
