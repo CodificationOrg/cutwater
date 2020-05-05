@@ -1,5 +1,5 @@
 {
-    "isEnabled": false,
+    "isEnabled": true,
     "testEnvironment": "node",
     "testMatch": [
         "**/*.(spec|test).js?(x)"

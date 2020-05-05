@@ -62,9 +62,9 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
       let server: Server;
       try {
         this.log('Starting Webpack dev server...');
-        server = new Server(compiler);
+        server = new Server(compiler, {}, this.logger());
         if (!!this.config[this.EXIT_IMMEDIATELY_FLAG]) {
-          server.listeningApp.close(() => {
+          server.close(() => {
             completeCallback();
             return;
           });
@@ -73,6 +73,14 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
         completeCallback(`Error creating Webpack DevServer[${this.config.configPath}]: ${err}`);
         return;
       }
+      ['SIGINT', 'SIGTERM'].forEach((signal: any) => {
+        process.on(signal, () => {
+          server.close(() => {
+            completeCallback();
+            return;
+          });
+        });
+      });
     }
   }
 
