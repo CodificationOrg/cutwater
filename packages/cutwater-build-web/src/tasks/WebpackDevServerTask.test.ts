@@ -1,4 +1,4 @@
-import { initialize } from '@codification/cutwater-build-core';
+import { initialize, setConfig } from '@codification/cutwater-build-core';
 import { WebpackTaskConfig } from '@codification/cutwater-build-webpack';
 import * as gulp from 'gulp';
 import { WebpackDevServerTask } from './WebpackDevServerTask';
@@ -25,6 +25,9 @@ const config: any = {
 describe('WebpackDevServerTask', () => {
   it('can create a webpack dev server', done => {
     const task = new WebpackDevServerTask();
+    setConfig({
+      verbose: true,
+    });
     task.setConfig({
       config,
       exitImmediately: true,

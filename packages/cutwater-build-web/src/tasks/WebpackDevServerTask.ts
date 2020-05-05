@@ -3,6 +3,7 @@ import { WebpackResources, WebpackTaskConfig, WebpackUtils } from '@codification
 import { Gulp } from 'gulp';
 import * as Webpack from 'webpack';
 import * as Server from 'webpack-dev-server/lib/Server';
+import * as createLogger from 'webpack-dev-server/lib/utils/createLogger';
 
 export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfig & TExtendedConfig> {
   private readonly EXIT_IMMEDIATELY_FLAG: string = 'exitImmediately';
@@ -62,7 +63,10 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
       let server: Server;
       try {
         this.log('Starting Webpack dev server...');
-        server = new Server(compiler, {}, this.logger());
+        const log: any = createLogger({
+          logLevel: this.logger().isVerboseEnabled() ? 'debug' : 'info',
+        });
+        server = new Server(compiler, {}, log);
         if (!!this.config[this.EXIT_IMMEDIATELY_FLAG]) {
           server.close(() => {
             completeCallback();
