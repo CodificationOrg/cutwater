@@ -4,6 +4,7 @@ import { Gulp } from 'gulp';
 import { EOL } from 'os';
 import * as path from 'path';
 import * as Webpack from 'webpack';
+import { WebpackUtils } from '../utilities/WebpackUtils';
 
 export interface WebpackTaskConfig {
   configPath: string;
@@ -54,20 +55,17 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
       IOUtils.copyFile(path.resolve(__dirname, 'webpack.config.js'));
       completeCallback();
     } else {
-      let webpackConfig: object;
+      let webpackConfig: object | undefined;
 
-      if (this.config.configPath && IOUtils.fileExists(this.config.configPath)) {
-        try {
-          webpackConfig = require(IOUtils.resolvePath(this.config.configPath));
-        } catch (err) {
-          completeCallback(`Error parsing webpack config: ${this.config.configPath}: ${err}`);
+      try {
+        webpackConfig = WebpackUtils.loadConfig(this.config);
+        if (!webpackConfig) {
+          this.logMissingConfigWarning();
+          completeCallback();
           return;
         }
-      } else if (this.config.config) {
-        webpackConfig = this.config.config;
-      } else {
-        this.logMissingConfigWarning();
-        completeCallback();
+      } catch (err) {
+        completeCallback(`Error parsing webpack config: ${this.config.configPath}: ${err}`);
         return;
       }
 

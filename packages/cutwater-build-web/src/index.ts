@@ -13,6 +13,7 @@ import {
 } from '@codification/cutwater-build-core';
 import { tsc, TscTask, tslint } from '@codification/cutwater-build-typescript';
 import { webpack } from '@codification/cutwater-build-webpack';
+import { WebpackDevServerTask } from './tasks/WebpackDevServerTask';
 
 export * from '@codification/cutwater-build-core';
 export * from '@codification/cutwater-build-typescript';
@@ -34,36 +35,37 @@ export const bundleTasks: ExecutableTask = task('bundle', serial(buildTasks, web
 export const testTasks: ExecutableTask = task('test', serial(buildSubtask, jest));
 export const integrationTask: ExecutableTask = task('test-integ', serial(buildSubtask, jestIntegration));
 
-export const watchTasks: ExecutableTask = task('watch', watch('src/**.ts', serial(testTasks, webpack)));
-
 tsc.name = 'tsc-commonjs';
 
-const tscAmdTask: TscTask = new TscTask();
-tscAmdTask.name = 'tsc-amd';
-tscAmdTask.setConfig({
+export const tscAmd: TscTask = new TscTask();
+tscAmd.name = 'tsc-amd';
+tscAmd.setConfig({
   customArgs: {
     outDir: './lib-amd',
     module: 'amd',
   },
 });
 
-const tscEsnextTask: TscTask = new TscTask();
-tscEsnextTask.name = 'tsc-es6';
-tscEsnextTask.setConfig({
+export const tscEs6: TscTask = new TscTask();
+tscEs6.name = 'tsc-es6';
+tscEs6.setConfig({
   customArgs: {
     outDir: './lib-es6',
     module: 'esnext',
   },
 });
 
-export const defaultTasks: ExecutableTask = task(
-  'default',
-  parallel(serial(bundleTasks, jest), tscAmdTask, tscEsnextTask),
-);
+export const defaultTasks: ExecutableTask = task('default', parallel(serial(bundleTasks, jest), tscAmd, tscEs6));
 
 setConfig({
   libAMDFolder: 'lib-amd',
   libES6Folder: 'lib-es6',
 });
+
+export const webWatch: ExecutableTask = task(
+  'watch',
+  watch(['src/**/*.*', 'public/**/*.*'], serial(tscEs6, copyStaticAssets, webpack)),
+);
+export const webpackDevServer: ExecutableTask = new WebpackDevServerTask();
 
 task('default', defaultTasks);
