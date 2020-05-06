@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-webpack",
-  "version": "0.20.8",
+  "version": "0.20.9",
   "description": "Configuration for building projects utilizing webpack.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -40,7 +40,7 @@
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
     "@codification/cutwater-build-core": "^0.20.0",
-    "@codification/cutwater-build-node": "^0.20.8",
+    "@codification/cutwater-build-node": "^0.20.9",
     "colors": "^1.4.0",
     "terser-webpack-plugin": "^1.4.1",
     "webpack": "^4.39.2"

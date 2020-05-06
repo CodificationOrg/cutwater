@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-node",
-  "version": "0.20.8",
+  "version": "0.20.9",
   "description": "Configuration for building node projects.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
