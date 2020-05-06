@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-typescript",
-  "version": "0.20.8",
+  "version": "0.20.10",
   "description": "Tasks for compiling and linting TypeScript.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
