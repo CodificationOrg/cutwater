@@ -4,4 +4,3 @@ export { WebpackResources, WebpackTask, WebpackTaskConfig } from './tasks/Webpac
 export { WebpackUtils } from './utilities/WebpackUtils';
 
 export const webpack: WebpackTask = new WebpackTask();
-export default webpack;

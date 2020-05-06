@@ -4,16 +4,14 @@ import { CloudFormationDeployTask } from './tasks/CloudFormationDeployTask';
 import { CloudFormationPackageTask } from './tasks/CloudFormationPackageTask';
 import { S3CopyTask } from './tasks/S3CopyTask';
 
-export const s3Copy: ExecutableTask = new S3CopyTask();
+export const s3CopyTask: ExecutableTask = new S3CopyTask();
+export const cfPackageTask: ExecutableTask = new CloudFormationPackageTask();
+export const cfDeployTask: ExecutableTask = new CloudFormationDeployTask();
+export const openApiCfPackageTasks: ExecutableTask = serial(openapiBundle, cfPackageTask);
+export const openApiCfDeployTasks: ExecutableTask = serial(openApiCfPackageTasks, cfDeployTask);
 
-task('s3-copy', s3Copy);
-
-export const cfPackage: ExecutableTask = new CloudFormationPackageTask();
-export const cfDeploy: ExecutableTask = new CloudFormationDeployTask();
-
-task('cloudformation-package', cfPackage);
-task('cloudformation-deploy', cfDeploy);
-
-export const openApiCfPackage: ExecutableTask = task('openapi-cf-package', serial(openapiBundle, cfPackage));
-
-export const openApiCfDeploy: ExecutableTask = task('openapi-cf-deploy', serial(openApiCfPackage, cfDeploy));
+task('s3-copy', s3CopyTask);
+task('cloudformation-package', cfPackageTask);
+task('cloudformation-deploy', cfDeployTask);
+task('openapi-cf-package', openApiCfPackageTasks);
+task('openapi-cf-deploy', openApiCfDeployTasks);
