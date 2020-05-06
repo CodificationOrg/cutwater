@@ -5,6 +5,7 @@ import { Gulp } from 'gulp';
 import * as net from 'net';
 import * as Webpack from 'webpack';
 import * as Server from 'webpack-dev-server/lib/Server';
+import * as createLogger from 'webpack-dev-server/lib/utils/createLogger';
 import * as processOptions from 'webpack-dev-server/lib/utils/processOptions';
 
 export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfig & TExtendedConfig> {
@@ -70,24 +71,19 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
         let compiler: Webpack.Compiler;
 
         try {
-          this.log('Creating Webpack compiler...');
+          this.logVerbose('Creating Webpack compiler...');
           compiler = webpack(config);
-          this.log('Compiler created.');
+          this.logVerbose('Compiler created.');
         } catch (err) {
           completeCallback(`Error creating Webpack compiler[${this.config.configPath}]: ${err}`);
           return;
         }
 
+        const log = createLogger({ logLevel: this.logger().isVerboseEnabled() ? 'debug' : 'info' });
+
         try {
           this.log('Starting Webpack dev server...');
-          server = new Server(compiler, options);
-          if (!!this.config[this.EXIT_IMMEDIATELY_FLAG]) {
-            this.log('Stopping Webpack dev server... Now!');
-            server.close(() => {
-              completeCallback();
-              return;
-            });
-          }
+          server = new Server(compiler, options, log);
           this.log('Webpack dev server is running.');
         } catch (err) {
           completeCallback(`Error creating Webpack dev server[${this.config.configPath}]: ${err}`);
@@ -139,6 +135,14 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
               completeCallback(`Webpack dev server error: ${err}`);
               return;
             }
+          });
+        }
+
+        if (!!this.config[this.EXIT_IMMEDIATELY_FLAG]) {
+          this.log('Stopping Webpack dev server... Now!');
+          server.close(() => {
+            completeCallback();
+            return;
           });
         }
       });

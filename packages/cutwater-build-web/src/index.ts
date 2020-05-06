@@ -69,3 +69,5 @@ export const webWatch: ExecutableTask = task(
 export const webpackDevServer: ExecutableTask = new WebpackDevServerTask();
 
 task('default', defaultTasks);
+task('start-server', webpackDevServer);
+task('start-watch-server', parallel(webWatch, webpackDevServer));
