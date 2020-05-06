@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.6](https://github.com/CodificationOrg/cutwater/compare/v0.20.5...v0.20.6) (2020-05-06)
+
+
+### Bug Fixes
+
+* more correction to config consumption ([dc6832f](https://github.com/CodificationOrg/cutwater/commit/dc6832f1c969d1abd257e884715191054e55320b))
+
+
+
+
+
 ## [0.20.5](https://github.com/CodificationOrg/cutwater/compare/v0.20.4...v0.20.5) (2020-05-05)
 
 
