@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.8](https://github.com/CodificationOrg/cutwater/compare/v0.20.7...v0.20.8) (2020-05-06)
+
+**Note:** Version bump only for package @codification/cutwater-node-core
+
+
+
+
+
 # [0.20.0](https://github.com/CodificationOrg/cutwater/compare/v0.19.0...v0.20.0) (2020-05-05)
 
 **Note:** Version bump only for package @codification/cutwater-node-core
