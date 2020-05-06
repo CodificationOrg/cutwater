@@ -1,6 +1,8 @@
 import { BuildConfig, GulpTask } from '@codification/cutwater-build-core';
 import { WebpackResources, WebpackTaskConfig, WebpackUtils } from '@codification/cutwater-build-webpack';
+import * as fs from 'fs';
 import { Gulp } from 'gulp';
+import * as net from 'net';
 import * as Webpack from 'webpack';
 import * as Server from 'webpack-dev-server/lib/Server';
 import * as processOptions from 'webpack-dev-server/lib/utils/processOptions';
@@ -52,6 +54,7 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
 
       ['SIGINT', 'SIGTERM'].forEach((signal: any) => {
         process.on(signal, () => {
+          this.log('Received signal, stopping Webpack dev server.');
           server.close(() => {
             completeCallback();
             return;
@@ -59,11 +62,13 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
         });
       });
 
-      this.log('Starting Webpack dev server...');
       processOptions(webpackConfig, {}, (config, options) => {
+        this.logVerbose(`Config: \n${JSON.stringify(config)}`);
+        this.logVerbose(`Options: \n${JSON.stringify(options)}`);
         const webpack: typeof Webpack = this.config.webpack || Webpack;
 
         let compiler: Webpack.Compiler;
+
         try {
           this.log('Creating Webpack compiler...');
           compiler = webpack(config);
@@ -72,17 +77,69 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
           completeCallback(`Error creating Webpack compiler[${this.config.configPath}]: ${err}`);
           return;
         }
+
         try {
+          this.log('Starting Webpack dev server...');
           server = new Server(compiler, options);
           if (!!this.config[this.EXIT_IMMEDIATELY_FLAG]) {
+            this.log('Stopping Webpack dev server... Now!');
             server.close(() => {
               completeCallback();
               return;
             });
           }
+          this.log('Webpack dev server is running.');
         } catch (err) {
-          completeCallback(`Error creating Webpack DevServer[${this.config.configPath}]: ${err}`);
+          completeCallback(`Error creating Webpack dev server[${this.config.configPath}]: ${err}`);
           return;
+        }
+
+        if (options.socket) {
+          server.listeningApp.on('error', (e: any) => {
+            if (e.code === 'EADDRINUSE') {
+              const clientSocket = new net.Socket();
+
+              clientSocket.on('error', (err: any) => {
+                if (err.code === 'ECONNREFUSED') {
+                  fs.unlinkSync(options.socket);
+
+                  server.listen(options.socket, options.host, error => {
+                    if (error) {
+                      completeCallback(`Webpack dev server error: ${error}`);
+                      return;
+                    }
+                  });
+                }
+              });
+
+              clientSocket.connect({ path: options.socket }, () => {
+                completeCallback(`This socket is already used...`);
+                return;
+              });
+            }
+          });
+
+          server.listen(options.socket, options.host, err => {
+            if (err) {
+              completeCallback(`Webpack dev server error: ${err}`);
+              return;
+            }
+
+            const READ_WRITE = 438;
+            fs.chmod(options.socket, READ_WRITE, (error: any) => {
+              if (err) {
+                completeCallback(`Webpack dev server error: ${error}`);
+                return;
+              }
+            });
+          });
+        } else {
+          server.listen(options.port, options.host, err => {
+            if (err) {
+              completeCallback(`Webpack dev server error: ${err}`);
+              return;
+            }
+          });
         }
       });
     }

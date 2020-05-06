@@ -12,10 +12,7 @@ const config: any = {
   watch: false,
   devServer: {
     port: 9000,
-    compress: true,
-    open: true,
-    publicPath: 'dist',
-    lazy: true,
+    lazy: false,
     liveReload: false,
     hot: false,
     watchContentBase: false,
@@ -33,6 +30,9 @@ describe('WebpackDevServerTask', () => {
       exitImmediately: true,
     } as Partial<WebpackTaskConfig>);
     task.executeTask(gulp, err => {
+      if (err) {
+        fail(err);
+      }
       done();
     });
   });
