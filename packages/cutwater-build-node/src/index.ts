@@ -14,7 +14,6 @@ import {
 } from '@codification/cutwater-build-typescript';
 
 export * from '@codification/cutwater-build-typescript';
-export * from '@codification/cutwater-build-webpack';
 
 const PRODUCTION: boolean = process.argv.indexOf('--production') !== -1 || process.argv.indexOf('--ship') !== -1;
 setConfig({
