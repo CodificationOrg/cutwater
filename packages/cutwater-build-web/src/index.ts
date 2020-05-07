@@ -1,16 +1,5 @@
-import {
-  copyStaticAssets,
-  ExecutableTask,
-  getConfig,
-  jest,
-  jestIntegration,
-  parallel,
-  prettier,
-  serial,
-  setConfig,
-  task,
-} from '@codification/cutwater-build-core';
-import { tscEs6, tscEs6Watch, tslint } from '@codification/cutwater-build-typescript';
+import { copyStaticAssets, ExecutableTask, getConfig, jest, jestIntegration, parallel, prettier, serial, setConfig, task } from '@codification/cutwater-build-core';
+import { tscEs6, tslint } from '@codification/cutwater-build-typescript';
 import { webpack } from '@codification/cutwater-build-webpack';
 import { WebpackDevServerTask } from './tasks/WebpackDevServerTask';
 
@@ -45,6 +34,5 @@ task('default', defaultTasks);
 task('build', buildTasks);
 task('bundle', bundleTasks);
 task('test', testTasks);
-task('watch', tscEs6Watch);
 task('test-integ', integrationTask);
 task('start-server', webpackDevServer);
