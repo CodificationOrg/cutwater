@@ -31,5 +31,4 @@ export const defaultTasks: ExecutableTask = serial(buildTasks, jest);
 task('build', buildTasks);
 task('test', testTasks);
 task('test-integ', integrationTask);
-task('watch', tscWatch);
 task('default', defaultTasks);

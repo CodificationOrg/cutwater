@@ -48,4 +48,3 @@ task('test', testTasks);
 task('watch', tscEs6Watch);
 task('test-integ', integrationTask);
 task('start-server', webpackDevServer);
-task('start-watch-server', parallel(tscEs6Watch, webpackDevServer));
