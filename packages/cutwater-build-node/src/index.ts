@@ -9,7 +9,6 @@ import {
   setConfig,
   task,
   tsc,
-  tscWatch,
   tslint,
 } from '@codification/cutwater-build-typescript';
 
