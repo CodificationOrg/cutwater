@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.12](https://github.com/CodificationOrg/cutwater/compare/v0.20.11...v0.20.12) (2020-05-07)
+
+
+### Bug Fixes
+
+* another possible fix for dupe task calls ([b84c090](https://github.com/CodificationOrg/cutwater/commit/b84c090f21efbc1426f968247853ad5c97a58b2d))
+
+
+
+
+
+
 ## [0.20.11](https://github.com/CodificationOrg/cutwater/compare/v0.20.10...v0.20.11) (2020-05-07)
 
 
