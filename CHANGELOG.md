@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.11](https://github.com/CodificationOrg/cutwater/compare/v0.20.10...v0.20.11) (2020-05-07)
+
+
+### Bug Fixes
+
+* remove another old watch task ([65f52ff](https://github.com/CodificationOrg/cutwater/commit/65f52ffe6f936f2d0ae6211c266ff01a2b720a05))
+* remove built-in watch tasks ([f8ec68e](https://github.com/CodificationOrg/cutwater/commit/f8ec68e5cd31623f7d038895bf2c8eae3d22caae))
+* remove old watch task import ([7ad8831](https://github.com/CodificationOrg/cutwater/commit/7ad8831977254520201155834e8e7caacfc90f10))
+
+
+
+
+
 ## [0.20.10](https://github.com/CodificationOrg/cutwater/compare/v0.20.9...v0.20.10) (2020-05-06)
 
 **Note:** Version bump only for package root

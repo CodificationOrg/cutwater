@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.11](https://github.com/CodificationOrg/cutwater/compare/v0.20.10...v0.20.11) (2020-05-07)
+
+
+### Bug Fixes
+
+* remove built-in watch tasks ([f8ec68e](https://github.com/CodificationOrg/cutwater/commit/f8ec68e5cd31623f7d038895bf2c8eae3d22caae))
+
+
+
+
+
 ## [0.20.10](https://github.com/CodificationOrg/cutwater/compare/v0.20.9...v0.20.10) (2020-05-06)
 
 **Note:** Version bump only for package @codification/cutwater-build-typescript
