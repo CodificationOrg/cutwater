@@ -9,12 +9,12 @@ import {
   serial,
   setConfig,
   task,
-} from '@codification/cutwater-build-core';
-import { tscEs6, tslint } from '@codification/cutwater-build-typescript';
+  tscEs6,
+  tslint,
+} from '@codification/cutwater-build-typescript';
 import { webpack } from '@codification/cutwater-build-webpack';
 import { WebpackDevServerTask } from './tasks/WebpackDevServerTask';
 
-export * from '@codification/cutwater-build-core';
 export * from '@codification/cutwater-build-typescript';
 export * from '@codification/cutwater-build-webpack';
 
@@ -23,13 +23,6 @@ const PRODUCTION: boolean = !!getConfig().args['production'] || !!getConfig().ar
 setConfig({
   production: PRODUCTION,
   shouldWarningsFailBuild: PRODUCTION,
-});
-
-tscEs6.setConfig({
-  customArgs: {
-    outDir: './lib',
-    module: 'esnext',
-  },
 });
 
 export const buildSubtask: ExecutableTask = parallel(tscEs6, copyStaticAssets);
@@ -41,9 +34,9 @@ export const integrationTask: ExecutableTask = serial(tslint, buildSubtask, jest
 export const webpackDevServer: ExecutableTask = new WebpackDevServerTask();
 export const defaultTasks: ExecutableTask = serial(prettier, testTasks, webpack);
 
-task('default', defaultTasks);
 task('build', buildTasks);
 task('bundle', bundleTasks);
 task('test', testTasks);
 task('test-integ', integrationTask);
 task('start-server', webpackDevServer);
+task('default', defaultTasks);

@@ -40,7 +40,6 @@
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
     "@codification/cutwater-build-core": "^0.20.0",
-    "@codification/cutwater-build-node": "^0.20.11",
     "@codification/cutwater-build-webpack": "^0.20.11",
     "webpack-dev-server": "^3.10.3"
   },
