@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.13](https://github.com/CodificationOrg/cutwater/compare/v0.20.12...v0.20.13) (2020-05-08)
+
+**Note:** Version bump only for package @codification/cutwater-build-webpack
+
+
+
+
+
+
 ## [0.20.11](https://github.com/CodificationOrg/cutwater/compare/v0.20.10...v0.20.11) (2020-05-07)
 
 **Note:** Version bump only for package @codification/cutwater-build-webpack

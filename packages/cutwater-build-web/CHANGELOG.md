@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.13](https://github.com/CodificationOrg/cutwater/compare/v0.20.12...v0.20.13) (2020-05-08)
+
+
+### Bug Fixes
+
+* improve tsc alt module configs ([9de262b](https://github.com/CodificationOrg/cutwater/commit/9de262beb003cc4f3865122de016a4db127a8d53))
+
+
+
+
+
+
 ## [0.20.12](https://github.com/CodificationOrg/cutwater/compare/v0.20.11...v0.20.12) (2020-05-07)
 
 
