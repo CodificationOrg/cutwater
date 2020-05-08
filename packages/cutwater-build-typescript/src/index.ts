@@ -10,32 +10,29 @@ export const SRC_WATCH_GLOB: string[] = [`${getConfig().srcFolder}/**/*.ts*`, `!
 
 export const tsc: ExecutableTask = new TscTask();
 
-export const tscAmd: TscTask = new TscTask();
-tscAmd.name = 'tsc-amd';
-tscAmd.setConfig({
-  customArgs: {
-    outDir: './lib-amd',
-    module: 'amd',
-  },
-});
+const configFolderMapping = {
+  amd: 'AMD',
+  es6: 'ES6',
+  esNext: 'ESNext',
+};
 
-export const tscEs6: TscTask = new TscTask();
-tscEs6.name = 'tsc-es6';
-tscEs6.setConfig({
-  customArgs: {
-    outDir: './lib-es6',
-    module: 'esnext',
-  },
-});
-
-setConfig({
-  libAMDFolder: 'lib-amd',
-  libES6Folder: 'lib-es6',
-});
+export const tscAlt = (module: 'amd' | 'es6' | 'esNext'): TscTask => {
+  const rval = new TscTask();
+  rval.name = `tsc-${module}`;
+  const folder = `lib-${module}`;
+  rval.setConfig({
+    customArgs: {
+      outDir: `./${folder}`,
+      module,
+    },
+  });
+  setConfig({
+    [`lib${configFolderMapping[module]}Folder`]: folder,
+  });
+  return rval;
+};
 
 export const tslint: ExecutableTask = new TsLintTask();
 
 task('tsc', tsc);
-task('tscAmd', tscAmd);
-task('tscEs6', tscEs6);
 task('tslint', tslint);

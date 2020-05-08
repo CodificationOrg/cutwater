@@ -8,9 +8,12 @@ import {
   prettier,
   serial,
   setConfig,
+  SRC_WATCH_GLOB,
   task,
-  tscEs6,
+  tsc,
+  tscAlt,
   tslint,
+  watch,
 } from '@codification/cutwater-build-typescript';
 import { webpack } from '@codification/cutwater-build-webpack';
 import { WebpackDevServerTask } from './tasks/WebpackDevServerTask';
@@ -25,7 +28,8 @@ setConfig({
   shouldWarningsFailBuild: PRODUCTION,
 });
 
-export const buildSubtask: ExecutableTask = parallel(tscEs6, copyStaticAssets);
+export const tscEs6: ExecutableTask = tscAlt('es6');
+export const buildSubtask: ExecutableTask = parallel(tsc, tscEs6, copyStaticAssets);
 export const buildTasks: ExecutableTask = serial(prettier, tslint, buildSubtask);
 export const bundleTasks: ExecutableTask = serial(buildTasks, webpack);
 export const testTasks: ExecutableTask = serial(tslint, buildSubtask, jest);
@@ -37,6 +41,7 @@ export const defaultTasks: ExecutableTask = serial(prettier, testTasks, webpack)
 task('build', buildTasks);
 task('bundle', bundleTasks);
 task('test', testTasks);
+task('watch', watch(SRC_WATCH_GLOB, parallel(tscEs6, copyStaticAssets)));
 task('test-integ', integrationTask);
 task('start-server', webpackDevServer);
 task('default', defaultTasks);
