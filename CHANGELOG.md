@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.14](https://github.com/CodificationOrg/cutwater/compare/v0.20.13...v0.20.14) (2020-05-08)
+
+**Note:** Version bump only for package root
+
+
+
+
+
 ## [0.20.13](https://github.com/CodificationOrg/cutwater/compare/v0.20.12...v0.20.13) (2020-05-08)
 
 
