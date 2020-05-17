@@ -60,9 +60,9 @@ export class S3Bucket {
   public async store(
     fileName: string,
     content: string | Buffer | Readable,
-    mimeType?: string,
+    options?: Partial<PutObjectRequest>,
   ): Promise<PutObjectOutput> {
-    return await this.s3Client.putObject(this.toPutObjectRequest(fileName, content, mimeType)).promise();
+    return await this.s3Client.putObject(this.toPutObjectRequest(fileName, content, options)).promise();
   }
 
   private async headObject(fileName: string): Promise<HeadObjectOutput | undefined> {
@@ -76,11 +76,15 @@ export class S3Bucket {
     return undefined;
   }
 
-  private toPutObjectRequest(key: string, content: string | Buffer | Readable, mimeType?: string): PutObjectRequest {
+  private toPutObjectRequest(
+    key: string,
+    content: string | Buffer | Readable,
+    options: Partial<PutObjectRequest> = {},
+  ): PutObjectRequest {
     const rval: PutObjectRequest = {
       ...this.toBaseObjectRequest(key),
       Body: content,
-      ContentType: mimeType ? mimeType : S3Bucket.toMimeType(key),
+      ...options,
     };
     return rval;
   }
