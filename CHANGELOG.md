@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/CodificationOrg/cutwater/compare/v0.20.14...v0.21.0) (2020-05-17)
+
+
+### Features
+
+* add fine grained options for S3 ([85079fd](https://github.com/CodificationOrg/cutwater/commit/85079fd40ef81417b3ffbc41845bb175e6c216ef))
+
+
+
+
+
 ## [0.20.14](https://github.com/CodificationOrg/cutwater/compare/v0.20.13...v0.20.14) (2020-05-08)
 
 **Note:** Version bump only for package root

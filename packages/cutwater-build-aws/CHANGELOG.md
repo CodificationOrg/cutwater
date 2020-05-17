@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/CodificationOrg/cutwater/compare/v0.20.14...v0.21.0) (2020-05-17)
+
+**Note:** Version bump only for package @codification/cutwater-build-aws
+
+
+
+
+
 ## [0.20.14](https://github.com/CodificationOrg/cutwater/compare/v0.20.13...v0.20.14) (2020-05-08)
 
 **Note:** Version bump only for package @codification/cutwater-build-aws
