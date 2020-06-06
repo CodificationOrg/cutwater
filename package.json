@@ -21,5 +21,6 @@
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.6.4",
     "typescript-tslint-plugin": "^0.5.4"
-  }
+  },
+  "version": "0.21.1"
 }
