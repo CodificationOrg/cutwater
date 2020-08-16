@@ -42,8 +42,8 @@
     "@codification/cutwater-build-core": "^0.21.0",
     "@codification/cutwater-build-node": "^0.21.0",
     "colors": "^1.4.0",
-    "terser-webpack-plugin": "^1.4.1",
-    "webpack": "^4.39.2"
+    "terser-webpack-plugin": "^4.1.0",
+    "webpack": "^4.44.1"
   },
   "devDependencies": {
     "@types/webpack": "^4.32.1"
