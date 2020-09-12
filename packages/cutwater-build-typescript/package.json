@@ -40,15 +40,25 @@
   },
   "license": "Apache-2.0",
   "private": false,
+  "eslintConfig": {
+    "extends": [
+      "@codification/cutwater"
+    ]
+  },
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
-    "@codification/cutwater-build-core": "^0.21.0",
+    "@codification/cutwater-build-core": "*",
+    "@codification/eslint-config-cutwater": "*",
+    "@typescript-eslint/eslint-plugin": "^3.9.0",
+    "@typescript-eslint/parser": "^3.9.0",
+    "eslint": "^7.7.0",
+    "gulp-eslint": "^6.0.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-tslint": "^8.1.4",
-    "gulp-typescript": "^5.0.1",
+    "gulp-typescript": "^6.0.0-alpha.1",
     "merge-stream": "^2.0.0",
-    "tslint": "^5.18.0",
+    "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.5.2"
+    "typescript": "^3.9.7"
   }
 }

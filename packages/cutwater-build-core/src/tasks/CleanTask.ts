@@ -1,5 +1,4 @@
 import { default as del } from 'del';
-import * as gulp from 'gulp';
 import { BuildConfig } from '../BuildConfig';
 import { GulpTask } from './GulpTask';
 
@@ -7,12 +6,12 @@ export interface CleanTaskConfig {
   force: boolean;
 }
 
-export class CleanTask extends GulpTask<CleanTaskConfig> {
+export class CleanTask extends GulpTask<CleanTaskConfig, string[]> {
   constructor() {
     super('clean');
   }
 
-  public executeTask(localGulp: gulp.Gulp): Promise<string[]> {
+  public executeTask(): Promise<string[]> {
     const { distFolder, libFolder, tempFolder }: BuildConfig = this.buildConfig;
     const cleanPaths: Set<string> = new Set([distFolder, libFolder, tempFolder]);
 

@@ -104,7 +104,7 @@ export class IOUtils {
     return fs.readFileSync(this.resolvePath(localPath, buildConfig), { encoding: 'utf8' });
   }
 
-  public static readYamlSyncSafe<T>(localPath: string, buildConfig?: BuildConfig, schema?: SchemaDefinition): T {
+  public static readYamlSyncSafe<T>(localPath: string, buildConfig?: BuildConfig): T {
     const rval: T | undefined = this.readYamlSync<T>(localPath, buildConfig);
     if (!rval) {
       throw new Error(`Failed to read required YAML file: ${this.resolvePath(localPath, buildConfig)}`);
@@ -119,7 +119,7 @@ export class IOUtils {
   ): T | undefined {
     let rval: T | undefined;
     try {
-      rval = yaml.load(this.readToString(localPath, buildConfig), !!schema ? { schema } : undefined);
+      rval = yaml.load(this.readToString(localPath, buildConfig), schema ? { schema } : undefined);
     } catch (e) {
       getLogger().error(`Error reading YAML file[${this.resolvePath(localPath, buildConfig)}]: ${e}`);
     }
@@ -127,7 +127,7 @@ export class IOUtils {
   }
 
   public static writeObjectToFileSync(
-    obj: any,
+    obj: unknown,
     localPath: string,
     buildConfig?: BuildConfig,
     schema?: SchemaDefinition,
@@ -136,7 +136,7 @@ export class IOUtils {
     if (this.isJSON(localPath)) {
       serialized = JSON.stringify(obj, null, 2);
     } else if (this.isYaml(localPath)) {
-      serialized = yaml.dump(obj, !!schema ? { schema } : undefined);
+      serialized = yaml.dump(obj, schema ? { schema } : undefined);
     } else {
       throw new Error(`Unrecognized file format: ${this.resolvePath(localPath, buildConfig)}`);
     }

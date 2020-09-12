@@ -110,7 +110,7 @@ export class BuildSummary {
   }
 
   private static logErrors(context: BuildContext, log: LogFunction): void {
-    let totalErrors: number = 0;
+    let totalErrors = 0;
     if (context.metrics.taskErrors > 0 || context.errors.length) {
       totalErrors = context.metrics.taskErrors + context.errors.length;
       log('Task errors:', `${totalErrors}`.red);

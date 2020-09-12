@@ -37,10 +37,16 @@
   },
   "license": "Apache-2.0",
   "private": false,
+  "eslintConfig": {
+    "extends": [
+      "@codification/cutwater"
+    ]
+  },
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
-    "@codification/cutwater-build-core": "^0.21.0",
-    "@codification/cutwater-build-node": "^0.21.0",
+    "@codification/cutwater-build-core": "*",
+    "@codification/cutwater-build-node": "*",
+    "@codification/eslint-config-cutwater": "*",
     "colors": "^1.4.0",
     "terser-webpack-plugin": "^4.1.0",
     "webpack": "^4.44.1"

@@ -4,7 +4,7 @@ import { ExecutableTask } from './ExecutableTask';
 export interface BuildConfig {
   maxBuildTimeMs: number;
   gulp: gulp.Gulp;
-  uniqueTasks?: ExecutableTask[];
+  uniqueTasks?: ExecutableTask<unknown>[];
   rootPath: string;
   packageFolder: string;
   srcFolder: string;
@@ -22,9 +22,9 @@ export interface BuildConfig {
   production: boolean;
   shouldWarningsFailBuild: boolean;
   args: { [name: string]: string | boolean };
-  properties?: { [key: string]: any };
+  properties?: { [key: string]: unknown };
   onTaskStart?: (taskName: string) => void;
-  onTaskEnd?: (taskName: string, duration: number[], error?: any) => void;
+  onTaskEnd?: (taskName: string, duration: number[], error?: Error) => void;
   isRedundantBuild?: boolean;
   jestEnabled?: boolean;
 }

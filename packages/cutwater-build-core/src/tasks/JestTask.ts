@@ -34,8 +34,8 @@ export interface JestTaskConfig {
   findRelatedTests: boolean;
   forceExit: boolean;
   globals: string;
-  globalSetup: string | null | undefined;
-  globalTeardown: string | null | undefined;
+  globalSetup: string | undefined;
+  globalTeardown: string | undefined;
   haste: string;
   init: boolean;
   json: boolean;
@@ -53,12 +53,12 @@ export interface JestTaskConfig {
   notifyMode: string;
   onlyChanged: boolean;
   outputFile: string;
-  preset: string | null | undefined;
+  preset: string | undefined;
   projects: string[];
-  prettierPath: string | null | undefined;
+  prettierPath: string | undefined;
   resetMocks: boolean;
   resetModules: boolean;
-  resolver: string | null | undefined;
+  resolver: string | undefined;
   restoreMocks: boolean;
   roots: string[];
   runInBand: boolean;
@@ -67,23 +67,23 @@ export interface JestTaskConfig {
   showConfig: boolean;
   silent: boolean;
   snapshotSerializers: string[];
-  testFailureExitCode: string | null | undefined;
+  testFailureExitCode: string | undefined;
   testMatch: string[];
   testNamePattern: string;
   testPathIgnorePatterns: string[];
   testPathPattern: string[];
   testRegex: string | string[];
-  testResultsProcessor: string | null | undefined;
+  testResultsProcessor: string | undefined;
   testRunner: string;
   testSequencer: string;
   testURL: string;
   timers: string;
   transform: string;
   transformIgnorePatterns: string[];
-  unmockedModulePathPatterns: string[] | null | undefined;
+  unmockedModulePathPatterns: string[] | undefined;
   updateSnapshot: boolean;
   useStderr: boolean;
-  verbose: boolean | null | undefined;
+  verbose: boolean | undefined;
   version: boolean;
   watch: boolean;
   watchAll: boolean;
@@ -91,14 +91,14 @@ export interface JestTaskConfig {
   watchPathIgnorePatterns: string[];
 }
 
-const ENV_LOGGING_LEVEL: string = 'LOGGING_LEVEL';
+const ENV_LOGGING_LEVEL = 'LOGGING_LEVEL';
 
 export function isJestEnabled(rootFolder: string): boolean {
   const taskConfigFile: string = path.join(rootFolder, 'config', 'jest.json');
   return IOUtils.fileExists(taskConfigFile) && IOUtils.readJSONSyncSafe<JestTaskConfig>(taskConfigFile).isEnabled;
 }
 
-export class JestTask extends GulpTask<JestTaskConfig> {
+export class JestTask extends GulpTask<JestTaskConfig, void> {
   public constructor() {
     super('jest', {
       cache: true,
@@ -116,17 +116,20 @@ export class JestTask extends GulpTask<JestTaskConfig> {
   }
 
   public executeTask(localGulp: gulp.Gulp, completeCallback: (error?: string | Error) => void): void {
-    const { isEnabled, ...jestConfig } = this.config as any;
+    const jestConfig = {
+      ...this.config,
+      _: [],
+      $0: '',
+      ci: this.buildConfig.production,
+      coverageDirectory: path.join(this.buildConfig.tempFolder, 'coverage'),
+      rootDir: this.buildConfig.rootPath,
+      testEnvironment: require.resolve('jest-environment-jsdom'),
+      cacheDirectory: path.join(this.buildConfig.rootPath, this.buildConfig.tempFolder, 'jest-cache'),
+    };
 
-    jestConfig.ci = this.buildConfig.production;
-    jestConfig.coverageDirectory = path.join(this.buildConfig.tempFolder, 'coverage');
-    jestConfig.rootDir = this.buildConfig.rootPath;
-    jestConfig.testEnvironment = require.resolve('jest-environment-jsdom');
-    jestConfig.cacheDirectory = path.join(this.buildConfig.rootPath, this.buildConfig.tempFolder, 'jest-cache');
+    process.env[ENV_LOGGING_LEVEL] = this.config.logLevel ? this.config.logLevel.toUpperCase() : 'ALL';
 
-    process.env[ENV_LOGGING_LEVEL] = jestConfig.logLevel ? jestConfig.logLevel.toUpperCase() : 'ALL';
-
-    runCLI(jestConfig as any, [this.buildConfig.rootPath])
+    runCLI(jestConfig, [this.buildConfig.rootPath])
       .then((result: { results: AggregatedResult; globalConfig: GlobalConfig }) => {
         if (result.results.numFailedTests || result.results.numFailedTestSuites) {
           completeCallback(new Error('Jest tests failed'));

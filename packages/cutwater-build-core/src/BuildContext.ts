@@ -41,8 +41,8 @@ export interface BuildContext {
   writeSummaryLogs: string[];
   buildConfig: BuildConfig;
   gulp: Gulp;
-  gulpErrorCallback: undefined | ((err: object) => void);
-  gulpStopCallback: undefined | ((err: object) => void);
+  gulpErrorCallback: undefined | ((err: Error) => void);
+  gulpStopCallback: undefined | ((err: Error) => void);
   errorAndWarningSuppressions: Array<string | RegExp>;
   shouldLogWarningsDuringSummary: boolean;
   shouldLogErrorsDuringSummary: boolean;
@@ -80,26 +80,26 @@ class BuildContextImpl implements BuildContext {
     duringFastExit: false,
   };
   public writeSummaryCallbacks: Array<() => void> = [];
-  public exitCode: number = 0;
+  public exitCode = 0;
   public writeSummaryLogs: string[] = [];
-  public gulpErrorCallback: undefined | ((err: object) => void) = undefined;
-  public gulpStopCallback: undefined | ((err: object) => void) = undefined;
+  public gulpErrorCallback: undefined | ((err: Error) => void) = undefined;
+  public gulpStopCallback: undefined | ((err: Error) => void) = undefined;
   public errorAndWarningSuppressions: Array<string | RegExp> = [];
-  public shouldLogWarningsDuringSummary: boolean = false;
-  public shouldLogErrorsDuringSummary: boolean = false;
+  public shouldLogWarningsDuringSummary = false;
+  public shouldLogErrorsDuringSummary = false;
 
   public constructor(config: BuildConfig, localGulp: Gulp, logger: Logger) {
     this.buildConfig = config;
     this.gulp = localGulp || config.gulp;
     this.logger = logger;
-    this.wireUpProcessErrorHandling(config.shouldWarningsFailBuild);
+    this.wireUpProcessErrorHandling();
   }
 
-  private wireUpProcessErrorHandling(shouldWarningsFailBuild: boolean): void {
+  private wireUpProcessErrorHandling(): void {
     if (!this.state.wiredUpErrorHandling) {
       this.state.wiredUpErrorHandling = true;
 
-      const wroteToStdErr: boolean = false;
+      const wroteToStdErr = false;
 
       process.on('exit', (code: number) => {
         this.state.duringFastExit = true;

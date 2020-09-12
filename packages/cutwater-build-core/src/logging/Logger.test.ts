@@ -5,7 +5,7 @@ import { getLogger, Logger } from './Logger';
 const logEntries: string[] = [];
 
 beforeAll(() => {
-  const writeEntry = (message?: any, ...optionalParams: any[]): void => {
+  const writeEntry = (message?: any): void => {
     const value: string = message ? message.toString() : '';
     logEntries.push(value);
   };

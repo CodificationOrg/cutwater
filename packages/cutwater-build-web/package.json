@@ -41,9 +41,10 @@
   "dependencies": {
     "@codification/cutwater-build-core": "^0.21.0",
     "@codification/cutwater-build-webpack": "^0.21.2",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.11.0"
   },
   "devDependencies": {
-    "@types/node": "^12.6.8"
+    "@types/node": "^12.6.8",
+    "webpack": "^4.44.1"
   }
 }

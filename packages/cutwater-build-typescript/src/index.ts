@@ -1,8 +1,10 @@
 import { ExecutableTask, getConfig, setConfig, task } from '@codification/cutwater-build-core';
+import { EsLintTask } from './tasks/EsLintTask';
 import { TscTask } from './tasks/TscTask';
 import { TsLintTask } from './tasks/TsLintTask';
 
 export * from '@codification/cutwater-build-core';
+export * from './tasks/EsLintTask';
 export * from './tasks/TscTask';
 export * from './tasks/TsLintTask';
 
@@ -33,6 +35,8 @@ export const tscAlt = (module: 'amd' | 'es6' | 'esNext'): TscTask => {
 };
 
 export const tslint: ExecutableTask = new TsLintTask();
+export const eslint: ExecutableTask = new EsLintTask();
 
 task('tsc', tsc);
 task('tslint', tslint);
+task('eslint', eslint);

@@ -10,7 +10,7 @@ export interface CopyStaticAssetsTaskConfig {
   excludeFiles?: string[];
 }
 
-export class CopyStaticAssetsTask extends GulpTask<CopyStaticAssetsTaskConfig> {
+export class CopyStaticAssetsTask extends GulpTask<CopyStaticAssetsTaskConfig, void> {
   constructor() {
     super('copy-static-assets', {
       includeExtensions: [],
