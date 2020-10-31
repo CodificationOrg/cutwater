@@ -16,7 +16,8 @@
     "prepublishOnly": "yarn build"
   },
   "resolutions": {
-    "minimist": "^1.2.3"
+    "minimist": "^1.2.3",
+    "node-forge": "^0.10.0"
   },
   "devDependencies": {
     "lerna": "^3.13.1",
