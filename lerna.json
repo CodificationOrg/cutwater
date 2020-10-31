@@ -10,5 +10,6 @@
     "packages/*"
   ],
   "version": "0.21.2",
-  "useWorkspaces": true
+  "useWorkspaces": true,
+  "stream": true
 }
