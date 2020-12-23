@@ -87,7 +87,7 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
           this.buildConfig.properties['webpackStats'] = stats;
           /* tslint:enable:no-string-literal */
 
-          const statsResult = stats.toJson({
+          const statsResult = stats!.toJson({
             hash: false,
             source: false,
           });

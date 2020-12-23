@@ -290,8 +290,8 @@ const registerTask = (localContext: BuildContext, taskName: string, taskExecutab
   });
 };
 
-const generateGulpError = (err: object): object => {
-  let rval: object;
+const generateGulpError = (err: Error): Error => {
+  let rval: {};
   if (logger.isVerboseEnabled()) {
     rval = err;
   } else {
@@ -303,7 +303,7 @@ const generateGulpError = (err: object): object => {
     };
     logger.markErrorAsWritten(rval as Error);
   }
-  return rval;
+  return rval as Error;
 };
 
 function executeTask(taskExecutable: ExecutableTask, localContext: BuildContext): Promise<void> {
