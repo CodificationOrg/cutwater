@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-node-core",
-  "version": "0.21.0",
+  "version": "0.21.4",
   "description": "A library providing the basic utility classes for node.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -37,13 +37,13 @@
   "private": false,
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
-    "@codification/cutwater-core": "^0.21.0",
-    "@codification/cutwater-logging": "^0.21.0",
+    "@codification/cutwater-core": "^0.21.4",
+    "@codification/cutwater-logging": "^0.21.4",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
-    "@codification/cutwater-build-core": "^0.21.0",
-    "@codification/cutwater-build-node": "^0.21.0",
+    "@codification/cutwater-build-core": "^0.21.4",
+    "@codification/cutwater-build-node": "^0.21.4",
     "got": "^10.5.7"
   }
 }
