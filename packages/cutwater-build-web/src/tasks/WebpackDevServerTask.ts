@@ -24,7 +24,7 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
   public get resources(): WebpackResources {
     if (!this.wpResources) {
       this.wpResources = {
-        webpack: this.config.webpack || Webpack,
+        webpack: (this.config as WebpackTaskConfig).webpack || Webpack,
       };
     }
 
@@ -66,7 +66,7 @@ export class WebpackDevServerTask<TExtendedConfig = {}> extends GulpTask<Webpack
       processOptions(webpackConfig, {}, (config, options) => {
         this.logVerbose(`Config: \n${JSON.stringify(config)}`);
         this.logVerbose(`Options: \n${JSON.stringify(options)}`);
-        const webpack: typeof Webpack = this.config.webpack || Webpack;
+        const webpack: typeof Webpack = (this.config as WebpackTaskConfig).webpack || Webpack;
 
         let compiler: Webpack.Compiler;
 

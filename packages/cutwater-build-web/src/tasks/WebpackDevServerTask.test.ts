@@ -35,5 +35,5 @@ describe('WebpackDevServerTask', () => {
       }
       done();
     });
-  });
+  }, 20000);
 });
