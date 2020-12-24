@@ -95,10 +95,11 @@ export class AwsCliTask<P> extends GulpTask<AwsCliTaskConfig<P>> {
     this.config.parameters = parameters;
   }
 
-  public executeTask(localGulp: gulp.Gulp): Promise<void> {
+  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
     const args = this.preparedArgs();
     this.log(`Running: ${this.config.runConfig.command} ${args}`);
-    return this.runCommand.run({
+    await this.runCommand.run({
+      logger: this.logger(),
       ...this.config.runConfig,
       args,
     });
