@@ -128,7 +128,7 @@ export class JestTask extends GulpTask<JestTaskConfig> {
     return super.isEnabled(buildConfig) && !!this.config.isEnabled;
   }
 
-  public async executeTask(localGulp: gulp.Gulp, completeCallback: (error?: string | Error) => void): Promise<void> {
+  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
     const options: any = this.config.options || {};
     options.ci = this.buildConfig.production;
     options.coverageDirectory = path.join(this.buildConfig.tempFolder, 'coverage');

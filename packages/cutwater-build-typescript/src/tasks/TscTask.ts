@@ -118,7 +118,7 @@ export class TscTask extends GulpTask<TscTaskConfig> {
     });
   }
 
-  public async executeTask(localGulp: gulp.Gulp, completeCallback: (error?: string | Error) => void): Promise<void> {
+  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
     const options: Partial<TscOptions> = this.config.options || {};
     options.outDir = options.outDir || this.buildConfig.libFolder;
 
