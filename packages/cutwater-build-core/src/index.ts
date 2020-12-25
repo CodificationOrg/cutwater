@@ -398,5 +398,8 @@ task('prettier', prettier);
 
 export const jestIntegration: JestTask = new JestTask();
 jestIntegration.name = 'jest-integration';
-// jestIntegration.setConfig({ isEnabled: true, testMatch: ['<rootDir>/lib/**/*.(integ).js?(x)'] });
+jestIntegration.setConfig({
+  isEnabled: true,
+  parameters: { ...jestIntegration.config.parameters, testMatch: ['<rootDir>/lib/**/*.(integ).js?(x)'] },
+});
 task('jest-integration', jestIntegration);
