@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/CodificationOrg/cutwater/compare/v0.21.4...v0.22.0) (2020-12-25)
+
+
+### Features
+
+* convert to using native jest call ([6374658](https://github.com/CodificationOrg/cutwater/commit/6374658ad9fbba60f461cffdad4cbc891a1470f5))
+
+
+
+
+
+
 ## [0.21.4](https://github.com/CodificationOrg/cutwater/compare/v0.21.3...v0.21.4) (2020-12-23)
 
 **Note:** Version bump only for package @codification/cutwater-logging

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/CodificationOrg/cutwater/compare/v0.21.4...v0.22.0) (2020-12-25)
+
+
+### Features
+
+* convert TscTask to use native tsc call ([a2d77ad](https://github.com/CodificationOrg/cutwater/commit/a2d77ad4a48b2d3fc0a62fd7ecb47867a7d59571))
+
+
+
+
+
+
 ## [0.21.4](https://github.com/CodificationOrg/cutwater/compare/v0.21.3...v0.21.4) (2020-12-23)
 
 **Note:** Version bump only for package @codification/cutwater-build-typescript
