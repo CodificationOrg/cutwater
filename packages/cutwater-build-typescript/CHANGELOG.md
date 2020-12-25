@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.1](https://github.com/CodificationOrg/cutwater/compare/v0.22.0...v0.22.1) (2020-12-25)
+
+
+### Bug Fixes
+
+* update param refs to use options ([1adb498](https://github.com/CodificationOrg/cutwater/commit/1adb49887e7cfff83d427ac9c112fd4d69401186))
+
+
+
+
+
+
 # [0.22.0](https://github.com/CodificationOrg/cutwater/compare/v0.21.4...v0.22.0) (2020-12-25)
 
 
