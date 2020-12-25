@@ -5,7 +5,7 @@ import { IOUtils } from '../utilities/IOUtils';
 import { RunCommand, RunCommandConfig } from '../utilities/RunCommand';
 import { GulpTask } from './GulpTask';
 
-export interface JestParameters {
+export interface JestOptions {
   all: boolean;
   automock: boolean;
   bail: number | boolean;
@@ -91,8 +91,7 @@ export interface JestParameters {
 
 export interface JestTaskConfig {
   isEnabled: boolean;
-  testMatch?: string;
-  parameters?: Partial<JestParameters>;
+  parameters?: Partial<JestOptions>;
   runConfig?: RunCommandConfig;
 }
 
@@ -146,7 +145,7 @@ export class JestTask extends GulpTask<JestTaskConfig> {
     });
   }
 
-  protected toArgString(args: Partial<JestParameters>): string {
+  protected toArgString(args: Partial<JestOptions>): string {
     const argArray: string[] = Object.keys(args).map(property => {
       const value = args[property];
       const arg = `--${property}`;
