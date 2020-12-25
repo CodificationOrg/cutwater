@@ -45,7 +45,6 @@
     "@codification/cutwater-build-core": "^0.22.1",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-tslint": "^8.1.4",
-    "gulp-typescript": "^5.0.1",
     "merge-stream": "^2.0.0",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",

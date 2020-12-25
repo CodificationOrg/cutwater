@@ -1,6 +1,5 @@
 import { WebpackTask } from './tasks/WebpackTask';
 
-export { WebpackResources, WebpackTask, WebpackTaskConfig } from './tasks/WebpackTask';
-export { WebpackUtils } from './utilities/WebpackUtils';
+export { WebpackTask, WebpackTaskConfig } from './tasks/WebpackTask';
 
 export const webpack: WebpackTask = new WebpackTask();
