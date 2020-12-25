@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.23.0](https://github.com/CodificationOrg/cutwater/compare/v0.22.1...v0.23.0) (2020-12-25)
+
+
+### Features
+
+* move webpack to native calls ([b643731](https://github.com/CodificationOrg/cutwater/commit/b64373134d7ddfa15ba16581bb53630e02df9550))
+
+
+
+
+
+
 ## [0.22.1](https://github.com/CodificationOrg/cutwater/compare/v0.22.0...v0.22.1) (2020-12-25)
 
 **Note:** Version bump only for package @codification/cutwater-build-webpack
