@@ -91,7 +91,7 @@ export interface JestOptions {
 
 export interface JestTaskConfig {
   isEnabled: boolean;
-  parameters?: Partial<JestOptions>;
+  options?: Partial<JestOptions>;
   runConfig?: RunCommandConfig;
 }
 
@@ -105,7 +105,7 @@ export class JestTask extends GulpTask<JestTaskConfig> {
 
   public constructor() {
     super('jest', {
-      parameters: {
+      options: {
         cache: true,
         collectCoverageFrom: '<rootDir>/lib/**/*.js?(x), !lib/**/*.test.*',
         coverage: true,
@@ -129,14 +129,14 @@ export class JestTask extends GulpTask<JestTaskConfig> {
   }
 
   public async executeTask(localGulp: gulp.Gulp, completeCallback: (error?: string | Error) => void): Promise<void> {
-    const params: any = this.config.parameters || {};
-    params.ci = this.buildConfig.production;
-    params.coverageDirectory = path.join(this.buildConfig.tempFolder, 'coverage');
-    params.rootDir = this.buildConfig.rootPath;
-    params.testEnvironment = require.resolve('jest-environment-jsdom');
-    params.cacheDirectory = path.join(this.buildConfig.rootPath, this.buildConfig.tempFolder, 'jest-cache');
+    const options: any = this.config.options || {};
+    options.ci = this.buildConfig.production;
+    options.coverageDirectory = path.join(this.buildConfig.tempFolder, 'coverage');
+    options.rootDir = this.buildConfig.rootPath;
+    options.testEnvironment = require.resolve('jest-environment-jsdom');
+    options.cacheDirectory = path.join(this.buildConfig.rootPath, this.buildConfig.tempFolder, 'jest-cache');
 
-    const args = `${this.preparedParameters()}`;
+    const args = `${this.prepareOptions()}`;
     this.logVerbose(`Running: jest ${args}`);
     await this.runCommand.run({
       logger: this.logger(),
@@ -156,14 +156,14 @@ export class JestTask extends GulpTask<JestTaskConfig> {
       } else if (typeof value === 'number') {
         return `${arg} ${value}`;
       } else if (Array.isArray(value)) {
-        return `${arg} ${this.toParameterList(value)}`;
+        return `${arg} ${this.toOptionList(value)}`;
       }
       return '';
     });
     return `${argArray.join(' ')} `;
   }
 
-  protected toParameterList(arg: any[]): string {
+  protected toOptionList(arg: any[]): string {
     return arg
       .map(value => {
         if (typeof value === 'string') {
@@ -176,7 +176,7 @@ export class JestTask extends GulpTask<JestTaskConfig> {
       .join(' ');
   }
 
-  protected preparedParameters(): string {
-    return !!this.config.parameters ? this.toArgString(this.config.parameters) : '';
+  protected prepareOptions(): string {
+    return !!this.config.options ? this.toArgString(this.config.options) : '';
   }
 }

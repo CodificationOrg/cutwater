@@ -98,16 +98,16 @@ export interface TscOptions {
 }
 
 export interface TscTaskConfig {
-  parameters?: Partial<TscOptions>;
+  options?: Partial<TscOptions>;
   runConfig?: RunCommandConfig;
 }
 
-export class TscTask extends GulpTask<any> {
+export class TscTask extends GulpTask<TscTaskConfig> {
   protected readonly runCommand: RunCommand = new RunCommand();
 
   public constructor() {
     super('tsc', {
-      parameters: {},
+      options: {},
       runConfig: {
         command: 'tsc',
         quiet: false,
@@ -119,10 +119,10 @@ export class TscTask extends GulpTask<any> {
   }
 
   public async executeTask(localGulp: gulp.Gulp, completeCallback: (error?: string | Error) => void): Promise<void> {
-    const params: Partial<TscOptions> = this.config.parameters || {};
-    params.outDir = params.outDir || this.config.libFolder;
+    const options: Partial<TscOptions> = this.config.options || {};
+    options.outDir = options.outDir || this.buildConfig.libFolder;
 
-    const args = `${this.preparedParameters()}`;
+    const args = `${this.prepareOptions()}`;
     this.logVerbose(`Running: tsc ${args}`);
     await this.runCommand.run({
       logger: this.logger(),
@@ -142,14 +142,14 @@ export class TscTask extends GulpTask<any> {
       } else if (typeof value === 'number') {
         return `${arg} ${value}`;
       } else if (Array.isArray(value)) {
-        return `${arg} ${this.toParameterList(value)}`;
+        return `${arg} ${this.toOptionList(value)}`;
       }
       return '';
     });
     return `${argArray.join(' ')} `;
   }
 
-  protected toParameterList(arg: any[]): string {
+  protected toOptionList(arg: any[]): string {
     return arg
       .map(value => {
         if (typeof value === 'string') {
@@ -162,7 +162,7 @@ export class TscTask extends GulpTask<any> {
       .join(' ');
   }
 
-  protected preparedParameters(): string {
-    return !!this.config.parameters ? this.toArgString(this.config.parameters) : '';
+  protected prepareOptions(): string {
+    return !!this.config.options ? this.toArgString(this.config.options) : '';
   }
 }
