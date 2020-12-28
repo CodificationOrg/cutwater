@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.2](https://github.com/CodificationOrg/cutwater/compare/v0.23.1...v0.23.2) (2020-12-28)
+
+
+### Bug Fixes
+
+* correct failure to clean some tsc outputs ([1d36ef6](https://github.com/CodificationOrg/cutwater/commit/1d36ef645f3163c263c262e9d835aa51971c9b35))
+
+
+
+
+
+
 ## [0.23.1](https://github.com/CodificationOrg/cutwater/compare/v0.23.0...v0.23.1) (2020-12-26)
 
 **Note:** Version bump only for package root
