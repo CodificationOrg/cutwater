@@ -27,6 +27,7 @@ export const tscAlt = (module: 'amd' | 'es6' | 'esNext'): TscTask => {
       module,
     },
   });
+  rval.cleanMatch = [folder];
   setConfig({
     [`lib${configFolderMapping[module]}Folder`]: folder,
   });
