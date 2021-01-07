@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.3](https://github.com/CodificationOrg/cutwater/compare/v0.23.2...v0.23.3) (2021-01-07)
+
+
+### Bug Fixes
+
+* ensure prod flag is passed to webpack ([44b8601](https://github.com/CodificationOrg/cutwater/commit/44b860114fb5ebfc3df002c80a53e80c2a61580d))
+
+
+
+
+
+
 ## [0.23.2](https://github.com/CodificationOrg/cutwater/compare/v0.23.1...v0.23.2) (2020-12-28)
 
 **Note:** Version bump only for package @codification/cutwater-build-webpack
