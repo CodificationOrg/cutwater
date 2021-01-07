@@ -75,6 +75,7 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
         return;
       }
 
+      this.config.options.mode = this.buildConfig.production ? 'production' : 'development';
       const args = `${this.prepareOptions()}`;
       this.logVerbose(`Running: webpack ${args}`);
       await this.runCommand.run({
@@ -86,9 +87,6 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
   }
 
   protected toArgString(args: Partial<WebpackOptions>): string {
-    if (this.buildConfig.production) {
-      args.mode = 'production';
-    }
     const argArray: string[] = Object.keys(args).map(property => {
       const value = args[property];
       const arg = TextUtils.convertPropertyNameToArg(property);
