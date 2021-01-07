@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-webpack",
-  "version": "0.23.3",
+  "version": "0.23.4",
   "description": "Configuration for building projects utilizing webpack.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",

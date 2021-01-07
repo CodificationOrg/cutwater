@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.4](https://github.com/CodificationOrg/cutwater/compare/v0.23.3...v0.23.4) (2021-01-07)
+
+
+### Bug Fixes
+
+* adjust method of setting mode for webpack ([e454662](https://github.com/CodificationOrg/cutwater/commit/e4546628d69243a4ef8de63ba6f2f9dfa1f44e2a))
+
+
+
+
+
+
 ## [0.23.3](https://github.com/CodificationOrg/cutwater/compare/v0.23.2...v0.23.3) (2021-01-07)
 
 

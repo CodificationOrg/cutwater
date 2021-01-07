@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.4](https://github.com/CodificationOrg/cutwater/compare/v0.23.3...v0.23.4) (2021-01-07)
+
+**Note:** Version bump only for package @codification/cutwater-build-web
+
+
+
+
+
+
 ## [0.23.3](https://github.com/CodificationOrg/cutwater/compare/v0.23.2...v0.23.3) (2021-01-07)
 
 **Note:** Version bump only for package @codification/cutwater-build-web
