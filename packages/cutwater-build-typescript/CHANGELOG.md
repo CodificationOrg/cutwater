@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.24.0 (2021-02-15)
+
+
+### Features
+
+* improve CI/CD workflow ([6a6ada5](https://github.com/CodificationOrg/cutwater/commit/6a6ada51b261da2296fc9a4628be3abbdc3021f8))
+
+
+
+
+
 ## [0.23.2](https://github.com/CodificationOrg/cutwater/compare/v0.23.1...v0.23.2) (2020-12-28)
 
 
