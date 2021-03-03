@@ -10,8 +10,9 @@
     "clean": "gulp clean",
     "format": "prettier --loglevel warn --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
+    "test": "jest",
     "build:compile": "yarn clean && yarn format && yarn lint && tsc",
-    "build": "yarn build:compile && jest"
+    "build": "yarn test && yarn build:compile"
   },
   "publishConfig": {
     "access": "public"
@@ -57,6 +58,7 @@
     "pretty-hrtime": "^1.0.3",
     "spawn-args": "^0.2.0",
     "through2": "^3.0.1",
+    "ts-jest": "^26.5.2",
     "tslint-config-prettier": "^1.18.0",
     "vinyl": "^2.2.0",
     "yaml": "^1.8.3",
