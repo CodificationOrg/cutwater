@@ -29,21 +29,12 @@ export class FileUtils {
     return rval;
   }
 
-  public static deleteDirectory(dirPath: string, recursive: boolean = true): void {
-    if (fs.existsSync(dirPath)) {
-      if (recursive) {
-        fs.readdirSync(dirPath).forEach(name => {
-          const p = path.join(dirPath, name);
-          if (fs.statSync(p).isFile()) {
-            LOG.debug(`Deleting file: ${p}`);
-            fs.unlinkSync(p);
-          } else {
-            this.deleteDirectory(p, recursive);
-          }
-        });
-      }
-      LOG.debug(`Deleting directory: ${dirPath}`);
-      fs.rmdirSync(dirPath);
-    }
+  public static deleteDirectory(
+    dirPath: string,
+    recursive: boolean = true,
+    maxRetries: number = 5,
+    retryDelay: number = 100,
+  ): void {
+    fs.rmdirSync(dirPath, { recursive, retryDelay, maxRetries });
   }
 }
