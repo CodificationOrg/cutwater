@@ -400,6 +400,6 @@ export const jestIntegration: JestTask = new JestTask();
 jestIntegration.name = 'jest-integration';
 jestIntegration.setConfig({
   isEnabled: true,
-  options: { ...jestIntegration.config.options, testMatch: ['<rootDir>/lib/**/*.(integ).js?(x)'] },
+  options: { ...jestIntegration.config.options, testMatch: ['<rootDir>/src/**/*.(integ).(ts|js)?(x)'] },
 });
 task('jest-integration', jestIntegration);

@@ -1,4 +1,3 @@
-import * as gulp from 'gulp';
 import * as path from 'path';
 import { BuildConfig } from '../';
 import { IOUtils } from '../utilities/IOUtils';
@@ -65,6 +64,7 @@ export interface JestOptions {
   showConfig: boolean;
   silent: boolean;
   snapshotSerializers: string[];
+  testEnvironment: string | null | undefined;
   testFailureExitCode: string | null | undefined;
   testMatch: string[];
   testNamePattern: string;
@@ -107,11 +107,13 @@ export class JestTask extends GulpTask<JestTaskConfig> {
     super('jest', {
       options: {
         cache: true,
-        collectCoverageFrom: '<rootDir>/lib/**/*.js?(x), !lib/**/*.test.*',
+        preset: 'ts-jest',
+        testEnvironment: 'node',
+        collectCoverageFrom: '<rootDir>/src/**/*.(ts|js)?(x), !src/**/*.test.*',
         coverage: true,
         coverageReporters: ['json', 'html'],
-        testMatch: ['<rootDir>/lib/**/*.(test|spec).js?(x)'],
-        testPathIgnorePatterns: ['<rootDir>/(src|lib-amd|lib-es6|coverage|build|docs|node_modules)/'],
+        testMatch: ['<rootDir>/src/**/*.(test|spec).(ts|js)?(x)'],
+        testPathIgnorePatterns: ['<rootDir>/(lib|lib-amd|lib-es6|coverage|build|docs|node_modules)/'],
         modulePathIgnorePatterns: ['<rootDir>/(src|lib)/.*/package.json'],
       },
       runConfig: {
@@ -128,7 +130,7 @@ export class JestTask extends GulpTask<JestTaskConfig> {
     return super.isEnabled(buildConfig) && !!this.config.isEnabled;
   }
 
-  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
+  public async executeTask(): Promise<void> {
     const options: any = this.config.options || {};
     options.ci = this.buildConfig.production;
     options.coverageDirectory = path.join(this.buildConfig.tempFolder, 'coverage');
