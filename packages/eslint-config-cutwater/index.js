@@ -3,7 +3,6 @@ module.exports = {
     'eslint:recommended',
     "plugin:react/recommended",
     'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint',
     'prettier'
   ],
   parser: '@typescript-eslint/parser',
@@ -18,6 +17,12 @@ module.exports = {
     react: {
       version: "detect"
     }
+  },
+  rules: {
+    "no-extra-boolean-cast": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-non-null-assertion": "off"
   },
   plugins: ['@typescript-eslint']
 }

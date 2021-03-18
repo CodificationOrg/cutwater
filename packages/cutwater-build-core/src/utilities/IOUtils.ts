@@ -24,15 +24,7 @@ export class IOUtils {
   public static rmdirs(localPath: string, buildConfig?: BuildConfig): void {
     const dirsPath = this.resolvePath(localPath, buildConfig);
     if (fs.existsSync(dirsPath)) {
-      fs.readdirSync(dirsPath).forEach(name => {
-        const p = path.join(dirsPath, name);
-        if (fs.statSync(p).isFile()) {
-          fs.unlinkSync(p);
-        } else {
-          this.rmdirs(p);
-        }
-      });
-      fs.rmdirSync(dirsPath);
+      fs.rmdirSync(dirsPath, { recursive: true });
     }
   }
 
@@ -53,7 +45,7 @@ export class IOUtils {
   }
 
   public static isYaml(file: string): boolean {
-    return IOUtils.YAML.find(ext => file.toLowerCase().endsWith(ext)) !== undefined;
+    return IOUtils.YAML.find((ext) => file.toLowerCase().endsWith(ext)) !== undefined;
   }
 
   public static readObjectFromFileSyncSafe<T>(

@@ -15,7 +15,7 @@ export class CleanFlagTask extends CleanTask {
   }
 
   public executeTask(): Promise<string[]> {
-    return super.executeTask().then(result => {
+    return super.executeTask().then((result) => {
       this.finished = true;
       return result;
     });

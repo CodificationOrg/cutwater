@@ -20,7 +20,6 @@ const LOG: Logger = LoggerFactory.getLogger();
 /**
  * @beta
  */
-// tslint:disable: interface-name
 export interface OriginRequestConfig {
   filter: (request: CloudFrontRequest) => void;
 }

@@ -8,14 +8,11 @@ let oldLog: any;
 let logger: Logger;
 
 beforeAll(() => {
-  // tslint:disable-next-line: missing-optional-annotation no-any typedef
-  const writeEntry = (message?: any, ...optionalParams: any[]): void => {
+  const writeEntry = (message?: any): void => {
     const value: string = message ? message.toString() : '';
     logEntries.push(value);
   };
-  // tslint:disable-next-line: no-string-literal
   oldLog = console['log'];
-  // tslint:disable-next-line: no-string-literal
   console['log'] = jest.fn(writeEntry);
   logger = LoggerFactory.getLogger('Foo');
 });
@@ -25,7 +22,6 @@ beforeEach(() => {
 });
 
 afterAll(() => {
-  // tslint:disable-next-line: no-string-literal
   console['log'] = oldLog;
 });
 

@@ -1,6 +1,6 @@
 {
   "name": "@codification/eslint-config-cutwater",
-  "version": "0.21.2",
+  "version": "0.24.1",
   "description": "Shareable config for cutwater based projects.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -27,13 +27,13 @@
   "license": "Apache-2.0",
   "private": false,
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^3.9.0",
-    "@typescript-eslint/parser": "^3.9.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-react": "^7.20.6"
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.18.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-react": "^7.22.0"
   },
   "devDependencies": {
-    "eslint": "^7.7.0"
+    "eslint": "^7.22.0"
   },
   "peerDependencies": {
     "eslint": ">= 7"

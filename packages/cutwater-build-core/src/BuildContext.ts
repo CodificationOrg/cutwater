@@ -103,7 +103,6 @@ class BuildContextImpl implements BuildContext {
 
       process.on('exit', (code: number) => {
         this.state.duringFastExit = true;
-        // tslint:disable-next-line: no-string-literal
         if (!global['dontWatchExit']) {
           if (!this.state.wroteSummary) {
             BuildSummary.write(this, () => {

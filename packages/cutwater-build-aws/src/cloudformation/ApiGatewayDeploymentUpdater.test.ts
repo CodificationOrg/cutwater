@@ -9,7 +9,7 @@ beforeAll(() => {
 
 afterAll(() => {
   fs.readdirSync('./temp/test').forEach(file => fs.unlinkSync(`./temp/test/${file}`));
-  fs.rmdirSync('./temp/test');
+  fs.rmdirSync('./temp/test', { recursive: true });
 });
 
 describe('ApiGatewayDeploymentUpdater', () => {

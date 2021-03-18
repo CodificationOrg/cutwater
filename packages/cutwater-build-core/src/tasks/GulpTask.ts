@@ -151,7 +151,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
       () => {
         this.logger().logEndSubtask(this.name, startTime);
       },
-      ex => {
+      (ex) => {
         this.logger().logEndSubtask(this.name, startTime, ex);
         throw ex;
       },
@@ -168,7 +168,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   }
 
   protected getConfigFilePaths(): string[] {
-    return ['config', '.config'].map(directory => path.join(process.cwd(), directory, `${this.name}.json`));
+    return ['config', '.config'].map((directory) => path.join(process.cwd(), directory, `${this.name}.json`));
   }
 
   protected logger(): Logger {
@@ -194,8 +194,8 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   private readConfigFiles(filePaths: string[]): T | undefined {
     let rval: T | undefined;
     filePaths
-      .map(configPath => this.readConfigFile(configPath))
-      .forEach(config => {
+      .map((configPath) => this.readConfigFile(configPath))
+      .forEach((config) => {
         if (config) {
           rval = !rval ? { ...config } : { ...rval, ...config };
         }

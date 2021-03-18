@@ -100,7 +100,7 @@ export function isJestEnabled(rootFolder: string): boolean {
   return IOUtils.fileExists(taskConfigFile) && IOUtils.readJSONSyncSafe<JestTaskConfig>(taskConfigFile).isEnabled;
 }
 
-export class JestTask extends GulpTask<JestTaskConfig> {
+export class JestTask extends GulpTask<JestTaskConfig, void> {
   protected readonly runCommand: RunCommand = new RunCommand();
 
   public constructor() {
@@ -142,13 +142,14 @@ export class JestTask extends GulpTask<JestTaskConfig> {
     this.logVerbose(`Running: jest ${args}`);
     await this.runCommand.run({
       logger: this.logger(),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       ...this.config.runConfig!,
       args,
     });
   }
 
   protected toArgString(args: Partial<JestOptions>): string {
-    const argArray: string[] = Object.keys(args).map(property => {
+    const argArray: string[] = Object.keys(args).map((property) => {
       const value = args[property];
       const arg = `--${property}`;
       if (typeof value === 'string') {
@@ -167,7 +168,7 @@ export class JestTask extends GulpTask<JestTaskConfig> {
 
   protected toOptionList(arg: any[]): string {
     return arg
-      .map(value => {
+      .map((value) => {
         if (typeof value === 'string') {
           return `"${value}"`;
         } else if (typeof value === 'number') {
@@ -179,6 +180,6 @@ export class JestTask extends GulpTask<JestTaskConfig> {
   }
 
   protected prepareOptions(): string {
-    return !!this.config.options ? this.toArgString(this.config.options) : '';
+    return this.config.options ? this.toArgString(this.config.options) : '';
   }
 }

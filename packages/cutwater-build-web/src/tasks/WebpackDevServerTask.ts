@@ -1,6 +1,6 @@
-import { WebpackTask, WebpackTaskConfig } from '@codification/cutwater-build-webpack';
+import { WebpackTask } from '@codification/cutwater-build-webpack';
 
-export class WebpackDevServerTask extends WebpackTask<WebpackTaskConfig> {
+export class WebpackDevServerTask extends WebpackTask {
   constructor() {
     super();
     this.name = 'webpack-dev-server';

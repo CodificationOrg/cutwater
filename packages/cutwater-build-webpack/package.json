@@ -9,8 +9,8 @@
   "scripts": {
     "clean": "gulp clean",
     "format": "gulp prettier",
-    "lint": "gulp tslint",
-    "build": "gulp --clean"
+    "lint": "gulp lint --fix",
+    "build": "gulp --fix --clean"
   },
   "publishConfig": {
     "access": "public"

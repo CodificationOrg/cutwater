@@ -13,7 +13,6 @@ export class IOUtils {
   public static bufferToReadable(buffer: Buffer): Readable {
     const rval: Readable = new Readable();
     rval.push(buffer);
-    // tslint:disable-next-line: no-null-keyword
     rval.push(null);
     return rval;
   }
@@ -24,7 +23,6 @@ export class IOUtils {
    * @param stream - the `Readable` containing the data to be buffered
    */
   public static readableToBuffer(stream: Readable): Promise<Buffer> {
-    // tslint:disable-next-line: no-any
     const rval: any[] = [];
     return new Promise((resolve, reject) => {
       stream.on('data', data => rval.push(data));

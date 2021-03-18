@@ -2,7 +2,6 @@ import { VarUtils } from './VarUtils';
 
 describe('VarUtils', () => {
   it('can determine if a value is missing', () => {
-    // tslint:disable-next-line: no-null-keyword
     expect(VarUtils.isMissing(null)).toBeTruthy();
     expect(VarUtils.isMissing(undefined)).toBeTruthy();
     expect(VarUtils.isMissing('')).toBeFalsy();

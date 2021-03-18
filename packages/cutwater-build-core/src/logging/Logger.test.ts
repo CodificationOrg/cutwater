@@ -9,7 +9,6 @@ beforeAll(() => {
     const value: string = message ? message.toString() : '';
     logEntries.push(value);
   };
-  // tslint:disable-next-line: no-string-literal
   console['log'] = jest.fn(writeEntry);
   initialize(gulp);
 });

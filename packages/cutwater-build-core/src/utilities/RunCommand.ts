@@ -29,10 +29,10 @@ export class RunCommand {
 
   private doExec(config: RunCommandConfig): Promise<Buffer> {
     return new Promise<Buffer>((resolve, reject) => {
-      let output: string = '';
+      let output = '';
       const proc = this.spawnProccess(config);
 
-      proc.stdout.on('data', data => {
+      proc.stdout.on('data', (data) => {
         output += data;
         if (!config.quiet) {
           process.stdout.write(data);
@@ -40,7 +40,7 @@ export class RunCommand {
       });
 
       // On error, throw the err back up the chain
-      proc.on('error', err => {
+      proc.on('error', (err) => {
         if (!config.ignoreErrors) {
           reject(err);
         } else {
@@ -49,7 +49,7 @@ export class RunCommand {
       });
 
       // On exit, check the exit code and if it's good, then resolve
-      proc.on('exit', code => {
+      proc.on('exit', (code) => {
         if (parseInt(code, 10) === 0) {
           resolve(Buffer.from(output, 'binary'));
         } else {

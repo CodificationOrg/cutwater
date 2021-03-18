@@ -1,5 +1,4 @@
 import { GulpTask, IOUtils } from '@codification/cutwater-build-core';
-import * as gulp from 'gulp';
 import { bundle } from 'swagger-cli';
 
 export interface OpenApiBundleTaskConfig {
@@ -11,7 +10,7 @@ export interface OpenApiBundleTaskConfig {
   type: 'yaml' | 'json';
 }
 
-export class OpenApiBundleTask extends GulpTask<OpenApiBundleTaskConfig> {
+export class OpenApiBundleTask extends GulpTask<OpenApiBundleTaskConfig, void> {
   public constructor() {
     super('openapi-bundle', {
       apiFile: './openapi/openapi.yaml',
@@ -20,7 +19,7 @@ export class OpenApiBundleTask extends GulpTask<OpenApiBundleTaskConfig> {
     });
   }
 
-  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
+  public async executeTask(): Promise<void> {
     const { apiFile, ...bundleConfig } = this.config;
     if (IOUtils.fileExists(apiFile)) {
       this.createOutputDir(this.config.outfile);

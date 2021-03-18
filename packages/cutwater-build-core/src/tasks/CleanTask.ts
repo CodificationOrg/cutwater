@@ -15,9 +15,9 @@ export class CleanTask extends GulpTask<CleanTaskConfig, string[]> {
     const { distFolder, libFolder, tempFolder }: BuildConfig = this.buildConfig;
     const cleanPaths: Set<string> = new Set([distFolder, libFolder, tempFolder]);
 
-    (this.buildConfig.uniqueTasks || []).forEach(executable => {
+    (this.buildConfig.uniqueTasks || []).forEach((executable) => {
       if (executable.getCleanMatch && executable.getCleanMatch(this.buildConfig)) {
-        executable.getCleanMatch(this.buildConfig).forEach(path => cleanPaths.add(path));
+        executable.getCleanMatch(this.buildConfig).forEach((path) => cleanPaths.add(path));
       }
     });
     return del(Array.from(cleanPaths), this.config);

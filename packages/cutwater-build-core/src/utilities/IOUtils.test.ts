@@ -21,8 +21,12 @@ describe('IOUtils', () => {
   });
 
   it('can properly detect file format and read an object from JSON or Yaml', () => {
-    expect(IOUtils.readObjectFromFileSyncSafe<Record<string, unknown>>('src/utilities/test.json').Resource).toBeDefined();
-    expect(IOUtils.readObjectFromFileSyncSafe<Record<string, unknown>>('src/utilities/test.yaml').Resource).toBeDefined();
+    expect(
+      IOUtils.readObjectFromFileSyncSafe<Record<string, unknown>>('src/utilities/test.json').Resource,
+    ).toBeDefined();
+    expect(
+      IOUtils.readObjectFromFileSyncSafe<Record<string, unknown>>('src/utilities/test.yaml').Resource,
+    ).toBeDefined();
   });
 
   it('can properly write an object to a file', () => {

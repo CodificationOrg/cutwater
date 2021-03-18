@@ -28,7 +28,7 @@ export class CopyStaticAssetsTask extends GulpTask<CopyStaticAssetsTaskConfig, v
 
     const allExtensions: string[] = (this.config.includeExtensions || []).concat(['json', 'html', 'css', 'md']);
 
-    allExtensions.forEach(ext => {
+    allExtensions.forEach((ext) => {
       if (!this.config.excludeExtensions || this.config.excludeExtensions.indexOf(ext) === -1) {
         if (!ext.match(/^\./)) {
           ext = `.${ext}`;
@@ -53,8 +53,8 @@ export class CopyStaticAssetsTask extends GulpTask<CopyStaticAssetsTaskConfig, v
 
     let rval: NodeJS.ReadWriteStream = gulp.src(globPatterns, { base: rootPath }).pipe(gulp.dest(libPath));
     ['libAMDFolder', 'libES6Folder', 'libESNextFolder']
-      .filter(dest => !!this.buildConfig[dest])
-      .forEach(dest => {
+      .filter((dest) => !!this.buildConfig[dest])
+      .forEach((dest) => {
         rval = rval.pipe(gulp.dest(path.join(this.buildConfig.rootPath, this.buildConfig[dest])));
       });
 

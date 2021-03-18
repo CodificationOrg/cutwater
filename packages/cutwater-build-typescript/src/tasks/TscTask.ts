@@ -1,5 +1,4 @@
 import { GulpTask, RunCommand, RunCommandConfig } from '@codification/cutwater-build-core';
-import * as gulp from 'gulp';
 
 export interface TscOptions {
   allowJs: boolean;
@@ -64,7 +63,7 @@ export interface TscOptions {
   noUnusedParameters: boolean;
   outDir: string;
   outFile: string;
-  paths: {};
+  paths: Record<string, unknown>;
   preserveConstEnums: boolean;
   preserveSymlinks: boolean;
   preserveWatchOutput: boolean;
@@ -102,7 +101,7 @@ export interface TscTaskConfig {
   runConfig?: RunCommandConfig;
 }
 
-export class TscTask extends GulpTask<TscTaskConfig> {
+export class TscTask extends GulpTask<TscTaskConfig, void> {
   protected readonly runCommand: RunCommand = new RunCommand();
 
   public constructor() {
@@ -118,7 +117,7 @@ export class TscTask extends GulpTask<TscTaskConfig> {
     });
   }
 
-  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
+  public async executeTask(): Promise<void> {
     const options: Partial<TscOptions> = this.config.options || {};
     options.outDir = options.outDir || this.buildConfig.libFolder;
 

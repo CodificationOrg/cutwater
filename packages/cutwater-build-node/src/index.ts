@@ -1,5 +1,6 @@
 import {
   copyStaticAssets,
+  eslint,
   ExecutableTask,
   jest,
   jestIntegration,
@@ -10,7 +11,6 @@ import {
   SRC_WATCH_GLOB,
   task,
   tsc,
-  tslint,
   watch,
 } from '@codification/cutwater-build-typescript';
 
@@ -22,12 +22,12 @@ setConfig({
   shouldWarningsFailBuild: PRODUCTION,
 });
 
-const buildSubtask: ExecutableTask = parallel(tslint, tsc, copyStaticAssets);
+const buildSubtask: ExecutableTask<unknown> = parallel(eslint, tsc, copyStaticAssets);
 
-export const buildTasks: ExecutableTask = serial(prettier, buildSubtask);
-export const testTasks: ExecutableTask = serial(prettier, tslint, jest);
-export const integrationTask: ExecutableTask = serial(prettier, tslint, jestIntegration);
-export const defaultTasks: ExecutableTask = serial(testTasks, tsc, copyStaticAssets);
+export const buildTasks: ExecutableTask<unknown> = serial(prettier, buildSubtask);
+export const testTasks: ExecutableTask<unknown> = serial(prettier, eslint, jest);
+export const integrationTask: ExecutableTask<unknown> = serial(prettier, eslint, jestIntegration);
+export const defaultTasks: ExecutableTask<unknown> = serial(testTasks, tsc, copyStaticAssets);
 
 task('build', buildTasks);
 task('test', testTasks);

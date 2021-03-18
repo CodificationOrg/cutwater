@@ -52,7 +52,7 @@ let buildConfig: BuildConfig = {
   buildErrorIconPath: path.resolve(__dirname, 'fail.png'),
   verbose: getFlagValue('verbose', false),
   production: getFlagValue('production', false),
-  args,
+  args: args as { [name: string]: string | boolean },
   shouldWarningsFailBuild: false,
 };
 
@@ -179,7 +179,6 @@ export function watch(watchMatch: string | string[], taskExecutable: ExecutableT
 
         context.state.watchMode = true;
         context.gulp.watch(watchMatch, runWatch);
-        // tslint:disable-next-line: no-console
         runWatch().catch(console.error);
       });
     },
@@ -187,7 +186,7 @@ export function watch(watchMatch: string | string[], taskExecutable: ExecutableT
 }
 
 export function serial(...tasks: Array<ExecutableTask<unknown>[] | ExecutableTask<unknown>>): ExecutableTask<unknown> {
-  const flatTasks: ExecutableTask<unknown>[] = flatten(tasks).filter(taskExecutable => {
+  const flatTasks: ExecutableTask<unknown>[] = flatten(tasks).filter((taskExecutable) => {
     return taskExecutable !== null && taskExecutable !== undefined;
   }) as ExecutableTask<unknown>[];
 
@@ -213,7 +212,7 @@ export function serial(...tasks: Array<ExecutableTask<unknown>[] | ExecutableTas
  * @public
  */
 export function parallel(...tasks: Array<ExecutableTask<unknown>[] | ExecutableTask<unknown>>): ExecutableTask<void> {
-  const flatTasks: ExecutableTask<unknown>[] = flatten<ExecutableTask<unknown>>(tasks).filter(taskExecutable => {
+  const flatTasks: ExecutableTask<unknown>[] = flatten<ExecutableTask<unknown>>(tasks).filter((taskExecutable) => {
     return taskExecutable !== null && taskExecutable !== undefined;
   });
 
@@ -229,7 +228,10 @@ export function parallel(...tasks: Array<ExecutableTask<unknown>[] | ExecutableT
           promises.push(executeTask(taskExecutable, localContext));
         }
         // Use promise all to make sure errors are propagated correctly
-        Promise.all<void>(promises).then(() => resolve(), err => reject(err));
+        Promise.all<void>(promises).then(
+          () => resolve(),
+          (err) => reject(err),
+        );
       });
     },
   };
@@ -255,24 +257,24 @@ export function initialize(localGulp: Gulp): void {
     buildContext.metrics.start = process.hrtime();
   }
 
-  Object.keys(taskMap).forEach(taskName => registerTask(buildContext, taskName, taskMap[taskName]));
+  Object.keys(taskMap).forEach((taskName) => registerTask(buildContext, taskName, taskMap[taskName]));
 
   buildContext.metrics.taskCreationTime = process.hrtime(buildContext.metrics.start);
 }
 
 const registerTask = (localContext: BuildContext, taskName: string, taskExecutable: ExecutableTask<unknown>): void => {
-  localContext.gulp.task(taskName, cb => {
+  localContext.gulp.task(taskName, (cb) => {
     const maxBuildTimeMs: number =
       taskExecutable.maxBuildTimeMs === undefined ? getConfig().maxBuildTimeMs : taskExecutable.maxBuildTimeMs;
     const timer: NodeJS.Timer | undefined =
       maxBuildTimeMs === 0
         ? undefined
         : setTimeout(() => {
-          logger.error(
-            `Build ran for ${maxBuildTimeMs} milliseconds without completing. Cancelling build with error.`,
-          );
-          cb(new Error('Timeout'));
-        }, maxBuildTimeMs);
+            logger.error(
+              `Build ran for ${maxBuildTimeMs} milliseconds without completing. Cancelling build with error.`,
+            );
+            cb(new Error('Timeout'));
+          }, maxBuildTimeMs);
     executeTask(taskExecutable, localContext)
       .then(() => {
         if (timer) {
@@ -294,12 +296,12 @@ const generateGulpError = (err: Error): Error => {
   if (logger.isVerboseEnabled()) {
     rval = err;
   } else {
-    rval = {
+    rval = ({
       showStack: false,
       toString: (): string => {
         return '';
       },
-    };
+    } as unknown) as Error;
     logger.markErrorAsWritten(rval);
   }
   return rval as Error;
@@ -357,7 +359,7 @@ function flatten<T>(oArr: Array<T | T[]>): T[] {
   const output: T[] = [];
 
   function traverse(arr: Array<T | T[]>): void {
-    arr.forEach(el => {
+    arr.forEach((el) => {
       if (Array.isArray(el)) {
         traverse(el as T[]);
       } else {
@@ -375,7 +377,6 @@ function handleCommandLineArguments(): void {
 }
 
 function handleTasksListArguments(): void {
-  /* tslint:disable:no-string-literal */
   if (args['tasks'] || args['tasks-simple'] || args['T']) {
     global['dontWatchExit'] = true;
   }
@@ -383,7 +384,6 @@ function handleTasksListArguments(): void {
     // we are showing a help command prompt via yargs or ts-command-line
     global['dontWatchExit'] = true;
   }
-  /* tslint:enable:no-string-literal */
 }
 
 export const clean: ExecutableTask<unknown> = new CleanTask();

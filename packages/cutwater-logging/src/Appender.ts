@@ -5,7 +5,6 @@ import { LoggingEvent } from './LoggingEvent';
  * A destination for [[LoggingEvent]]s.
  * @beta
  */
-// tslint:disable-next-line: interface-name
 export interface Appender {
   /**
    * The name of this appender.
