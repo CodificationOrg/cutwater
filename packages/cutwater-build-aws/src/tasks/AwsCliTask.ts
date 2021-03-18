@@ -24,7 +24,7 @@ export interface AwsCliTaskConfig<P> {
   runConfig: RunCommandConfig;
 }
 
-export class AwsCliTask<P> extends GulpTask<AwsCliTaskConfig<P>> {
+export class AwsCliTask<P> extends GulpTask<AwsCliTaskConfig<P>, void> {
   protected readonly awsCommand: string;
   protected readonly awsSubCommand: string;
   protected readonly filteredParams: string[];
@@ -95,6 +95,7 @@ export class AwsCliTask<P> extends GulpTask<AwsCliTaskConfig<P>> {
     this.config.parameters = parameters;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async executeTask(localGulp: gulp.Gulp): Promise<void> {
     const args = this.preparedArgs();
     this.log(`Running: ${this.config.runConfig.command} ${args}`);

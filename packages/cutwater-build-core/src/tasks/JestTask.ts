@@ -31,8 +31,8 @@ export interface JestOptions {
   findRelatedTests: boolean;
   forceExit: boolean;
   globals: string;
-  globalSetup: string | null | undefined;
-  globalTeardown: string | null | undefined;
+  globalSetup: string | undefined;
+  globalTeardown: string | undefined;
   haste: string;
   init: boolean;
   json: boolean;
@@ -50,12 +50,12 @@ export interface JestOptions {
   notifyMode: string;
   onlyChanged: boolean;
   outputFile: string;
-  preset: string | null | undefined;
+  preset: string | undefined;
   projects: string[];
-  prettierPath: string | null | undefined;
+  prettierPath: string | undefined;
   resetMocks: boolean;
   resetModules: boolean;
-  resolver: string | null | undefined;
+  resolver: string | undefined;
   restoreMocks: boolean;
   roots: string[];
   runInBand: boolean;
@@ -71,17 +71,17 @@ export interface JestOptions {
   testPathIgnorePatterns: string[];
   testPathPattern: string[];
   testRegex: string | string[];
-  testResultsProcessor: string | null | undefined;
+  testResultsProcessor: string | undefined;
   testRunner: string;
   testSequencer: string;
   testURL: string;
   timers: string;
   transform: string;
   transformIgnorePatterns: string[];
-  unmockedModulePathPatterns: string[] | null | undefined;
+  unmockedModulePathPatterns: string[] | undefined;
   updateSnapshot: boolean;
   useStderr: boolean;
-  verbose: boolean | null | undefined;
+  verbose: boolean | undefined;
   version: boolean;
   watch: boolean;
   watchAll: boolean;
@@ -100,7 +100,7 @@ export function isJestEnabled(rootFolder: string): boolean {
   return IOUtils.fileExists(taskConfigFile) && IOUtils.readJSONSyncSafe<JestTaskConfig>(taskConfigFile).isEnabled;
 }
 
-export class JestTask extends GulpTask<JestTaskConfig> {
+export class JestTask extends GulpTask<JestTaskConfig, void> {
   protected readonly runCommand: RunCommand = new RunCommand();
 
   public constructor() {
@@ -142,13 +142,14 @@ export class JestTask extends GulpTask<JestTaskConfig> {
     this.logVerbose(`Running: jest ${args}`);
     await this.runCommand.run({
       logger: this.logger(),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       ...this.config.runConfig!,
       args,
     });
   }
 
   protected toArgString(args: Partial<JestOptions>): string {
-    const argArray: string[] = Object.keys(args).map(property => {
+    const argArray: string[] = Object.keys(args).map((property) => {
       const value = args[property];
       const arg = `--${property}`;
       if (typeof value === 'string') {
@@ -167,7 +168,7 @@ export class JestTask extends GulpTask<JestTaskConfig> {
 
   protected toOptionList(arg: any[]): string {
     return arg
-      .map(value => {
+      .map((value) => {
         if (typeof value === 'string') {
           return `"${value}"`;
         } else if (typeof value === 'number') {
@@ -179,6 +180,6 @@ export class JestTask extends GulpTask<JestTaskConfig> {
   }
 
   protected prepareOptions(): string {
-    return !!this.config.options ? this.toArgString(this.config.options) : '';
+    return this.config.options ? this.toArgString(this.config.options) : '';
   }
 }

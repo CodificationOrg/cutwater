@@ -1,14 +1,14 @@
 import { ExecutableTask, getConfig, setConfig, task } from '@codification/cutwater-build-core';
+import { EsLintTask } from './tasks/EsLintTask';
 import { TscTask } from './tasks/TscTask';
-import { TsLintTask } from './tasks/TsLintTask';
 
 export * from '@codification/cutwater-build-core';
+export * from './tasks/EsLintTask';
 export * from './tasks/TscTask';
-export * from './tasks/TsLintTask';
 
 export const SRC_WATCH_GLOB: string[] = [`${getConfig().srcFolder}/**/*.ts*`, `!${getConfig().srcFolder}/**/*.test.*`];
 
-export const tsc: ExecutableTask = new TscTask();
+export const tsc: ExecutableTask<unknown> = new TscTask();
 
 const configFolderMapping = {
   amd: 'AMD',
@@ -34,7 +34,7 @@ export const tscAlt = (module: 'amd' | 'es6' | 'esNext'): TscTask => {
   return rval;
 };
 
-export const tslint: ExecutableTask = new TsLintTask();
+export const eslint: ExecutableTask<unknown> = new EsLintTask();
 
 task('tsc', tsc);
-task('tslint', tslint);
+task('lint', eslint);

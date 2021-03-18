@@ -12,7 +12,7 @@ import {
   task,
   tsc,
   tscAlt,
-  tslint,
+  eslint,
   watch,
 } from '@codification/cutwater-build-typescript';
 import { webpack } from '@codification/cutwater-build-webpack';
@@ -21,22 +21,21 @@ import { WebpackDevServerTask } from './tasks/WebpackDevServerTask';
 export * from '@codification/cutwater-build-typescript';
 export * from '@codification/cutwater-build-webpack';
 
-// tslint:disable-next-line:no-string-literal
 const PRODUCTION: boolean = !!getConfig().args['production'] || !!getConfig().args['ship'];
 setConfig({
   production: PRODUCTION,
   shouldWarningsFailBuild: PRODUCTION,
 });
 
-export const tscEs6: ExecutableTask = tscAlt('es6');
-export const buildSubtask: ExecutableTask = parallel(tsc, tscEs6, copyStaticAssets);
-export const buildTasks: ExecutableTask = serial(prettier, tslint, buildSubtask);
-export const bundleTasks: ExecutableTask = serial(buildTasks, webpack);
-export const testTasks: ExecutableTask = serial(prettier, tslint, jest);
-export const integrationTask: ExecutableTask = serial(prettier, tslint, jestIntegration);
+export const tscEs6: ExecutableTask<unknown> = tscAlt('es6');
+export const buildSubtask: ExecutableTask<unknown> = parallel(tsc, tscEs6, copyStaticAssets);
+export const buildTasks: ExecutableTask<unknown> = serial(prettier, eslint, buildSubtask);
+export const bundleTasks: ExecutableTask<unknown> = serial(buildTasks, webpack);
+export const testTasks: ExecutableTask<unknown> = serial(prettier, eslint, jest);
+export const integrationTask: ExecutableTask<unknown> = serial(prettier, eslint, jestIntegration);
 
-export const webpackDevServer: ExecutableTask = new WebpackDevServerTask();
-export const defaultTasks: ExecutableTask = serial(testTasks, buildSubtask, webpack);
+export const webpackDevServer: ExecutableTask<unknown> = new WebpackDevServerTask();
+export const defaultTasks: ExecutableTask<unknown> = serial(testTasks, buildSubtask, webpack);
 
 task('build', buildTasks);
 task('bundle', bundleTasks);

@@ -1,12 +1,11 @@
 import * as gulp from 'gulp';
 import { default as prettier } from 'gulp-prettier';
-import { Options } from 'prettier';
+import { Options as PrettierTaskConfig } from 'prettier';
 import { GulpTask } from './GulpTask';
 
-// tslint:disable-next-line:no-empty-interface
-export interface PrettierTaskConfig extends Options {}
+export { PrettierTaskConfig };
 
-export class PrettierTask extends GulpTask<PrettierTaskConfig> {
+export class PrettierTask extends GulpTask<PrettierTaskConfig, void> {
   constructor() {
     super('prettier', {
       printWidth: 120,

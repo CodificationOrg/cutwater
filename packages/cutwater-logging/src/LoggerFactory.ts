@@ -1,7 +1,5 @@
-import * as util from 'util';
-
 import { Config } from '@codification/cutwater-core';
-
+import * as util from 'util';
 import { Appender } from './Appender';
 import { ConsoleAppender } from './ConsoleAppender';
 import { Level } from './Level';
@@ -62,7 +60,6 @@ export class LoggerFactory {
 
     let rval: Logger = this.LOGGERS[loggerName];
     if (!rval) {
-      // tslint:disable-next-line: no-use-before-declare
       rval = this.initialize(new DefaultLoggerImpl(loggerName));
       this.LOGGERS[loggerName] = rval;
     }
@@ -81,7 +78,7 @@ export class LoggerFactory {
     });
   }
 
-  private static LOGGERS: object = [];
+  private static LOGGERS: Record<string, Logger> = {};
 
   private static init(): void {
     if (!this.GLOBAL_LEVEL) {
@@ -97,13 +94,13 @@ export class LoggerFactory {
     return logger;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private constructor() {}
 }
 
 /**
  * @ignore
  */
-// tslint:disable-next-line: max-classes-per-file
 class DefaultLoggerImpl implements Logger {
   private loggerName: string;
   private loggerLevel: Level;
@@ -133,37 +130,30 @@ class DefaultLoggerImpl implements Logger {
     this.loggerAppender = appender;
   }
 
-  // tslint:disable-next-line: no-any
   public fatal(...input: any[]): boolean {
     return this.doLog(Level.FATAL, input);
   }
 
-  // tslint:disable-next-line: no-any
   public error(...input: any[]): boolean {
     return this.doLog(Level.ERROR, input);
   }
 
-  // tslint:disable-next-line: no-any
   public warn(...input: any[]): boolean {
     return this.doLog(Level.WARN, input);
   }
 
-  // tslint:disable-next-line: no-any
   public info(...input: any[]): boolean {
     return this.doLog(Level.INFO, input);
   }
 
-  // tslint:disable-next-line: no-any
   public log(...input: any[]): boolean {
     return this.doLog(Level.DEBUG, input);
   }
 
-  // tslint:disable-next-line: no-any
   public debug(...input: any[]): boolean {
     return this.doLog(Level.DEBUG, input);
   }
 
-  // tslint:disable-next-line: no-any
   public trace(...input: any[]): boolean {
     return this.doLog(Level.TRACE, input);
   }
@@ -172,7 +162,6 @@ class DefaultLoggerImpl implements Logger {
     return this.level.isGreaterOrEqual(level);
   }
 
-  // tslint:disable-next-line: no-any
   private doLog(level: Level, input: any[]): boolean {
     const rval: boolean = this.isEnabled(level);
     if (rval) {

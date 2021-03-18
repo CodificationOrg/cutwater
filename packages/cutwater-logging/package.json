@@ -11,7 +11,7 @@
     "clean": "gulp clean",
     "test": "gulp test --clean",
     "watch": "gulp watch",
-    "build": "gulp --clean --production"
+    "build": "gulp --fix --clean --production"
   },
   "publishConfig": {
     "access": "public"
@@ -39,6 +39,11 @@
   "license": "Apache-2.0",
   "private": false,
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
+  "eslintConfig": {
+    "extends": [
+      "@codification/cutwater"
+    ]
+  },
   "devDependencies": {
     "@codification/cutwater-build-core": "^0.24.2",
     "@codification/cutwater-build-node": "^0.24.2"

@@ -12,11 +12,5 @@ export class LoggingEvent {
    * @param level - the level associated with the message
    * @param message - the message to be logged
    */
-  // tslint:disable-next-line: no-any
-  constructor(
-    public readonly logger: Logger,
-    public readonly level: Level,
-    // tslint:disable-next-line: no-any
-    public readonly message: any,
-  ) {}
+  constructor(public readonly logger: Logger, public readonly level: Level, public readonly message: any) {}
 }

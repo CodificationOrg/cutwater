@@ -6,7 +6,6 @@ import {
   RunCommandConfig,
   TextUtils,
 } from '@codification/cutwater-build-core';
-import { Gulp } from 'gulp';
 import * as path from 'path';
 
 export interface WebpackOptions {
@@ -37,7 +36,7 @@ export interface WebpackTaskConfig {
   runConfig?: RunCommandConfig;
 }
 
-export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfig> {
+export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
   protected readonly runCommand: RunCommand = new RunCommand();
 
   constructor() {
@@ -60,7 +59,7 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
     return super.isEnabled(buildConfig) && this.config.options?.config !== null;
   }
 
-  public async executeTask(localGulp: Gulp): Promise<void> {
+  public async executeTask(): Promise<void> {
     const shouldInitWebpack: boolean = process.argv.indexOf('--initwebpack') > -1;
 
     if (shouldInitWebpack) {
@@ -122,7 +121,6 @@ export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfi
   }
 
   private logMissingConfigWarning(): void {
-    // tslint:disable-next-line:no-console
     console.warn('No webpack config has been provided. ' + 'Run again using --initwebpack to create a default config.');
   }
 }

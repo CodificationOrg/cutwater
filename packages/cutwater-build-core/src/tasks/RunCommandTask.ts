@@ -1,14 +1,12 @@
-import * as gulp from 'gulp';
-import { RunCommand, RunCommandConfig } from '../utilities/RunCommand';
+import { RunCommand, RunCommandConfig as RunCommandTaskConfig } from '../utilities/RunCommand';
 import { GulpTask } from './GulpTask';
 
-// tslint:disable-next-line: no-empty-interface
-export interface RunCommandTaskConfig extends RunCommandConfig {}
+export { RunCommandTaskConfig };
 
-export class RunCommandTask<T extends RunCommandTaskConfig> extends GulpTask<T> {
+export class RunCommandTask<T extends RunCommandTaskConfig> extends GulpTask<T, void> {
   private readonly runCommand: RunCommand = new RunCommand();
 
-  public constructor(taskName: string = 'run-command', defaultConfig: Partial<T> = {}) {
+  public constructor(taskName = 'run-command', defaultConfig: Partial<T> = {}) {
     super(taskName, {
       quiet: false,
       ignoreErrors: false,
@@ -18,7 +16,7 @@ export class RunCommandTask<T extends RunCommandTaskConfig> extends GulpTask<T> 
     } as T);
   }
 
-  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
+  public async executeTask(): Promise<void> {
     this.logVerbose(`Running: ${this.preparedCommand()} ${this.preparedArgs()}`);
     await this.runCommand.run({
       ...this.config,

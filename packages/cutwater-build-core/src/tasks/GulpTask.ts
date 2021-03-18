@@ -10,15 +10,15 @@ import { ExecutableTask } from '../ExecutableTask';
 import { getLogger, Logger } from '../logging/Logger';
 import { IOUtils } from '../utilities/IOUtils';
 
-export abstract class GulpTask<T> implements ExecutableTask {
+export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   public readonly CONFIG_ENV_VAR: string = 'CUTWATER_BUILD_CONFIG';
 
   public name: string;
   public buildConfig: BuildConfig;
   public config: T;
   public cleanMatch: string[];
-  public enabled: boolean = true;
-  private taskSchema: object | undefined;
+  public enabled = true;
+  private taskSchema: Record<string, unknown> | undefined;
 
   public constructor(name: string, initialTaskConfig: Partial<T> = {}) {
     this.name = name;
@@ -29,7 +29,7 @@ export abstract class GulpTask<T> implements ExecutableTask {
     return (!buildConfig || !buildConfig.isRedundantBuild) && this.enabled;
   }
 
-  public get schema(): object | undefined {
+  public get schema(): Record<string, unknown> | undefined {
     return this.taskSchema ? this.taskSchema : (this.taskSchema = this.loadSchema());
   }
 
@@ -51,7 +51,7 @@ export abstract class GulpTask<T> implements ExecutableTask {
   public abstract executeTask(
     gulp: gulp.Gulp,
     completeCallback?: (error?: string | Error) => void,
-  ): Promise<object | void> | NodeJS.ReadWriteStream | void;
+  ): Promise<R | void> | NodeJS.ReadWriteStream | void;
 
   public log(message: string): void {
     this.logger().log(`[${this.name.cyan}] ${message}`);
@@ -77,7 +77,7 @@ export abstract class GulpTask<T> implements ExecutableTask {
     this.logger().fileWarning(this.name, filePath, line, column, warningCode, message);
   }
 
-  public getCleanMatch(buildConfig: BuildConfig, taskConfig: T = this.config): string[] {
+  public getCleanMatch(): string[] {
     return this.cleanMatch;
   }
 
@@ -114,7 +114,6 @@ export abstract class GulpTask<T> implements ExecutableTask {
           stream.then(resolve, reject);
         } else if (stream.pipe) {
           // wait for stream to end
-
           eos(
             stream,
             {
@@ -122,7 +121,7 @@ export abstract class GulpTask<T> implements ExecutableTask {
               readable: stream.readable,
               writable: stream.writable && !stream.readable,
             },
-            (err: object) => {
+            (err: Error) => {
               if (err) {
                 reject(err);
               } else {
@@ -134,7 +133,7 @@ export abstract class GulpTask<T> implements ExecutableTask {
           // Make sure the stream is completely read
           stream.pipe(
             through2.obj(
-              (file: Vinyl, encoding: string, callback: (p?: object) => void) => {
+              (file: Vinyl, encoding: string, callback: () => void) => {
                 callback();
               },
               (callback: () => void) => {
@@ -152,7 +151,7 @@ export abstract class GulpTask<T> implements ExecutableTask {
       () => {
         this.logger().logEndSubtask(this.name, startTime);
       },
-      ex => {
+      (ex) => {
         this.logger().logEndSubtask(this.name, startTime, ex);
         throw ex;
       },
@@ -160,16 +159,16 @@ export abstract class GulpTask<T> implements ExecutableTask {
   }
 
   protected createOutputDir(outputPath: string): void {
-    const outputDir = !!path.extname(outputPath) ? path.dirname(outputPath) : outputPath;
+    const outputDir = path.extname(outputPath) ? path.dirname(outputPath) : outputPath;
     IOUtils.mkdirs(outputDir);
   }
 
-  protected loadSchema(): object | undefined {
+  protected loadSchema(): Record<string, unknown> | undefined {
     return undefined;
   }
 
   protected getConfigFilePaths(): string[] {
-    return ['config', '.config'].map(directory => path.join(process.cwd(), directory, `${this.name}.json`));
+    return ['config', '.config'].map((directory) => path.join(process.cwd(), directory, `${this.name}.json`));
   }
 
   protected logger(): Logger {
@@ -178,12 +177,12 @@ export abstract class GulpTask<T> implements ExecutableTask {
 
   private readConfigs(): T | undefined {
     const configFiles: string[] = this.getConfigFilePaths();
-    const schema: object | undefined = this.schema;
+    const schema: Record<string, unknown> | undefined = this.schema;
 
-    let rval: T | undefined = this.readConfigFiles(configFiles, schema);
-    if (!!process.env[this.CONFIG_ENV_VAR]) {
+    let rval: T | undefined = this.readConfigFiles(configFiles);
+    if (process.env[this.CONFIG_ENV_VAR]) {
       const envConfig = JSON.parse(process.env[this.CONFIG_ENV_VAR] || '');
-      if (!!envConfig[this.name]) {
+      if (envConfig[this.name]) {
         const verifiedConfig: T | undefined = this.verifyConfig(envConfig[this.name], schema);
         rval = !rval ? verifiedConfig : { ...rval, ...verifiedConfig };
       }
@@ -192,19 +191,19 @@ export abstract class GulpTask<T> implements ExecutableTask {
     return rval;
   }
 
-  private readConfigFiles(filePaths: string[], schema?: object): T | undefined {
+  private readConfigFiles(filePaths: string[]): T | undefined {
     let rval: T | undefined;
     filePaths
-      .map(configPath => this.readConfigFile(configPath))
-      .forEach(config => {
-        if (!!config) {
+      .map((configPath) => this.readConfigFile(configPath))
+      .forEach((config) => {
+        if (config) {
           rval = !rval ? { ...config } : { ...rval, ...config };
         }
       });
     return rval;
   }
 
-  private readConfigFile(filePath: string, schema?: object): T | undefined {
+  private readConfigFile(filePath: string): T | undefined {
     if (!IOUtils.fileExists(filePath)) {
       return undefined;
     } else {
@@ -212,7 +211,7 @@ export abstract class GulpTask<T> implements ExecutableTask {
     }
   }
 
-  private verifyConfig(rawData: T | undefined, schema?: object): T | undefined {
+  private verifyConfig(rawData: T | undefined, schema?: Record<string, unknown>): T | undefined {
     if (!!rawData && !!schema) {
       const ajv = new Ajv();
       if (!ajv.validate(schema, rawData)) {

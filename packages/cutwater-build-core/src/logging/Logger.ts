@@ -40,7 +40,6 @@ export class Logger {
   }
 
   public log(...args: string[]): void {
-    // tslint:disable-next-line: no-console
     console.log(`[${Logger.timestamp().gray}] ${args.join('')}`);
   }
 
@@ -157,7 +156,7 @@ export class Logger {
   }
 
   private colorize(color: Color, args: string[]): string[] {
-    return args.map(arg => color(arg));
+    return args.map((arg) => color(arg));
   }
 
   private formatError(e: any): string | undefined {
@@ -191,7 +190,7 @@ export class Logger {
         return e.message;
       }
     } else {
-      let output: string = String(e.err);
+      let output = String(e.err);
 
       try {
         output = JSON.stringify(e.err);

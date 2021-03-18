@@ -6,7 +6,6 @@ import { Level } from './Level';
  *
  * @beta
  */
-// tslint:disable-next-line: interface-name
 export interface Logger {
   /**
    * The human readable name of this logger instance.
@@ -36,7 +35,6 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  // tslint:disable-next-line: no-any
   fatal(...input: any[]): boolean;
 
   /**
@@ -45,7 +43,6 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  // tslint:disable-next-line: no-any
   error(...input: any[]): boolean;
 
   /**
@@ -54,7 +51,6 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  // tslint:disable-next-line: no-any
   warn(...input: any[]): boolean;
 
   /**
@@ -63,7 +59,6 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  // tslint:disable-next-line: no-any
   info(...input: any[]): boolean;
 
   /**
@@ -72,7 +67,6 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  // tslint:disable-next-line: no-any
   debug(...input: any[]): boolean;
 
   /**
@@ -81,7 +75,6 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  // tslint:disable-next-line: no-any
   trace(...input: any[]): boolean;
 
   /**
@@ -89,6 +82,5 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  // tslint:disable-next-line: no-any
   log(...input: any[]): boolean;
 }

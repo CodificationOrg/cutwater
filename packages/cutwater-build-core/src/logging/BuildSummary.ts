@@ -33,7 +33,7 @@ export class BuildSummary {
 
           const callbacks: Array<() => void> = context.writeSummaryCallbacks;
           context.writeSummaryCallbacks = [];
-          callbacks.forEach(writeSummaryCallback => writeSummaryCallback());
+          callbacks.forEach((writeSummaryCallback) => writeSummaryCallback());
         });
       });
     } else if (context.state.wroteSummary) {
@@ -44,22 +44,20 @@ export class BuildSummary {
   private static relogIssues(context: BuildContext): void {
     const shouldRelogIssues: boolean = getFlagValue('relogIssues');
     if (shouldRelogIssues) {
-      context.warnings.forEach(warning => {
-        // tslint:disable-next-line: no-console
+      context.warnings.forEach((warning) => {
         console.error(warning.yellow);
       });
     }
 
     if (shouldRelogIssues && (context.metrics.taskErrors > 0 || context.errors.length)) {
-      context.errors.forEach(err => {
-        // tslint:disable-next-line: no-console
+      context.errors.forEach((err) => {
         console.error(err.red);
       });
     }
   }
 
   private static logSummaries(context: BuildContext, log: LogFunction): void {
-    context.writeSummaryLogs.forEach(summary => log(summary));
+    context.writeSummaryLogs.forEach((summary) => log(summary));
   }
 
   private static logContextInfo(context: BuildContext, log: LogFunction): void {
@@ -110,7 +108,7 @@ export class BuildSummary {
   }
 
   private static logErrors(context: BuildContext, log: LogFunction): void {
-    let totalErrors: number = 0;
+    let totalErrors = 0;
     if (context.metrics.taskErrors > 0 || context.errors.length) {
       totalErrors = context.metrics.taskErrors + context.errors.length;
       log('Task errors:', `${totalErrors}`.red);
@@ -120,6 +118,6 @@ export class BuildSummary {
   private static doWriteSumaryCallbacks(context: BuildContext): void {
     const callbacks: Array<() => void> = context.writeSummaryCallbacks;
     context.writeSummaryCallbacks = [];
-    callbacks.forEach(writeSummaryCallback => writeSummaryCallback());
+    callbacks.forEach((writeSummaryCallback) => writeSummaryCallback());
   }
 }

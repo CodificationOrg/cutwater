@@ -10,7 +10,7 @@ describe('RunCommandTask', () => {
   it('can run echo', async () => {
     task.setConfig({ command: 'echo', args: '"Hello World!"' });
     try {
-      await task.executeTask(gulp);
+      await task.executeTask();
     } catch (err) {
       fail(err);
     }

@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "gulp clean",
     "format": "gulp prettier",
-    "lint": "gulp tslint",
+    "lint": "gulp lint --fix",
     "build:compile": "yarn clean && yarn format && yarn lint && gulp tsc",
     "build": "yarn build:compile"
   },
@@ -38,6 +38,11 @@
   "license": "Apache-2.0",
   "private": false,
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
+  "eslintConfig": {
+    "extends": [
+      "@codification/cutwater"
+    ]
+  },
   "dependencies": {
     "@codification/cutwater-build-core": "^0.24.2",
     "@codification/cutwater-build-typescript": "^0.24.2"

@@ -9,9 +9,9 @@
   "scripts": {
     "clean": "gulp clean",
     "format": "gulp prettier",
-    "lint": "gulp tslint",
+    "lint": "gulp lint --fix",
     "test-integ": "gulp test-integ --clean",
-    "build": "gulp --clean"
+    "build": "gulp --fix --clean"
   },
   "publishConfig": {
     "access": "public"
@@ -40,6 +40,11 @@
   "license": "Apache-2.0",
   "private": false,
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
+  "eslintConfig": {
+    "extends": [
+      "@codification/cutwater"
+    ]
+  },
   "dependencies": {
     "@codification/cutwater-build-core": "^0.24.2",
     "@codification/cutwater-build-node": "^0.24.2",

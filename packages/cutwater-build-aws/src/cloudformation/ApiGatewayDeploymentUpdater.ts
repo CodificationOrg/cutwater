@@ -21,7 +21,7 @@ export class ApiGatewayDeploymentUpdater {
   public performOpenApiMerges(outputFile: string): void {
     this.validateState();
 
-    const apiToHash: {} = {};
+    const apiToHash: Record<string, string> = {};
     this.findRestApiResourceNames().forEach(rn => {
       const hash: string | undefined = this.mergeOpenApi(rn);
       if (!!hash) {
@@ -29,7 +29,7 @@ export class ApiGatewayDeploymentUpdater {
       }
     });
 
-    const deployToHash: {} = {};
+    const deployToHash: Record<string, string> = {};
     Object.keys(apiToHash).forEach(api => {
       const deployName = this.findDeploymentResourceName(api);
       if (!!deployName) {
@@ -77,7 +77,7 @@ export class ApiGatewayDeploymentUpdater {
     let rval = value;
     if (typeof value === 'string') {
       Object.keys(deployNameMapping).some(srcName => {
-        const matcher: RegExp = new RegExp('(?=\\W*)' + srcName + '(?=\\W*)', 'g');
+        const matcher = new RegExp('(?=\\W*)' + srcName + '(?=\\W*)', 'g');
         if (matcher.test(value)) {
           rval = value.replace(matcher, deployNameMapping[srcName]);
           return true;

@@ -3,7 +3,6 @@ import { Layout } from './Layout';
 import { LoggingEvent } from './LoggingEvent';
 import { SimpleLayout } from './SimpleLayout';
 
-// tslint:disable:no-console
 /**
  * The default [[Appender]] implementation that writes all [[LoggingEvent]]s to `console.log()`.
  */
