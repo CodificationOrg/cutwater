@@ -1,14 +1,10 @@
-import { AggregatedResult } from '@jest/test-result';
-import { GlobalConfig } from '@jest/types/build/Config';
-import * as gulp from 'gulp';
-import { runCLI } from 'jest';
 import * as path from 'path';
 import { BuildConfig } from '../';
 import { IOUtils } from '../utilities/IOUtils';
+import { RunCommand, RunCommandConfig } from '../utilities/RunCommand';
 import { GulpTask } from './GulpTask';
 
-export interface JestTaskConfig {
-  isEnabled: boolean;
+export interface JestOptions {
   all: boolean;
   automock: boolean;
   bail: number | boolean;
@@ -16,6 +12,7 @@ export interface JestTaskConfig {
   cache: boolean;
   changedFilesWithAncestor: boolean;
   changedSince: string;
+  ci: boolean;
   clearCache: boolean;
   clearMocks: boolean;
   collectCoverage: boolean;
@@ -67,7 +64,8 @@ export interface JestTaskConfig {
   showConfig: boolean;
   silent: boolean;
   snapshotSerializers: string[];
-  testFailureExitCode: string | undefined;
+  testEnvironment: string | null | undefined;
+  testFailureExitCode: string | null | undefined;
   testMatch: string[];
   testNamePattern: string;
   testPathIgnorePatterns: string[];
@@ -91,23 +89,40 @@ export interface JestTaskConfig {
   watchPathIgnorePatterns: string[];
 }
 
-const ENV_LOGGING_LEVEL = 'LOGGING_LEVEL';
+export interface JestTaskConfig {
+  isEnabled: boolean;
+  options?: Partial<JestOptions>;
+  runConfig?: RunCommandConfig;
+}
 
 export function isJestEnabled(rootFolder: string): boolean {
   const taskConfigFile: string = path.join(rootFolder, 'config', 'jest.json');
   return IOUtils.fileExists(taskConfigFile) && IOUtils.readJSONSyncSafe<JestTaskConfig>(taskConfigFile).isEnabled;
 }
 
-export class JestTask extends GulpTask<JestTaskConfig, void> {
+export class JestTask extends GulpTask<JestTaskConfig> {
+  protected readonly runCommand: RunCommand = new RunCommand();
+
   public constructor() {
     super('jest', {
-      cache: true,
-      collectCoverageFrom: '<rootDir>/lib/**/*.js?(x), !lib/**/*.test.*',
-      coverage: true,
-      coverageReporters: ['json', 'html'],
-      testMatch: ['<rootDir>/lib/**/*.(test|spec).js?(x)'],
-      testPathIgnorePatterns: ['<rootDir>/(src|lib-amd|lib-es6|coverage|build|docs|node_modules)/'],
-      modulePathIgnorePatterns: ['<rootDir>/(src|lib)/.*/package.json'],
+      options: {
+        cache: true,
+        preset: 'ts-jest',
+        testEnvironment: 'node',
+        collectCoverageFrom: '<rootDir>/src/**/*.(ts|js)?(x), !src/**/*.test.*',
+        coverage: true,
+        coverageReporters: ['json', 'html'],
+        testMatch: ['<rootDir>/src/**/*.(test|spec).(ts|js)?(x)'],
+        testPathIgnorePatterns: ['<rootDir>/(lib|lib-amd|lib-es6|coverage|build|docs|node_modules)/'],
+        modulePathIgnorePatterns: ['<rootDir>/(src|lib)/.*/package.json'],
+      },
+      runConfig: {
+        command: 'jest',
+        quiet: false,
+        ignoreErrors: false,
+        cwd: process.cwd(),
+        env: {},
+      },
     });
   }
 
@@ -115,31 +130,55 @@ export class JestTask extends GulpTask<JestTaskConfig, void> {
     return super.isEnabled(buildConfig) && !!this.config.isEnabled;
   }
 
-  public executeTask(localGulp: gulp.Gulp, completeCallback: (error?: string | Error) => void): void {
-    const jestConfig = {
-      ...this.config,
-      _: [],
-      $0: '',
-      ci: this.buildConfig.production,
-      coverageDirectory: path.join(this.buildConfig.tempFolder, 'coverage'),
-      rootDir: this.buildConfig.rootPath,
-      testEnvironment: require.resolve('jest-environment-jsdom'),
-      cacheDirectory: path.join(this.buildConfig.rootPath, this.buildConfig.tempFolder, 'jest-cache'),
-    };
+  public async executeTask(): Promise<void> {
+    const options: any = this.config.options || {};
+    options.ci = this.buildConfig.production;
+    options.coverageDirectory = path.join(this.buildConfig.tempFolder, 'coverage');
+    options.rootDir = this.buildConfig.rootPath;
+    options.testEnvironment = require.resolve('jest-environment-jsdom');
+    options.cacheDirectory = path.join(this.buildConfig.rootPath, this.buildConfig.tempFolder, 'jest-cache');
 
-    process.env[ENV_LOGGING_LEVEL] = this.config.logLevel ? this.config.logLevel.toUpperCase() : 'ALL';
+    const args = `${this.prepareOptions()}`;
+    this.logVerbose(`Running: jest ${args}`);
+    await this.runCommand.run({
+      logger: this.logger(),
+      ...this.config.runConfig!,
+      args,
+    });
+  }
 
-    runCLI(jestConfig, [this.buildConfig.rootPath])
-      .then((result: { results: AggregatedResult; globalConfig: GlobalConfig }) => {
-        if (result.results.numFailedTests || result.results.numFailedTestSuites) {
-          completeCallback(new Error('Jest tests failed'));
-        } else {
-          if (!this.buildConfig.production) {
-            // this._copySnapshots(this.buildConfig.libFolder, this.buildConfig.srcFolder);
-          }
-          completeCallback();
+  protected toArgString(args: Partial<JestOptions>): string {
+    const argArray: string[] = Object.keys(args).map(property => {
+      const value = args[property];
+      const arg = `--${property}`;
+      if (typeof value === 'string') {
+        return `${arg} "${value}"`;
+      } else if (typeof value === 'boolean' && !!value) {
+        return arg;
+      } else if (typeof value === 'number') {
+        return `${arg} ${value}`;
+      } else if (Array.isArray(value)) {
+        return `${arg} ${this.toOptionList(value)}`;
+      }
+      return '';
+    });
+    return `${argArray.join(' ')} `;
+  }
+
+  protected toOptionList(arg: any[]): string {
+    return arg
+      .map(value => {
+        if (typeof value === 'string') {
+          return `"${value}"`;
+        } else if (typeof value === 'number') {
+          return value;
         }
+        return '';
       })
-      .catch(err => completeCallback(err));
+      .join(' ');
+  }
+
+  protected prepareOptions(): string {
+    return !!this.config.options ? this.toArgString(this.config.options) : '';
   }
 }

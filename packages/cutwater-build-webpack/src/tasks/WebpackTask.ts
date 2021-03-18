@@ -1,151 +1,128 @@
-import { BuildConfig, GulpTask, IOUtils } from '@codification/cutwater-build-core';
-import * as colors from 'colors';
+import {
+  BuildConfig,
+  GulpTask,
+  IOUtils,
+  RunCommand,
+  RunCommandConfig,
+  TextUtils,
+} from '@codification/cutwater-build-core';
 import { Gulp } from 'gulp';
-import { EOL } from 'os';
 import * as path from 'path';
-import * as Webpack from 'webpack';
-import { WebpackUtils } from '../utilities/WebpackUtils';
+
+export interface WebpackOptions {
+  entry: string[];
+  config: string[];
+  configName: string[];
+  name: string;
+  color: boolean;
+  merge: boolean;
+  env: string[];
+  progress: boolean | string;
+  help: boolean;
+  outputPath: string;
+  target: string[];
+  watch: boolean;
+  hot: boolean;
+  devtool: string;
+  prefetch: string;
+  json: boolean | string;
+  mode: string;
+  version: boolean;
+  stats: boolean | string;
+  analyze: boolean;
+}
 
 export interface WebpackTaskConfig {
-  configPath: string;
-  config?: Webpack.Configuration;
-  suppressWarnings?: Array<string | RegExp>;
-  webpack?: typeof Webpack;
-  printStats?: boolean;
+  options?: Partial<WebpackOptions>;
+  runConfig?: RunCommandConfig;
 }
 
-export interface WebpackResources {
-  webpack: typeof Webpack;
-}
+export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfig> {
+  protected readonly runCommand: RunCommand = new RunCommand();
 
-export class WebpackTask<TExtendedConfig = {}> extends GulpTask<WebpackTaskConfig & TExtendedConfig> {
-  private wpResources: WebpackResources;
-
-  constructor(extendedName?: string, extendedConfig?: TExtendedConfig) {
-    super(extendedName || 'webpack', {
-      configPath: './webpack.config.js',
-      suppressWarnings: [],
-      printStats: true,
-      ...((extendedConfig as unknown) as object),
-    } as any);
-  }
-
-  public get resources(): WebpackResources {
-    if (!this.wpResources) {
-      this.wpResources = {
-        webpack: this.config.webpack || Webpack,
-      };
-    }
-
-    return this.wpResources;
+  constructor() {
+    super('webpack', {
+      options: {
+        config: ['./webpack.config.js'],
+        stats: true,
+      },
+      runConfig: {
+        command: 'webpack',
+        quiet: false,
+        ignoreErrors: false,
+        cwd: process.cwd(),
+        env: {},
+      },
+    });
   }
 
   public isEnabled(buildConfig: BuildConfig): boolean {
-    return super.isEnabled(buildConfig) && this.config.configPath !== null;
+    return super.isEnabled(buildConfig) && this.config.options?.config !== null;
   }
 
-  public executeTask(localGulp: Gulp, completeCallback: (error?: string) => void): void {
+  public async executeTask(localGulp: Gulp): Promise<void> {
     const shouldInitWebpack: boolean = process.argv.indexOf('--initwebpack') > -1;
 
     if (shouldInitWebpack) {
       this.log(
         'Initializing a webpack.config.js, which bundles lib/index.js into dist/packagename.js into a UMD module.',
       );
-
       IOUtils.copyFile(path.resolve(__dirname, 'webpack.config.js'));
-      completeCallback();
+      return;
     } else {
-      let webpackConfig: object | undefined;
-
-      try {
-        webpackConfig = WebpackUtils.loadConfig(this.config);
-        if (!webpackConfig) {
-          this.logMissingConfigWarning();
-          completeCallback();
-          return;
-        }
-      } catch (err) {
-        completeCallback(`Error parsing webpack config: ${this.config.configPath}: ${err}`);
+      if (!this.config.options?.config) {
+        this.logMissingConfigWarning();
         return;
       }
 
-      if (webpackConfig) {
-        const webpack: typeof Webpack = this.config.webpack || Webpack;
-        const startTime = new Date().getTime();
-        const outputDir = this.buildConfig.distFolder;
-
-        webpack(webpackConfig, (error, stats) => {
-          if (error) {
-            completeCallback(error.message);
-          }
-
-          if (!this.buildConfig.properties) {
-            this.buildConfig.properties = {};
-          }
-
-          /* tslint:disable:no-string-literal */
-          this.buildConfig.properties['webpackStats'] = stats;
-          /* tslint:enable:no-string-literal */
-
-          const statsResult = stats.toJson({
-            hash: false,
-            source: false,
-          });
-
-          if (statsResult.errors && statsResult.errors.length) {
-            this.logError(`'${outputDir}':` + EOL + statsResult.errors.join(EOL) + EOL);
-          }
-
-          if (statsResult.warnings && statsResult.warnings.length) {
-            const unsuppressedWarnings: string[] = [];
-            const warningSuppressionRegexes = (this.config.suppressWarnings || []).map((regex: string) => {
-              return new RegExp(regex);
-            });
-
-            statsResult.warnings.forEach((warning: string) => {
-              const suppressed =
-                warningSuppressionRegexes.find(suppressionRegex => warning.match(suppressionRegex)) !== undefined;
-              if (!suppressed) {
-                unsuppressedWarnings.push(warning);
-              }
-            });
-
-            if (unsuppressedWarnings.length > 0) {
-              this.logWarning(`'${outputDir}':` + EOL + unsuppressedWarnings.join(EOL) + EOL);
-            }
-          }
-
-          const duration = new Date().getTime() - startTime;
-          const statsResultChildren = statsResult.children ? statsResult.children : [statsResult];
-
-          statsResultChildren.forEach(child => {
-            if (child.chunks) {
-              child.chunks.forEach(chunk => {
-                if (chunk.files && this.config.printStats) {
-                  chunk.files.forEach(file =>
-                    this.log(
-                      `Bundled: '${colors.cyan(path.basename(file))}', ` +
-                        `size: ${colors.magenta('' + chunk.size)} bytes, ` +
-                        `took ${colors.magenta(duration.toString(10))} ms.`,
-                    ),
-                  ); // end file
-                }
-              }); // end chunk
-            }
-          }); // end child
-
-          completeCallback();
-        }); // endwebpack callback
-      }
+      this.config.options.mode = this.buildConfig.production ? 'production' : 'development';
+      const args = `${this.prepareOptions()}`;
+      this.logVerbose(`Running: webpack ${args}`);
+      await this.runCommand.run({
+        logger: this.logger(),
+        ...this.config.runConfig!,
+        args,
+      });
     }
+  }
+
+  protected toArgString(args: Partial<WebpackOptions>): string {
+    const argArray: string[] = Object.keys(args).map(property => {
+      const value = args[property];
+      const arg = TextUtils.convertPropertyNameToArg(property);
+      if (typeof value === 'string') {
+        return `${arg} "${value}"`;
+      } else if (typeof value === 'boolean' && !!value) {
+        return arg;
+      } else if (typeof value === 'number') {
+        return `${arg} ${value}`;
+      } else if (Array.isArray(value)) {
+        return `${arg} ${this.toOptionList(value)}`;
+      }
+      return '';
+    });
+    return `${argArray.join(' ')} `;
+  }
+
+  protected toOptionList(arg: any[]): string {
+    return arg
+      .map(value => {
+        if (typeof value === 'string') {
+          return `"${value}"`;
+        } else if (typeof value === 'number') {
+          return value;
+        }
+        return '';
+      })
+      .join(' ');
+  }
+
+  protected prepareOptions(): string {
+    return !!this.config.options ? this.toArgString(this.config.options) : '';
   }
 
   private logMissingConfigWarning(): void {
     // tslint:disable-next-line:no-console
-    console.warn(
-      'No webpack config has been provided. ' +
-        'Run again using --initwebpack to create a default config, ' +
-        `or call webpack.setConfig({ configPath: null }) in your gulpfile.`,
-    );
+    console.warn('No webpack config has been provided. ' + 'Run again using --initwebpack to create a default config.');
   }
 }

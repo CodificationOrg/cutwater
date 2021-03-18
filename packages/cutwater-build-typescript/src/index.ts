@@ -23,11 +23,13 @@ export const tscAlt = (module: 'amd' | 'es6' | 'esNext'): TscTask => {
   rval.name = `tsc-${module}`;
   const folder = `lib-${module}`;
   rval.setConfig({
-    customArgs: {
+    options: {
+      ...rval.config.options,
       outDir: `./${folder}`,
       module,
     },
   });
+  rval.cleanMatch = [folder];
   setConfig({
     [`lib${configFolderMapping[module]}Folder`]: folder,
   });

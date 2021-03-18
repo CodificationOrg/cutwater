@@ -3,6 +3,91 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.24.1 (2021-03-03)
+
+**Note:** Version bump only for package @codification/cutwater-build-typescript
+
+
+
+
+
+# 0.24.0 (2021-02-15)
+
+
+### Features
+
+* improve CI/CD workflow ([6a6ada5](https://github.com/CodificationOrg/cutwater/commit/6a6ada51b261da2296fc9a4628be3abbdc3021f8))
+
+
+
+
+
+## [0.23.2](https://github.com/CodificationOrg/cutwater/compare/v0.23.1...v0.23.2) (2020-12-28)
+
+
+### Bug Fixes
+
+* correct failure to clean some tsc outputs ([1d36ef6](https://github.com/CodificationOrg/cutwater/commit/1d36ef645f3163c263c262e9d835aa51971c9b35))
+
+
+
+
+
+
+## [0.23.1](https://github.com/CodificationOrg/cutwater/compare/v0.23.0...v0.23.1) (2020-12-26)
+
+**Note:** Version bump only for package @codification/cutwater-build-typescript
+
+
+
+
+
+
+# [0.23.0](https://github.com/CodificationOrg/cutwater/compare/v0.22.1...v0.23.0) (2020-12-25)
+
+
+### Features
+
+* move webpack to native calls ([b643731](https://github.com/CodificationOrg/cutwater/commit/b64373134d7ddfa15ba16581bb53630e02df9550))
+
+
+
+
+
+
+## [0.22.1](https://github.com/CodificationOrg/cutwater/compare/v0.22.0...v0.22.1) (2020-12-25)
+
+
+### Bug Fixes
+
+* update param refs to use options ([1adb498](https://github.com/CodificationOrg/cutwater/commit/1adb49887e7cfff83d427ac9c112fd4d69401186))
+
+
+
+
+
+
+# [0.22.0](https://github.com/CodificationOrg/cutwater/compare/v0.21.4...v0.22.0) (2020-12-25)
+
+
+### Features
+
+* convert TscTask to use native tsc call ([a2d77ad](https://github.com/CodificationOrg/cutwater/commit/a2d77ad4a48b2d3fc0a62fd7ecb47867a7d59571))
+
+
+
+
+
+
+## [0.21.4](https://github.com/CodificationOrg/cutwater/compare/v0.21.3...v0.21.4) (2020-12-23)
+
+**Note:** Version bump only for package @codification/cutwater-build-typescript
+
+
+
+
+
+
 # [0.21.0](https://github.com/CodificationOrg/cutwater/compare/v0.20.14...v0.21.0) (2020-05-17)
 
 **Note:** Version bump only for package @codification/cutwater-build-typescript

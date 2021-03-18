@@ -3,12 +3,13 @@
   "command": {
     "version": {
       "allowBranch": "master",
-      "message": "chore(release): publish %s"
+      "message": "%s [skip-ci]"
     }
   },
   "packages": [
     "packages/*"
   ],
-  "version": "0.21.2",
-  "useWorkspaces": true
+  "version": "0.24.1",
+  "useWorkspaces": true,
+  "stream": true
 }

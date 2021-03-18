@@ -16,10 +16,11 @@ export class RunCommandTask<T extends RunCommandTaskConfig> extends GulpTask<T, 
     } as T);
   }
 
-  public executeTask(): Promise<void> {
+  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
     this.logVerbose(`Running: ${this.preparedCommand()} ${this.preparedArgs()}`);
-    return this.runCommand.run({
+    await this.runCommand.run({
       ...this.config,
+      logger: this.logger(),
       command: this.preparedCommand(),
       args: this.preparedArgs(),
     });

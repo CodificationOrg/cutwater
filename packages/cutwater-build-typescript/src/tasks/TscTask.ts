@@ -1,67 +1,168 @@
-import { BuildConfig, GulpTask } from '@codification/cutwater-build-core';
+import { GulpTask, RunCommand, RunCommandConfig } from '@codification/cutwater-build-core';
 import * as gulp from 'gulp';
-import * as sourcemaps from 'gulp-sourcemaps';
-import * as ts from 'gulp-typescript';
-import { ICompileStream, Project } from 'gulp-typescript/release/project';
-import * as merge from 'merge-stream';
-import { Readable } from 'stream';
 
-export class TscTask extends GulpTask<any> {
+export interface TscOptions {
+  allowJs: boolean;
+  allowSyntheticDefaultImports: boolean;
+  allowUmdGlobalAccess: boolean;
+  allowUnreachableCode: boolean;
+  allowUnusedLabels: boolean;
+  alwaysStrict: boolean;
+  assumeChangesOnlyAffectDirectDependencies: boolean;
+  baseUrl: string;
+  build: boolean;
+  charset: string;
+  checkJs: boolean;
+  composite: boolean;
+  declaration: boolean;
+  declarationDir: string;
+  declarationMap: boolean;
+  diagnostics: boolean;
+  disableSizeLimit: boolean;
+  downlevelIteration: boolean;
+  emitBOM: boolean;
+  emitDeclarationOnly: boolean;
+  emitDecoratorMetadata: boolean;
+  esModuleInterop: boolean;
+  experimentalDecorators: boolean;
+  extendedDiagnostics: boolean;
+  forceConsistentCasingInFileNames: boolean;
+  generateCpuProfile: string;
+  help: boolean;
+  importHelpers: boolean;
+  incremental: boolean;
+  inlineSourceMap: boolean;
+  inlineSources: boolean;
+  init: boolean;
+  isolatedModules: boolean;
+  jsx: string;
+  jsxFactory: string;
+  jsxFragmentFactory: string;
+  keyofStringsOnly: boolean;
+  lib: string[];
+  listEmittedFiles: boolean;
+  listFiles: boolean;
+  locale: string;
+  mapRoot: string;
+  maxNodeModuleJsDepth: number;
+  module: string;
+  moduleResolution: string;
+  newLine: string;
+  noEmit: boolean;
+  noEmitHelpers: boolean;
+  noEmitOnError: boolean;
+  noErrorTruncation: boolean;
+  noFallthroughCasesInSwitch: boolean;
+  noImplicitAny: boolean;
+  noImplicitReturns: boolean;
+  noImplicitThis: boolean;
+  noImplicitUseStrict: boolean;
+  noLib: boolean;
+  noResolve: boolean;
+  noStrictGenericChecks: boolean;
+  noUnusedLocals: boolean;
+  noUnusedParameters: boolean;
+  outDir: string;
+  outFile: string;
+  paths: {};
+  preserveConstEnums: boolean;
+  preserveSymlinks: boolean;
+  preserveWatchOutput: boolean;
+  pretty: boolean;
+  project: string;
+  reactNamespace: string;
+  removeComments: boolean;
+  resolveJsonModule: boolean;
+  rootDir: string;
+  rootDirs: string[];
+  showConfig: boolean;
+  skipDefaultLibCheck: boolean;
+  skipLibCheck: boolean;
+  sourceMap: boolean;
+  sourceRoot: string;
+  strict: boolean;
+  strictBindCallApply: boolean;
+  strictFunctionTypes: boolean;
+  strictPropertyInitialization: boolean;
+  strictNullChecks: boolean;
+  suppressExcessPropertyErrors: boolean;
+  suppressImplicitAnyIndexErrors: boolean;
+  target: string;
+  traceResolution: boolean;
+  tsBuildInfoFile: string;
+  types: string[];
+  typeRoots: string[];
+  useDefineForClassFields: boolean;
+  version: boolean;
+  watch: boolean;
+}
+
+export interface TscTaskConfig {
+  options?: Partial<TscOptions>;
+  runConfig?: RunCommandConfig;
+}
+
+export class TscTask extends GulpTask<TscTaskConfig> {
+  protected readonly runCommand: RunCommand = new RunCommand();
+
   public constructor() {
-    super('tsc', {});
+    super('tsc', {
+      options: {},
+      runConfig: {
+        command: 'tsc',
+        quiet: false,
+        ignoreErrors: false,
+        cwd: process.cwd(),
+        env: {},
+      },
+    });
   }
 
-  public getCleanMatch(buildConfig: BuildConfig, taskConfig: any = this.config): string[] {
-    const rval: string[] = super.getCleanMatch(buildConfig, taskConfig) || [];
-    if (rval.indexOf(this.outputFolder(buildConfig)) === -1) {
-      rval.push(this.outputFolder(buildConfig));
-    }
-    return rval;
+  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
+    const options: Partial<TscOptions> = this.config.options || {};
+    options.outDir = options.outDir || this.buildConfig.libFolder;
+
+    const args = `${this.prepareOptions()}`;
+    this.logVerbose(`Running: tsc ${args}`);
+    await this.runCommand.run({
+      logger: this.logger(),
+      ...this.config.runConfig!,
+      args,
+    });
   }
 
-  public executeTask(localGulp: gulp.Gulp): NodeJS.ReadWriteStream | void {
-    const tsProject: Project = ts.createProject('tsconfig.json', this.customArgs);
-
-    let baseStream: any = localGulp.src(this.srcGlobs);
-    if (this.sourceMapsEnabled(tsProject)) {
-      baseStream = baseStream.pipe(sourcemaps.init());
-    }
-    const compiledStream: ICompileStream = baseStream.pipe(tsProject());
-
-    const streams: Readable[] = [compiledStream.js];
-    if (this.declarationsEnabled(tsProject)) {
-      streams.push(compiledStream.dts);
-    }
-
-    let rval: NodeJS.ReadWriteStream = merge(...streams);
-    if (this.sourceMapsEnabled(tsProject)) {
-      rval = rval.pipe(sourcemaps.write('.'));
-    }
-    return rval.pipe(localGulp.dest(this.outputFolder()));
+  protected toArgString(args: Partial<TscOptions>): string {
+    const argArray: string[] = Object.keys(args).map(property => {
+      const value = args[property];
+      const arg = `--${property}`;
+      if (typeof value === 'string') {
+        return `${arg} "${value}"`;
+      } else if (typeof value === 'boolean' && !!value) {
+        return arg;
+      } else if (typeof value === 'number') {
+        return `${arg} ${value}`;
+      } else if (Array.isArray(value)) {
+        return `${arg} ${this.toOptionList(value)}`;
+      }
+      return '';
+    });
+    return `${argArray.join(' ')} `;
   }
 
-  private sourceMapsEnabled(project: Project): boolean {
-    return (
-      project.options !== undefined && project.options.sourceMap !== undefined && project.options.sourceMap === true
-    );
+  protected toOptionList(arg: any[]): string {
+    return arg
+      .map(value => {
+        if (typeof value === 'string') {
+          return `"${value}"`;
+        } else if (typeof value === 'number') {
+          return value;
+        }
+        return '';
+      })
+      .join(' ');
   }
 
-  private declarationsEnabled(project: Project): boolean {
-    return (
-      project.options !== undefined && project.options.declaration !== undefined && project.options.declaration === true
-    );
-  }
-
-  private outputFolder(buildConfig: BuildConfig = this.buildConfig): string {
-    // tslint:disable-next-line: no-string-literal
-    return this.customArgs['outDir'] || buildConfig.libFolder;
-  }
-
-  private get srcGlobs(): string[] {
-    return ['*.ts', '*.tsx', '*.d.ts'].map(ext => `${this.buildConfig.srcFolder}/**/${ext}`);
-  }
-
-  private get customArgs(): object {
-    return this.config.customArgs || {};
+  protected prepareOptions(): string {
+    return !!this.config.options ? this.toArgString(this.config.options) : '';
   }
 }

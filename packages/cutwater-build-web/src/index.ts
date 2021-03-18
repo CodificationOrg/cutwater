@@ -32,11 +32,11 @@ export const tscEs6: ExecutableTask = tscAlt('es6');
 export const buildSubtask: ExecutableTask = parallel(tsc, tscEs6, copyStaticAssets);
 export const buildTasks: ExecutableTask = serial(prettier, tslint, buildSubtask);
 export const bundleTasks: ExecutableTask = serial(buildTasks, webpack);
-export const testTasks: ExecutableTask = serial(tslint, buildSubtask, jest);
-export const integrationTask: ExecutableTask = serial(tslint, buildSubtask, jestIntegration);
+export const testTasks: ExecutableTask = serial(prettier, tslint, jest);
+export const integrationTask: ExecutableTask = serial(prettier, tslint, jestIntegration);
 
 export const webpackDevServer: ExecutableTask = new WebpackDevServerTask();
-export const defaultTasks: ExecutableTask = serial(prettier, testTasks, webpack);
+export const defaultTasks: ExecutableTask = serial(testTasks, buildSubtask, webpack);
 
 task('build', buildTasks);
 task('bundle', bundleTasks);

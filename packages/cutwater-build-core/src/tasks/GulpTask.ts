@@ -88,7 +88,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
 
     this.logger().logStartSubtask(this.name);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       let stream;
 
       try {

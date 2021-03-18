@@ -25,9 +25,9 @@ setConfig({
 const buildSubtask: ExecutableTask = parallel(tslint, tsc, copyStaticAssets);
 
 export const buildTasks: ExecutableTask = serial(prettier, buildSubtask);
-export const testTasks: ExecutableTask = serial(buildSubtask, jest);
-export const integrationTask: ExecutableTask = serial(buildSubtask, jestIntegration);
-export const defaultTasks: ExecutableTask = serial(buildTasks, jest);
+export const testTasks: ExecutableTask = serial(prettier, tslint, jest);
+export const integrationTask: ExecutableTask = serial(prettier, tslint, jestIntegration);
+export const defaultTasks: ExecutableTask = serial(testTasks, tsc, copyStaticAssets);
 
 task('build', buildTasks);
 task('test', testTasks);

@@ -3,6 +3,88 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.24.1 (2021-03-03)
+
+**Note:** Version bump only for package @codification/cutwater-build-core
+
+
+
+
+
+# 0.24.0 (2021-02-15)
+
+
+### Features
+
+* improve CI/CD workflow ([6a6ada5](https://github.com/CodificationOrg/cutwater/commit/6a6ada51b261da2296fc9a4628be3abbdc3021f8))
+
+
+
+
+
+## [0.23.2](https://github.com/CodificationOrg/cutwater/compare/v0.23.1...v0.23.2) (2020-12-28)
+
+**Note:** Version bump only for package @codification/cutwater-build-core
+
+
+
+
+
+
+## [0.23.1](https://github.com/CodificationOrg/cutwater/compare/v0.23.0...v0.23.1) (2020-12-26)
+
+**Note:** Version bump only for package @codification/cutwater-build-core
+
+
+
+
+
+
+# [0.23.0](https://github.com/CodificationOrg/cutwater/compare/v0.22.1...v0.23.0) (2020-12-25)
+
+**Note:** Version bump only for package @codification/cutwater-build-core
+
+
+
+
+
+
+## [0.22.1](https://github.com/CodificationOrg/cutwater/compare/v0.22.0...v0.22.1) (2020-12-25)
+
+
+### Bug Fixes
+
+* update param refs to use options ([1adb498](https://github.com/CodificationOrg/cutwater/commit/1adb49887e7cfff83d427ac9c112fd4d69401186))
+
+
+
+
+
+
+# [0.22.0](https://github.com/CodificationOrg/cutwater/compare/v0.21.4...v0.22.0) (2020-12-25)
+
+
+### Features
+
+* convert to using native jest call ([6374658](https://github.com/CodificationOrg/cutwater/commit/6374658ad9fbba60f461cffdad4cbc891a1470f5))
+
+
+
+
+
+
+## [0.21.4](https://github.com/CodificationOrg/cutwater/compare/v0.21.3...v0.21.4) (2020-12-23)
+
+
+### Bug Fixes
+
+* correct problems caused by new versions ([c6ae7a5](https://github.com/CodificationOrg/cutwater/commit/c6ae7a57fda5d5ad95c5ee4ad8596cdca9b7f91a))
+
+
+
+
+
+
 # [0.21.0](https://github.com/CodificationOrg/cutwater/compare/v0.20.14...v0.21.0) (2020-05-17)
 
 **Note:** Version bump only for package @codification/cutwater-build-core
