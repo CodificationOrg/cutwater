@@ -25,7 +25,7 @@ export class Config {
    * @param key - the configuration key
    * @param defaultValue - the value to be returned if one is not found in the internal cache or environment variables
    */
-  public static get(key: string, defaultValue: string = ''): string {
+  public static get(key: string, defaultValue = ''): string {
     let rval: string | undefined = this.config[key] ? this.config[key] : process.env[key];
     if (!rval) {
       rval = defaultValue;

@@ -11,7 +11,7 @@ export class StringUtils {
    * @param value - the string to be checked
    * @returns true if the value is blank
    */
-  public static isBlank(value: string = ''): boolean {
+  public static isBlank(value = ''): boolean {
     return StringUtils.isEmpty(value) || value.trim().length === 0;
   }
 
@@ -21,7 +21,7 @@ export class StringUtils {
    * @param value - the string to be checked
    * @returns true if the string is empty
    */
-  public static isEmpty(value: string = ''): boolean {
+  public static isEmpty(value = ''): boolean {
     return value.length < 1;
   }
 
@@ -33,7 +33,7 @@ export class StringUtils {
    * @param caseInsensitive - true if the match should be case sensitive
    * @returns true if the value contains the search term
    */
-  public static contains(value: string, searchTerm: string, caseInsensitive: boolean = false): boolean {
+  public static contains(value: string, searchTerm: string, caseInsensitive = false): boolean {
     return (
       VarUtils.isPresent(value) &&
       VarUtils.isPresent(searchTerm) &&
@@ -50,7 +50,7 @@ export class StringUtils {
    * @param caseInsensitive - true if the match should be case sensitive
    * @returns true if the value starts with the search term
    */
-  public static startsWith(value: string, searchTerm: string, caseInsensitive: boolean = false): boolean {
+  public static startsWith(value: string, searchTerm: string, caseInsensitive = false): boolean {
     return (
       VarUtils.isPresent(value) &&
       VarUtils.isPresent(searchTerm) &&
@@ -67,7 +67,7 @@ export class StringUtils {
    * @param caseInsensitive - true if the match should be case sensitive
    * @returns true if the value ends with the search term
    */
-  public static endsWith(value: string, searchTerm: string, caseInsensitive: boolean = false): boolean {
+  public static endsWith(value: string, searchTerm: string, caseInsensitive = false): boolean {
     const index: number =
       value && searchTerm && value.length >= searchTerm.length ? value.length - searchTerm.length : -1;
     return (
