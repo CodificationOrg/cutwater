@@ -1,0 +1,67 @@
+{
+  "name": "@codification/cutwater-auth",
+  "version": "0.24.3",
+  "description": "A library providing a simple solution for authentication.",
+  "homepage": "https://github.com/CodificationOrg/cutwater",
+  "bugs": "https://github.com/CodificationOrg/cutwater/issues",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "clean": "gulp clean",
+    "test": "gulp test --clean",
+    "test-integ": "gulp test-integ --clean",
+    "watch": "gulp watch",
+    "build": "gulp --fix --clean --production"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodificationOrg/cutwater.git",
+    "directory": "packages/cutwater-auth"
+  },
+  "keywords": [
+    "common",
+    "cutwater",
+    "utilities",
+    "support",
+    "auth",
+    "authentication",
+    "oauth",
+    "browser",
+    "node",
+    "codification"
+  ],
+  "author": {
+    "name": "William Weiss",
+    "url": "https://github.com/wweiss"
+  },
+  "license": "Apache-2.0",
+  "private": false,
+  "prettier": "@codification/cutwater-build-core/includes/prettier-config",
+  "eslintConfig": {
+    "extends": [
+      "@codification/cutwater"
+    ]
+  },
+  "jest": {
+    "setupFiles": [
+      "./jest-setup.js"
+    ]
+  },
+  "devDependencies": {
+    "@codification/cutwater-build-core": "^0.24.3",
+    "@codification/cutwater-build-node": "^0.24.3",
+    "dotenv": "^8.2.0"
+  },
+  "dependencies": {
+    "@codification/cutwater-core": "^0.24.3",
+    "@codification/cutwater-logging": "^0.24.3",
+    "@codification/cutwater-node-core": "^0.24.3",
+    "form-data": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^1.7.0"
+  }
+}
