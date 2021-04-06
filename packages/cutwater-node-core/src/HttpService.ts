@@ -1,7 +1,7 @@
 import { LoggerFactory } from '@codification/cutwater-logging';
-import fetch from 'portable-fetch';
-import { Readable } from 'stream';
-import { IOUtils } from './IOUtils';
+import got, { OptionsOfBufferResponseBody } from 'got';
+import { IncomingMessage } from 'node:http';
+import { HttpUtils } from './HttpUtils';
 
 export interface HttpResponse {
   statusCode: number;
@@ -64,23 +64,18 @@ export class HttpService {
   }
 
   public async fetchData(url: string): Promise<DataResponse | undefined> {
-    const response: Response = await fetch(url, { responseType: 'buffer', throwHttpErrors: false });
-    if (this.isResponseOk(response)) {
+    const response: IncomingMessage = await got(url, { responseType: 'buffer', throwHttpErrors: false });
+    if (HttpUtils.isResponseOk(response)) {
       return {
-        data: response.body ? await IOUtils.readableToBuffer((response.body as unknown) as Readable) : Buffer.from(''),
+        data: await HttpUtils.toBuffer(response),
         ...this.toHttpResponse(response),
       };
-    } else if (response.status === 404) {
+    } else if (response.statusCode === 404) {
       return undefined;
     } else {
-      this.LOG.error(`Url[${url}] returned error status code [${response.status}]: \n`, response);
+      this.LOG.error(`Url[${url}] returned error status code [${response.statusCode}]: \n`, response);
       throw new Error('Data could not be fetched from url.');
     }
-  }
-
-  public isResponseOk(response: Response): boolean {
-    const statusCode: number = response.status || 500;
-    return statusCode > 199 && statusCode < 400;
   }
 
   public async postForObject<T>(url: string, body?: any): Promise<ObjectResponse<T> | undefined> {
@@ -99,33 +94,33 @@ export class HttpService {
   }
 
   public async post(url: string, body?: any): Promise<DataResponse | undefined> {
-    const opts: RequestInit = {
-      method: 'POST',
-      body,
+    const opts: OptionsOfBufferResponseBody = {
+      json: body,
+      responseType: 'buffer',
     };
-    const response: Response = await fetch(url, opts);
-    if (this.isResponseOk(response)) {
+    const response: IncomingMessage = await got.post(url, opts);
+    if (HttpUtils.isResponseOk(response)) {
       return {
-        data: response.body ? await IOUtils.readableToBuffer((response.body as unknown) as Readable) : Buffer.from(''),
+        data: await HttpUtils.toBuffer(response),
         ...this.toHttpResponse(response),
       };
-    } else if (response.status === 404) {
+    } else if (response.statusCode === 404) {
       return undefined;
     } else {
-      this.LOG.error(`Url[${url}] returned error status code [${response.status}]: \n`, response);
+      this.LOG.error(`Url[${url}] returned error status code [${response.statusCode}]: \n`, response);
       throw new Error('Error during post to url.');
     }
   }
 
-  private toHttpResponse(response: Response): HttpResponse {
+  private toHttpResponse(response: IncomingMessage): HttpResponse {
     const rval: HttpResponse = {
-      statusCode: response.status || 0,
+      statusCode: response.statusCode || 0,
       contentLength: -1,
       contentType: '',
     };
     if (response.headers) {
-      rval.contentLength = +(response.headers.get('content-length') || '-1');
-      rval.contentType = response.headers.get('content-type') || '';
+      rval.contentLength = +(response.headers['content-length'] || '-1');
+      rval.contentType = response.headers['content-type'] || '';
     }
     return rval;
   }

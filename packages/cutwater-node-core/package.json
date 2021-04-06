@@ -45,12 +45,12 @@
   "dependencies": {
     "@codification/cutwater-core": "^0.24.3",
     "@codification/cutwater-logging": "^0.24.3",
-    "portable-fetch": "^3.0.0",
+    "got": "^11.8.2",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@codification/cutwater-build-core": "^0.24.3",
     "@codification/cutwater-build-node": "^0.24.3",
-    "got": "^11.8.2"
+    "@types/got": "^9.6.11"
   }
 }

@@ -6,6 +6,6 @@ describe('HttpService', () => {
   it('can post', async () => {
     const result = await service.postForObject<{ data: string }>('https://httpbin.org/post', 'test data');
     expect(result).toBeDefined();
-    expect(result?.object.data).toBe('test data');
+    expect(result?.object.data).toBe('"test data"');
   });
 });
