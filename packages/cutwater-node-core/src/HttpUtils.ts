@@ -51,7 +51,7 @@ export class HttpUtils {
         rval += chunk;
       });
       response.on('end', () => {
-        resolve(new Buffer(rval, 'binary'));
+        resolve(Buffer.from(rval, 'binary'));
       });
       response.on('error', err => reject(err));
     });
