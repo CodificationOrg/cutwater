@@ -3,7 +3,7 @@ import { IncomingHttpHeaders, IncomingMessage, OutgoingHttpHeaders } from 'http'
 import { IOUtils } from './IOUtils';
 
 const LOG = LoggerFactory.getLogger();
-const GOT_RESPONSE_BODY: string = 'body';
+const GOT_RESPONSE_BODY = 'body';
 
 /**
  * Utility for handling common HTTP related tasks.
@@ -43,7 +43,7 @@ export class HttpUtils {
       LOG.debug(`Processing toBuffer as a GOT response...`);
       return this.gotResponseToBuffer(response);
     }
-    let rval: string = '';
+    let rval = '';
     return new Promise<Buffer>((resolve, reject) => {
       LOG.debug(`Processing toBuffer as standard IncomingMessage...`);
       response.setEncoding('binary');
@@ -68,7 +68,7 @@ export class HttpUtils {
   public static mergeHeaders(
     dst: IncomingHttpHeaders | OutgoingHttpHeaders,
     src: IncomingHttpHeaders | OutgoingHttpHeaders,
-    overwrite: boolean = true,
+    overwrite = true,
   ): IncomingHttpHeaders {
     const rval: IncomingHttpHeaders = this.toIncomingHttpHeaders(dst);
     Object.keys(src).forEach(headerName => {

@@ -1,8 +1,8 @@
-import { default as got } from 'got';
+import got from 'got';
 import { IncomingMessage } from 'http';
 import { HttpUtils } from './HttpUtils';
 
-const GOOGLE_URL: string = 'https://www.google.com';
+const GOOGLE_URL = 'https://www.google.com';
 
 describe('HttpUtils', () => {
   describe('toBodyText', () => {

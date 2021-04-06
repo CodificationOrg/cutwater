@@ -1,13 +1,13 @@
 import { LoggerFactory } from '@codification/cutwater-logging';
-import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
-import * as uuid from 'uuid/v4';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import uuid from 'uuid/v4';
 
 const LOG = LoggerFactory.getLogger();
 
 export class FileUtils {
-  public static createTempDir(prefix: string = path.join(os.tmpdir(), 'cutwater-'), recursive: boolean = true): string {
+  public static createTempDir(prefix: string = path.join(os.tmpdir(), 'cutwater-'), recursive = true): string {
     if (recursive && !this.doesParentDirectoryExist(prefix)) {
       fs.mkdirSync(path.resolve(path.dirname(prefix)), { recursive: true });
     }
@@ -20,7 +20,7 @@ export class FileUtils {
     return fs.existsSync(path.dirname(path.resolve(filePath)));
   }
 
-  public static createTempFilePath(tempDir?: string, ext: string = 'tmp'): string {
+  public static createTempFilePath(tempDir?: string, ext = 'tmp'): string {
     const rval = path.join(
       tempDir ? tempDir : this.createTempDir(),
       `${uuid()}${ext.startsWith('.') ? ext : '.' + ext}`,
@@ -29,12 +29,7 @@ export class FileUtils {
     return rval;
   }
 
-  public static deleteDirectory(
-    dirPath: string,
-    recursive: boolean = true,
-    maxRetries: number = 5,
-    retryDelay: number = 100,
-  ): void {
+  public static deleteDirectory(dirPath: string, recursive = true, maxRetries = 5, retryDelay = 100): void {
     fs.rmdirSync(dirPath, { recursive, retryDelay, maxRetries });
   }
 }
