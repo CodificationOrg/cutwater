@@ -1,6 +1,7 @@
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
 import * as crypto from 'crypto';
 import { OAuthResponse } from './OAuthResponse';
+import { OAuthServiceProvider, toOAuthServiceProvider } from './OAuthServiceProvider';
 
 interface State {
   v: string;
@@ -25,6 +26,12 @@ export class AuthState {
   public async generateState(): Promise<string> {
     const value = `${this.providerName}.${await this.generateNonce()}`;
     return JSON.stringify({ v: value, s: await this.generateStateHash(value) });
+  }
+
+  public static getOAuthServiceProvider(response: OAuthResponse): OAuthServiceProvider | undefined {
+    const stateObj: State = JSON.parse(response.state);
+    const provider = stateObj.v.substr(0, stateObj.v.indexOf('.'));
+    return toOAuthServiceProvider(provider);
   }
 
   private generateNonce(): Promise<string> {
