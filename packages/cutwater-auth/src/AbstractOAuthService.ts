@@ -1,13 +1,13 @@
 import { LoggerFactory } from '@codification/cutwater-logging';
+import { HttpService } from '@codification/cutwater-node-core';
 import FormData from 'form-data';
 import * as jwt from 'jsonwebtoken';
 import { GetPublicKeyOrSecret, JwtHeader } from 'jsonwebtoken';
 import jwks from 'jwks-rsa';
 import { AuthState } from './AuthState';
+import { OAuthClaims } from './OAuthClaims';
 import { OAuthResponse } from './OAuthResponse';
 import { OAuthService } from './OAuthService';
-import { OAuthClaims } from './OAuthClaims';
-import { HttpService } from '@codification/cutwater-node-core';
 
 interface Tokens {
   idToken: string;
@@ -56,7 +56,7 @@ export abstract class AbstractOAuthService implements OAuthService {
       `client_id=${await this.clientId}&` +
       `scope=${encodeURIComponent(this.scope!.join(' '))}&` +
       `redirect_uri=${encodeURIComponent(redirectUrl)}&` +
-      `state=${encodeURIComponent(await this.AUTH_STATE.generateState(this.name))}`;
+      `state=${encodeURIComponent(await this.AUTH_STATE.generateState())}`;
     this.LOG.debug(`Generated auth url[${this.name}]: `, rval);
 
     return rval;
@@ -64,7 +64,7 @@ export abstract class AbstractOAuthService implements OAuthService {
 
   public async getClaims(response: OAuthResponse): Promise<OAuthClaims> {
     if (await this.AUTH_STATE.validateTokenParams(response)) {
-      return await this.fetchClaims(await this.generateTokenRequestConfig(response));
+      return await this.fetchClaims(this.generateTokenRequestConfig(response));
     } else {
       throw new Error('Invalid login input.');
     }
@@ -141,12 +141,12 @@ export abstract class AbstractOAuthService implements OAuthService {
     return this.discoveryDocument[key];
   }
 
-  private async generateTokenRequestConfig(resposne: OAuthResponse): Promise<TokenRequestConfig> {
+  private generateTokenRequestConfig(response: OAuthResponse): TokenRequestConfig {
     return {
-      code: resposne.code,
-      client_id: await this.clientId,
-      client_secret: await this.clientSecret,
-      redirect_uri: resposne.redirectUrl,
+      code: response.code,
+      client_id: this.clientId,
+      client_secret: this.clientSecret,
+      redirect_uri: response.redirectUrl,
       grant_type: 'authorization_code',
     };
   }
