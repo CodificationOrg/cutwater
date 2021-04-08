@@ -2,7 +2,7 @@ import { OAuthResponse } from '.';
 import { AuthState } from './AuthState';
 import { OAuthServiceProvider } from './OAuthServiceProvider';
 
-const authState = new AuthState(OAuthServiceProvider.MICROSOFT, process.env['MICROSOFT_SECRET']!);
+const authState = new AuthState(OAuthServiceProvider.MICROSOFT, 'foo');
 
 describe('AuthState', () => {
   it('can generate state', async () => {

@@ -24,13 +24,13 @@ describe('OAuthServiceFactory', () => {
     const url = await factory.generateAuthUrl(OAuthServiceProvider.GOOGLE, 'https://example.com/authCallback');
     expect(url).toBeTruthy();
     expect(url.indexOf('google')).not.toBe(-1);
-  });
+  }, 10000);
   it('can create an auth url using provider string', async () => {
     const factory = new OAuthServiceFactory(opts);
     const url = await factory.generateAuthUrl('microsoft', 'https://example.com/authCallback');
     expect(url).toBeTruthy();
     expect(url.indexOf('microsoft')).not.toBe(-1);
-  });
+  }, 10000);
 
   it('fails with invalid provider string', async () => {
     const factory = new OAuthServiceFactory(opts);
