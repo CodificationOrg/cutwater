@@ -6,13 +6,13 @@ import jwt from 'jsonwebtoken';
 import { AuthService } from '../AuthService';
 import { LambdaAuthOptions } from './LambdaAuthOptions';
 
-export class LambdaAuthService implements AuthService<APIGatewayProxyEvent, APIGatewayProxyResult>{
+export class LambdaAuthService implements AuthService<APIGatewayProxyEvent, APIGatewayProxyResult> {
   private readonly LOG: Logger = LoggerFactory.getLogger();
   private readonly SET_COOKIE: string = 'Set-Cookie';
   private readonly DEFAULT_OPTS: LambdaAuthOptions = {
     tokenCookie: 'idToken',
-    tokenTTLSeconds: TimeUnit.minutes(30).toSeconds()
-  }
+    tokenTTLSeconds: TimeUnit.minutes(30).toSeconds(),
+  };
 
   private readonly opts: LambdaAuthOptions;
 
@@ -39,8 +39,13 @@ export class LambdaAuthService implements AuthService<APIGatewayProxyEvent, APIG
   }
 
   private generateIdTokenCookieValue(userId?: string): string {
-    const expires: Date | undefined = !!userId ? new Date(Date.now() + (this.opts.tokenTTLSeconds * 1000)) : new Date(0);
-    return cookie.serialize(this.opts.tokenCookie, this.createTokenValue(userId), { httpOnly: true, secure: true, sameSite: 'lax', expires });
+    const expires: Date | undefined = !!userId ? new Date(Date.now() + this.opts.tokenTTLSeconds * 1000) : new Date(0);
+    return cookie.serialize(this.opts.tokenCookie, this.createTokenValue(userId), {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      expires,
+    });
   }
 
   private createTokenValue(userId?: string): string {
