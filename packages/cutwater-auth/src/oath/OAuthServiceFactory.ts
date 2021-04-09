@@ -9,7 +9,7 @@ import { OAuthServiceProvider, toOAuthServiceProvider } from './OAuthServiceProv
 export class OAuthServiceFactory {
   private readonly AUTH_SERVICES: Partial<Record<OAuthServiceProvider, OAuthService>> = {};
 
-  public constructor(private readonly options: OAuthServiceOptions) {
+  public constructor(private readonly options: Partial<OAuthServiceOptions>) {
     Object.keys(options).forEach(provider => {
       const { clientId, clientSecret } = this.options[provider]!;
       switch (provider) {
