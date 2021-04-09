@@ -5,12 +5,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 0.24.4 (2021-04-08)
 
-**Note:** Version bump only for package @codification/eslint-config-cutwater
-
-
-
-
-
-## 0.24.3 (2021-03-18)
-
-**Note:** Version bump only for package @codification/eslint-config-cutwater
+**Note:** Version bump only for package @codification/cutwater-auth
