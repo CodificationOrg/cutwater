@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.25.0 (2021-04-09)
+
+
+### Features
+
+* add aws classes to barrel file ([282cdcd](https://github.com/CodificationOrg/cutwater/commit/282cdcd177c8b8476e48e8db0338949626c559dd))
+
+
+
+
+
 ## 0.24.5 (2021-04-09)
 
 **Note:** Version bump only for package @codification/cutwater-core
