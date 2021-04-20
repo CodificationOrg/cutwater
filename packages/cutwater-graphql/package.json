@@ -1,0 +1,58 @@
+{
+  "name": "@codification/cutwater-graphql",
+  "version": "0.25.0",
+  "description": "A library providing useful tools for working with GraphQL.",
+  "homepage": "https://github.com/CodificationOrg/cutwater",
+  "bugs": "https://github.com/CodificationOrg/cutwater/issues",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "clean": "gulp clean",
+    "test": "gulp test --clean",
+    "test-integ": "gulp test-integ --clean",
+    "watch": "gulp watch",
+    "build": "gulp --fix --clean --production"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodificationOrg/cutwater.git",
+    "directory": "packages/cutwater-graphql"
+  },
+  "keywords": [
+    "common",
+    "cutwater",
+    "utilities",
+    "support",
+    "graphql",
+    "relay",
+    "codification"
+  ],
+  "author": {
+    "name": "William Weiss",
+    "url": "https://github.com/wweiss"
+  },
+  "license": "Apache-2.0",
+  "private": false,
+  "prettier": "@codification/cutwater-build-core/includes/prettier-config",
+  "eslintConfig": {
+    "extends": [
+      "@codification/cutwater"
+    ]
+  },
+  "devDependencies": {
+    "@codification/cutwater-build-core": "^0.25.0",
+    "@codification/cutwater-build-node": "^0.25.0",
+    "apollo-server-caching": "^0.6.0"
+  },
+  "dependencies": {
+    "@codification/cutwater-core": "^0.25.0",
+    "@codification/cutwater-logging": "^0.25.0"
+  },
+  "peerDependencies": {
+    "apollo-server-caching": "^0.6.0"
+  }
+}
