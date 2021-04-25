@@ -2,6 +2,7 @@ export * from './Comparator';
 export * from './CompareUtils';
 export * from './Config';
 export * from './Env';
+export * from './MemoryCache';
 export * from './ObjectUtils';
 export * from './StringUtils';
 export * from './TimeUnit';
