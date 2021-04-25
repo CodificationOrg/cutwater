@@ -1,4 +1,4 @@
-import { InMemoryLRUCache } from 'apollo-server-caching';
+import { MemoryCache } from '@codification/cutwater-core';
 import { ItemRepository } from '../types';
 import { ItemCache } from './ItemCache';
 import { ItemDescriptor } from './ItemDescriptor';
@@ -12,6 +12,8 @@ export interface RepositoryConfig<T> {
 export class CachingItemRepository<T> implements ItemRepository<T> {
   public readonly name: string;
 
+  private readonly CACHE: MemoryCache;
+
   private readonly ROOT_OBJECT_ID = 'ROOT_OBJECT_ID';
   private readonly DESCRIPTOR: ItemDescriptor<T>;
   private readonly CACHE_TTL: number;
@@ -19,12 +21,13 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
 
   public constructor(
     private readonly REPO: ItemRepository<T>,
-    private readonly CACHE: InMemoryLRUCache,
     { name, itemDescriptor, ttl }: RepositoryConfig<T>,
+    cache: MemoryCache = new MemoryCache(),
   ) {
     this.name = name;
     this.DESCRIPTOR = itemDescriptor;
     this.CACHE_TTL = ttl || 90;
+    this.CACHE = cache;
   }
 
   public async getAll(parentId?: string): Promise<T[]> {

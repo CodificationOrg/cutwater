@@ -1,4 +1,4 @@
-import { InMemoryLRUCache } from 'apollo-server-caching';
+import { MemoryCache } from '@codification/cutwater-core';
 import { ItemCache } from './ItemCache';
 import { PropertyDescriptor } from './PropertyDescriptor';
 
@@ -24,7 +24,7 @@ export const mockItems = (count: number = randomCount()) => {
 };
 
 const newInstance = async (count?: number): Promise<ItemCache<MockItem>> => {
-  const rval = new ItemCache<MockItem>(new InMemoryLRUCache(), {
+  const rval = new ItemCache<MockItem>(new MemoryCache(), {
     repoName: 'stuff',
     cacheId: 'PLACEHOLDER',
     itemDescriptor: new PropertyDescriptor('userId', 'groupId'),
@@ -39,7 +39,7 @@ const newInstance = async (count?: number): Promise<ItemCache<MockItem>> => {
 describe('ItemCache', () => {
   describe('constructor', () => {
     it('can create a new instance', () => {
-      const result = new ItemCache(new InMemoryLRUCache(), {
+      const result = new ItemCache(new MemoryCache(), {
         repoName: 'stuff',
         cacheId: 'PLACEHOLDER',
         itemDescriptor: new PropertyDescriptor('id', 'parent'),

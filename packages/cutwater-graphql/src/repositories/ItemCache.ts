@@ -1,5 +1,5 @@
+import { MemoryCache } from '@codification/cutwater-core';
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
-import { InMemoryLRUCache } from 'apollo-server-caching';
 import { ItemDescriptor } from './ItemDescriptor';
 
 export interface CacheConfig<T> {
@@ -22,10 +22,7 @@ export class ItemCache<T> {
   private readonly CACHE_TTL: number;
   private readonly DESCRIPTOR: ItemDescriptor<T>;
 
-  public constructor(
-    private readonly CACHE: InMemoryLRUCache,
-    { repoName, cacheId, itemDescriptor, ttl }: CacheConfig<T>,
-  ) {
+  public constructor(private readonly CACHE: MemoryCache, { repoName, cacheId, itemDescriptor, ttl }: CacheConfig<T>) {
     this.CACHE_KEY = this.toKey(`${cacheId}_CACHE`);
     this.REPO_NAME = repoName;
     this.CACHE_ID = cacheId;
@@ -46,19 +43,16 @@ export class ItemCache<T> {
   }
 
   public async get(id: string): Promise<T | undefined> {
-    let rval: T | undefined;
-    const rawValue = await this.CACHE.get(this.toKey(id));
-    if (!rawValue && this.INDEX.includes(id)) {
+    let rval: T | undefined = await this.CACHE.get(this.toKey(id));
+    if (!rval && this.INDEX.includes(id)) {
       rval = ((await this.getCachedBulk()) || {})[id];
-    } else if (rawValue) {
-      rval = JSON.parse(rawValue);
     }
     return rval;
   }
 
   public async put(item: T): Promise<T> {
     const id = this.DESCRIPTOR.getId(item);
-    await this.CACHE.set(this.toKey(id), JSON.stringify(item), { ttl: this.CACHE_TTL });
+    await this.CACHE.put(this.toKey(id), item, this.CACHE_TTL);
     if (!this.INDEX.includes(id)) {
       this.INDEX.push(id);
       const cachedItems = await this.getCachedBulk();
@@ -84,7 +78,7 @@ export class ItemCache<T> {
     } else {
       rval = await this.get(id);
     }
-    await this.CACHE.delete(this.toKey(id));
+    await this.CACHE.remove(this.toKey(id));
     return rval;
   }
 
@@ -99,13 +93,12 @@ export class ItemCache<T> {
           return cachedItems;
         }, {})
       : itemsOrCache;
-    await this.CACHE.set(this.CACHE_KEY, JSON.stringify(rval), { ttl: this.CACHE_TTL });
+    await this.CACHE.put(this.CACHE_KEY, rval, this.CACHE_TTL);
     return rval;
   }
 
   protected async getCachedBulk(): Promise<CachedItems<T> | undefined> {
-    const rawValue = await this.CACHE.get(this.CACHE_KEY);
-    return rawValue ? JSON.parse(rawValue) : undefined;
+    return await this.CACHE.get(this.CACHE_KEY);
   }
 
   private toKey(key: string): string {

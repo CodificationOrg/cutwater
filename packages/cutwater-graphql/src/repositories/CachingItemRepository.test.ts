@@ -1,4 +1,3 @@
-import { InMemoryLRUCache } from 'apollo-server-caching';
 import { ItemRepository } from '..';
 import { CachingItemRepository } from './CachingItemRepository';
 import { MockItem, mockItems, randomCount } from './ItemCache.test';
@@ -17,7 +16,7 @@ export const newMemoryRepo = async (count?: number): Promise<ItemRepository<Mock
 };
 
 const newCachingRepo = async (count?: number): Promise<CachingItemRepository<MockItem>> => {
-  const rval = new CachingItemRepository<MockItem>(await newMemoryRepo(count), new InMemoryLRUCache(), {
+  const rval = new CachingItemRepository<MockItem>(await newMemoryRepo(count), {
     name: 'MockItems',
     itemDescriptor: new PropertyDescriptor('userId', 'groupId'),
   });
@@ -27,7 +26,7 @@ const newCachingRepo = async (count?: number): Promise<CachingItemRepository<Moc
 describe('CachingItemRepository', () => {
   describe('constructor', () => {
     it('can create a new instance', async () => {
-      const result = new CachingItemRepository<MockItem>(await newMemoryRepo(), new InMemoryLRUCache(), {
+      const result = new CachingItemRepository<MockItem>(await newMemoryRepo(), {
         name: 'MockItems',
         itemDescriptor: new PropertyDescriptor('userId', 'groupId'),
       });
