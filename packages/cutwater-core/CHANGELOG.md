@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.25.2 (2021-04-25)
+
+
+### Bug Fixes
+
+* add missing export for MemoryCache ([9acc49f](https://github.com/CodificationOrg/cutwater/commit/9acc49f989873a0cb53b4b1de8245f7a7f8a0aef))
+
+
+
+
+
 ## 0.25.1 (2021-04-25)
 
 **Note:** Version bump only for package @codification/cutwater-core
