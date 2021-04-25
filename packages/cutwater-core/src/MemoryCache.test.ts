@@ -10,7 +10,7 @@ const newInstance = (itemCount?: number) => {
   return rval;
 };
 
-const delay = (delaySeconds: number): Promise<void> => {
+const delay = (delaySeconds = 1010): Promise<void> => {
   return new Promise<void>(resolve => {
     setTimeout(() => resolve(), delaySeconds);
   });
@@ -44,7 +44,7 @@ describe('MemoryCache', () => {
       const cache = newInstance(12);
       cache.put('newItem', 'itemValue', 1);
       expect(cache.size()).toBe(13);
-      await delay(1001);
+      await delay();
       expect(cache.size()).toBe(12);
     });
   });
@@ -85,7 +85,7 @@ describe('MemoryCache', () => {
     it('will not return an expired value', async () => {
       const cache = newInstance();
       cache.put('foo', 'oldValue', 1);
-      await delay(1001);
+      await delay();
       expect(cache.get('foo')).toBeFalsy();
     });
   });
