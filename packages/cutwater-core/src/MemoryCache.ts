@@ -12,6 +12,9 @@ export class MemoryCache {
   private nextExpiration: number;
 
   public constructor(defaultTTLSedonds = 90) {
+    if (defaultTTLSedonds < 1) {
+      throw new Error('Minimum cache TTL is 1 second.');
+    }
     this.DEFAULT_TTL = defaultTTLSedonds;
     this.resetNextExpiration();
   }
