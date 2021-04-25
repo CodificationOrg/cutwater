@@ -1,9 +1,8 @@
 import { TimeUnit } from './TimeUnit';
 
 interface CacheEntry {
-  value: unknown;
-  time: number;
-  ttl: number;
+  val: unknown;
+  exp: number;
 }
 
 export class MemoryCache {
@@ -37,9 +36,8 @@ export class MemoryCache {
   public put<T>(key: string, value: T, ttlSeconds: number = this.DEFAULT_TTL): T | undefined {
     const rval: T | undefined = this.get(key);
     const entry: CacheEntry = {
-      value,
-      time: Date.now(),
-      ttl: TimeUnit.seconds(ttlSeconds).toMillis(),
+      val: value,
+      exp: Date.now() + TimeUnit.seconds(ttlSeconds).toMillis(),
     };
     this.CACHE[key] = entry;
     this.updateNextExpiration(entry);
@@ -50,7 +48,7 @@ export class MemoryCache {
     this.sweep();
     const entry = this.CACHE[key];
     if (entry && !this.isExpired(entry)) {
-      return entry.value as T;
+      return entry.val as T;
     } else if (entry) {
       delete this.CACHE[key];
     }
@@ -70,14 +68,13 @@ export class MemoryCache {
   }
 
   private isExpired(entry?: CacheEntry): boolean {
-    return !!entry && Date.now() - entry.time > entry.ttl;
+    return !!entry && Date.now() > entry.exp;
   }
 
   private updateNextExpiration(entry?: CacheEntry): void {
     if (!!entry && !this.isExpired(entry)) {
-      const expiration = entry.time + entry.ttl;
-      if (expiration < this.nextExpiration) {
-        this.nextExpiration = expiration;
+      if (entry.exp < this.nextExpiration) {
+        this.nextExpiration = entry.exp;
       }
     }
   }
