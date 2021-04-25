@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-node",
-  "version": "0.25.0",
+  "version": "0.25.1",
   "description": "Configuration for building node projects.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -44,8 +44,8 @@
     ]
   },
   "dependencies": {
-    "@codification/cutwater-build-core": "^0.25.0",
-    "@codification/cutwater-build-typescript": "^0.25.0"
+    "@codification/cutwater-build-core": "^0.25.1",
+    "@codification/cutwater-build-typescript": "^0.25.1"
   },
   "devDependencies": {
     "@types/node": "^12.12.6"
