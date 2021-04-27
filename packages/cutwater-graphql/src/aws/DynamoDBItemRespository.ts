@@ -1,12 +1,6 @@
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
 import { DynamoDB } from 'aws-sdk';
-import {
-  AttributeMap,
-  GetItemOutput,
-  PutItemInput,
-  QueryInput,
-  QueryOutput
-} from 'aws-sdk/clients/dynamodb';
+import { AttributeMap, GetItemOutput, PutItemInput, QueryInput, QueryOutput } from 'aws-sdk/clients/dynamodb';
 import { ItemRepository } from '../types';
 
 export interface DynamoDBItemTableConfig {
@@ -27,16 +21,14 @@ export interface DynamoDBItemRepositoryConfig<T> {
   tableConfig: DynamoDBItemTableConfig;
   idProperty: string;
   parentIdProperty?: string;
-  converter: DynamoDBItemConverter<T>
+  converter: DynamoDBItemConverter<T>;
 }
 
 export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T> {
   protected readonly LOG: Logger = LoggerFactory.getLogger();
   protected readonly db: DynamoDB = new DynamoDB();
 
-  public constructor(
-    public readonly config: DynamoDBItemRepositoryConfig<T>
-  ) {
+  public constructor(public readonly config: DynamoDBItemRepositoryConfig<T>) {
     Object.freeze(config);
     this.db = config.db || new DynamoDB();
   }
@@ -51,9 +43,7 @@ export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T>
   }
 
   public async get(id: string): Promise<T | undefined> {
-    const result: GetItemOutput = await this.db
-      .getItem(this.toItemInput(this.toPartitionValue(id)))
-      .promise();
+    const result: GetItemOutput = await this.db.getItem(this.toItemInput(this.toPartitionValue(id))).promise();
     return result.Item ? this.attributeMapToItem(result.Item) : undefined;
   }
 
@@ -112,8 +102,8 @@ export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T>
   protected async itemToAttributeMap(item: T): Promise<AttributeMap> {
     const rval = await this.config.converter.convertToAttributeMap(item);
     rval[this.config.tableConfig.idKey] = {
-      S: this.toPartitionValue(item[this.config.idProperty])
-    }
+      S: this.toPartitionValue(item[this.config.idProperty]),
+    };
     let typeValue;
     if (this.config.parentIdProperty) {
       typeValue = this.toPartitionValue(item[this.config.parentIdProperty]);
@@ -121,8 +111,8 @@ export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T>
       typeValue = this.config.nodeType;
     }
     rval[this.config.tableConfig.typeKey] = {
-      S: typeValue
-    }
+      S: typeValue,
+    };
     return rval;
   }
 
