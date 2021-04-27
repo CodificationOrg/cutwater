@@ -5,6 +5,7 @@ import { ItemDescriptor } from './ItemDescriptor';
 
 export interface RepositoryConfig<T> {
   name: string;
+  greedy?: boolean;
   itemDescriptor: ItemDescriptor<T>;
   ttl?: number;
 }
@@ -13,6 +14,7 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   public readonly name: string;
 
   private readonly CACHE: MemoryCache;
+  private readonly GREEDY: boolean;
 
   private readonly ROOT_OBJECT_ID = 'ROOT_OBJECT_ID';
   private readonly DESCRIPTOR: ItemDescriptor<T>;
@@ -21,13 +23,14 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
 
   public constructor(
     private readonly REPO: ItemRepository<T>,
-    { name, itemDescriptor, ttl }: RepositoryConfig<T>,
+    { name, itemDescriptor, ttl, greedy = false }: RepositoryConfig<T>,
     cache: MemoryCache = new MemoryCache(),
   ) {
     this.name = name;
     this.DESCRIPTOR = itemDescriptor;
     this.CACHE_TTL = ttl || 90;
     this.CACHE = cache;
+    this.GREEDY = greedy;
   }
 
   public async getAll(parentId?: string): Promise<T[]> {
@@ -47,6 +50,9 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     }
     if (!rval) {
       rval = await this.REPO.get(id);
+      if (rval && this.GREEDY) {
+        await this.getAll(this.DESCRIPTOR.getParentId(rval));
+      }
       if (itemCache && rval) {
         itemCache.put(rval);
       }
