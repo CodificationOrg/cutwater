@@ -33,7 +33,7 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
     this.db = config.db || new DynamoDB();
   }
 
-  public async getAll(parentId: string): Promise<T[]> {
+  public async getAll(parentId?: string): Promise<T[]> {
     const results: AttributeMap[] = await this.getAllMaps(parentId);
     const rval: T[] = [];
     for (const item of results) {
