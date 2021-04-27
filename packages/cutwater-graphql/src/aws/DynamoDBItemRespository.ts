@@ -21,10 +21,10 @@ export interface DynamoDBItemRepositoryConfig<T> {
   tableConfig: DynamoDBItemTableConfig;
   idProperty: string;
   parentIdProperty?: string;
-  converter: DynamoDBItemConverter<T>;
+  converter?: DynamoDBItemConverter<T>;
 }
 
-export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T> {
+export class DynamoDBItemRepository<T> implements ItemRepository<T> {
   protected readonly LOG: Logger = LoggerFactory.getLogger();
   protected readonly db: DynamoDB = new DynamoDB();
 
@@ -49,7 +49,7 @@ export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T>
 
   public async put(item: T): Promise<T> {
     const params: PutItemInput = {
-      Item: await this.config.converter.convertToAttributeMap(item),
+      Item: await this.itemToAttributeMap(item),
       ...this.toBaseInput(),
     };
     await this.db.putItem(params).promise();
@@ -91,16 +91,25 @@ export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T>
   }
 
   protected async attributeMapToItem(attributeMap: AttributeMap): Promise<T> {
+    let rval: T;
     attributeMap[this.config.tableConfig.idKey].S = this.toId(attributeMap[this.config.tableConfig.idKey].S!);
     if (this.config.parentIdProperty) {
       attributeMap[this.config.tableConfig.typeKey].S = this.toId(attributeMap[this.config.tableConfig.typeKey].S!);
     }
-    const rval = await this.config.converter.convertToItem(attributeMap);
-    return (rval as unknown) as T;
+    if (this.config.converter) {
+      rval = await this.config.converter.convertToItem(attributeMap);
+    } else {
+      rval = {} as T;
+    }
+    rval[this.config.idProperty] = attributeMap[this.config.tableConfig.idKey].S;
+    if (this.config.parentIdProperty) {
+      rval[this.config.parentIdProperty] = attributeMap[this.config.tableConfig.typeKey].S;
+    }
+    return rval;
   }
 
   protected async itemToAttributeMap(item: T): Promise<AttributeMap> {
-    const rval = await this.config.converter.convertToAttributeMap(item);
+    const rval = this.config.converter ? await this.config.converter.convertToAttributeMap(item) : {};
     rval[this.config.tableConfig.idKey] = {
       S: this.toPartitionValue(item[this.config.idProperty]),
     };
