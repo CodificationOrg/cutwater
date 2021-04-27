@@ -34,6 +34,9 @@ export class CompareUtils {
       return CompareUtils.safeCompare(value, first) >= 0 && CompareUtils.safeCompare(value, last) <= 0;
     },
     [Comparator.CONTAINS]: (value: string | Array<string | number>, expected: string | number): boolean => {
+      if (!value) {
+        return false;
+      }
       if (typeof value === 'string') {
         return value.indexOf(`${expected}`) !== -1;
       } else {
@@ -41,6 +44,9 @@ export class CompareUtils {
       }
     },
     [Comparator.NOT_CONTAINS]: (value: string | Array<string | number>, expected: string | number): boolean => {
+      if (!value) {
+        return true;
+      }
       if (typeof value === 'string') {
         return value.indexOf(`${expected}`) === -1;
       } else {
@@ -48,10 +54,10 @@ export class CompareUtils {
       }
     },
     [Comparator.IN]: (value: string | number, expected: Array<string | number>): boolean => {
-      return expected.includes(value);
+      return value ? expected.includes(value) : false;
     },
     [Comparator.BEGINS_WITH]: (value: string, expected: string): boolean => {
-      return value.startsWith(expected);
+      return value ? value.startsWith(expected) : false;
     },
   };
 
