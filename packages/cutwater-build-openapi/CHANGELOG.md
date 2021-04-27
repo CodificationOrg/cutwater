@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.27.0 (2021-04-27)
+
+
+### Features
+
+* have adapter implment repository as well ([746cb07](https://github.com/CodificationOrg/cutwater/commit/746cb07897743c97e652ac90fa3e87a1d6c7be6d))
+
+
+
+
+
 # 0.26.0 (2021-04-27)
 
 
