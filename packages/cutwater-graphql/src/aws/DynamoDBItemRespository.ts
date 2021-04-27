@@ -2,7 +2,6 @@ import { Logger, LoggerFactory } from '@codification/cutwater-logging';
 import { DynamoDB } from 'aws-sdk';
 import {
   AttributeMap,
-
   GetItemOutput,
   PutItemInput,
   QueryInput,
@@ -44,12 +43,16 @@ export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T>
 
   public async getAll(parentId: string): Promise<T[]> {
     const results: AttributeMap[] = await this.getAllMaps(parentId);
-    return results.map(item => this.dynamoToItem(new DynamoItem(item)));
+    const rval: T[] = [];
+    for (const item of results) {
+      rval.push(await this.attributeMapToItem(item));
+    }
+    return rval;
   }
 
   public async get(id: string): Promise<T | undefined> {
     const result: GetItemOutput = await this.db
-      .getItem(this.toItemInput(this.toPartitionKey(id)))
+      .getItem(this.toItemInput(this.toPartitionValue(id)))
       .promise();
     return result.Item ? this.attributeMapToItem(result.Item) : undefined;
   }
@@ -66,16 +69,16 @@ export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T>
   public async remove(id: string): Promise<T | undefined> {
     const rval = await this.get(id);
     if (rval) {
-      await this.db.deleteItem(this.toItemInput(this.toPartitionKey(id))).promise();
+      await this.db.deleteItem(this.toItemInput(this.toPartitionValue(id))).promise();
     }
     return rval;
   }
 
-  public toItemInput(paritionKey: string): any {
+  public toItemInput(partitionValue: string): any {
     const rval = {
       Key: {
-        [this.config.getLookup.primaryKey]: {
-          S: paritionKey,
+        [this.config.tableConfig.idKey]: {
+          S: partitionValue,
         },
       },
       ...this.toBaseInput(),
@@ -85,7 +88,7 @@ export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T>
 
   public toBaseInput() {
     return {
-      TableName: this.config.tableName,
+      TableName: this.config.tableConfig.tableName,
     };
   }
 
@@ -98,8 +101,10 @@ export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T>
   }
 
   protected async attributeMapToItem(attributeMap: AttributeMap): Promise<T> {
-    attributeMap[this.config.idAttribute].S = this.toId(attributeMap[this.config.idAttribute].S!);
-    attributeMap[this.config.getAllConfig.sortKey] = item.toStringPart(SORT_KEY, 1);
+    attributeMap[this.config.tableConfig.idKey].S = this.toId(attributeMap[this.config.tableConfig.idKey].S!);
+    if (this.config.parentIdProperty) {
+      attributeMap[this.config.tableConfig.typeKey].S = this.toId(attributeMap[this.config.tableConfig.typeKey].S!);
+    }
     const rval = await this.config.converter.convertToItem(attributeMap);
     return (rval as unknown) as T;
   }
@@ -122,21 +127,21 @@ export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T>
   }
 
   protected async getAllMaps(parentId?: string, cursor?: string): Promise<AttributeMap[]> {
-    const partitionKey = parentId ? this.toPartitionKey(parentId) : this.config.nodeType;
+    const partitionValue = parentId ? this.toPartitionValue(parentId) : this.config.nodeType;
     const params: QueryInput = {
       ExpressionAttributeValues: {
         ':partition': {
-          S: partitionKey,
+          S: partitionValue,
         },
       },
-      KeyConditionExpression: `${this.config.getAllConfig.primaryKey} = :partition`,
-      IndexName: this.config.getAllConfig.index,
+      KeyConditionExpression: `${this.config.tableConfig.typeKey} = :partition`,
+      IndexName: this.config.tableConfig.typeIndex,
       ...this.toBaseInput(),
     };
     if (cursor) {
       params.ExclusiveStartKey = {
-        [this.config.getAllConfig.primaryKey]: { S: partitionKey },
-        [this.config.getAllConfig.sortKey]: { S: cursor },
+        [this.config.tableConfig.typeKey]: { S: partitionValue },
+        [this.config.tableConfig.idKey]: { S: cursor },
       };
     }
 
@@ -153,7 +158,7 @@ export abstract class AbstractDynamoDBRepository<T> implements ItemRepository<T>
 
     const rval = result.Items;
     if (result.LastEvaluatedKey) {
-      const moreResults = await this.getAllMaps(parentId, result.LastEvaluatedKey[this.config.getAllConfig.sortKey].S!);
+      const moreResults = await this.getAllMaps(parentId, result.LastEvaluatedKey[this.config.tableConfig.idKey].S!);
       for (const m of moreResults) {
         rval.push(m);
       }
