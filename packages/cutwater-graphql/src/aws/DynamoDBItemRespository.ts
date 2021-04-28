@@ -90,27 +90,26 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
     return partitionKey.split('#')[1].trim();
   }
 
-  protected async attributeMapToItem(attributeMap: AttributeMap): Promise<T> {
-    let rval: T;
-    attributeMap[this.config.tableConfig.idKey].S = this.toId(attributeMap[this.config.tableConfig.idKey].S!);
+  protected setItemIds(map: AttributeMap, item: T): T {
+    item[this.config.idProperty] = this.toId(map[this.config.tableConfig.idKey].S!);
     if (this.config.parentIdProperty) {
-      attributeMap[this.config.tableConfig.typeKey].S = this.toId(attributeMap[this.config.tableConfig.typeKey].S!);
+      item[this.config.parentIdProperty] = this.toId(map[this.config.tableConfig.typeKey].S!);
     }
+    return item;
+  }
+
+  protected async attributeMapToItem(map: AttributeMap): Promise<T> {
+    let rval: T;
     if (this.config.converter) {
-      rval = await this.config.converter.convertToItem(attributeMap);
+      rval = await this.config.converter.convertToItem(map);
     } else {
       rval = {} as T;
     }
-    rval[this.config.idProperty] = attributeMap[this.config.tableConfig.idKey].S;
-    if (this.config.parentIdProperty) {
-      rval[this.config.parentIdProperty] = attributeMap[this.config.tableConfig.typeKey].S;
-    }
-    return rval;
+    return this.setItemIds(map, rval);
   }
 
-  protected async itemToAttributeMap(item: T): Promise<AttributeMap> {
-    const rval = this.config.converter ? await this.config.converter.convertToAttributeMap(item) : {};
-    rval[this.config.tableConfig.idKey] = {
+  protected setAttributeMapIds(item: T, map: AttributeMap): AttributeMap {
+    map[this.config.tableConfig.idKey] = {
       S: this.toPartitionValue(item[this.config.idProperty]),
     };
     let typeValue;
@@ -119,10 +118,15 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
     } else {
       typeValue = this.config.nodeType;
     }
-    rval[this.config.tableConfig.typeKey] = {
+    map[this.config.tableConfig.typeKey] = {
       S: typeValue,
     };
-    return rval;
+    return map;
+  }
+
+  protected async itemToAttributeMap(item: T): Promise<AttributeMap> {
+    const rval = this.config.converter ? await this.config.converter.convertToAttributeMap(item) : {};
+    return this.setAttributeMapIds(item, rval);
   }
 
   protected async getAllMaps(parentId?: string, cursor?: string): Promise<AttributeMap[]> {
