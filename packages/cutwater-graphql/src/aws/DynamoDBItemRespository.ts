@@ -2,48 +2,37 @@ import { Logger, LoggerFactory } from '@codification/cutwater-logging';
 import { DynamoDB } from 'aws-sdk';
 import { AttributeMap, GetItemOutput, PutItemInput, QueryInput, QueryOutput } from 'aws-sdk/clients/dynamodb';
 import { ItemRepository } from '../types';
-
-export interface DynamoDBItemTableConfig {
-  tableName: string;
-  typeIndex: string;
-  idKey: string;
-  typeKey: string;
-}
-
-export interface DynamoDBItemConverter<T> {
-  convertToItem(map: AttributeMap): Promise<T>;
-  convertToAttributeMap(item: T): Promise<AttributeMap>;
-}
+import { DynamoDBMapper } from './DynamoDBMapperFactory';
 
 export interface DynamoDBItemRepositoryConfig<T> {
   db?: DynamoDB;
-  nodeType: string;
-  tableConfig: DynamoDBItemTableConfig;
-  idProperty: string;
-  parentIdProperty?: string;
-  converter?: DynamoDBItemConverter<T>;
+  tableName: string;
+  typeIndex: string;
+  mapper: DynamoDBMapper<T>;
 }
 
 export class DynamoDBItemRepository<T> implements ItemRepository<T> {
   protected readonly LOG: Logger = LoggerFactory.getLogger();
   protected readonly db: DynamoDB = new DynamoDB();
+  protected readonly mapper: DynamoDBMapper<T>;
 
   public constructor(public readonly config: DynamoDBItemRepositoryConfig<T>) {
     Object.freeze(config);
     this.db = config.db || new DynamoDB();
+    this.mapper = config.mapper;
   }
 
   public async getAll(parentId?: string): Promise<T[]> {
     const results: AttributeMap[] = await this.getAllMaps(parentId);
     const rval: T[] = [];
     for (const item of results) {
-      rval.push(await this.attributeMapToItem(item));
+      rval.push(this.attributeMapToItem(item));
     }
     return rval;
   }
 
   public async get(id: string): Promise<T | undefined> {
-    const result: GetItemOutput = await this.db.getItem(this.toItemInput(this.toPartitionValue(id))).promise();
+    const result: GetItemOutput = await this.db.getItem(this.toItemInput(id)).promise();
     return result.Item ? this.attributeMapToItem(result.Item) : undefined;
   }
 
@@ -59,16 +48,16 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
   public async remove(id: string): Promise<T | undefined> {
     const rval = await this.get(id);
     if (rval) {
-      await this.db.deleteItem(this.toItemInput(this.toPartitionValue(id))).promise();
+      await this.db.deleteItem(this.toItemInput(id)).promise();
     }
     return rval;
   }
 
-  public toItemInput(partitionValue: string): any {
+  public toItemInput(id: string): any {
     const rval = {
       Key: {
-        [this.config.tableConfig.idKey]: {
-          S: partitionValue,
+        [this.mapper.idKey]: {
+          S: this.mapper.toPartitionValue(id),
         },
       },
       ...this.toBaseInput(),
@@ -78,73 +67,34 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
 
   public toBaseInput() {
     return {
-      TableName: this.config.tableConfig.tableName,
+      TableName: this.config.tableName,
     };
   }
 
-  protected toPartitionValue(id: string): string {
-    return `${this.config.nodeType}#${id}`;
-  }
-
-  protected toId(partitionKey: string): string {
-    return partitionKey.split('#')[1].trim();
-  }
-
-  protected setItemIds(map: AttributeMap, item: T): T {
-    item[this.config.idProperty] = this.toId(map[this.config.tableConfig.idKey].S!);
-    if (this.config.parentIdProperty) {
-      item[this.config.parentIdProperty] = this.toId(map[this.config.tableConfig.typeKey].S!);
-    }
-    return item;
-  }
-
-  protected async attributeMapToItem(map: AttributeMap): Promise<T> {
-    let rval: T;
-    if (this.config.converter) {
-      rval = await this.config.converter.convertToItem(map);
-    } else {
-      rval = {} as T;
-    }
-    return this.setItemIds(map, rval);
-  }
-
-  protected setAttributeMapIds(item: T, map: AttributeMap): AttributeMap {
-    map[this.config.tableConfig.idKey] = {
-      S: this.toPartitionValue(item[this.config.idProperty]),
-    };
-    let typeValue;
-    if (this.config.parentIdProperty) {
-      typeValue = this.toPartitionValue(item[this.config.parentIdProperty]);
-    } else {
-      typeValue = this.config.nodeType;
-    }
-    map[this.config.tableConfig.typeKey] = {
-      S: typeValue,
-    };
-    return map;
+  protected attributeMapToItem(map: AttributeMap): T {
+    return this.mapper.create(map).item;
   }
 
   protected async itemToAttributeMap(item: T): Promise<AttributeMap> {
-    const rval = this.config.converter ? await this.config.converter.convertToAttributeMap(item) : {};
-    return this.setAttributeMapIds(item, rval);
+    return this.mapper.create(item).map;
   }
 
   protected async getAllMaps(parentId?: string, cursor?: string): Promise<AttributeMap[]> {
-    const partitionValue = parentId ? this.toPartitionValue(parentId) : this.config.nodeType;
+    const partitionValue = this.mapper.toTypeValue(parentId);
     const params: QueryInput = {
       ExpressionAttributeValues: {
         ':partition': {
           S: partitionValue,
         },
       },
-      KeyConditionExpression: `${this.config.tableConfig.typeKey} = :partition`,
-      IndexName: this.config.tableConfig.typeIndex,
+      KeyConditionExpression: `${this.mapper.typeKey} = :partition`,
+      IndexName: this.config.typeIndex,
       ...this.toBaseInput(),
     };
     if (cursor) {
       params.ExclusiveStartKey = {
-        [this.config.tableConfig.typeKey]: { S: partitionValue },
-        [this.config.tableConfig.idKey]: { S: cursor },
+        [this.mapper.typeKey]: { S: partitionValue },
+        [this.mapper.idKey]: { S: cursor },
       };
     }
 
@@ -155,13 +105,13 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
         return [];
       }
     } catch (err) {
-      this.LOG.error('Encountered error during query: ', params);
+      this.LOG.error(`Encountered error during query[${JSON.stringify(params)}]: `, err);
       return [];
     }
 
     const rval = result.Items;
     if (result.LastEvaluatedKey) {
-      const moreResults = await this.getAllMaps(parentId, result.LastEvaluatedKey[this.config.tableConfig.idKey].S!);
+      const moreResults = await this.getAllMaps(parentId, result.LastEvaluatedKey[this.mapper.idKey].S!);
       for (const m of moreResults) {
         rval.push(m);
       }
