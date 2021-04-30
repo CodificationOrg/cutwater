@@ -11,15 +11,15 @@ export interface RepositoryConfig<T> {
 }
 
 export class CachingItemRepository<T> implements ItemRepository<T> {
+  private static readonly ROOT_OBJECT_ID = 'ROOT_OBJECT_ID';
+
   public readonly name: string;
 
-  private readonly CACHE: MemoryCache;
-  private readonly GREEDY: boolean;
-
-  private readonly ROOT_OBJECT_ID = 'ROOT_OBJECT_ID';
-  private readonly DESCRIPTOR: ItemDescriptor<T>;
-  private readonly CACHE_TTL: number;
-  private readonly ITEM_CACHES: Record<string, ItemCache<T>> = {};
+  private readonly memCache: MemoryCache;
+  private readonly greedy: boolean;
+  private readonly descriptor: ItemDescriptor<T>;
+  private readonly ttl: number;
+  private readonly itemCaches: Record<string, ItemCache<T>> = {};
 
   public constructor(
     private readonly REPO: ItemRepository<T>,
@@ -27,42 +27,36 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     cache: MemoryCache = new MemoryCache(),
   ) {
     this.name = name;
-    this.DESCRIPTOR = itemDescriptor;
-    this.CACHE_TTL = ttl || 90;
-    this.CACHE = cache;
-    this.GREEDY = greedy;
+    this.descriptor = itemDescriptor;
+    this.ttl = ttl || 90;
+    this.memCache = cache;
+    this.greedy = greedy;
   }
 
   public async getAll(parentId?: string): Promise<T[]> {
-    const itemCache = this.getItemCache(parentId);
-    let rval: T[] = await itemCache.getAll();
+    let rval: T[] = await this.getAllCached(parentId);
     if (rval.length === 0) {
-      rval = await itemCache.putAll(await this.REPO.getAll(parentId));
+      rval = await this.cacheAll(await this.REPO.getAll(parentId));
     }
     return rval;
   }
 
   public async get(id: string): Promise<T | undefined> {
-    let rval: T | undefined;
-    const itemCache = this.getItemCacheForItemId(id);
-    if (itemCache) {
-      rval = await itemCache.get(id);
-    }
+    let rval: T | undefined = await this.getCached(id);
     if (!rval) {
       rval = await this.REPO.get(id);
-      if (rval && this.GREEDY) {
-        await this.getAll(this.DESCRIPTOR.getParentId(rval));
+      if (rval && this.greedy) {
+        await this.getAll(this.descriptor.getParentId(rval));
       }
-      if (itemCache && rval) {
-        itemCache.put(rval);
+      if (rval) {
+        this.cache(rval);
       }
     }
     return rval;
   }
 
   public async put(item: T): Promise<T> {
-    const itemCache = this.getItemCache(this.DESCRIPTOR.getParentId(item));
-    return await itemCache.put(await this.REPO.put(item));
+    return await this.cache(await this.REPO.put(item));
   }
 
   public async remove(id: string): Promise<T | undefined> {
@@ -74,22 +68,42 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     return rval;
   }
 
-  private getItemCache(parentId: string = this.ROOT_OBJECT_ID): ItemCache<T> {
-    let rval = this.ITEM_CACHES[parentId];
+  protected async cache(item: T): Promise<T> {
+    return await this.getItemCache(this.descriptor.getParentId(item)).put(item);
+  }
+
+  protected async cacheAll(items: T[], parentId?: string): Promise<T[]> {
+    return await await this.getItemCache(parentId).putAll(items);
+  }
+
+  protected async getCached(id: string): Promise<T | undefined> {
+    const itemCache = this.getItemCacheForItemId(id);
+    if (itemCache) {
+      return await itemCache.get(id);
+    }
+    return undefined;
+  }
+
+  protected async getAllCached(parentId: string = CachingItemRepository.ROOT_OBJECT_ID): Promise<T[]> {
+    return await this.getItemCache(parentId).getAll();
+  }
+
+  private getItemCache(parentId: string = CachingItemRepository.ROOT_OBJECT_ID): ItemCache<T> {
+    let rval = this.itemCaches[parentId];
     if (!rval) {
-      rval = new ItemCache<T>(this.CACHE, {
+      rval = new ItemCache<T>(this.memCache, {
         repoName: this.name,
         cacheId: parentId,
-        itemDescriptor: this.DESCRIPTOR,
-        ttl: this.CACHE_TTL,
+        itemDescriptor: this.descriptor,
+        ttl: this.ttl,
       });
-      this.ITEM_CACHES[parentId] = rval;
+      this.itemCaches[parentId] = rval;
     }
     return rval;
   }
 
   private getItemCacheForItemId(id: string): ItemCache<T> | undefined {
-    const parentId = Object.keys(this.ITEM_CACHES).find(parentId => this.ITEM_CACHES[parentId].includes(id));
+    const parentId = Object.keys(this.itemCaches).find(parentId => this.itemCaches[parentId].includes(id));
     return parentId ? this.getItemCache(parentId) : undefined;
   }
 }
