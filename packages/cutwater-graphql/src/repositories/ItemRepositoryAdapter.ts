@@ -7,47 +7,48 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
   protected readonly LOG: Logger = LoggerFactory.getLogger();
 
   public constructor(
-    protected readonly NODE_TYPE: string,
-    protected readonly REPO: ItemRepository<T>,
-    protected readonly DESCRIPTOR: NodeItemDescriptor<T>,
-  ) {}
+    protected readonly nodeType: string,
+    protected readonly repo: ItemRepository<T>,
+    protected readonly descriptor: NodeItemDescriptor<T>,
+  ) { }
 
   public getAll(parentId?: string): Promise<T[]> {
-    return this.REPO.getAll(parentId);
+    return this.repo.getAll(parentId);
   }
 
   public get(id: string): Promise<T | undefined> {
-    return this.REPO.get(id);
+    return this.repo.get(id);
   }
 
   public put(item: T): Promise<T> {
-    return this.REPO.put(item);
+    return this.repo.put(item);
   }
 
   public remove(id: string): Promise<T | undefined> {
-    return this.REPO.remove(id);
+    return this.repo.remove(id);
   }
 
   public getNodeId(item: T): NodeId {
-    return NodeId.create(this.NODE_TYPE, this.DESCRIPTOR.getObjectId(item));
+    return NodeId.create(this.nodeType, this.descriptor.getObjectId(item));
   }
 
   public isNodeSource(nodeType: string): boolean {
-    return nodeType === this.NODE_TYPE;
+    return nodeType === this.nodeType;
   }
 
   public isSource(id: NodeId): boolean {
-    return id.nodeType === this.NODE_TYPE;
+    return id.nodeType === this.nodeType;
   }
 
   public async resolve(id: NodeId): Promise<(T & Node) | undefined> {
-    const result = await this.get(this.DESCRIPTOR.getItemId(id));
+    const result = await this.get(this.descriptor.getItemId(id));
+    this.LOG.trace(`Resolution [${id.clearId}]: `, result);
     return result ? this.asNode(result) : undefined;
   }
 
   public async resolveConnections(parentId?: NodeId): Promise<(T & Node)[]> {
-    this.LOG.debug(`Resolving connections for: ${parentId ? parentId.clearId : 'ROOT'}`);
-    const result = await this.getAll(this.DESCRIPTOR.getItemParentId(parentId));
+    const result = await this.getAll(this.descriptor.getItemParentId(parentId));
+    this.LOG.trace(`Connection resolution [${parentId ? parentId.clearId : 'ROOT'}]: `, result.length);
     return result.map(item => this.asNode(item));
   }
 

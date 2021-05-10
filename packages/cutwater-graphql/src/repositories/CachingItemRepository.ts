@@ -1,4 +1,5 @@
 import { MemoryCache } from '@codification/cutwater-core';
+import { Logger, LoggerFactory } from '@codification/cutwater-logging';
 import { ItemRepository } from '../types';
 import { ItemCache } from './ItemCache';
 import { ItemDescriptor } from './ItemDescriptor';
@@ -12,6 +13,7 @@ export interface RepositoryConfig<T> {
 
 export class CachingItemRepository<T> implements ItemRepository<T> {
   private static readonly ROOT_OBJECT_ID = 'ROOT_OBJECT_ID';
+  protected readonly LOG: Logger = LoggerFactory.getLogger();
 
   public readonly name: string;
 
@@ -91,6 +93,7 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   private getItemCache(parentId: string = CachingItemRepository.ROOT_OBJECT_ID): ItemCache<T> {
     let rval = this.itemCaches[parentId];
     if (!rval) {
+      this.LOG.debug(`[${this.name}] - Creating cache for parentId: `, parentId);
       rval = new ItemCache<T>(this.memCache, {
         repoName: this.name,
         cacheId: parentId,

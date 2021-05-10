@@ -32,7 +32,12 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
   }
 
   public async get(id: string): Promise<T | undefined> {
-    const result: GetItemOutput = await this.db.getItem(this.toItemInput(id)).promise();
+    const params = this.toItemInput(id);
+    this.LOG.trace('DynamoDB Get: ', params);
+    const result: GetItemOutput = await this.db.getItem(params).promise();
+    if (!result.Item) {
+      this.LOG.trace('No result.');
+    }
     return result.Item ? this.attributeMapToItem(result.Item) : undefined;
   }
 
@@ -41,6 +46,7 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
       Item: await this.itemToAttributeMap(item),
       ...this.toBaseInput(),
     };
+    this.LOG.trace('DynamoDB Put: ', params);
     await this.db.putItem(params).promise();
     return item;
   }
@@ -48,7 +54,9 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
   public async remove(id: string): Promise<T | undefined> {
     const rval = await this.get(id);
     if (rval) {
-      await this.db.deleteItem(this.toItemInput(id)).promise();
+      const params = this.toItemInput(id);
+      this.LOG.trace('DynamoDB Delete: ', params);
+      await this.db.deleteItem(params).promise();
     }
     return rval;
   }
@@ -98,6 +106,7 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
       };
     }
 
+    this.LOG.trace('DynamoDB GetAll: ', params);
     let result: QueryOutput;
     try {
       result = await this.db.query(params).promise();
