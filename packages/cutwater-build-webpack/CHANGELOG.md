@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.27.4 (2021-05-10)
+
+
+### Bug Fixes
+
+* correct issue with adapter ([c80f7a9](https://github.com/CodificationOrg/cutwater/commit/c80f7a93cdd420377f5d72a2e5635a99d560215d))
+
+
+
+
+
 ## 0.27.3 (2021-05-10)
 
 **Note:** Version bump only for package @codification/cutwater-build-webpack
