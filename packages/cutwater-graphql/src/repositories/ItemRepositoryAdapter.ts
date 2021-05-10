@@ -10,7 +10,7 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
     protected readonly nodeType: string,
     protected readonly repo: ItemRepository<T>,
     protected readonly descriptor: NodeItemDescriptor<T>,
-  ) { }
+  ) {}
 
   public getAll(parentId?: string): Promise<T[]> {
     return this.repo.getAll(parentId);
