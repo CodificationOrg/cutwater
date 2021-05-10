@@ -32,12 +32,9 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
     return NodeId.create(this.nodeType, this.descriptor.getObjectId(item));
   }
 
-  public isNodeSource(nodeType: string): boolean {
+  public isSource(nodeIdOrNodeType: NodeId | string): boolean {
+    const nodeType = typeof nodeIdOrNodeType === 'string' ? nodeIdOrNodeType : nodeIdOrNodeType.nodeType;
     return nodeType === this.nodeType;
-  }
-
-  public isSource(id: NodeId): boolean {
-    return id.nodeType === this.nodeType;
   }
 
   public async resolve(id: NodeId): Promise<(T & Node) | undefined> {

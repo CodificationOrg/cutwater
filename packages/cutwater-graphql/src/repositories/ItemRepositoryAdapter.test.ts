@@ -36,10 +36,16 @@ describe('ItemRepositoryAdapter', () => {
   });
 
   describe('isSource', () => {
-    it('can verify if it is a node source', async () => {
+    it('can verify if it is a node source by NodeId', async () => {
       const adapter = await newAdapter();
       const id = NodeId.create('MockItem', '0');
       expect(adapter.isSource(id)).toBeTruthy();
+    });
+
+    it('can verify if it is a node source by nodeType string', async () => {
+      const adapter = await newAdapter();
+      const id = NodeId.create('MockItem', '0');
+      expect(adapter.isSource(id.nodeType)).toBeTruthy();
     });
 
     it('can verify if it is not a node source', async () => {
