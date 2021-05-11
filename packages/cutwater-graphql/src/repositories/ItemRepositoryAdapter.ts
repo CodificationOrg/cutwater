@@ -39,13 +39,11 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
 
   public async resolve(id: NodeId): Promise<(T & Node) | undefined> {
     const result = await this.get(this.descriptor.getItemId(id));
-    this.LOG.trace(`Resolution [${id.clearId}]: `, result);
     return result ? this.asNode(result) : undefined;
   }
 
   public async resolveConnections(parentId?: NodeId): Promise<(T & Node)[]> {
     const result = await this.getAll(this.descriptor.getItemParentId(parentId));
-    this.LOG.trace(`Connection resolution [${parentId ? parentId.clearId : 'ROOT'}]: `, result.length);
     return result.map(item => this.asNode(item));
   }
 

@@ -15,8 +15,14 @@ export const newMemoryRepo = async (count?: number): Promise<ItemRepository<Mock
   return rval;
 };
 
-const newCachingRepo = async (count?: number): Promise<CachingItemRepository<MockItem>> => {
-  const rval = new CachingItemRepository<MockItem>(await newMemoryRepo(count), {
+const newCachingRepo = async (
+  countOrRepo?: number | ItemRepository<MockItem>,
+): Promise<CachingItemRepository<MockItem>> => {
+  const repo =
+    !countOrRepo || typeof countOrRepo === 'number'
+      ? await newMemoryRepo(countOrRepo)
+      : (countOrRepo as ItemRepository<MockItem>);
+  const rval = new CachingItemRepository<MockItem>(repo, {
     name: 'MockItems',
     itemDescriptor: new PropertyDescriptor('userId', 'groupId'),
   });
@@ -41,12 +47,32 @@ describe('CachingItemRepository', () => {
       const items = await repo.getAll();
       expect(items.length).toBe(count);
     });
+    it('will use cache after first call', async () => {
+      const count = randomCount();
+      const baseRepo = await newMemoryRepo(count);
+      const spyRepo = jest.spyOn(baseRepo, 'getAll');
+      const repo = await newCachingRepo(baseRepo);
+      await repo.getAll();
+      expect(spyRepo).toBeCalledTimes(1);
+      await repo.getAll();
+      expect(spyRepo).toBeCalledTimes(1);
+    });
     it('can get all by parentId', async () => {
       const count = 52;
       const repo = await newCachingRepo(count);
       const items = await repo.getAll('a');
       expect(items.length).toBeLessThan(30);
       expect(items.length).toBeGreaterThan(20);
+    });
+    it('will use cache after first call by parentId', async () => {
+      const count = 52;
+      const baseRepo = await newMemoryRepo(count);
+      const spyRepo = jest.spyOn(baseRepo, 'getAll');
+      const repo = await newCachingRepo(baseRepo);
+      await repo.getAll('a');
+      expect(spyRepo).toBeCalledTimes(1);
+      await repo.getAll('a');
+      expect(spyRepo).toBeCalledTimes(1);
     });
     it('includes added items', async () => {
       const count = randomCount();

@@ -24,7 +24,7 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   private readonly itemCaches: Record<string, ItemCache<T>> = {};
 
   public constructor(
-    private readonly REPO: ItemRepository<T>,
+    private readonly repo: ItemRepository<T>,
     { name, itemDescriptor, ttl, greedy = false }: RepositoryConfig<T>,
     cache: MemoryCache = new MemoryCache(),
   ) {
@@ -38,7 +38,7 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   public async getAll(parentId?: string): Promise<T[]> {
     let rval: T[] = await this.getAllCached(parentId);
     if (rval.length === 0) {
-      rval = await this.cacheAll(await this.REPO.getAll(parentId));
+      rval = await this.cacheAll(await this.repo.getAll(parentId), parentId);
     }
     return rval;
   }
@@ -46,7 +46,7 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   public async get(id: string): Promise<T | undefined> {
     let rval: T | undefined = await this.getCached(id);
     if (!rval) {
-      rval = await this.REPO.get(id);
+      rval = await this.repo.get(id);
       if (rval && this.greedy) {
         await this.getAll(this.descriptor.getParentId(rval));
       }
@@ -58,11 +58,11 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   }
 
   public async put(item: T): Promise<T> {
-    return await this.cache(await this.REPO.put(item));
+    return await this.cache(await this.repo.put(item));
   }
 
   public async remove(id: string): Promise<T | undefined> {
-    const rval = await this.REPO.remove(id);
+    const rval = await this.repo.remove(id);
     const itemCache = this.getItemCacheForItemId(id);
     if (itemCache) {
       await itemCache.remove(id);
