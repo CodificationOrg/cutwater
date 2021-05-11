@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.27.5 (2021-05-11)
+
+
+### Bug Fixes
+
+* correct failure to cache based on parentId ([a74b02d](https://github.com/CodificationOrg/cutwater/commit/a74b02d327d19df570d0de9b5b3a09095cb7f838))
+
+
+
+
+
 ## 0.27.4 (2021-05-10)
 
 
