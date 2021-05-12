@@ -22,11 +22,11 @@ export class ItemCache<T> {
   private readonly descriptor: ItemDescriptor<T>;
 
   public constructor(private readonly CACHE: MemoryCache, { repoName, cacheId, itemDescriptor, ttl }: CacheConfig<T>) {
-    this.cacheKey = this.toKey(`${cacheId}_CACHE`);
     this.repoName = repoName;
     this.cacheId = cacheId;
     this.descriptor = itemDescriptor;
     this.cacheTTL = ttl || 90;
+    this.cacheKey = this.toKey(`${cacheId}_CACHE`);
   }
 
   public includes(id: string): boolean {
