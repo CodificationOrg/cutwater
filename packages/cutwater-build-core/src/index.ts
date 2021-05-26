@@ -296,12 +296,12 @@ const generateGulpError = (err: Error): Error => {
   if (logger.isVerboseEnabled()) {
     rval = err;
   } else {
-    rval = ({
+    rval = {
       showStack: false,
       toString: (): string => {
         return '';
       },
-    } as unknown) as Error;
+    } as unknown as Error;
     logger.markErrorAsWritten(rval);
   }
   return rval as Error;

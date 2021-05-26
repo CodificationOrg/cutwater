@@ -1,6 +1,6 @@
 import { LoggerFactory } from '@codification/cutwater-logging';
 import got, { OptionsOfBufferResponseBody } from 'got';
-import { IncomingMessage } from 'node:http';
+import { IncomingMessage } from 'http';
 import { HttpUtils } from './HttpUtils';
 
 export interface HttpResponse {
