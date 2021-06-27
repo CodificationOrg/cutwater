@@ -17,6 +17,7 @@ export const newMemoryRepo = async (count?: number): Promise<ItemRepository<Mock
 
 const newCachingRepo = async (
   countOrRepo?: number | ItemRepository<MockItem>,
+  greedy = false,
 ): Promise<CachingItemRepository<MockItem>> => {
   const repo =
     !countOrRepo || typeof countOrRepo === 'number'
@@ -25,6 +26,7 @@ const newCachingRepo = async (
   const rval = new CachingItemRepository<MockItem>(repo, {
     name: 'MockItems',
     itemDescriptor: new PropertyDescriptor('userId', 'groupId'),
+    greedy,
   });
   return rval;
 };
@@ -100,6 +102,14 @@ describe('CachingItemRepository', () => {
       const item = await repo.get(id);
       expect(item).toBeTruthy();
       expect(item?.userId).toBe(id);
+    });
+    it('will do a greedy load triggered by a get', async () => {
+      const repo = await newCachingRepo(2000, true);
+      const getAllSpy = jest.spyOn(repo, 'getAll');
+      for (let i = 0; i < 500; i++) {
+        await repo.get(`${randomCount(2000) - 1}`);
+      }
+      expect(getAllSpy).toBeCalledTimes(2);
     });
   });
 
