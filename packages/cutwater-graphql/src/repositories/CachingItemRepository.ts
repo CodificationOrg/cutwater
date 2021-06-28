@@ -17,6 +17,8 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
 
   public readonly name: string;
 
+  private greedyIds: string[] = [];
+
   private readonly memCache: MemoryCache;
   private readonly greedy: boolean;
   private readonly descriptor: ItemDescriptor<T>;
@@ -47,11 +49,15 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     let rval: T | undefined = await this.getCached(id);
     if (!rval) {
       rval = await this.repo.get(id);
-      if (rval && this.greedy) {
-        await this.getAll(this.descriptor.getParentId(rval));
-      }
       if (rval) {
-        this.cache(rval);
+        await this.cache(rval);
+        if (this.greedy) {
+          const parentId = this.descriptor.getParentId(rval) || CachingItemRepository.ROOT_OBJECT_ID;
+          if (!this.greedyIds.includes(parentId)) {
+            this.greedyIds.push(parentId);
+            await this.getAll(this.descriptor.getParentId(rval));
+          }
+        }
       }
     }
     return rval;
