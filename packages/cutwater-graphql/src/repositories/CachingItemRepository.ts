@@ -11,13 +11,16 @@ export interface RepositoryConfig<T> {
   ttl?: number;
 }
 
+type Cmd = () => Promise<void>;
+type GetCallback<T> = (result?: T) => void;
+
 export class CachingItemRepository<T> implements ItemRepository<T> {
   private static readonly ROOT_OBJECT_ID = 'ROOT_OBJECT_ID';
   protected readonly LOG: Logger = LoggerFactory.getLogger();
 
   public readonly name: string;
 
-  private greedyIds: string[] = [];
+  private cmdQueue: Cmd[] = [];
 
   private readonly memCache: MemoryCache;
   private readonly greedy: boolean;
@@ -35,6 +38,14 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     this.ttl = ttl || 90;
     this.memCache = cache;
     this.greedy = greedy;
+
+    if (greedy) {
+      setInterval(async () => {
+        while (this.cmdQueue.length > 0) {
+          await this.cmdQueue.shift()!();
+        }
+      }, 5);
+    }
   }
 
   public async getAll(parentId?: string): Promise<T[]> {
@@ -46,21 +57,31 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   }
 
   public async get(id: string): Promise<T | undefined> {
+    return new Promise<T | undefined>(res => {
+      const cmd: Cmd = () =>
+        this.doGet(id, result => {
+          res(result);
+        });
+      if (this.greedy) {
+        this.cmdQueue.push(cmd);
+      } else {
+        cmd();
+      }
+    });
+  }
+
+  private async doGet(id: string, callback: GetCallback<T>): Promise<void> {
     let rval: T | undefined = await this.getCached(id);
     if (!rval) {
       rval = await this.repo.get(id);
       if (rval) {
         await this.cache(rval);
         if (this.greedy) {
-          const parentId = this.descriptor.getParentId(rval) || CachingItemRepository.ROOT_OBJECT_ID;
-          if (!this.greedyIds.includes(parentId)) {
-            this.greedyIds.push(parentId);
-            await this.getAll(this.descriptor.getParentId(rval));
-          }
+          await this.getAll(this.descriptor.getParentId(rval));
         }
       }
     }
-    return rval;
+    callback(rval);
   }
 
   public async put(item: T): Promise<T> {

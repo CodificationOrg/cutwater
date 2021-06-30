@@ -103,18 +103,26 @@ describe('CachingItemRepository', () => {
       expect(item).toBeTruthy();
       expect(item?.userId).toBe(id);
     });
+    it('can do a single load with greedy flag', async () => {
+      const repo = await newCachingRepo(25, true);
+      const item = await repo.get('5');
+      expect(item?.userId).toBe('5');
+    });
     it('will do a greedy load triggered by a get', async () => {
-      const repo = await newCachingRepo(2000, true);
+      const repo = await newCachingRepo(500, true);
       const getAllSpy = jest.spyOn(repo, 'getAll');
       const promises: Promise<MockItem | undefined>[] = [];
-      for (let i = 0; i < 500; i++) {
-        promises.push(repo.get(`${randomCount(2000) - 1}`));
+      for (let i = 0; i < 200; i++) {
+        promises.push(repo.get(`${randomCount(500) - 1}`));
       }
       await Promise.all(promises);
+
+      const item = await repo.get('5');
+      expect(item?.userId).toBe('5');
       expect(getAllSpy).toBeCalledTimes(2);
     });
     it('will use items cached by previous getAll', async () => {
-      const repo = await newCachingRepo(500, true);
+      const repo = await newCachingRepo(100, true);
       const repoSpy = jest.spyOn(repo['repo'], 'get');
       await repo.getAll('a');
       await repo.get('1');
