@@ -4,8 +4,15 @@ import { CompareUtils } from './CompareUtils';
 describe('CompareUtils', () => {
   describe('safeCompare', () => {
     it('can sort numbers', () => {
-      const values = [3, 9, undefined, 0, 42].sort(CompareUtils.safeCompare);
+      const values = [3, 9, undefined, 0, 42];
+      values.sort(CompareUtils.safeCompare);
       expect(values[0]).toBe(0);
+      expect(values[4]).toBeUndefined();
+    });
+    it('can sort floats', () => {
+      const values = [3.14, 0.645, undefined, 0.348965, 42];
+      values.sort(CompareUtils.safeCompare);
+      expect(values[0]).toBe(0.348965);
       expect(values[4]).toBeUndefined();
     });
     it('can sort strings', () => {

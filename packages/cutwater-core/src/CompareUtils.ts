@@ -66,7 +66,9 @@ export class CompareUtils {
   }
 
   private static toSafeNumber(value: comparable): number {
-    return !!value ? parseInt(CompareUtils.toSafeString(value)) : -1;
+    const safeVal = CompareUtils.toSafeString(value);
+    const isFloat = safeVal.indexOf('.') !== -1;
+    return isFloat ? parseFloat(safeVal) : !!value ? parseInt(safeVal) : -1;
   }
 
   private static compareAs(a: comparable, b: comparable, type: string): boolean {
