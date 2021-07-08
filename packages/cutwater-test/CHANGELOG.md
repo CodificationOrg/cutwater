@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.27.10 (2021-07-08)
+
+
+### Bug Fixes
+
+* ensure safeCompare handles floats ([27f0a6d](https://github.com/CodificationOrg/cutwater/commit/27f0a6d3e559d862ebfff4ae925977e4d4bd5329))
+
+
+
+
+
 ## 0.27.9 (2021-06-30)
 
 **Note:** Version bump only for package @codification/cutwater-test
