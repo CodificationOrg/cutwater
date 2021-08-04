@@ -4,8 +4,9 @@ import {
   IOUtils,
   RunCommand,
   RunCommandConfig,
-  TextUtils,
+  TextUtils
 } from '@codification/cutwater-build-core';
+import * as fs from 'fs';
 import * as path from 'path';
 
 export interface WebpackOptions {
@@ -42,7 +43,7 @@ export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
   constructor() {
     super('webpack', {
       options: {
-        config: ['./webpack.config.js'],
+        config: [WebpackTask.defaultConfig()],
         stats: true,
       },
       runConfig: {
@@ -122,5 +123,11 @@ export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
 
   private logMissingConfigWarning(): void {
     console.warn('No webpack config has been provided. ' + 'Run again using --initwebpack to create a default config.');
+  }
+
+  private static defaultConfig(): string {
+    const includedConfig = path.resolve(__dirname, 'webpack.config.js');
+    const localConfig = path.resolve(process.cwd(), 'webpack.config.js');
+    return fs.existsSync(localConfig) ? localConfig : includedConfig;
   }
 }

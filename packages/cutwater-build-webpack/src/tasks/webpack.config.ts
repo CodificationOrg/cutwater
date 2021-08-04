@@ -26,10 +26,22 @@ const webpackConfiguration = (env, options): Webpack.Configuration => {
   return {
     mode: isProduction ? 'production' : 'development',
     context: __dirname,
-    devtool: isProduction ? undefined : 'source-map',
+    devtool: isProduction ? undefined : 'inline-source-map',
 
     entry: {
-      [packageJSON.name]: path.join(__dirname, buildConfig.libFolder, 'index.js'),
+      [packageJSON.name]: path.join(__dirname, buildConfig.srcFolder, 'index.ts'),
+    },
+
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+    ],
+
+    resolve: {
+      extensions: ['.tsx', '.ts', '.js'],
     },
 
     output: {
