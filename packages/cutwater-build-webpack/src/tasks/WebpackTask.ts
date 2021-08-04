@@ -4,7 +4,7 @@ import {
   IOUtils,
   RunCommand,
   RunCommandConfig,
-  TextUtils
+  TextUtils,
 } from '@codification/cutwater-build-core';
 import * as fs from 'fs';
 import * as path from 'path';
