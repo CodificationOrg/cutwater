@@ -31,9 +31,9 @@ export class AwsCliTask<P> extends GulpTask<AwsCliTaskConfig<P>, void> {
   protected readonly runCommand: RunCommand = new RunCommand();
 
   public constructor(
-    taskName: string = 'aws-cli',
-    command: string = '',
-    subCommand: string = '',
+    taskName = 'aws-cli',
+    command = '',
+    subCommand = '',
     filteredParams: string[] = [],
     defaultConfig: Partial<AwsCliTaskConfig<P>> = {},
   ) {
