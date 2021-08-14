@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.27.13 (2021-08-14)
+
+**Note:** Version bump only for package @codification/cutwater-graphql
+
+
+
+
+
 ## 0.27.12 (2021-08-14)
 
 **Note:** Version bump only for package @codification/cutwater-graphql
