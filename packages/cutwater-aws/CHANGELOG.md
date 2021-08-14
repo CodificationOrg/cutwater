@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.27.14 (2021-08-14)
+
+
+### Bug Fixes
+
+* correct ts-loader/webpack version conflict ([ab19c79](https://github.com/CodificationOrg/cutwater/commit/ab19c79087e86e824de163a3039b34fae78da639))
+
+
+
+
+
 ## 0.27.13 (2021-08-14)
 
 **Note:** Version bump only for package @codification/cutwater-aws
