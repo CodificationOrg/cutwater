@@ -9,11 +9,9 @@
   "scripts": {
     "clean": "lerna run clean",
     "build": "lerna run build",
-    "preversion": "yarn build",
     "release": "lerna version --conventional-commits",
     "version": " git add -A .",
-    "postversion": "git push && git push --tags",
-    "prepublishOnly": "yarn build"
+    "postversion": "git push && git push --tags"
   },
   "resolutions": {
     "elliptic": "^6.5.4",
