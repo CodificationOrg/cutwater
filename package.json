@@ -16,6 +16,7 @@
   "resolutions": {
     "elliptic": "^6.5.4",
     "minimist": "^1.2.5",
+    "glob-parent": "^5.1.2",
     "node-forge": "^0.10.0"
   },
   "devDependencies": {
