@@ -1,5 +1,6 @@
-import { GulpTask, RunCommand, RunCommandConfig, TextUtils } from '@codification/cutwater-build-core';
-import * as gulp from 'gulp';
+import { GulpTask, RunCommand, RunCommandConfig } from '@codification/cutwater-build-core';
+import { CliUtils } from '../support/CliUtils';
+import { CliConfig } from '../types/CliConfig';
 
 export interface AwsCliOptions {
   debug?: boolean;
@@ -18,11 +19,7 @@ export interface AwsCliOptions {
   cliConnectTimeout?: number;
 }
 
-export interface AwsCliTaskConfig<P> {
-  options?: AwsCliOptions;
-  parameters?: P;
-  runConfig: RunCommandConfig;
-}
+export type AwsCliTaskConfig<P> = CliConfig<AwsCliOptions, P>;
 
 export class AwsCliTask<P> extends GulpTask<AwsCliTaskConfig<P>, void> {
   protected readonly awsCommand: string;
@@ -95,65 +92,21 @@ export class AwsCliTask<P> extends GulpTask<AwsCliTaskConfig<P>, void> {
     this.config.parameters = parameters;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
-    const args = this.preparedArgs();
+  public setArguments(args: string[]): void {
+    this.config.args = args;
+  }
+
+  public async executeTask(): Promise<void> {
+    const args = CliUtils.prepareArgs(this.config, {
+      command: this.awsCommand,
+      subCommand: this.awsSubCommand,
+      filteredParams: this.filteredParams,
+    });
     this.log(`Running: ${this.config.runConfig.command} ${args}`);
     await this.runCommand.run({
       logger: this.logger(),
       ...this.config.runConfig,
       args,
     });
-  }
-
-  protected preparedArgs(): string {
-    return `${this.preparedOptions()}${this.preparedCommand()}${this.preparedParameters()}`;
-  }
-
-  protected preparedCommand(): string {
-    return !!this.awsCommand ? `${this.awsCommand}${!!this.awsSubCommand ? ' ' + this.awsSubCommand : ''} ` : '';
-  }
-
-  protected preparedOptions(): string {
-    return !!this.config.options ? this.toArgString(this.config.options) : '';
-  }
-
-  protected toArgString(args: any, filteredArgs: string[] = []): string {
-    const argArray: string[] = Object.keys(args)
-      .filter(property => !filteredArgs.includes(property))
-      .map(property => {
-        const value = args[property];
-        const arg = TextUtils.convertPropertyNameToArg(property);
-        if (typeof value === 'string') {
-          return `${arg} "${value}"`;
-        } else if (typeof value === 'boolean' && !!value) {
-          return arg;
-        } else if (typeof value === 'number') {
-          return `${arg} ${value}`;
-        } else if (Array.isArray(value)) {
-          return `${arg} ${this.toParameterList(value)}`;
-        } else if (typeof value === 'object') {
-          return `${arg} '${JSON.stringify(value)}'`;
-        }
-        return '';
-      });
-    return `${argArray.join(' ')} `;
-  }
-
-  protected toParameterList(arg: any[]): string {
-    return arg
-      .map(value => {
-        if (typeof value === 'string') {
-          return `"${value}"`;
-        } else if (typeof value === 'number') {
-          return value;
-        }
-        return '';
-      })
-      .join(' ');
-  }
-
-  protected preparedParameters(): string {
-    return !!this.config.parameters ? this.toArgString(this.config.parameters, this.filteredParams) : '';
   }
 }

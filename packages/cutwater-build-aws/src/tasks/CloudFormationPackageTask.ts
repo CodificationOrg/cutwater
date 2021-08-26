@@ -1,4 +1,3 @@
-import * as gulp from 'gulp';
 import { ApiGatewayDeploymentUpdater } from '../cloudformation/ApiGatewayDeploymentUpdater';
 import { AwsCliTask } from './AwsCliTask';
 
@@ -22,11 +21,11 @@ export class CloudFormationPackageTask extends AwsCliTask<CloudFormationPackageP
     });
   }
 
-  public async executeTask(localGulp: gulp.Gulp): Promise<void> {
+  public async executeTask(): Promise<void> {
     if (!!this.config.parameters) {
       this.createOutputDir(this.config.parameters.outputTemplateFile);
     }
-    await super.executeTask(localGulp);
+    await super.executeTask();
     if (!!this.config.parameters) {
       const updater = new ApiGatewayDeploymentUpdater();
       updater.load(this.config.parameters.outputTemplateFile);

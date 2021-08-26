@@ -1,8 +1,6 @@
 import { AwsCliTask } from './AwsCliTask';
 
 export interface S3CopyParameters {
-  from: string;
-  to: string;
   dryrun?: boolean;
   quiet: boolean;
   include?: string;
@@ -42,10 +40,6 @@ export interface S3CopyParameters {
 
 export class S3CopyTask extends AwsCliTask<S3CopyParameters> {
   public constructor() {
-    super('s3-copy', 's3', 'cp', ['from', 'to']);
-  }
-
-  protected preparedCommand(): string {
-    return `${super.preparedCommand()}${this.config.parameters?.from} ${this.config.parameters?.to} `;
+    super('s3-copy', 's3', 'cp');
   }
 }

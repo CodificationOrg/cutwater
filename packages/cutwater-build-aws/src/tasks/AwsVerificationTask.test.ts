@@ -9,6 +9,6 @@ beforeAll(() => {
 describe('AwsVerificationTask', () => {
   it('it properly verifies that aws-cli is installed', () => {
     const task: AwsVerificationTask = new AwsVerificationTask();
-    return expect(task.executeTask(gulp)).resolves.toBeUndefined();
+    return expect(task.executeTask()).resolves.toBeUndefined();
   }, 15000);
 });

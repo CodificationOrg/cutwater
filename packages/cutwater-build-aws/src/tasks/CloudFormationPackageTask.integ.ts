@@ -10,7 +10,7 @@ describe('CloudFormationPackageTask', () => {
   it('it properly fails with invalid arguments', async () => {
     const task: CloudFormationPackageTask = new CloudFormationPackageTask();
     try {
-      await task.executeTask(gulp);
+      await task.executeTask();
       fail('it should have thrown an error');
     } catch (err) {
       expect(err).toBeDefined();

@@ -9,9 +9,9 @@ beforeAll(() => {
 describe('S3CopyTask', () => {
   it('it properly fails with invalid arguments', async () => {
     const task: S3CopyTask = new S3CopyTask();
-    task.setParameters({ from: 'boo', to: 'bar' });
+    task.setArguments(['boo', 'bar']);
     try {
-      await task.executeTask(gulp);
+      await task.executeTask();
       fail('it should have thrown an error');
     } catch (err) {
       expect(err).toBeDefined();
