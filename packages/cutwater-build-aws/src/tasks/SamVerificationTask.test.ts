@@ -7,7 +7,7 @@ beforeAll(() => {
 });
 
 describe('SamVerificationTask', () => {
-  it('it properly verifies that aws-cli is installed', () => {
+  it('it properly verifies that sam-cli is installed', () => {
     const task: SamVerificationTask = new SamVerificationTask();
     return expect(task.executeTask()).resolves.toBeUndefined();
   }, 15000);
