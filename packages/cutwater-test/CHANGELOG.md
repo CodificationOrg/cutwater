@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.28.0 (2021-08-27)
+
+
+### Features
+
+* add package and publish for aws SAM cli ([b3702d5](https://github.com/CodificationOrg/cutwater/commit/b3702d51b78d349ca29035c6216f20d2d9c09c2e))
+
+
+
+
+
 ## 0.27.14 (2021-08-14)
 
 
