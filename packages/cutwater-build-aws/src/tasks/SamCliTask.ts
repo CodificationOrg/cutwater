@@ -13,7 +13,7 @@ export type SamCliTaskConfig<P> = CliConfig<SamCliOptions, P>;
 
 export class SamCliTask<P> extends GulpTask<SamCliTaskConfig<P>, void> {
   protected readonly samCommand: string;
-  protected readonly filteredParams: string[];
+  protected readonly filteredParams: string[] = [];
   protected readonly runCommand: RunCommand = new RunCommand();
 
   public constructor(taskName = 'sam-cli', command = '', defaultConfig: Partial<SamCliTaskConfig<P>> = {}) {
@@ -76,6 +76,7 @@ export class SamCliTask<P> extends GulpTask<SamCliTaskConfig<P>, void> {
   public async executeTask(): Promise<void> {
     const args = CliUtils.prepareArgs(this.config, {
       command: this.samCommand,
+      filteredParams: this.filteredParams,
     });
     this.log(`Running: ${this.config.runConfig.command} ${args}`);
     await this.runCommand.run({
