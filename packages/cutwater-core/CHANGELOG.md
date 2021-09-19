@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.28.4 (2021-09-19)
+
+**Note:** Version bump only for package @codification/cutwater-core
+
+
+
+
+
 ## 0.28.3 (2021-08-31)
 
 **Note:** Version bump only for package @codification/cutwater-core
