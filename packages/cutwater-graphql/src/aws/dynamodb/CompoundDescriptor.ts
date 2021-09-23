@@ -1,7 +1,7 @@
 import { ItemDescriptor, NodeId, NodeItemDescriptor } from '../..';
 import { CompoundKey } from './CompoundKey';
 
-export class PropertyDescriptor<T> implements ItemDescriptor<T>, NodeItemDescriptor<T> {
+export class CompoundDescriptor<T> implements ItemDescriptor<T>, NodeItemDescriptor<T> {
   public constructor(private readonly nodeType, private readonly idProperty: string) {}
 
   public getId(item: T): string {
