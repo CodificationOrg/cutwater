@@ -5,3 +5,4 @@ export * from './CompoundMap';
 export * from './CompoundMapper';
 export * from './CompoundMapperConfig';
 export * from './CompoundMapperFactory';
+export * from './CompundDescriptor';
