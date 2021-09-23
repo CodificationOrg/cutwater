@@ -7,17 +7,21 @@ export interface MockItem {
   userId: string;
   name: string;
   age: number;
+  canonicalId: string;
 }
 
 export const randomCount = (max = 25) => Math.floor(Math.random() * max + 1);
 export const mockItems = (count: number = randomCount()) => {
   const rval: MockItem[] = [];
   for (let i = 0; i < count; i++) {
+    const groupId = `${i % 2 ? 'a' : 'b'}`;
+    const userId = `${i}`;
     rval.push({
-      groupId: `${i % 2 ? 'a' : 'b'}`,
-      userId: `${i}`,
+      groupId,
+      userId,
       name: `name${i}`,
       age: i,
+      canonicalId: `${groupId}:${userId}`,
     });
   }
   return rval;
