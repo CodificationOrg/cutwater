@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.29.0 (2021-09-23)
+
+
+### Features
+
+* add support for compound dynamodb item repos ([b9476b7](https://github.com/CodificationOrg/cutwater/commit/b9476b73476ec56b3e2e1af81f96508fc0d2a751))
+
+
+
+
+
 ## 0.28.4 (2021-09-19)
 
 **Note:** Version bump only for package @codification/cutwater-build-node
