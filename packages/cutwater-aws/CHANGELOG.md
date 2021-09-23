@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.30.0 (2021-09-23)
+
+
+### Features
+
+* add default descriptor for compound repo ([18a8344](https://github.com/CodificationOrg/cutwater/commit/18a8344b281138d33f3ac0f8307b4d14c90c24ea))
+
+
+
+
+
 # 0.29.0 (2021-09-23)
 
 
