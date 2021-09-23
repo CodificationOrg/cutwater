@@ -1,5 +1,6 @@
 import { DynamoItem } from '@codification/cutwater-aws';
 import { AttributeMap } from 'aws-sdk/clients/dynamodb';
+import { CompoundKey } from '.';
 import { CompoundMap } from './CompoundMap';
 import { CompoundMapper } from './CompoundMapper';
 import { CompoundMapperConfig } from './CompoundMapperConfig';
@@ -27,26 +28,25 @@ class ConfiguredCompoundMapper<T> implements CompoundMapper<T> {
     return new CompoundMapImp<T>(item, this);
   }
 
+  private toCompoundKey(itemOrId: T | string): CompoundKey {
+    const itemId = typeof itemOrId === 'string' ? itemOrId : this.getId(itemOrId);
+    return CompoundKey.fromItemId(this.config.nodeType, itemId);
+  }
+
   public getId(item: T): string {
     return item[this.config.idProperty];
   }
 
   public getParentId(item: T): string | undefined {
-    return this.getId(item)
-      .split(':')
-      .slice(0, -1)
-      .join(':');
+    return this.toCompoundKey(item).parentItemId;
   }
 
   public toPartitionValue(id: string): string {
-    return id
-      .split(':')
-      .slice(0, -1)
-      .join('#');
+    return this.toCompoundKey(id).partitionValue;
   }
 
   public toSortKeyValue(id: string): string {
-    return this.config.nodeType + '#' + id.split(':').pop();
+    return this.toCompoundKey(id).sortKeyValue;
   }
 }
 
@@ -64,7 +64,7 @@ class CompoundMapImp<T> implements CompoundMap<T> {
   }
 
   public get id(): string {
-    return this.partitionValue.split('#').join(':') + ':' + this.sortKeyValue.split('#').pop();
+    return CompoundKey.fromKey(this.partitionValue, this.sortKeyValue).itemId;
   }
 
   public get partitionValue(): string {

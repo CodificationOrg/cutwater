@@ -1,3 +1,4 @@
+export * from './CompoundKey';
 export * from './CompoundKeyItemRepositoryConfig';
 export * from './CompoundKeyItemRespository';
 export * from './CompoundMap';

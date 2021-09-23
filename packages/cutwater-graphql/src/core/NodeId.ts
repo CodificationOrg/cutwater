@@ -1,5 +1,5 @@
 export class NodeId {
-  private static readonly SEPARATOR = ':';
+  public static readonly SEPARATOR = ':';
   private static readonly TYPE = 0;
   private static readonly OBJECT_ID = 1;
 
