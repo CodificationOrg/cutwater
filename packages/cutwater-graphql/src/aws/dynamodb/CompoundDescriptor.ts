@@ -17,7 +17,7 @@ export class CompoundDescriptor<T> implements ItemDescriptor<T>, NodeItemDescrip
   }
 
   public getItemParentId(nodeId: NodeId): string {
-    return CompoundKey.fromNodeId(nodeId).parentItemId;
+    return CompoundKey.fromNodeId(nodeId).itemId;
   }
 
   public getObjectId(item: T): string {
