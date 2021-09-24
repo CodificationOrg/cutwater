@@ -15,7 +15,12 @@ enum ValueType {
 }
 
 export class DynamoItem {
-  public constructor(public item: AttributeMap = {}) {}
+
+  public item: AttributeMap;
+
+  public constructor(item: AttributeMap = {}) {
+    this.item = { ...item };
+  }
 
   public prune(): AttributeMap {
     const removes: string[] = [];
