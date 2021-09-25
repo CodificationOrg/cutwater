@@ -77,7 +77,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     return rval;
   }
 
-  private get baseInput() {
+  protected get baseInput() {
     return {
       TableName: this.config.tableName,
     };
