@@ -15,7 +15,6 @@ enum ValueType {
 }
 
 export class DynamoItem {
-
   public item: AttributeMap;
 
   public constructor(item: AttributeMap = {}) {
