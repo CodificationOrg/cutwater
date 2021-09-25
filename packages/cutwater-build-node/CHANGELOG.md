@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.30.2 (2021-09-24)
+
+**Note:** Version bump only for package @codification/cutwater-build-node
+
+
+
+
+
+## 0.30.1 (2021-09-23)
+
+
+### Bug Fixes
+
+* correct typos related to new descriptor ([9ecef65](https://github.com/CodificationOrg/cutwater/commit/9ecef659488ab082a92258f660c78c8e72e8407f))
+
+
+
+
+
 # 0.30.0 (2021-09-23)
 
 
