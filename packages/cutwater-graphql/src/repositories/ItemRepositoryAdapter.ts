@@ -1,16 +1,20 @@
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
+import { ItemRepository } from '@codification/cutwater-repo';
 import { NodeId } from '../core';
-import { ItemRepository, Node, NodeSource } from '../types';
+import { Node, NodeSource } from '../types';
 import { NodeItemDescriptor } from './NodeItemDescriptor';
 
 export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T & Node> {
   protected readonly LOG: Logger = LoggerFactory.getLogger();
 
   public constructor(
-    protected readonly nodeType: string,
     protected readonly repo: ItemRepository<T>,
     protected readonly descriptor: NodeItemDescriptor<T>,
   ) {}
+
+  public get itemType(): string {
+    return this.repo.itemType;
+  }
 
   public getAll(parentId?: string): Promise<T[]> {
     return this.repo.getAll(parentId);
@@ -29,12 +33,12 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
   }
 
   public getNodeId(item: T): NodeId {
-    return NodeId.create(this.nodeType, this.descriptor.getObjectId(item));
+    return NodeId.create(this.itemType, this.descriptor.getObjectId(item));
   }
 
   public isSource(nodeIdOrNodeType: NodeId | string): boolean {
     const nodeType = typeof nodeIdOrNodeType === 'string' ? nodeIdOrNodeType : nodeIdOrNodeType.nodeType;
-    return nodeType === this.nodeType;
+    return nodeType === this.itemType;
   }
 
   public async resolve(id: NodeId): Promise<(T & Node) | undefined> {

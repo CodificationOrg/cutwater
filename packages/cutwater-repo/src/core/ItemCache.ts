@@ -1,6 +1,6 @@
 import { MemoryCache } from '@codification/cutwater-core';
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
-import { ItemDescriptor } from './ItemDescriptor';
+import { ItemDescriptor } from '../types';
 
 export interface CacheConfig<T> {
   repoName: string;

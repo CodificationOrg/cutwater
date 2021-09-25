@@ -1,13 +1,14 @@
 import { MemoryCache } from '@codification/cutwater-core';
 import { ItemCache } from './ItemCache';
-import { PropertyDescriptor } from './PropertyDescriptor';
+import { ItemPropertyDescriptor } from './ItemPropertyDescriptor';
+
+const itemDescriptor = new ItemPropertyDescriptor('MockItem', 'userId', 'groupId');
 
 export interface MockItem {
   groupId: string;
   userId: string;
   name: string;
   age: number;
-  canonicalId: string;
 }
 
 export const randomCount = (max = 25) => Math.floor(Math.random() * max + 1);
@@ -21,7 +22,6 @@ export const mockItems = (count: number = randomCount()) => {
       userId,
       name: `name${i}`,
       age: i,
-      canonicalId: `${groupId}:${userId}`,
     });
   }
   return rval;
@@ -31,7 +31,7 @@ const newInstance = async (count?: number): Promise<ItemCache<MockItem>> => {
   const rval = new ItemCache<MockItem>(new MemoryCache(), {
     repoName: 'stuff',
     cacheId: 'PLACEHOLDER',
-    itemDescriptor: new PropertyDescriptor('userId', 'groupId'),
+    itemDescriptor,
     ttl: 50,
   });
   if (count) {
@@ -46,7 +46,7 @@ describe('ItemCache', () => {
       const result = new ItemCache(new MemoryCache(), {
         repoName: 'stuff',
         cacheId: 'PLACEHOLDER',
-        itemDescriptor: new PropertyDescriptor('id', 'parent'),
+        itemDescriptor,
         ttl: 50,
       });
       expect(result).toBeTruthy();

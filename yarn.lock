@@ -310,6 +310,63 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@codification/cutwater-build-core@^0.30.2":
+  version "0.30.2"
+  resolved "https://registry.yarnpkg.com/@codification/cutwater-build-core/-/cutwater-build-core-0.30.2.tgz#8875ada34885b40d45229a4e6dc2747a7251c914"
+  integrity sha512-qPALIzBFyGVaLUgztK6GBBsDUMGI8QAsw0YRb8Wjx14ahoGbEkt73rMxm94DyqHzQ6dF0hc+m/A3iUap0axhgw==
+  dependencies:
+    "@types/gulp" "^4.0.7"
+    "@types/jest" "^26.x"
+    "@types/node" "^12.12.6"
+    ajv "^6.10.2"
+    colors "^1.3.3"
+    cross-spawn "^7.0.1"
+    del "^5.1.0"
+    end-of-stream "^1.4.1"
+    glob-escape "^0.0.2"
+    gulp "^4.0.2"
+    gulp-prettier "^2.2.0"
+    jest "^26.x"
+    js-yaml "^3.13.1"
+    node-notifier "^8.0.1"
+    prettier "^2.2.1"
+    pretty-hrtime "^1.0.3"
+    spawn-args "^0.2.0"
+    through2 "^3.0.1"
+    ts-jest "^26.5.2"
+    vinyl "^2.2.0"
+    yaml "^1.8.3"
+    yargs "^14.0.0"
+
+"@codification/cutwater-build-node@^0.30.1":
+  version "0.30.2"
+  resolved "https://registry.yarnpkg.com/@codification/cutwater-build-node/-/cutwater-build-node-0.30.2.tgz#3f692db5c741fcd960b7605cadfdb42458daf2ea"
+  integrity sha512-ZhJ4CNTrbSCnUNHAp+3BgnFief5D1xdjhq3zcZhbtR71eCjW7X5cElirZGLf8cBtuox4cxpbDi8Iz/rZdRPRmA==
+  dependencies:
+    "@codification/cutwater-build-core" "^0.30.2"
+    "@codification/cutwater-build-typescript" "^0.30.2"
+
+"@codification/cutwater-build-typescript@^0.30.2":
+  version "0.30.2"
+  resolved "https://registry.yarnpkg.com/@codification/cutwater-build-typescript/-/cutwater-build-typescript-0.30.2.tgz#01d6fe78e225695eaf4a523c3a19527cdaa013c5"
+  integrity sha512-esqcT3FCFA1ZST4OCd4Ob1ew7cfwrtyI/UIgwtC4uCrwuSx+h1g0UGz2qCIYpo/UXQ4C8o3zqfF2qfoA8F9UHQ==
+  dependencies:
+    "@codification/cutwater-build-core" "^0.30.2"
+    "@codification/eslint-config-cutwater" "^0.30.2"
+    eslint "^7.22.0"
+    gulp-eslint "^6.0.0"
+    typescript "^4.1.3"
+
+"@codification/eslint-config-cutwater@^0.30.2":
+  version "0.30.2"
+  resolved "https://registry.yarnpkg.com/@codification/eslint-config-cutwater/-/eslint-config-cutwater-0.30.2.tgz#1b378ca935751569beb29e32df5ec41186789e62"
+  integrity sha512-tKJ7JCly7N7O6+DJrlqDkUwSiC5criuxSkKU6Gp/zF9lk0bEjC3cma5aLnY8hN8DNXDXsWaG2jUceLcwEvq/0g==
+  dependencies:
+    "@typescript-eslint/eslint-plugin" "^4.18.0"
+    "@typescript-eslint/parser" "^4.18.0"
+    eslint-config-prettier "^8.1.0"
+    eslint-plugin-react "^7.22.0"
+
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.5.tgz#9283c9ce5b289a3c4f61c12757469e59377f81f3"
