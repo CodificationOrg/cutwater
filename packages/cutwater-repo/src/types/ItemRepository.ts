@@ -1,4 +1,5 @@
 export interface ItemRepository<T> {
+  readonly itemType: string;
   getAll(parentId?: string): Promise<T[]>;
   get(id: string): Promise<T | undefined>;
   put(item: T): Promise<T>;

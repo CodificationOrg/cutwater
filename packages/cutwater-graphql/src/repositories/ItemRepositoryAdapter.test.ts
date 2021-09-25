@@ -1,25 +1,52 @@
+import { ItemRepository, MemoryItemRepository } from '@codification/cutwater-repo';
 import { NodeId } from '../core';
-import { newMemoryRepo } from './CachingItemRepository.test';
-import { MockItem, mockItems, randomCount } from './ItemCache.test';
 import { ItemRepositoryAdapter } from './ItemRepositoryAdapter';
 import { PropertyDescriptor } from './PropertyDescriptor';
 
+const itemDescriptor = new PropertyDescriptor('MockItem', 'userId', 'groupId');
+
+export interface MockItem {
+  groupId: string;
+  userId: string;
+  name: string;
+  age: number;
+}
+
+export const newMemoryRepo = async (count?: number): Promise<ItemRepository<MockItem>> => {
+  const rval = new MemoryItemRepository<MockItem>('MockItem', itemDescriptor);
+  if (count) {
+    const items = mockItems(count);
+    for (const item of items) {
+      await rval.put(item);
+    }
+  }
+  return rval;
+};
+
+export const randomCount = (max = 25) => Math.floor(Math.random() * max + 1);
+export const mockItems = (count: number = randomCount()) => {
+  const rval: MockItem[] = [];
+  for (let i = 0; i < count; i++) {
+    const groupId = `${i % 2 ? 'a' : 'b'}`;
+    const userId = `${i}`;
+    rval.push({
+      groupId,
+      userId,
+      name: `name${i}`,
+      age: i,
+    });
+  }
+  return rval;
+};
+
 const newAdapter = async (count?: number): Promise<ItemRepositoryAdapter<MockItem>> => {
-  return new ItemRepositoryAdapter<MockItem>(
-    'MockItem',
-    await newMemoryRepo(count),
-    new PropertyDescriptor('userId', 'groupId'),
-  );
+  return new ItemRepositoryAdapter<MockItem>(await newMemoryRepo(count), itemDescriptor);
 };
 
 describe('ItemRepositoryAdapter', () => {
   describe('constructor', () => {
     it('can create a new instance', async () => {
-      const result = new ItemRepositoryAdapter<MockItem>(
-        'MockItem',
-        await newMemoryRepo(),
-        new PropertyDescriptor('userId', 'groupId'),
-      );
+      const result = new ItemRepositoryAdapter<MockItem>(await newMemoryRepo(), itemDescriptor);
       expect(result).toBeTruthy();
     });
   });

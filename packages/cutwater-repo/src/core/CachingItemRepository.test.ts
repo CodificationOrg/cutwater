@@ -1,11 +1,13 @@
-import { ItemRepository } from '..';
+import { ItemRepository } from '../types';
 import { CachingItemRepository } from './CachingItemRepository';
 import { MockItem, mockItems, randomCount } from './ItemCache.test';
+import { ItemPropertyDescriptor } from './ItemPropertyDescriptor';
 import { MemoryItemRepository } from './MemoryItemRepository';
-import { PropertyDescriptor } from './PropertyDescriptor';
+
+const itemDescriptor = new ItemPropertyDescriptor('MockItem', 'userId', 'groupId');
 
 export const newMemoryRepo = async (count?: number): Promise<ItemRepository<MockItem>> => {
-  const rval = new MemoryItemRepository<MockItem>(new PropertyDescriptor('userId', 'groupId'));
+  const rval = new MemoryItemRepository<MockItem>('MockItem', itemDescriptor);
   if (count) {
     const items = mockItems(count);
     for (const item of items) {
@@ -25,7 +27,7 @@ const newCachingRepo = async (
       : (countOrRepo as ItemRepository<MockItem>);
   const rval = new CachingItemRepository<MockItem>(repo, {
     name: 'MockItems',
-    itemDescriptor: new PropertyDescriptor('userId', 'groupId'),
+    itemDescriptor,
     greedy,
   });
   return rval;
@@ -36,7 +38,7 @@ describe('CachingItemRepository', () => {
     it('can create a new instance', async () => {
       const result = new CachingItemRepository<MockItem>(await newMemoryRepo(), {
         name: 'MockItems',
-        itemDescriptor: new PropertyDescriptor('userId', 'groupId'),
+        itemDescriptor,
       });
       expect(result).toBeTruthy();
     });

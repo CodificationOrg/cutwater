@@ -33,7 +33,7 @@ const createCFRequest = (): CloudFrontRequestEvent =>
 
 const createHeaders = (...headerNames: string[]): IncomingHttpHeaders => {
   const rval: IncomingHttpHeaders = {} as IncomingHttpHeaders;
-  let counter: number = 0;
+  let counter = 0;
   headerNames.forEach(header => {
     rval[header.toLowerCase()] = `Value${counter}`;
     counter++;

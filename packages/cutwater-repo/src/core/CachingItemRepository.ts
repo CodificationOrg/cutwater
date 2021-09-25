@@ -1,8 +1,7 @@
 import { MemoryCache } from '@codification/cutwater-core';
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
-import { ItemRepository } from '../types';
+import { ItemDescriptor, ItemRepository } from '../types';
 import { ItemCache } from './ItemCache';
-import { ItemDescriptor } from './ItemDescriptor';
 
 export interface RepositoryConfig<T> {
   name: string;
@@ -46,6 +45,10 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
         }
       }, 5);
     }
+  }
+
+  public get itemType(): string {
+    return this.repo.itemType;
   }
 
   public async getAll(parentId?: string): Promise<T[]> {

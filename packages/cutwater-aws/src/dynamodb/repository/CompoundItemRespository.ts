@@ -1,29 +1,29 @@
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
+import { ItemRepository } from '@codification/cutwater-repo';
 import { DynamoDB } from 'aws-sdk';
 import { AttributeMap, GetItemOutput, PutItemInput, QueryInput, QueryOutput } from 'aws-sdk/clients/dynamodb';
-import { ItemRepository } from '../types';
-import { DynamoDBMapper } from './DynamoDBMapperFactory';
+import { CompoundKey } from '.';
+import { DynamoItem } from '..';
+import { CompoundItemId } from './CompoundItemId';
+import { CompoundItemRepositoryConfig } from './CompoundItemRepositoryConfig';
 
-export interface DynamoDBItemRepositoryConfig<T> {
-  db?: DynamoDB;
-  tableName: string;
-  typeIndex: string;
-  mapper: DynamoDBMapper<T>;
-}
+export class CompoundItemRepository<T> implements ItemRepository<T> {
+  private static readonly ROOT_PARTITION_KEY = '#ROOT#';
 
-export class DynamoDBItemRepository<T> implements ItemRepository<T> {
   protected readonly LOG: Logger = LoggerFactory.getLogger();
   protected readonly db: DynamoDB = new DynamoDB();
-  protected readonly mapper: DynamoDBMapper<T>;
 
-  public constructor(public readonly config: DynamoDBItemRepositoryConfig<T>) {
-    Object.freeze(config);
+  public constructor(public readonly config: CompoundItemRepositoryConfig<T>) {
     this.db = config.db || new DynamoDB();
-    this.mapper = config.mapper;
+  }
+
+  public get itemType() {
+    return this.config.itemType;
   }
 
   public async getAll(parentId?: string): Promise<T[]> {
-    const results: AttributeMap[] = await this.getAllMaps(parentId);
+    const partitionValue = parentId ? CompoundKey.toPartitionKey(parentId) : CompoundItemRepository.ROOT_PARTITION_KEY;
+    const results: AttributeMap[] = await this.getAllMaps(partitionValue);
     const rval: T[] = [];
     for (const item of results) {
       rval.push(this.attributeMapToItem(item));
@@ -44,7 +44,7 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
   public async put(item: T): Promise<T> {
     const params: PutItemInput = {
       Item: await this.itemToAttributeMap(item),
-      ...this.toBaseInput(),
+      ...this.baseInput,
     };
     this.LOG.trace('DynamoDB Put: ', params);
     await this.db.putItem(params).promise();
@@ -62,47 +62,62 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
   }
 
   public toItemInput(id: string): any {
+    const key = CompoundKey.fromItemId(this.itemType, id);
     const rval = {
       Key: {
-        [this.mapper.idKey]: {
-          S: this.mapper.toPartitionValue(id),
+        [this.config.partitionKey]: {
+          S: key.partitionKey,
+        },
+        [this.config.sortKey]: {
+          S: key.sortKey,
         },
       },
-      ...this.toBaseInput(),
+      ...this.baseInput,
     };
     return rval;
   }
 
-  public toBaseInput() {
+  private get baseInput() {
     return {
       TableName: this.config.tableName,
     };
   }
 
   protected attributeMapToItem(map: AttributeMap): T {
-    return this.mapper.create(map).item;
+    const dynamoItem = new DynamoItem(map);
+    const rval = this.config.toItem(map);
+    rval[this.config.idProperty] = CompoundItemId.fromKeys(
+      dynamoItem.toString(this.config.partitionKey)!,
+      dynamoItem.toString(this.config.sortKey)!,
+    ).itemId;
+    return rval;
   }
 
   protected async itemToAttributeMap(item: T): Promise<AttributeMap> {
-    return this.mapper.create(item).map;
+    const key = CompoundKey.fromItemId(this.itemType, item[this.config.idProperty]);
+    const rval = new DynamoItem(this.config.toAttributeMap(item));
+    rval.setString(this.config.partitionKey, key.partitionKey);
+    rval.setString(this.config.sortKey, key.sortKey);
+    return rval.item;
   }
 
-  protected async getAllMaps(parentId?: string, cursor?: string): Promise<AttributeMap[]> {
-    const partitionValue = this.mapper.toTypeValue(parentId);
+  protected async getAllMaps(partitionValue: string, cursor?: string): Promise<AttributeMap[]> {
     const params: QueryInput = {
       ExpressionAttributeValues: {
-        ':partition': {
+        ':partitionValue': {
           S: partitionValue,
         },
+        ':itemType': {
+          S: this.config.itemType,
+        },
       },
-      KeyConditionExpression: `${this.mapper.typeKey} = :partition`,
-      IndexName: this.config.typeIndex,
-      ...this.toBaseInput(),
+      KeyConditionExpression: `${this.config.partitionKey} = :partitionValue and begins_with(${this.config.sortKey}, :itemType)`,
+      ...this.baseInput,
     };
     if (cursor) {
       params.ExclusiveStartKey = {
-        [this.mapper.typeKey]: { S: partitionValue },
-        [this.mapper.idKey]: { S: cursor },
+        [this.config.partitionKey]: { S: partitionValue },
+        [this.config.sortKey]: { S: cursor },
       };
     }
 
@@ -120,7 +135,7 @@ export class DynamoDBItemRepository<T> implements ItemRepository<T> {
 
     const rval = result.Items;
     if (result.LastEvaluatedKey) {
-      const moreResults = await this.getAllMaps(parentId, result.LastEvaluatedKey[this.mapper.idKey].S!);
+      const moreResults = await this.getAllMaps(partitionValue, result.LastEvaluatedKey[this.config.sortKey].S!);
       for (const m of moreResults) {
         rval.push(m);
       }

@@ -1,12 +1,20 @@
+import { ItemDescriptor } from '@codification/cutwater-repo';
 import { NodeId } from '../core';
-import { ItemDescriptor } from './ItemDescriptor';
 import { NodeItemDescriptor } from './NodeItemDescriptor';
 
 export class PropertyDescriptor<T> implements ItemDescriptor<T>, NodeItemDescriptor<T> {
-  public constructor(private readonly idProperty: string, private readonly parentIdProperty?: string) {}
+  public constructor(
+    private readonly itemType,
+    private readonly idProperty: string,
+    private readonly parentIdProperty?: string,
+  ) {}
 
   public getId(item: T): string {
     return item[this.idProperty];
+  }
+
+  public getType(): string {
+    return this.itemType;
   }
 
   public getParentId(item: T): string | undefined {

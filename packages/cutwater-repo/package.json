@@ -1,12 +1,11 @@
 {
-  "name": "@codification/cutwater-core",
-  "version": "0.30.2",
-  "description": "A library providing the basic utility classes for both the browser and node environments.",
+  "name": "@codification/cutwater-repo",
+  "version": "0.30.1",
+  "description": "A library providing the helpful structure for repositories.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "sideEffects": false,
   "scripts": {
     "clean": "gulp clean",
     "test": "gulp test --clean",
@@ -19,16 +18,14 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/CodificationOrg/cutwater.git",
-    "directory": "packages/cutwater-core"
+    "directory": "packages/cutwater-repo"
   },
   "keywords": [
     "common",
-    "cutwater",
-    "utilities",
-    "support",
-    "core",
-    "browser",
     "node",
+    "cutwater",
+    "repository",
+    "support",
     "codification"
   ],
   "author": {
@@ -44,10 +41,10 @@
     ]
   },
   "dependencies": {
-    "date-fns": "^1.29.0"
+    "@codification/cutwater-core": "^0.30.0",
+    "@codification/cutwater-logging": "^0.30.0"
   },
   "devDependencies": {
-    "@codification/cutwater-build-core": "^0.30.2",
-    "@codification/cutwater-build-node": "^0.30.2"
+    "@codification/cutwater-build-node": "^0.30.1"
   }
 }
