@@ -44,12 +44,12 @@
     ]
   },
   "devDependencies": {
-    "@codification/cutwater-aws": "^0.30.0",
     "@codification/cutwater-build-core": "^0.30.0",
     "@codification/cutwater-build-node": "^0.30.0",
     "aws-sdk": "^2.817.0"
   },
   "dependencies": {
+    "@codification/cutwater-repo": "^0.30.0",
     "@codification/cutwater-core": "^0.30.0",
     "@codification/cutwater-logging": "^0.30.0"
   },
