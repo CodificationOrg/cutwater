@@ -17,6 +17,10 @@ export class CompoundItemId {
     return new CompoundItemId(parentId, name);
   }
 
+  public withName(name: string): CompoundItemId {
+    return new CompoundItemId(this.itemId, name);
+  }
+
   public get itemId(): string {
     return [this.parentId, this.name].join(CompoundItemId.ID_SEPARATOR);
   }

@@ -15,6 +15,13 @@ describe('CompoundItemId', () => {
     });
   });
 
+  describe('withName', () => {
+    it('can create a new instance by adding a name', () => {
+      const result = CompoundItemId.fromItemId('parent:23');
+      expect(result.withName('42').name).toBe('42');
+    });
+  });
+
   const result = CompoundItemId.create('foo:bar:baggins', 'bilbo');
 
   describe('itemId', () => {
