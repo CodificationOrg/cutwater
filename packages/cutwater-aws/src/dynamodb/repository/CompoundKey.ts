@@ -1,11 +1,20 @@
-import { formatValue } from '..';
+import { AttributeMap } from 'aws-sdk/clients/dynamodb';
+import { DynamoItem, formatValue } from '..';
 import { CompoundItemId } from './CompoundItemId';
 
 export class CompoundKey {
-  private constructor(private readonly itemType: string, public readonly compoundItemId: CompoundItemId) {}
+  private constructor(public readonly itemType: string, public readonly compoundItemId: CompoundItemId) {}
 
   public static fromItemId(itemType: string, itemId: string): CompoundKey {
     return new CompoundKey(itemType, CompoundItemId.fromItemId(itemId));
+  }
+
+  public static fromAttributeMap(map: AttributeMap, partitionKey = 'pk', sortKey = 'sk'): CompoundKey {
+    const dynamoItem = new DynamoItem(map);
+    return new CompoundKey(
+      dynamoItem.toStringPart(sortKey, 0)!,
+      CompoundItemId.fromKeys(dynamoItem.toString(partitionKey)!, dynamoItem.toString(sortKey)!),
+    );
   }
 
   public get partitionKey(): string {

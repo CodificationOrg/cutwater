@@ -1,3 +1,4 @@
+import { DynamoItem } from '..';
 import { CompoundKey } from './CompoundKey';
 
 describe('CompoundKey', () => {
@@ -6,6 +7,19 @@ describe('CompoundKey', () => {
       const result = CompoundKey.fromItemId('Item', 'foo:bar:baz');
       expect(result.partitionKey).toBe('foo#bar');
       expect(result.sortKey).toBe('Item#baz');
+    });
+  });
+
+  describe('fromAttributeMap', () => {
+    it('can create from an Attribute Map', () => {
+      const map = new DynamoItem();
+      map.setString('pk', 'EC#ABC');
+      map.setString('sk', 'MockItem#42');
+      const result = CompoundKey.fromAttributeMap(map.item);
+      expect(result.compoundItemId.parentId).toBe('EC:ABC');
+      expect(result.compoundItemId.name).toBe('42');
+      expect(result.itemType).toBe('MockItem');
+      expect(result.compoundItemId.itemId).toBe('EC:ABC:42');
     });
   });
 
