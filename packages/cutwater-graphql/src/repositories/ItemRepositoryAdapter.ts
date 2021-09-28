@@ -47,7 +47,7 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
   }
 
   public async resolveConnections(parentId?: NodeId): Promise<(T & Node)[]> {
-    const result = await this.getAll(this.descriptor.getItemParentId(parentId));
+    const result = await this.getAll(parentId ? this.descriptor.getItemId(parentId) : undefined);
     return result.map(item => this.asNode(item));
   }
 
