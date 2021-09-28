@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.32.0 (2021-09-28)
+
+
+### Features
+
+* add support for multipart objectIds ([48a60f0](https://github.com/CodificationOrg/cutwater/commit/48a60f070ab708cf7247862f8092abf90e9d2c3b))
+
+
+
+
+
 # 0.31.0 (2021-09-26)
 
 
