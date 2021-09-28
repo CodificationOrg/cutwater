@@ -22,5 +22,9 @@ describe('NodeId', () => {
       const result = NodeId.from(NodeId.create('User', '42').id);
       expect(result.objectId).toBe('42');
     });
+    it('can decode an id with multiple parts in the objectId', () => {
+      const result = NodeId.from(NodeId.create('User', 'Test:foo:42').id);
+      expect(result.objectId).toBe('Test:foo:42');
+    });
   });
 });

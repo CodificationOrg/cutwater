@@ -48,7 +48,12 @@ export class NodeId {
 
   private static getNodeIdPart(id: string, partIndex: number): string | undefined {
     const rval = NodeId.decodeNodeId(id).split(NodeId.SEPARATOR);
-    return rval.length === 2 ? rval[partIndex] : undefined;
+    if (rval.length < 2) {
+      return undefined;
+    } else if (partIndex === NodeId.TYPE) {
+      return rval[NodeId.TYPE];
+    }
+    return rval.slice(1).join(this.SEPARATOR);
   }
 
   private constructor(public readonly nodeType: string, public readonly objectId: string) {
