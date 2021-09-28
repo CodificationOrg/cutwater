@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.32.1 (2021-09-28)
+
+
+### Bug Fixes
+
+* correct error in resolving connections ([94d595e](https://github.com/CodificationOrg/cutwater/commit/94d595ee687577971f2de13b95e52ce3106c34fd))
+
+
+
+
+
 # 0.32.0 (2021-09-28)
 
 
