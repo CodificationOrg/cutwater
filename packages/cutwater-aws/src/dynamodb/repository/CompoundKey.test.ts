@@ -23,6 +23,13 @@ describe('CompoundKey', () => {
     });
   });
 
+  describe('toPartitionKey', () => {
+    it('can create from a partition key from a name only itemId', () => {
+      const result = CompoundKey.toPartitionKey('nameOnly');
+      expect(result).toBe('nameOnly');
+    });
+  });
+
   const result = CompoundKey.fromItemId('Item', 'foo:bar:baz');
 
   describe('itemId', () => {

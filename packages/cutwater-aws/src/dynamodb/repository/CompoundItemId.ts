@@ -3,7 +3,7 @@ import { parseValue } from '../DynamoUtils';
 export class CompoundItemId {
   public static readonly ID_SEPARATOR = ':';
 
-  private constructor(public readonly parentId: string, public readonly name: string) {}
+  private constructor(public readonly parentId: string | undefined = undefined, public readonly name: string) {}
 
   public static fromItemId(itemId: string): CompoundItemId {
     return new CompoundItemId(CompoundItemId.toParentId(itemId), CompoundItemId.toName(itemId));
@@ -22,7 +22,7 @@ export class CompoundItemId {
   }
 
   public get itemId(): string {
-    return [this.parentId, this.name].join(CompoundItemId.ID_SEPARATOR);
+    return this.parentId ? [this.parentId, this.name].join(CompoundItemId.ID_SEPARATOR) : this.name;
   }
 
   public get idParts(): string[] {
@@ -30,7 +30,7 @@ export class CompoundItemId {
   }
 
   public get parentIdParts(): string[] {
-    return this.parentId.split(CompoundItemId.ID_SEPARATOR);
+    return this.parentId ? this.parentId.split(CompoundItemId.ID_SEPARATOR) : [];
   }
 
   public static toParentId(itemId: string): string {
