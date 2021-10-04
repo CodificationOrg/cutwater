@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.32.2 (2021-10-04)
+
+
+### Bug Fixes
+
+* correct how top level item Ids are processed ([ca46cd8](https://github.com/CodificationOrg/cutwater/commit/ca46cd839c3837a9d58b19ad05a932d9ccedda54))
+
+
+
+
+
 ## 0.32.1 (2021-09-28)
 
 

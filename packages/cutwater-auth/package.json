@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-auth",
-  "version": "0.32.1",
+  "version": "0.32.2",
   "description": "A library providing a simple solution for authentication.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -52,17 +52,17 @@
     ]
   },
   "devDependencies": {
-    "@codification/cutwater-build-core": "^0.32.1",
-    "@codification/cutwater-build-node": "^0.32.1",
+    "@codification/cutwater-build-core": "^0.32.2",
+    "@codification/cutwater-build-node": "^0.32.2",
     "@types/cookie": "^0.4.0",
     "@types/jsonwebtoken": "^8.5.1",
     "aws-lambda": "^1.0.6",
     "dotenv": "^8.2.0"
   },
   "dependencies": {
-    "@codification/cutwater-core": "^0.32.1",
-    "@codification/cutwater-logging": "^0.32.1",
-    "@codification/cutwater-node-core": "^0.32.1",
+    "@codification/cutwater-core": "^0.32.2",
+    "@codification/cutwater-logging": "^0.32.2",
+    "@codification/cutwater-node-core": "^0.32.2",
     "cookie": "^0.4.1",
     "form-data": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
