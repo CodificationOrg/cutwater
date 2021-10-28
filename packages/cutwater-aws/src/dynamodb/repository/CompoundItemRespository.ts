@@ -2,7 +2,17 @@ import { AsyncUtils } from '@codification/cutwater-core';
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
 import { ItemRepository } from '@codification/cutwater-repo';
 import { DynamoDB } from 'aws-sdk';
-import { AttributeMap, BatchWriteItemInput, BatchWriteItemOutput, GetItemOutput, PutItemInput, QueryInput, QueryOutput, WriteRequest, WriteRequests } from 'aws-sdk/clients/dynamodb';
+import {
+  AttributeMap,
+  BatchWriteItemInput,
+  BatchWriteItemOutput,
+  GetItemOutput,
+  PutItemInput,
+  QueryInput,
+  QueryOutput,
+  WriteRequest,
+  WriteRequests,
+} from 'aws-sdk/clients/dynamodb';
 import { CompoundKey } from '.';
 import { DynamoItem } from '..';
 import { CompoundItemId } from './CompoundItemId';
@@ -61,7 +71,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     const tableName = this.config.tableName;
     const inputs = writeRequests.reduce((inputs: BatchWriteItemInput[], req: WriteRequest, index: number) => {
       if (index % 24 === 0) {
-        inputs.push({ RequestItems: { [tableName]: [], }, });
+        inputs.push({ RequestItems: { [tableName]: [] } });
       }
       inputs[inputs.length - 1].RequestItems[tableName].push(req);
       return inputs;
@@ -78,16 +88,24 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
   private async putAllWithRetry(input: BatchWriteItemInput, maxTries = 10, currentTry = 0): Promise<AttributeMap[]> {
     const rval: AttributeMap[] = [];
     if (currentTry === maxTries) {
-      return (input.RequestItems[this.config.tableName] as WriteRequests).filter(req => req.PutRequest).map(req => req.PutRequest!.Item);
+      return (input.RequestItems[this.config.tableName] as WriteRequests)
+        .filter(req => req.PutRequest)
+        .map(req => req.PutRequest!.Item);
     }
     const result: BatchWriteItemOutput = await this.db.batchWriteItem(input).promise();
     const unprocessed = (result.UnprocessedItems && result.UnprocessedItems[this.config.tableName]) || [];
     if (unprocessed.length > 0) {
       currentTry++;
       await AsyncUtils.wait(2 ** currentTry * 10);
-      rval.push(...(await this.putAllWithRetry({
-        RequestItems: { [this.config.tableName]: unprocessed }
-      }, maxTries, currentTry)));
+      rval.push(
+        ...(await this.putAllWithRetry(
+          {
+            RequestItems: { [this.config.tableName]: unprocessed },
+          },
+          maxTries,
+          currentTry,
+        )),
+      );
     }
     return rval;
   }
