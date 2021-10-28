@@ -1,3 +1,4 @@
+export * from './AsyncUtils';
 export * from './Comparator';
 export * from './CompareUtils';
 export * from './Config';
