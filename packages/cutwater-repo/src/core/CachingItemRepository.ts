@@ -91,6 +91,10 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     return await this.cache(await this.repo.put(item));
   }
 
+  public async putAll(items: T[], parentId?: string): Promise<T[]> {
+    return this.cacheAll(await this.repo.putAll(items), parentId);
+  }
+
   public async remove(id: string): Promise<T | undefined> {
     const rval = await this.repo.remove(id);
     const itemCache = this.getItemCacheForItemId(id);
@@ -105,7 +109,15 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   }
 
   protected async cacheAll(items: T[], parentId?: string): Promise<T[]> {
-    return await await this.getItemCache(parentId).putAll(items);
+    if (parentId) {
+      return await await this.getItemCache(parentId).putAll(items);
+    } else {
+      const rval: T[] = [];
+      for (const item of items) {
+        rval.push(await this.cache(item));
+      }
+      return rval;
+    }
   }
 
   protected async getCached(id: string): Promise<T | undefined> {

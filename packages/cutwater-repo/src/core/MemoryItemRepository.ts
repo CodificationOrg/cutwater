@@ -23,6 +23,13 @@ export class MemoryItemRepository<T> implements ItemRepository<T> {
     return Promise.resolve(item);
   }
 
+  public putAll(items: T[]): Promise<T[]> {
+    items.forEach(item => {
+      this.repo[this.descriptor.getId(item)] = item;
+    });
+    return Promise.resolve(items);
+  }
+
   public remove(id: string): Promise<T | undefined> {
     const rval = this.repo[id];
     delete this.repo[id];

@@ -28,6 +28,10 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
     return this.repo.put(item);
   }
 
+  public putAll(items: T[]): Promise<T[]> {
+    return this.repo.putAll(items);
+  }
+
   public remove(id: string): Promise<T | undefined> {
     return this.repo.remove(id);
   }

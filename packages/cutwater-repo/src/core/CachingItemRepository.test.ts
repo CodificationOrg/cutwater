@@ -56,9 +56,9 @@ describe('CachingItemRepository', () => {
       const baseRepo = await newMemoryRepo(count);
       const spyRepo = jest.spyOn(baseRepo, 'getAll');
       const repo = await newCachingRepo(baseRepo);
-      await repo.getAll();
-      expect(spyRepo).toBeCalledTimes(1);
-      await repo.getAll();
+      await repo.getAll('a');
+      await repo.getAll('a');
+      await repo.getAll('a');
       expect(spyRepo).toBeCalledTimes(1);
     });
     it('can get all by parentId', async () => {
