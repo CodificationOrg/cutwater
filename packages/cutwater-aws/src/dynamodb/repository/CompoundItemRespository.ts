@@ -1,7 +1,8 @@
+import { AsyncUtils } from '@codification/cutwater-core';
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
 import { ItemRepository } from '@codification/cutwater-repo';
 import { DynamoDB } from 'aws-sdk';
-import { AttributeMap, GetItemOutput, PutItemInput, QueryInput, QueryOutput } from 'aws-sdk/clients/dynamodb';
+import { AttributeMap, BatchWriteItemInput, BatchWriteItemOutput, GetItemOutput, PutItemInput, QueryInput, QueryOutput, WriteRequest, WriteRequests } from 'aws-sdk/clients/dynamodb';
 import { CompoundKey } from '.';
 import { DynamoItem } from '..';
 import { CompoundItemId } from './CompoundItemId';
@@ -49,6 +50,46 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     this.LOG.trace('DynamoDB Put: ', params);
     await this.db.putItem(params).promise();
     return item;
+  }
+
+  public async putAll(items: T[]): Promise<T[]> {
+    const writeRequests: WriteRequests = [];
+    for (const item of items) {
+      writeRequests.push({ PutRequest: { Item: await this.itemToAttributeMap(item) } });
+    }
+
+    const tableName = this.config.tableName;
+    const inputs = writeRequests.reduce((inputs: BatchWriteItemInput[], req: WriteRequest, index: number) => {
+      if (index % 24 === 0) {
+        inputs.push({ RequestItems: { [tableName]: [], }, });
+      }
+      inputs[inputs.length - 1].RequestItems[tableName].push(req);
+      return inputs;
+    }, []);
+
+    const fails: AttributeMap[] = [];
+    for (const input of inputs) {
+      fails.push(...(await this.putAllWithRetry(input)));
+    }
+    const failIds = fails.map(map => CompoundKey.fromAttributeMap(map).compoundItemId.itemId);
+    return items.filter(item => !failIds.includes(this.toItemId(item)));
+  }
+
+  private async putAllWithRetry(input: BatchWriteItemInput, maxTries = 10, currentTry = 0): Promise<AttributeMap[]> {
+    const rval: AttributeMap[] = [];
+    if (currentTry === maxTries) {
+      return (input.RequestItems[this.config.tableName] as WriteRequests).filter(req => req.PutRequest).map(req => req.PutRequest!.Item);
+    }
+    const result: BatchWriteItemOutput = await this.db.batchWriteItem(input).promise();
+    const unprocessed = (result.UnprocessedItems && result.UnprocessedItems[this.config.tableName]) || [];
+    if (unprocessed.length > 0) {
+      currentTry++;
+      await AsyncUtils.wait(2 ** currentTry * 10);
+      rval.push(...(await this.putAllWithRetry({
+        RequestItems: { [this.config.tableName]: unprocessed }
+      }, maxTries, currentTry)));
+    }
+    return rval;
   }
 
   public async remove(id: string): Promise<T | undefined> {
@@ -99,6 +140,10 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     rval.setString(this.config.partitionKey, key.partitionKey);
     rval.setString(this.config.sortKey, key.sortKey);
     return rval.item;
+  }
+
+  protected toItemId(item: T): string {
+    return CompoundKey.fromItemId(this.itemType, item[this.config.idProperty]).compoundItemId.itemId;
   }
 
   protected async getAllMaps(partitionValue: string, cursor?: string): Promise<AttributeMap[]> {
