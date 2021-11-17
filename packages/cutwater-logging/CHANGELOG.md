@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.33.0 (2021-11-17)
+
+
+### Features
+
+* add removeAll support in repos ([cbf5e3d](https://github.com/CodificationOrg/cutwater/commit/cbf5e3d89169a16fb3b91a8f33be3fdb951f247e))
+
+
+
+
+
 ## 0.32.3 (2021-10-28)
 
 **Note:** Version bump only for package @codification/cutwater-logging
