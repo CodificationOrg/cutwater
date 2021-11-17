@@ -1,4 +1,4 @@
-import { AttributeMap } from 'aws-sdk/clients/dynamodb';
+import { AttributeMap, Key } from 'aws-sdk/clients/dynamodb';
 import { DynamoItem, formatValue } from '..';
 import { CompoundItemId } from './CompoundItemId';
 
@@ -23,6 +23,17 @@ export class CompoundKey {
 
   public get sortKey(): string {
     return formatValue(this.itemType, this.compoundItemId.name);
+  }
+
+  public toKey(partitionKey = 'pk', sortKey = 'sk'): Key {
+    return {
+      [partitionKey]: {
+        S: this.partitionKey,
+      },
+      [sortKey]: {
+        S: this.sortKey,
+      },
+    };
   }
 
   public static toPartitionKey(parentId: string): string {

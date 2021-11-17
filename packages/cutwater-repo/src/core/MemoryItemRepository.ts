@@ -35,4 +35,15 @@ export class MemoryItemRepository<T> implements ItemRepository<T> {
     delete this.repo[id];
     return Promise.resolve(rval);
   }
+
+  public async removeAll(ids: string[]): Promise<string[]> {
+    const rval: string[] = [];
+    for (const id of ids) {
+      const removed = await this.remove(id);
+      if (removed) {
+        rval.push(id);
+      }
+    }
+    return rval;
+  }
 }

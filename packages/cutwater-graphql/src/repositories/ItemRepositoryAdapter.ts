@@ -36,6 +36,10 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
     return this.repo.remove(id);
   }
 
+  public removeAll(ids: string[]): Promise<string[]> {
+    return this.repo.removeAll(ids);
+  }
+
   public getNodeId(item: T): NodeId {
     return NodeId.create(this.itemType, this.descriptor.getObjectId(item));
   }

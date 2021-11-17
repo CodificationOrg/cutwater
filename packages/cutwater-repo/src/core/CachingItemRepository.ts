@@ -104,6 +104,17 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     return rval;
   }
 
+  public async removeAll(ids: string[]): Promise<string[]> {
+    const rval = await this.repo.removeAll(ids);
+    for (const id of ids) {
+      const itemCache = this.getItemCacheForItemId(id);
+      if (itemCache) {
+        await itemCache.remove(id);
+      }
+    }
+    return rval;
+  }
+
   protected async cache(item: T): Promise<T> {
     return await this.getItemCache(this.descriptor.getParentId(item)).put(item);
   }

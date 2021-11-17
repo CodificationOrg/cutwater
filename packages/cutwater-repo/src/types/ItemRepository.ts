@@ -5,4 +5,5 @@ export interface ItemRepository<T> {
   put(item: T): Promise<T>;
   putAll(item: T[]): Promise<T[]>;
   remove(id: string): Promise<T | undefined>;
+  removeAll(ids: string[]): Promise<string[]>;
 }

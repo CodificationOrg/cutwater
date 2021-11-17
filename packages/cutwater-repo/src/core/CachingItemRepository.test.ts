@@ -154,4 +154,25 @@ describe('CachingItemRepository', () => {
       expect(await repo.get(id)).toBeFalsy();
     });
   });
+
+  describe('removeAll', () => {
+    it('can remove multiple items', async () => {
+      const count = randomCount(30, 10);
+      const repo = await newCachingRepo(count);
+
+      const ids: string[] = [];
+      const toRemove = randomCount(count, 5);
+      while (ids.length < toRemove) {
+        const id = `${randomCount(count) - 1}`;
+        if (!ids.includes(id)) {
+          ids.push(id);
+        }
+      }
+      const removedIds = await repo.removeAll(ids);
+      expect(removedIds.length).toBe(toRemove);
+      const items = await repo.getAll();
+      expect(items.length).toBe(count - toRemove);
+      expect(await repo.get(ids[randomCount(toRemove, 1)])).toBeUndefined();
+    });
+  });
 });

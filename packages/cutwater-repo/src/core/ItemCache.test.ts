@@ -11,7 +11,9 @@ export interface MockItem {
   age: number;
 }
 
-export const randomCount = (max = 25) => Math.floor(Math.random() * max + 1);
+export const randomCount = (max = 25, min = 1) => {
+  return Math.max(Math.floor(Math.random() * max + 1), min);
+};
 export const mockItems = (count: number = randomCount()) => {
   const rval: MockItem[] = [];
   for (let i = 0; i < count; i++) {
