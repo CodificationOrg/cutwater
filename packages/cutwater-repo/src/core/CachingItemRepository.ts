@@ -75,13 +75,14 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
 
   private async doGet(id: string, callback: GetCallback<T>): Promise<void> {
     let rval: T | undefined = await this.getCached(id);
-    if (!rval) {
+    const cacheMiss = !rval;
+    if (cacheMiss) {
       rval = await this.repo.get(id);
-      if (rval) {
-        await this.cache(rval);
-        if (this.greedy) {
-          await this.getAll(this.descriptor.getParentId(rval));
-        }
+    }
+    if (cacheMiss && rval) {
+      rval = await this.cache(rval);
+      if (this.greedy) {
+        await this.getAll(this.descriptor.getParentId(rval));
       }
     }
     callback(rval);
@@ -121,7 +122,7 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
 
   protected async cacheAll(items: T[], parentId?: string): Promise<T[]> {
     if (parentId) {
-      return await await this.getItemCache(parentId).putAll(items);
+      return await this.getItemCache(parentId).putAll(items);
     } else {
       const rval: T[] = [];
       for (const item of items) {
@@ -139,7 +140,7 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     return undefined;
   }
 
-  protected async getAllCached(parentId: string = CachingItemRepository.ROOT_OBJECT_ID): Promise<T[]> {
+  protected async getAllCached(parentId?: string): Promise<T[]> {
     return await this.getItemCache(parentId).getAll();
   }
 
