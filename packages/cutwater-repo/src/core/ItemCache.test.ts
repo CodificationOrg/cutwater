@@ -104,6 +104,15 @@ describe('ItemCache', () => {
       const item = (await cache.getAll()).find(item => item.userId === selected);
       expect(item?.age).toBe(422);
     });
+    it('returns copies', async () => {
+      const count = randomCount(100, 50);
+      const selected = (randomCount(count) - 1).toString();
+      const cache = await newInstance(count);
+      const existingItem = (await cache.getAll()).find(item => item.userId === selected)!;
+      existingItem.age = 422;
+      const item = (await cache.getAll()).find(item => item.userId === selected);
+      expect(item?.age).toBe(+selected);
+    });
     it('excludes removed items', async () => {
       const count = randomCount();
       const cache = await newInstance(count);
@@ -122,6 +131,14 @@ describe('ItemCache', () => {
       expect(item).toBeTruthy();
       expect(item?.userId).toBe(id);
     });
+    it('returns a copy', async () => {
+      const count = randomCount();
+      const selected = (randomCount(count) - 1).toString();
+      const cache = await newInstance(count);
+      const item = (await cache.get(selected))!;
+      item.age = 442;
+      expect((await cache.get(selected))!.age).toBe(+selected);
+    });
   });
 
   describe('put', () => {
@@ -131,6 +148,12 @@ describe('ItemCache', () => {
       const item = await cache.get('0');
       expect(item).toBeTruthy();
       expect(item?.userId).toBe('0');
+    });
+    it('returns a copy', async () => {
+      const cache = await newInstance();
+      const item = mockItems(1)[0];
+      const result = await cache.put(item);
+      expect(item === result).toBeFalsy();
     });
   });
 
