@@ -82,6 +82,14 @@ describe('MemoryCache', () => {
       expect(cache.get('key3')).toBe('value3');
     });
 
+    it('will return a new object', () => {
+      const cache = newInstance(8);
+      cache.put<{ test: string }>('foo', { test: 'test' });
+      const item = cache.get<{ test: string }>('foo')!;
+      item.test = 'bar';
+      expect(cache.get<{ test: string }>('foo')!.test).toBe('test');
+    });
+
     it('will not return an expired value', async () => {
       const cache = newInstance();
       cache.put('foo', 'oldValue', 1);
