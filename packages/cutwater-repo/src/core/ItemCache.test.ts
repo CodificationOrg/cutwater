@@ -71,7 +71,8 @@ describe('ItemCache', () => {
     it('can put all', async () => {
       const count = randomCount();
       const cache = await newInstance();
-      await cache.putAll(mockItems(count));
+      const result = await cache.putAll(mockItems(count));
+      expect(result.length).toBe(count);
       const items = await cache.getAll();
       expect(items.length).toBe(count);
     });
@@ -92,6 +93,16 @@ describe('ItemCache', () => {
       await cache.put(newItem);
       const items = await cache.getAll();
       expect(items.length).toBe(count + 1);
+    });
+    it('includes updated items', async () => {
+      const count = randomCount(100, 50);
+      const selected = (randomCount(count) - 1).toString();
+      const cache = await newInstance(count);
+      const existingItem = (await cache.get(selected))!;
+      existingItem.age = 422;
+      await cache.put(existingItem);
+      const item = (await cache.getAll()).find(item => item.userId === selected);
+      expect(item?.age).toBe(422);
     });
     it('excludes removed items', async () => {
       const count = randomCount();

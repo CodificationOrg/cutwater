@@ -87,7 +87,9 @@ describe('MemoryCache', () => {
       cache.put<{ test: string }>('foo', { test: 'test' });
       const item = cache.get<{ test: string }>('foo')!;
       item.test = 'bar';
-      expect(cache.get<{ test: string }>('foo')!.test).toBe('test');
+      const result = cache.get<{ test: string }>('foo')!;
+      expect(result === item).toBeFalsy();
+      expect(result.test).toBe('test');
     });
 
     it('will not return an expired value', async () => {
