@@ -51,6 +51,11 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     return this.repo.itemType;
   }
 
+  public async invalidate(itemOrId: string | T): Promise<void> {
+    const id = typeof itemOrId === 'string' ? itemOrId : this.descriptor.getId(itemOrId);
+    await this.getItemCacheForItemId(id)?.invalidate(id);
+  }
+
   public async getAll(parentId?: string): Promise<T[]> {
     let rval: T[] = await this.getAllCached(parentId);
     if (rval.length === 0) {

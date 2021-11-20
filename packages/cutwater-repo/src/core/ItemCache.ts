@@ -33,6 +33,11 @@ export class ItemCache<T> {
     return this.idIndex.includes(id);
   }
 
+  public async invalidate(idOrItem: string | T): Promise<void> {
+    const id = typeof idOrItem === 'string' ? idOrItem : this.descriptor.getId(idOrItem);
+    await this.remove(id);
+  }
+
   public async getAll(): Promise<T[]> {
     return Object.values((await this.getCachedBulk()) || {});
   }

@@ -1,6 +1,6 @@
 import { ItemRepository } from '../types';
 import { CachingItemRepository } from './CachingItemRepository';
-import { MockItem, mockItems, randomCount } from './ItemCache.test';
+import { MockItem, mockItems, randomCount, selectId } from './ItemCache.test';
 import { ItemPropertyDescriptor } from './ItemPropertyDescriptor';
 import { MemoryItemRepository } from './MemoryItemRepository';
 
@@ -166,6 +166,44 @@ describe('CachingItemRepository', () => {
       const item = await repo.get('0');
       expect(item).toBeTruthy();
       expect(item?.userId).toBe('0');
+    });
+  });
+
+  describe('invalidate', () => {
+    it('can invalidate a cached item', async () => {
+      const count = randomCount();
+      const selected = selectId(count);
+
+      const baseRepo = await newMemoryRepo(count);
+      const spyRepo = jest.spyOn(baseRepo, 'get');
+      const repo = await newCachingRepo(baseRepo);
+
+      await repo.get(selected);
+      await repo.get(selected);
+      expect(spyRepo).toBeCalledTimes(1);
+
+      await repo.invalidate(selected);
+      await repo.get(selected);
+      await repo.get(selected);
+      expect(spyRepo).toBeCalledTimes(2);
+    });
+
+    it('can invalidate a cached item with greedy enabled', async () => {
+      const count = randomCount();
+      const selected = selectId(count);
+
+      const baseRepo = await newMemoryRepo(count);
+      const spyRepo = jest.spyOn(baseRepo, 'get');
+      const repo = await newCachingRepo(baseRepo, true);
+
+      await repo.get(selected);
+      await repo.get(selected);
+      expect(spyRepo).toBeCalledTimes(1);
+
+      await repo.invalidate(selected);
+      await repo.get(selected);
+      await repo.get(selected);
+      expect(spyRepo).toBeCalledTimes(2);
     });
   });
 

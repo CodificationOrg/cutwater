@@ -14,6 +14,7 @@ export interface MockItem {
 export const randomCount = (max = 25, min = 1) => {
   return Math.max(Math.floor(Math.random() * max + 1), min);
 };
+export const selectId = (count: number): string => (randomCount(count) - 1).toString();
 export const mockItems = (count: number = randomCount()) => {
   const rval: MockItem[] = [];
   for (let i = 0; i < count; i++) {
@@ -52,6 +53,17 @@ describe('ItemCache', () => {
         ttl: 50,
       });
       expect(result).toBeTruthy();
+    });
+  });
+
+  describe('invalidate', () => {
+    it('can invalidate an id or item', async () => {
+      const count = randomCount();
+      const selected = selectId(count);
+      const cache = await newInstance(count);
+      expect(cache.includes(selected)).toBeTruthy();
+      await cache.invalidate(selected);
+      expect(cache.includes(selected)).toBeFalsy();
     });
   });
 
