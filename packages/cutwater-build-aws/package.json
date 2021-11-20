@@ -10,6 +10,7 @@
     "clean": "gulp clean",
     "format": "gulp prettier",
     "lint": "gulp lint --fix",
+    "test": "gulp test --clean",
     "test-integ": "gulp test-integ --clean",
     "build": "gulp --fix --clean"
   },
