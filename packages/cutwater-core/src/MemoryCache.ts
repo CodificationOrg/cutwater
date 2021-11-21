@@ -1,12 +1,13 @@
+import * as rfdc from 'rfdc';
 import { TimeUnit } from './TimeUnit';
 
-interface CacheEntry {
-  val: string;
+interface CacheEntry<T> {
+  val: T;
   exp: number;
 }
 
 export class MemoryCache {
-  private readonly CACHE: Record<string, CacheEntry> = {};
+  private readonly CACHE: Record<string, CacheEntry<unknown>> = {};
   private readonly DEFAULT_TTL: number;
 
   private nextExpiration: number;
@@ -38,8 +39,8 @@ export class MemoryCache {
 
   public put<T>(key: string, value: T, ttlSeconds: number = this.DEFAULT_TTL): T | undefined {
     const rval: T | undefined = this.get(key);
-    const entry: CacheEntry = {
-      val: JSON.stringify(value),
+    const entry: CacheEntry<T> = {
+      val: rfdc()(value),
       exp: Date.now() + TimeUnit.seconds(ttlSeconds).toMillis(),
     };
     this.CACHE[key] = entry;
@@ -51,7 +52,7 @@ export class MemoryCache {
     this.sweep();
     const entry = this.CACHE[key];
     if (entry && !this.isExpired(entry)) {
-      return JSON.parse(entry.val) as T;
+      return rfdc()(entry.val) as T;
     } else if (entry) {
       delete this.CACHE[key];
     }
@@ -70,11 +71,11 @@ export class MemoryCache {
     this.nextExpiration = Date.now() + TimeUnit.seconds(this.DEFAULT_TTL).toMillis();
   }
 
-  private isExpired(entry?: CacheEntry): boolean {
+  private isExpired(entry?: CacheEntry<unknown>): boolean {
     return !!entry && Date.now() > entry.exp;
   }
 
-  private updateNextExpiration(entry?: CacheEntry): void {
+  private updateNextExpiration(entry?: CacheEntry<unknown>): void {
     if (!!entry && !this.isExpired(entry)) {
       if (entry.exp < this.nextExpiration) {
         this.nextExpiration = entry.exp;
