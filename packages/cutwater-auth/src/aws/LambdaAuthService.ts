@@ -6,6 +6,8 @@ import jwt from 'jsonwebtoken';
 import { AuthService } from '../AuthService';
 import { LambdaAuthOptions } from './LambdaAuthOptions';
 
+export type TokenSecret = string | (() => Promise<string>);
+
 export class LambdaAuthService implements AuthService<APIGatewayProxyEvent, APIGatewayProxyResult> {
   private readonly LOG: Logger = LoggerFactory.getLogger();
   private readonly SET_COOKIE: string = 'Set-Cookie';
@@ -16,7 +18,7 @@ export class LambdaAuthService implements AuthService<APIGatewayProxyEvent, APIG
 
   private readonly opts: LambdaAuthOptions;
 
-  public constructor(private readonly tokenSecret: string, opts?: Partial<LambdaAuthOptions>) {
+  public constructor(private readonly tokenSecret: TokenSecret, opts?: Partial<LambdaAuthOptions>) {
     this.opts = { ...this.DEFAULT_OPTS, ...opts };
   }
 
@@ -34,13 +36,13 @@ export class LambdaAuthService implements AuthService<APIGatewayProxyEvent, APIG
   }
 
   public async setUserId(res: APIGatewayProxyResult, userId?: string): Promise<void> {
-    this.addTokenHeaders(res, this.generateIdTokenCookieValue(userId));
+    this.addTokenHeaders(res, await this.generateIdTokenCookieValue(userId));
     return Promise.resolve();
   }
 
-  private generateIdTokenCookieValue(userId?: string): string {
+  private async generateIdTokenCookieValue(userId?: string): Promise<string> {
     const expires: Date | undefined = !!userId ? new Date(Date.now() + this.opts.tokenTTLSeconds * 1000) : new Date(0);
-    return cookie.serialize(this.opts.tokenCookie, this.createTokenValue(userId), {
+    return cookie.serialize(this.opts.tokenCookie, await this.createTokenValue(userId), {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
@@ -48,11 +50,15 @@ export class LambdaAuthService implements AuthService<APIGatewayProxyEvent, APIG
     });
   }
 
-  private createTokenValue(userId?: string): string {
+  private async createTokenValue(userId?: string): Promise<string> {
     if (userId) {
       this.LOG.debug(`Creating token for userId: `, userId);
     }
-    return !userId ? '' : jwt.sign({ userId }, this.tokenSecret, { expiresIn: this.opts.tokenTTLSeconds });
+    return !userId ? '' : jwt.sign({ userId }, await this.getTokenSecret(), { expiresIn: this.opts.tokenTTLSeconds });
+  }
+
+  private async getTokenSecret(): Promise<string> {
+    return typeof this.tokenSecret === 'string' ? this.tokenSecret : this.tokenSecret();
   }
 
   private addTokenHeaders(res: APIGatewayProxyResult, token: string): APIGatewayProxyResult {
