@@ -1,7 +1,8 @@
 import { AbstractOAuthService } from './AbstractOAuthService';
+import { OAuthServiceProvider } from './OAuthServiceProvider';
 
 export class GoogleOAuthService extends AbstractOAuthService {
   public constructor(clientId: string, clientSecret: string) {
-    super('google', clientId, clientSecret, 'https://accounts.google.com');
+    super(OAuthServiceProvider.GOOGLE, clientId, clientSecret, 'https://accounts.google.com');
   }
 }

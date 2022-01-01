@@ -4,6 +4,7 @@ import FormData from 'form-data';
 import * as jwt from 'jsonwebtoken';
 import { GetPublicKeyOrSecret, JwtHeader } from 'jsonwebtoken';
 import jwks from 'jwks-rsa';
+import { OAuthServiceProvider } from '.';
 import { AuthState } from './AuthState';
 import { OAuthClaims } from './OAuthClaims';
 import { OAuthResponse } from './OAuthResponse';
@@ -40,13 +41,13 @@ export abstract class AbstractOAuthService implements OAuthService {
   private jwtVerificationFunction: GetPublicKeyOrSecret;
 
   public constructor(
-    public readonly name: string,
+    public readonly provider: OAuthServiceProvider,
     private readonly clientId: string,
     private readonly clientSecret: string,
     discoveryUrlBase: string,
     private readonly scope: string[] = ['openid', 'profile', 'email'],
   ) {
-    this.AUTH_STATE = new AuthState(name, clientSecret);
+    this.AUTH_STATE = new AuthState(provider, clientSecret);
     this.discoveryUrl = `${discoveryUrlBase}/.well-known/openid-configuration`;
   }
 
@@ -57,7 +58,7 @@ export abstract class AbstractOAuthService implements OAuthService {
       `scope=${encodeURIComponent((scope || this.scope).join(' '))}&` +
       `redirect_uri=${encodeURIComponent(redirectUrl)}&` +
       `state=${encodeURIComponent(await this.AUTH_STATE.generateState())}`;
-    this.LOG.debug(`[${this.name}] Generated auth url[${this.name}]: `, rval);
+    this.LOG.debug(`[${this.provider}] Generated auth url[${this.provider}]: `, rval);
 
     return rval;
   }
@@ -66,7 +67,7 @@ export abstract class AbstractOAuthService implements OAuthService {
     if (await this.AUTH_STATE.validateTokenParams(response)) {
       return await this.fetchClaims(this.generateTokenRequestConfig(response));
     } else {
-      throw new Error(`[${this.name}] Invalid response.`);
+      throw new Error(`[${this.provider}] Invalid response.`);
     }
   }
 
@@ -83,7 +84,7 @@ export abstract class AbstractOAuthService implements OAuthService {
           reject(err);
         } else {
           const rval: OAuthClaims = decoded! as OAuthClaims;
-          this.LOG.debug(`[${this.name}] Claims received: `, decoded);
+          this.LOG.debug(`[${this.provider}] Claims received: `, decoded);
           resolve(rval);
         }
       });
@@ -101,7 +102,7 @@ export abstract class AbstractOAuthService implements OAuthService {
       };
       return rval;
     } else {
-      throw new Error(`[${this.name}] Did not receive response to token id request.`);
+      throw new Error(`[${this.provider}] Did not receive response to token id request.`);
     }
   }
 
@@ -115,7 +116,7 @@ export abstract class AbstractOAuthService implements OAuthService {
     }
     return this.getDiscoveryDocumentValue(this.KEY_ENDPOINT).then(uri => {
       this.jwksClient = jwks({ jwksUri: uri });
-      this.LOG.info(`[${this.name}] JWKS client created.`);
+      this.LOG.info(`[${this.provider}] JWKS client created.`);
       this.jwtVerificationFunction = (header: JwtHeader, callback) => {
         this.jwksClient.getSigningKey(header.kid || '', (err: any, key: any) => {
           const signingKey = key.publicKey || key.rsaPublicKey;
@@ -131,11 +132,11 @@ export abstract class AbstractOAuthService implements OAuthService {
       const data = await this.httpService.fetchObject(this.discoveryUrl);
       if (!!data) {
         this.discoveryDocument = data.object;
-        this.LOG.info(`[${this.name}] Discovery document successfully loaded.`);
+        this.LOG.info(`[${this.provider}] Discovery document successfully loaded.`);
       } else if (!data) {
-        throw new Error(`[${this.name}] Discovery document was not found!`);
+        throw new Error(`[${this.provider}] Discovery document was not found!`);
       } else {
-        throw new Error(`[${this.name}] Error getting discovery document: ${JSON.stringify(data)}`);
+        throw new Error(`[${this.provider}] Error getting discovery document: ${JSON.stringify(data)}`);
       }
     }
     return this.discoveryDocument[key];

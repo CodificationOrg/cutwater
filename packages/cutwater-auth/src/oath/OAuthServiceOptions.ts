@@ -1,4 +1,4 @@
+import { OAuthServiceProvider } from '.';
 import { OAuthServiceConfig } from './OAuthServiceConfig';
-import { OAuthServiceProvider } from './OAuthServiceProvider';
 
-export type OAuthServiceOptions = Record<OAuthServiceProvider, OAuthServiceConfig>;
+export type OAuthServiceOptions = Partial<Record<OAuthServiceProvider, OAuthServiceConfig>>;

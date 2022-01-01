@@ -30,7 +30,7 @@ export class AuthState {
 
   public static getOAuthServiceProvider(response: OAuthResponse): OAuthServiceProvider | undefined {
     const stateObj: State = JSON.parse(response.state);
-    const provider = stateObj.v.substr(0, stateObj.v.indexOf('.'));
+    const provider = stateObj.v.substring(0, stateObj.v.indexOf('.'));
     return toOAuthServiceProvider(provider);
   }
 

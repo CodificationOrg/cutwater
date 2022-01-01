@@ -8,7 +8,7 @@ describe('AuthState', () => {
   it('can generate state', async () => {
     const result = await authState.generateState();
     expect(result).toBeTruthy();
-    expect(result.indexOf('microsoft')).not.toBe(-1);
+    expect(result.indexOf('MICROSOFT')).not.toBe(-1);
   });
 
   it('can find the provider for a response', async () => {
