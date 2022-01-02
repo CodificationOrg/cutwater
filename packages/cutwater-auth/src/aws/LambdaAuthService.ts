@@ -36,9 +36,10 @@ export class LambdaAuthService implements AuthService<APIGatewayProxyEvent, APIG
     }
   }
 
-  public async setUserId(res: APIGatewayProxyResult, userId?: string): Promise<void> {
-    this.addTokenHeaders(res, await this.generateIdTokenCookieValue(userId));
-    return Promise.resolve();
+  public async setUserId(res?: APIGatewayProxyResult, userId?: string): Promise<void> {
+    if (res) {
+      this.addTokenHeaders(res, await this.generateIdTokenCookieValue(userId));
+    }
   }
 
   private async generateIdTokenCookieValue(userId?: string): Promise<string> {
