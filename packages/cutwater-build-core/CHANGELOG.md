@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.33.8 (2022-01-02)
+
+
+### Bug Fixes
+
+* correct failure to check for result ([d05b873](https://github.com/CodificationOrg/cutwater/commit/d05b873abcd4591585ea076b6e4777014e17a720))
+
+
+
+
+
 ## 0.33.7 (2022-01-02)
 
 **Note:** Version bump only for package @codification/cutwater-build-core
