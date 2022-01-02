@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.33.9 (2022-01-02)
+
+
+### Bug Fixes
+
+* stop error on missing provider config ([790fd9c](https://github.com/CodificationOrg/cutwater/commit/790fd9c132ed7ca9b5e7467ac03a34503459ab84))
+
+
+
+
+
 ## 0.33.8 (2022-01-02)
 
 
