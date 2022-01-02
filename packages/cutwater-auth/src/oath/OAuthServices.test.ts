@@ -14,6 +14,13 @@ const opts: OAuthServiceOptions = {
   },
 };
 
+const partialOpts: OAuthServiceOptions = {
+  [OAuthServiceProvider.GOOGLE]: {
+    clientId: 'foo',
+    clientSecret: 'bar',
+  },
+};
+
 const configSrc: OAuthServiceConfigSource = {
   findClientId: async (provider: OAuthServiceProvider): Promise<string | undefined> => {
     return opts[provider]?.clientId;
@@ -46,6 +53,13 @@ describe('OAuthServices', () => {
     const url = (await authServices.generateConnectionConfig('microsoft', 'https://example.com/authCallback'))?.authUrl;
     expect(url).toBeTruthy();
     expect(url!.indexOf('microsoft')).not.toBe(-1);
+  }, 10000);
+
+  it('does not throw error on missing config', async () => {
+    const authServices = new OAuthServices(partialOpts);
+    const configs = await authServices.generateConnectionConfigs('https://example.com/authCallback');
+    expect(configs).toBeTruthy();
+    expect(configs.length).toBe(1);
   }, 10000);
 
   it('fails with invalid provider string', async () => {

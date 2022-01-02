@@ -11,7 +11,7 @@ import { OAuthServiceProvider, OAuthServiceProviderLike, toOAuthServiceProvider 
 export class OAuthServices {
   private availableServices: Partial<Record<OAuthServiceProvider, OAuthService>>;
 
-  public constructor(private config: OAuthServiceOptions | OAuthServiceConfigSource) { }
+  public constructor(private config: OAuthServiceOptions | OAuthServiceConfigSource) {}
 
   public async generateConnectionConfig(
     provider: OAuthServiceProviderLike,
@@ -31,7 +31,6 @@ export class OAuthServices {
     } catch (err) {
       return undefined;
     }
-
   }
 
   public async generateConnectionConfigs(redirectUrl: string, scope?: string[]): Promise<OAuthConnectionConfig[]> {
