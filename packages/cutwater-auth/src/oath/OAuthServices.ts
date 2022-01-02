@@ -11,7 +11,7 @@ import { OAuthServiceProvider, OAuthServiceProviderLike, toOAuthServiceProvider 
 export class OAuthServices {
   private availableServices: Partial<Record<OAuthServiceProvider, OAuthService>>;
 
-  public constructor(private config: OAuthServiceOptions | OAuthServiceConfigSource) {}
+  public constructor(private config: OAuthServiceOptions | OAuthServiceConfigSource) { }
 
   public async generateConnectionConfig(
     provider: OAuthServiceProviderLike,
@@ -22,11 +22,16 @@ export class OAuthServices {
     if (!oAuthProvider) {
       throw new Error(`Unknown OAuth provider: ${provider}`);
     }
-    const service = await this.findOAuthService(oAuthProvider);
-    return {
-      provider: service.provider,
-      authUrl: await service.generateAuthUrl(redirectUrl, scope),
-    };
+    try {
+      const service = await this.findOAuthService(oAuthProvider);
+      return {
+        provider: service.provider,
+        authUrl: await service.generateAuthUrl(redirectUrl, scope),
+      };
+    } catch (err) {
+      return undefined;
+    }
+
   }
 
   public async generateConnectionConfigs(redirectUrl: string, scope?: string[]): Promise<OAuthConnectionConfig[]> {
