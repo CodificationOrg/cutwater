@@ -17,19 +17,20 @@ export class LambdaAuthService implements AuthService<APIGatewayProxyEvent, APIG
   };
 
   private readonly opts: LambdaAuthOptions;
+  private resolvedSecret: string;
 
-  public constructor(private readonly tokenSecret: TokenSecret, opts?: Partial<LambdaAuthOptions>) {
+  public constructor(private readonly secret: TokenSecret, opts?: Partial<LambdaAuthOptions>) {
     this.opts = { ...this.DEFAULT_OPTS, ...opts };
   }
 
-  public getUserId(req: APIGatewayProxyEvent): Promise<string | undefined> {
+  public async getUserId(req: APIGatewayProxyEvent): Promise<string | undefined> {
     const token: string | undefined = this.getCookieValue(req);
     if (!token) {
-      return Promise.resolve(undefined);
+      return undefined;
     }
     try {
-      const payload: any = jwt.verify(token, this.tokenSecret);
-      return Promise.resolve(!!payload && !!payload.userId ? payload.userId : undefined);
+      const payload: any = jwt.verify(token, await this.getTokenSecret());
+      return !!payload && !!payload.userId ? payload.userId : undefined;
     } catch (err) {
       throw new Error(`Received invalid token: ${err.message}`);
     }
@@ -58,7 +59,10 @@ export class LambdaAuthService implements AuthService<APIGatewayProxyEvent, APIG
   }
 
   private async getTokenSecret(): Promise<string> {
-    return typeof this.tokenSecret === 'string' ? this.tokenSecret : this.tokenSecret();
+    if (!this.resolvedSecret) {
+      this.resolvedSecret = typeof this.secret === 'string' ? this.secret : await this.secret();
+    }
+    return this.resolvedSecret;
   }
 
   private addTokenHeaders(res: APIGatewayProxyResult, token: string): APIGatewayProxyResult {
