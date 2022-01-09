@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.33.10 (2022-01-09)
+
+
+### Bug Fixes
+
+* correct issues with HttpService and post ([739d48c](https://github.com/CodificationOrg/cutwater/commit/739d48c4472223df039c56cbb954f1819b127931))
+
+
+
+
+
 ## 0.33.9 (2022-01-02)
 
 
