@@ -17,7 +17,7 @@
     "elliptic": "^6.5.4",
     "minimist": "^1.2.5",
     "glob-parent": "^5.1.2",
-    "node-forge": "^0.10.0",
+    "node-forge": "^1.0.0",
     "tar": "^6.1.9",
     "set-value": "^4.0.1",
     "ansi-regex": "^5.0.1",
