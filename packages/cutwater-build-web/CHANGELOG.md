@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.33.12 (2022-01-09)
+
+
+### Bug Fixes
+
+* update vulnerable package ([996233d](https://github.com/CodificationOrg/cutwater/commit/996233d689c372cd589559877dbab630dbed164a))
+
+
+
+
+
 ## 0.33.11 (2022-01-09)
 
 
