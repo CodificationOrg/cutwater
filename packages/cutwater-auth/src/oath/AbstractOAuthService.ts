@@ -1,6 +1,5 @@
 import { LoggerFactory } from '@codification/cutwater-logging';
 import { HttpService } from '@codification/cutwater-node-core';
-import FormData from 'form-data';
 import * as jwt from 'jsonwebtoken';
 import { GetPublicKeyOrSecret, JwtHeader } from 'jsonwebtoken';
 import jwks from 'jwks-rsa';
@@ -92,9 +91,7 @@ export abstract class AbstractOAuthService implements OAuthService {
   }
 
   private async getTokens(req: TokenRequestConfig): Promise<Tokens> {
-    const body = new FormData();
-    Object.keys(req).forEach(field => body.append(field, req[field]));
-    const resp = await this.httpService.postForObject<any>(await this.tokenEndpoint, body);
+    const resp = await this.httpService.postForObject<any>(await this.tokenEndpoint, { form: true, body: req });
     if (!!resp) {
       const rval: Tokens = {
         idToken: resp.object[this.ID_TOKEN],

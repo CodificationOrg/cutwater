@@ -21,6 +21,12 @@ export interface ObjectResponse<T> extends HttpResponse {
   object: T;
 }
 
+export interface PostBody {
+  json?: boolean;
+  form?: boolean;
+  body: any;
+}
+
 export class HttpService {
   private readonly LOG = LoggerFactory.getLogger();
 
@@ -94,11 +100,7 @@ export class HttpService {
   }
 
   public async post(url: string, body?: any): Promise<DataResponse | undefined> {
-    const opts: OptionsOfBufferResponseBody = {
-      json: body,
-      responseType: 'buffer',
-    };
-    const response: IncomingMessage = await got.post(url, opts);
+    const response: IncomingMessage = await got.post(url, this.toPostOptions(body));
     if (HttpUtils.isResponseOk(response)) {
       return {
         data: await HttpUtils.toBuffer(response),
@@ -110,6 +112,24 @@ export class HttpService {
       this.LOG.error(`Url[${url}] returned error status code [${response.statusCode}]: \n`, response);
       throw new Error('Error during post to url.');
     }
+  }
+
+  private toPostOptions(body?: any): OptionsOfBufferResponseBody {
+    const postBody = this.toPostBody(body);
+    return {
+      responseType: 'buffer',
+      form: postBody.form ? postBody.body : undefined,
+      json: postBody.json ? postBody.body : undefined,
+      body: !postBody.form && !postBody.json ? postBody.body : undefined,
+    };
+  }
+
+  private toPostBody(body?: any): PostBody {
+    if (!body || typeof body !== 'object') {
+      return { body };
+    }
+    const isPostBody = ['form', 'json', 'body'].find(prop => Object.keys(body).includes(prop)) !== undefined;
+    return isPostBody ? body : { body };
   }
 
   private toHttpResponse(response: IncomingMessage): HttpResponse {
