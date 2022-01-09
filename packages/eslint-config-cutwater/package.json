@@ -1,6 +1,6 @@
 {
   "name": "@codification/eslint-config-cutwater",
-  "version": "0.33.11",
+  "version": "0.33.12",
   "description": "Shareable config for cutwater based projects.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
