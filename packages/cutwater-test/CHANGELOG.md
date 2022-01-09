@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.33.14 (2022-01-09)
+
+
+### Bug Fixes
+
+* add pin to prevent colors hack ([0fe1efa](https://github.com/CodificationOrg/cutwater/commit/0fe1efa443fe01f4d19c747fe2686a406bc28433))
+
+
+
+
+
 ## 0.33.13 (2022-01-09)
 
 **Note:** Version bump only for package @codification/cutwater-test
