@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.33.11 (2022-01-09)
+
+
+### Bug Fixes
+
+* rollback updates to other packages ([e9d9ecd](https://github.com/CodificationOrg/cutwater/commit/e9d9ecd8a510555745b025fb9faf74c3db2027da))
+
+
+
+
+
 ## 0.33.10 (2022-01-09)
 
 
