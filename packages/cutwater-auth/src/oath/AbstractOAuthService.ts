@@ -91,7 +91,7 @@ export abstract class AbstractOAuthService implements OAuthService {
   }
 
   private async getTokens(req: TokenRequestConfig): Promise<Tokens> {
-    const resp = await this.httpService.postForObject<any>(await this.tokenEndpoint, { form: true, body: req });
+    const resp = await this.httpService.postFormForObject<any>(await this.tokenEndpoint, req);
     if (!!resp) {
       const rval: Tokens = {
         idToken: resp.object[this.ID_TOKEN],

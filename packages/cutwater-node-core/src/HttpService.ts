@@ -1,6 +1,6 @@
 import { LoggerFactory } from '@codification/cutwater-logging';
-import got, { OptionsOfBufferResponseBody } from 'got';
 import { IncomingMessage } from 'http';
+import needle, { NeedleResponse } from 'needle';
 import { HttpUtils } from './HttpUtils';
 
 export interface HttpResponse {
@@ -21,12 +21,6 @@ export interface ObjectResponse<T> extends HttpResponse {
   object: T;
 }
 
-export interface PostBody {
-  json?: boolean;
-  form?: boolean;
-  body: any;
-}
-
 export class HttpService {
   private readonly LOG = LoggerFactory.getLogger();
 
@@ -43,7 +37,7 @@ export class HttpService {
     const data: DataResponse | undefined = await this.fetchData(url);
     if (data && data.contentType.toLowerCase().indexOf('text/html') !== -1) {
       return {
-        body: data.data.toString(),
+        body: data.data.toString('utf-8'),
         ...data,
       };
     } else if (data) {
@@ -58,7 +52,7 @@ export class HttpService {
     const data: DataResponse | undefined = await this.fetchData(url);
     if (data && data.contentType.toLowerCase().indexOf('application/json') !== -1) {
       return {
-        object: JSON.parse(data.data.toString()),
+        object: JSON.parse(data.data.toString('utf-8')),
         ...data,
       };
     } else if (data) {
@@ -70,25 +64,33 @@ export class HttpService {
   }
 
   public async fetchData(url: string): Promise<DataResponse | undefined> {
-    const response: IncomingMessage = await got(url, { responseType: 'buffer', throwHttpErrors: false });
+    const response: NeedleResponse = await needle('get', url, { responseType: 'buffer', throwHttpErrors: false });
     if (HttpUtils.isResponseOk(response)) {
       return {
-        data: await HttpUtils.toBuffer(response),
+        data: response.raw,
         ...this.toHttpResponse(response),
       };
     } else if (response.statusCode === 404) {
       return undefined;
     } else {
-      this.LOG.error(`Url[${url}] returned error status code [${response.statusCode}]: \n`, response);
+      this.LOG.error(
+        `Url[${url}] returned error status code [${response.statusCode}]: \n`,
+        response.statusMessage,
+        response.body,
+      );
       throw new Error('Data could not be fetched from url.');
     }
   }
 
-  public async postForObject<T>(url: string, body?: any): Promise<ObjectResponse<T> | undefined> {
-    const data: DataResponse | undefined = await this.post(url, body);
+  public async postFormForObject<T>(url: string, body: Record<string, any>): Promise<ObjectResponse<T> | undefined> {
+    return await this.postForObject(url, body, false);
+  }
+
+  public async postForObject<T>(url: string, body: any, json = true): Promise<ObjectResponse<T> | undefined> {
+    const data: DataResponse | undefined = await this.post(url, body, json);
     if (data && data.contentType.toLowerCase().indexOf('application/json') !== -1) {
       return {
-        object: JSON.parse(data.data.toString()),
+        object: JSON.parse(data.data.toString('utf-8')),
         ...data,
       };
     } else if (data) {
@@ -99,37 +101,23 @@ export class HttpService {
     }
   }
 
-  public async post(url: string, body?: any): Promise<DataResponse | undefined> {
-    const response: IncomingMessage = await got.post(url, this.toPostOptions(body));
+  public async post(url: string, body: any, json = true): Promise<DataResponse | undefined> {
+    const response: NeedleResponse = await needle('post', url, body, { json });
     if (HttpUtils.isResponseOk(response)) {
       return {
-        data: await HttpUtils.toBuffer(response),
+        data: response.raw,
         ...this.toHttpResponse(response),
       };
     } else if (response.statusCode === 404) {
       return undefined;
     } else {
-      this.LOG.error(`Url[${url}] returned error status code [${response.statusCode}]: \n`, response);
+      this.LOG.error(
+        `Url[${url}] returned error status code [${response.statusCode}]: \n`,
+        response.statusMessage,
+        response.body,
+      );
       throw new Error('Error during post to url.');
     }
-  }
-
-  private toPostOptions(body?: any): OptionsOfBufferResponseBody {
-    const postBody = this.toPostBody(body);
-    return {
-      responseType: 'buffer',
-      form: postBody.form ? postBody.body : undefined,
-      json: postBody.json ? postBody.body : undefined,
-      body: !postBody.form && !postBody.json ? postBody.body : undefined,
-    };
-  }
-
-  private toPostBody(body?: any): PostBody {
-    if (!body || typeof body !== 'object') {
-      return { body };
-    }
-    const isPostBody = ['form', 'json', 'body'].find(prop => Object.keys(body).includes(prop)) !== undefined;
-    return isPostBody ? body : { body };
   }
 
   private toHttpResponse(response: IncomingMessage): HttpResponse {

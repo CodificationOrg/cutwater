@@ -45,12 +45,14 @@
   "dependencies": {
     "@codification/cutwater-core": "^0.33.11",
     "@codification/cutwater-logging": "^0.33.11",
-    "got": "^11.8.2",
+    "needle": "^3.0.0",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@codification/cutwater-build-core": "^0.33.11",
     "@codification/cutwater-build-node": "^0.33.11",
-    "@types/got": "^9.6.11"
+    "got": "^11.8.2",
+    "@types/got": "^9.6.11",
+    "@types/needle": "^2.5.2"
   }
 }
