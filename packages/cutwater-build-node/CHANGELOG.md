@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.33.17 (2022-01-10)
+
+
+### Bug Fixes
+
+* ensure default parent results in undefined ([c39d1ff](https://github.com/CodificationOrg/cutwater/commit/c39d1ff940f0dd3786937981d183dac1e6affa17))
+
+
+
+
+
 ## 0.33.16 (2022-01-10)
 
 
