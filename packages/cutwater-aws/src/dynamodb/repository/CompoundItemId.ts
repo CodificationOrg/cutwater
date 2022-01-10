@@ -1,3 +1,4 @@
+import { CompoundKey } from '.';
 import { parseValue } from '../DynamoUtils';
 
 export class CompoundItemId {
@@ -9,11 +10,12 @@ export class CompoundItemId {
     return new CompoundItemId(CompoundItemId.toParentId(itemId), CompoundItemId.toName(itemId));
   }
 
-  public static fromKeys(partitionKey: string, sortKey: string, noParent = false): CompoundItemId {
-    return new CompoundItemId(
-      !noParent ? parseValue(partitionKey).join(CompoundItemId.ID_SEPARATOR) : undefined,
-      parseValue(sortKey).pop()!,
-    );
+  public static fromKeys(partitionKey: string, sortKey: string): CompoundItemId {
+    const parent =
+      partitionKey === CompoundKey.DEFAULT_PARENT
+        ? undefined
+        : parseValue(partitionKey).join(CompoundItemId.ID_SEPARATOR);
+    return new CompoundItemId(parent, parseValue(sortKey).pop()!);
   }
 
   public static create(parentId: string, name: string): CompoundItemId {

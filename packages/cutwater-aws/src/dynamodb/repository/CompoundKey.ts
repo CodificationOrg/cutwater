@@ -12,10 +12,9 @@ export class CompoundKey {
 
   public static fromAttributeMap(map: AttributeMap, partitionKey = 'pk', sortKey = 'sk'): CompoundKey {
     const dynamoItem = new DynamoItem(map);
-    const noParent = dynamoItem.toString(partitionKey)! === CompoundKey.DEFAULT_PARENT;
     return new CompoundKey(
       dynamoItem.toStringPart(sortKey, 0)!,
-      CompoundItemId.fromKeys(dynamoItem.toString(partitionKey)!, dynamoItem.toString(sortKey)!, noParent),
+      CompoundItemId.fromKeys(dynamoItem.toString(partitionKey)!, dynamoItem.toString(sortKey)!),
     );
   }
 

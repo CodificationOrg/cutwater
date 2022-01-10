@@ -1,3 +1,4 @@
+import { CompoundKey } from '.';
 import { CompoundItemId } from './CompoundItemId';
 
 describe('CompoundItemId', () => {
@@ -17,6 +18,20 @@ describe('CompoundItemId', () => {
     it('can create a new instance from an item id string with no parent part', () => {
       const result = CompoundItemId.fromItemId('parent');
       expect(result.name).toBe('parent');
+    });
+  });
+
+  describe('fromKeys', () => {
+    it('can create a new instance from attribute map keys', () => {
+      const result = CompoundItemId.fromKeys('parent#23', 'MockItem#42');
+      expect(result.name).toBe('42');
+      expect(result.parentId).toBe('parent:23');
+    });
+
+    it('can create a new instance from attribute map keys with no parent', () => {
+      const result = CompoundItemId.fromKeys(CompoundKey.DEFAULT_PARENT, 'MockItem#42');
+      expect(result.name).toBe('42');
+      expect(result.parentId).toBeUndefined();
     });
   });
 
