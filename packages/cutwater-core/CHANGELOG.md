@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.33.16 (2022-01-10)
+
+
+### Bug Fixes
+
+* use new default parend from CompoundKey ([a5eddcd](https://github.com/CodificationOrg/cutwater/commit/a5eddcd0dc679e7811a471dffe677d3b21207097))
+
+
+
+
+
 ## 0.33.15 (2022-01-10)
 
 **Note:** Version bump only for package @codification/cutwater-core
