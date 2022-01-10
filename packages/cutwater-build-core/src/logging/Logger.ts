@@ -1,7 +1,7 @@
-import { Color, default as colors } from 'colors';
 import * as path from 'path';
 import { default as prettyTime } from 'pretty-hrtime';
 import { getFlagValue } from '../State';
+import { duration as elapsed, error, label, msg, warn } from '../utilities/ColorUtils';
 
 export class Logger {
   public static timestamp(): string {
@@ -31,16 +31,16 @@ export class Logger {
 
   public warn(...args: string[]): void {
     args.splice(0, 0, 'Warning -');
-    this.log(...this.colorize(colors.yellow, args));
+    this.log(...this.colorizeAll(warn, args));
   }
 
   public error(...args: string[]): void {
     args.splice(0, 0, 'Error -');
-    this.log(...this.colorize(colors.red, args));
+    this.log(...this.colorizeAll(error, args));
   }
 
   public log(...args: string[]): void {
-    console.log(`[${Logger.timestamp().gray}] ${args.join('')}`);
+    console.log(`[${msg(Logger.timestamp())}] ${args.join('')}`);
   }
 
   public fileWarning(
@@ -79,11 +79,11 @@ export class Logger {
     } else if (path.isAbsolute(filePath)) {
       filePath = path.relative(process.cwd(), filePath);
     }
-    write(`${taskName.cyan} - ${filePath}(${line},${column}): error ${errorCode}: ${message}`);
+    write(`${label(taskName)} - ${filePath}(${line},${column}): error ${errorCode}: ${message}`);
   }
 
   public logStartSubtask(name: string): void {
-    this.log(`Starting subtask '${name.cyan}'...`);
+    this.log(`Starting subtask '${label(name)}'...`);
   }
 
   public logEndSubtask(name: string, startTime: [number, number], errorObject?: Error): void {
@@ -91,7 +91,7 @@ export class Logger {
     if (name) {
       if (!errorObject) {
         const durationString: string = prettyTime(duration);
-        this.log(`Finished subtask '${name.cyan}' after ${durationString.magenta}`);
+        this.log(`Finished subtask '${label(name)}' after ${elapsed(durationString)}`);
       } else {
         this.writeError({
           err: errorObject,
@@ -119,8 +119,8 @@ export class Logger {
 
             this.error(
               "'" + e.task.cyan + "'",
-              (e.subTask ? 'sub task errored after' : 'errored after').red,
-              time.magenta,
+              error(e.subTask ? 'sub task errored after' : 'errored after'),
+              elapsed(time),
               '\r\n',
               msg || '',
             );
@@ -155,7 +155,7 @@ export class Logger {
     }
   }
 
-  private colorize(color: Color, args: string[]): string[] {
+  private colorizeAll(color: (value: string) => string, args: string[]): string[] {
     return args.map((arg) => color(arg));
   }
 

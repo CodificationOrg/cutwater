@@ -8,6 +8,7 @@ import { BuildConfig } from '../BuildConfig';
 import { BuildContext } from '../BuildContext';
 import { ExecutableTask } from '../ExecutableTask';
 import { getLogger, Logger } from '../logging/Logger';
+import { label } from '../utilities/ColorUtils';
 import { IOUtils } from '../utilities/IOUtils';
 
 export abstract class GulpTask<T, R> implements ExecutableTask<T> {
@@ -54,19 +55,19 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   ): Promise<R | void> | NodeJS.ReadWriteStream | void;
 
   public log(message: string): void {
-    this.logger().log(`[${this.name.cyan}] ${message}`);
+    this.logger().log(`[${label(this.name)}] ${message}`);
   }
 
   public logVerbose(message: string): void {
-    this.logger().verbose(`[${this.name.cyan}] ${message}`);
+    this.logger().verbose(`[${label(this.name)}] ${message}`);
   }
 
   public logWarning(message: string): void {
-    this.logger().warn(`[${this.name.cyan}] ${message}`);
+    this.logger().warn(`[${label(this.name)}] ${message}`);
   }
 
   public logError(message: string): void {
-    this.logger().error(`[${this.name.cyan}] ${message}`);
+    this.logger().error(`[${label(this.name)}] ${message}`);
   }
 
   public fileError(filePath: string, line: number, column: number, errorCode: string, message: string): void {

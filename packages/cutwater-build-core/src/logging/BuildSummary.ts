@@ -1,7 +1,7 @@
 import { default as prettyTime } from 'pretty-hrtime';
-
 import { BuildContext } from '../BuildContext';
 import { builtPackage, coreBuildPackage, getFlagValue } from '../State';
+import { duration, error, failure, info, success, warn } from '../utilities/ColorUtils';
 import { IOUtils } from '../utilities/IOUtils';
 
 type LogFunction = (...args: string[]) => void;
@@ -15,7 +15,7 @@ export class BuildSummary {
       context.state.writingSummary = true;
 
       IOUtils.afterStreamsFlushed(context.state.duringFastExit, () => {
-        log('==================[ Finished ]=================='.magenta);
+        log(duration('==================[ Finished ]=================='));
 
         this.relogIssues(context);
 
@@ -45,13 +45,13 @@ export class BuildSummary {
     const shouldRelogIssues: boolean = getFlagValue('relogIssues');
     if (shouldRelogIssues) {
       context.warnings.forEach((warning) => {
-        console.error(warning.yellow);
+        console.error(warn(warning));
       });
     }
 
     if (shouldRelogIssues && (context.metrics.taskErrors > 0 || context.errors.length)) {
       context.errors.forEach((err) => {
-        console.error(err.red);
+        console.error(error(err));
       });
     }
   }
@@ -64,13 +64,13 @@ export class BuildSummary {
     const totalDuration: [number, number] = process.hrtime(context.metrics.start);
     const name: string = builtPackage.name || 'with unknown name';
     const version: string = builtPackage.version || 'unknown';
-    log(`Project ${name} version:`, version.yellow);
+    log(`Project ${name} version:`, info(version));
 
     const coreBuildVersion = coreBuildPackage && coreBuildPackage.version ? coreBuildPackage.version : 'unknown';
-    log('Build tools version:', coreBuildVersion.yellow);
+    log('Build tools version:', info(coreBuildVersion));
 
-    log('Node version:', process.version.yellow);
-    log('Total duration:', prettyTime(totalDuration).yellow);
+    log('Node version:', info(process.version));
+    log('Total duration:', info(prettyTime(totalDuration)));
   }
 
   private static logTestResults(context: BuildContext, log: LogFunction): void {
@@ -78,11 +78,11 @@ export class BuildSummary {
       log(
         'Tests results -',
         'Passed:',
-        `${context.metrics.testsPassed}`.green,
+        success(`${context.metrics.testsPassed}`),
         'Failed:',
-        `${context.metrics.testsFailed}`.red,
+        failure(`${context.metrics.testsFailed}`),
         'Skipped:',
-        `${context.metrics.testsSkipped}`.yellow,
+        warn(`${context.metrics.testsSkipped}`),
       );
     }
   }
@@ -92,18 +92,18 @@ export class BuildSummary {
       log(
         'Coverage results -',
         'Passed:',
-        `${context.metrics.coveragePass}`.green,
+        success(`${context.metrics.coveragePass}`),
         'Failed:',
-        `${context.metrics.coverageResults - context.metrics.coveragePass}`.red,
+        failure(`${context.metrics.coverageResults - context.metrics.coveragePass}`),
         'Avg. Cov.:',
-        `${Math.floor(context.metrics.coverageTotal / context.metrics.coverageResults)}%`.yellow,
+        info(`${Math.floor(context.metrics.coverageTotal / context.metrics.coverageResults)}%`),
       );
     }
   }
 
   private static logWarnings(context: BuildContext, log: LogFunction): void {
     if (context.warnings.length) {
-      log('Task warnings:', `${context.warnings.length.toString()}`.yellow);
+      log('Task warnings:', warn(`${context.warnings.length.toString()}`));
     }
   }
 
@@ -111,7 +111,7 @@ export class BuildSummary {
     let totalErrors = 0;
     if (context.metrics.taskErrors > 0 || context.errors.length) {
       totalErrors = context.metrics.taskErrors + context.errors.length;
-      log('Task errors:', `${totalErrors}`.red);
+      log('Task errors:', error(`${totalErrors}`));
     }
   }
 
