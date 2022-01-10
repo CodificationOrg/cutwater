@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-graphql",
-  "version": "0.33.14",
+  "version": "0.33.15",
   "description": "A library providing useful tools for working with GraphQL.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -44,12 +44,12 @@
     ]
   },
   "devDependencies": {
-    "@codification/cutwater-build-core": "^0.33.14",
-    "@codification/cutwater-build-node": "^0.33.14"
+    "@codification/cutwater-build-core": "^0.33.15",
+    "@codification/cutwater-build-node": "^0.33.15"
   },
   "dependencies": {
-    "@codification/cutwater-core": "^0.33.14",
-    "@codification/cutwater-logging": "^0.33.14",
-    "@codification/cutwater-repo": "^0.33.14"
+    "@codification/cutwater-core": "^0.33.15",
+    "@codification/cutwater-logging": "^0.33.15",
+    "@codification/cutwater-repo": "^0.33.15"
   }
 }
