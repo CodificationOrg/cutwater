@@ -40,6 +40,16 @@ describe('CompoundItemId', () => {
     });
   });
 
+  describe('parentId', () => {
+    it('can return the correct parent id as a string', () => {
+      expect(result.parentId).toBe('foo:bar:baggins');
+    });
+
+    it('can return the undefined parentId when none is present', () => {
+      expect(noParentResult.parentId).toBeUndefined();
+    });
+  });
+
   describe('idParts', () => {
     it('can return the correct parts of the id as an array', () => {
       expect(result.idParts.length).toBe(4);

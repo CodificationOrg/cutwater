@@ -9,8 +9,11 @@ export class CompoundItemId {
     return new CompoundItemId(CompoundItemId.toParentId(itemId), CompoundItemId.toName(itemId));
   }
 
-  public static fromKeys(partitionKey: string, sortKey: string): CompoundItemId {
-    return new CompoundItemId(parseValue(partitionKey).join(CompoundItemId.ID_SEPARATOR), parseValue(sortKey).pop()!);
+  public static fromKeys(partitionKey: string, sortKey: string, noParent = false): CompoundItemId {
+    return new CompoundItemId(
+      !noParent ? parseValue(partitionKey).join(CompoundItemId.ID_SEPARATOR) : undefined,
+      parseValue(sortKey).pop()!,
+    );
   }
 
   public static create(parentId: string, name: string): CompoundItemId {
@@ -33,11 +36,12 @@ export class CompoundItemId {
     return this.parentId ? this.parentId.split(CompoundItemId.ID_SEPARATOR) : [];
   }
 
-  public static toParentId(itemId: string): string {
-    return itemId
+  public static toParentId(itemId: string): string | undefined {
+    const rval = itemId
       .split(CompoundItemId.ID_SEPARATOR)
       .slice(0, -1)
       .join(this.ID_SEPARATOR);
+    return rval.length !== 0 ? rval : undefined;
   }
 
   public static toName(itemId: string): string {
