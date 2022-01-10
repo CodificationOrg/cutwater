@@ -20,8 +20,6 @@ import { CompoundItemId } from './CompoundItemId';
 import { CompoundItemRepositoryConfig } from './CompoundItemRepositoryConfig';
 
 export class CompoundItemRepository<T> implements ItemRepository<T> {
-  private static readonly ROOT_PARTITION_KEY = '#ROOT#';
-
   protected readonly LOG: Logger = LoggerFactory.getLogger();
   protected readonly db: DynamoDB = new DynamoDB();
 
@@ -34,7 +32,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
   }
 
   public async getAll(parentId?: string): Promise<T[]> {
-    const partitionValue = parentId ? CompoundKey.toPartitionKey(parentId) : CompoundItemRepository.ROOT_PARTITION_KEY;
+    const partitionValue = parentId ? CompoundKey.toPartitionKey(parentId) : CompoundKey.DEFAULT_PARENT;
     const results: AttributeMap[] = await this.getAllMaps(partitionValue);
     const rval: T[] = [];
     for (const item of results) {
