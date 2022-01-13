@@ -96,6 +96,19 @@ export class DynamoItem {
     }
   }
 
+  public toObject<T>(key: string, defaultValue?: T): T | undefined {
+    const value = this.toString(key);
+    return value ? JSON.parse(value) : defaultValue;
+  }
+
+  public setObject<T>(key: string, value: T): void {
+    if (value !== undefined) {
+      this.item[key] = {
+        S: JSON.stringify(value),
+      };
+    }
+  }
+
   public toStringPart(key: string, index: number, defaultValue?: string): string | undefined {
     const parts = parseValue(this.getValue<string>(key, ValueType.S));
     return parts.length > index ? parts[index] : defaultValue;
