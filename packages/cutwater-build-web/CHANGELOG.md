@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.34.0 (2022-01-13)
+
+
+### Features
+
+* add support for JSON obj as attributes ([4363e7e](https://github.com/CodificationOrg/cutwater/commit/4363e7eaf79edfe0ae1dfe05eba584c158168913))
+
+
+
+
+
 ## 0.33.17 (2022-01-10)
 
 
