@@ -14,6 +14,7 @@
     "postversion": "git push && git push --tags"
   },
   "resolutions": {
+    "async": "^2.6.4",
     "elliptic": "^6.5.4",
     "minimist": "^1.2.6",
     "glob-parent": "^5.1.2",
