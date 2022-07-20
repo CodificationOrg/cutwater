@@ -9,7 +9,7 @@
   "packages": [
     "packages/*"
   ],
-  "version": "0.34.8",
+  "version": "0.34.9",
   "useWorkspaces": true,
   "stream": true
 }

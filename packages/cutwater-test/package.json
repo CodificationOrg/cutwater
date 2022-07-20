@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-test",
-  "version": "0.34.8",
+  "version": "0.34.9",
   "description": "A library providing the helpful test utilities.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -42,10 +42,10 @@
     ]
   },
   "devDependencies": {
-    "@codification/cutwater-build-node": "^0.34.8"
+    "@codification/cutwater-build-node": "^0.34.9"
   },
   "dependencies": {
-    "@codification/cutwater-node-core": "^0.34.8",
+    "@codification/cutwater-node-core": "^0.34.9",
     "uuid": "^3.4.0"
   }
 }
