@@ -49,7 +49,7 @@
   "dependencies": {
     "@codification/cutwater-build-core": "^0.34.9",
     "@codification/eslint-config-cutwater": "^0.34.9",
-    "eslint": "8.6.0",
+    "eslint": "8.20.0",
     "gulp-eslint": "^6.0.0",
     "typescript": "^4.1.3"
   }
