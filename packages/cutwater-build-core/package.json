@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-core",
-  "version": "0.34.10",
+  "version": "0.34.11",
   "description": "A library providing basic build tasks.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
