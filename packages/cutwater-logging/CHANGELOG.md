@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.34.12 (2022-09-25)
+
+**Note:** Version bump only for package @codification/cutwater-logging
+
+
+
+
+
 ## 0.34.11 (2022-07-30)
 
 **Note:** Version bump only for package @codification/cutwater-logging
