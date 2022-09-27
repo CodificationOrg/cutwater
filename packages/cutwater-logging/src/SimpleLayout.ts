@@ -15,7 +15,7 @@ export class SimpleLayout implements Layout {
   /**
    * The format to be used for timestamps in this layout.
    */
-  public timestampFormat: string = 'YYYY-MM-DD HH:mm:ss,SSS';
+  public timestampFormat = 'YYYY-MM-DD HH:mm:ss,SSS';
 
   public format(event: LoggingEvent): string {
     const loggerName: string =

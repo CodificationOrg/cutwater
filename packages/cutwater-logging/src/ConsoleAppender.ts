@@ -23,7 +23,7 @@ export class ConsoleAppender implements Appender {
    * @param name - The name of this appender.
    * @param layout - The layout to use for received logging events.
    */
-  constructor(name: string = 'console', layout: Layout = new SimpleLayout()) {
+  constructor(name = 'console', layout: Layout = new SimpleLayout()) {
     this.name = name;
     this.layout = layout;
   }

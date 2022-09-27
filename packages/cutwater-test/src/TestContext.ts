@@ -8,14 +8,14 @@ export class TestContext {
   }
 
   public readonly tempDir: string;
-  private destroyed: boolean = false;
+  private destroyed = false;
 
-  private constructor(tempDirPrefix: string = 'temp/test-') {
+  private constructor(tempDirPrefix = 'temp/test-') {
     const tempPath = path.resolve(path.join(process.cwd(), tempDirPrefix));
     this.tempDir = FileUtils.createTempDir(tempPath);
   }
 
-  public createTempFilePath(ext: string = 'tmp'): string {
+  public createTempFilePath(ext = 'tmp'): string {
     this.checkForDestroyed();
     return FileUtils.createTempFilePath(this.tempDir, ext);
   }
