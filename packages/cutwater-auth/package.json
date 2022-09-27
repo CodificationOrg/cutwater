@@ -9,8 +9,8 @@
   "sideEffects": false,
   "scripts": {
     "clean": "gulp clean",
-    "test": "gulp test --clean",
-    "test-integ": "gulp test-integ --clean",
+    "test": "gulp test",
+    "test-integ": "gulp test-integ",
     "watch": "gulp watch",
     "build": "gulp --fix --clean --production"
   },

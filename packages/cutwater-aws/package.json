@@ -9,7 +9,7 @@
   "sideEffects": false,
   "scripts": {
     "clean": "gulp clean",
-    "test": "gulp test --clean",
+    "test": "gulp test",
     "build": "gulp --clean --fix --production"
   },
   "publishConfig": {

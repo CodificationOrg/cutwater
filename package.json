@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "lerna run clean",
     "build": "lerna run build",
+    "test": "lerna run test",
     "release": "lerna version --conventional-commits",
     "version": " git add -A .",
     "postversion": "git push && git push --tags"

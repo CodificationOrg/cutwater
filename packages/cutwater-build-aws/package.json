@@ -10,8 +10,8 @@
     "clean": "gulp clean",
     "format": "gulp prettier",
     "lint": "gulp lint --fix",
-    "test": "gulp test --clean",
-    "test-integ": "gulp test-integ --clean",
+    "test": "gulp test",
+    "test-integ": "gulp test-integ",
     "build": "gulp --fix --clean"
   },
   "publishConfig": {

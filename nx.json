@@ -1,0 +1,39 @@
+{
+  "affected": {
+    "defaultBase": "master"
+  },
+  "workspaceLayout": {
+    "libsDir": "packages"
+  },
+  "implicitDependencies": {
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    "nx.json": "*"
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "build"
+      ]
+    }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test"
+        ]
+      }
+    }
+  }
+}

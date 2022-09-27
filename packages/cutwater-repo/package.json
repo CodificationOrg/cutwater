@@ -8,7 +8,7 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "clean": "gulp clean",
-    "test": "gulp test --clean",
+    "test": "gulp test",
     "watch": "gulp watch",
     "build": "gulp --fix --clean --production"
   },
