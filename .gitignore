@@ -71,3 +71,6 @@ reports
 # Rush files
 common/temp/**
 package-deps.json
+
+# IDE files
+.vs
