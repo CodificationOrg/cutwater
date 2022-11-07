@@ -35,13 +35,17 @@ jobs:
       
       - name: Build
         run:  yarn build
+        env:
+          NX_BRANCH: ${{ github.ref_name }}
 
       - name: Release
         run: npx lerna version --conventional-commits --create-release github --yes
         env:
+          NX_BRANCH: ${{ github.ref_name }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish
         run:  npx lerna publish from-package --yes
         env:
+          NX_BRANCH: ${{ github.ref_name }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

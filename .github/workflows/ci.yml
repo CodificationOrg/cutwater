@@ -29,3 +29,5 @@ jobs:
 
     - name: Build
       run:  yarn build
+      env:
+        NX_BRANCH: ${{ github.ref_name }}
