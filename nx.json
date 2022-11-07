@@ -16,11 +16,19 @@
     "build": {
       "dependsOn": [
         "^build"
+      ],
+      "outputs": [
+        "{projectRoot}/lib",
+        "{projectRoot}/dist",
+        "{projectRoot}/temp"
       ]
     },
     "test": {
       "dependsOn": [
         "build"
+      ],
+      "outputs": [
+        "{projectRoot}/temp"
       ]
     }
   },
@@ -29,9 +37,9 @@
       "runner": "nx/tasks-runners/default",
       "options": {
         "cacheableOperations": [
+          "test",
           "build",
-          "lint",
-          "test"
+          "lint"
         ]
       }
     }

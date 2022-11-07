@@ -1,6 +1,5 @@
 {
   "npmClient": "yarn",
-  "useNx": true,
   "command": {
     "version": {
       "allowBranch": "master",
