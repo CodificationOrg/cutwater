@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-repo",
-  "version": "0.34.13",
+  "version": "0.34.14",
   "description": "A library providing the helpful structure for repositories.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -41,10 +41,10 @@
     ]
   },
   "dependencies": {
-    "@codification/cutwater-core": "^0.34.13",
-    "@codification/cutwater-logging": "^0.34.13"
+    "@codification/cutwater-core": "^0.34.14",
+    "@codification/cutwater-logging": "^0.34.14"
   },
   "devDependencies": {
-    "@codification/cutwater-build-node": "^0.34.13"
+    "@codification/cutwater-build-node": "^0.34.14"
   }
 }

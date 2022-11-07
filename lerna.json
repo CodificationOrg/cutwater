@@ -6,10 +6,8 @@
       "message": "%s [skip-ci]"
     }
   },
-  "packages": [
-    "packages/*"
-  ],
-  "version": "0.34.13",
+  "packages": ["packages/*"],
+  "version": "0.34.14",
   "useWorkspaces": true,
   "stream": true
 }
