@@ -29,7 +29,8 @@
     "colors": "1.4.0",
     "faker": "5.5.3",
     "follow-redirects": "^1.14.8",
-    "url-parse": "^1.5.9"
+    "url-parse": "^1.5.9",
+    "minimatch": "^3.0.5"
   },
   "devDependencies": {
     "@nrwl/nx-cloud": "15.0.2",
