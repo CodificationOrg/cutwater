@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-logging",
-  "version": "0.34.16",
+  "version": "0.34.17",
   "description": "Yet another simple logging utility.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -45,10 +45,10 @@
     ]
   },
   "devDependencies": {
-    "@codification/cutwater-build-core": "^0.34.16",
-    "@codification/cutwater-build-node": "^0.34.16"
+    "@codification/cutwater-build-core": "^0.34.17",
+    "@codification/cutwater-build-node": "^0.34.17"
   },
   "dependencies": {
-    "@codification/cutwater-core": "^0.34.16"
+    "@codification/cutwater-core": "^0.34.17"
   }
 }
