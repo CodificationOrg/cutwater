@@ -185,7 +185,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
       return requests.filter(key => !failIds.includes((key as CompoundKey).compoundItemId.itemId));
     } else {
       const failIds = unprocessed.map(map => CompoundKey.fromAttributeMap(map).compoundItemId.itemId);
-      return requests.filter(item => !failIds.includes(this.toItemId(item as T)));
+      return requests.filter(item => !failIds.includes(this.toItemId((item as unknown) as T)));
     }
   }
 
@@ -213,7 +213,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
   private async toWriteRequest<V extends T | CompoundKey>(itemOrKey: V): Promise<WriteRequest> {
     return (itemOrKey as CompoundKey).partitionKey !== undefined
       ? { DeleteRequest: { Key: (itemOrKey as CompoundKey).toKey() } }
-      : { PutRequest: { Item: await this.itemToAttributeMap(itemOrKey as T) } };
+      : { PutRequest: { Item: await this.itemToAttributeMap((itemOrKey as unknown) as T) } };
   }
 
   private async batchWithRetry(input: BatchWriteItemInput, maxTries = 10, currentTry = 0): Promise<AttributeMap[]> {
