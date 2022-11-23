@@ -82,6 +82,28 @@ describe('ItemRepositoryAdapter', () => {
     });
   });
 
+  describe('dataLoader', () => {
+    it('can create a functional DataLoader', async () => {
+      const count = randomCount(32);
+      const adapter = await newAdapter(count);
+      const loader = adapter.dataLoader;
+      const items = [...(await adapter.getAll('a')), ...(await adapter.getAll('b'))];
+      const keyCount = randomCount(items.length) - 1;
+      const keys: string[] = [];
+      while (keys.length < keyCount) {
+        const item = items[randomCount(items.length) - 1];
+        if (!keys.includes(item.userId)) {
+          keys.push(item.userId);
+        }
+      }
+      loader.loadMany(keys);
+      const key = keys[randomCount(keyCount) - 1];
+      const result = await loader.load(key);
+      expect(result).toBeTruthy();
+      expect(result.userId).toBe(key);
+    });
+  });
+
   describe('resolve', () => {
     it('can resolve a valid node id', async () => {
       const count = randomCount(32);

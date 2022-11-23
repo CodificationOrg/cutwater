@@ -1,42 +1,57 @@
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
 import { ItemRepository } from '@codification/cutwater-repo';
+import DataLoader from 'dataloader';
 import { NodeId } from '../core';
 import { Node, NodeSource } from '../types';
 import { NodeItemDescriptor } from './NodeItemDescriptor';
 
 export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T & Node> {
   protected readonly LOG: Logger = LoggerFactory.getLogger();
+  public readonly dataLoader: DataLoader<string, T>;
 
-  public constructor(
-    protected readonly repo: ItemRepository<T>,
-    protected readonly descriptor: NodeItemDescriptor<T>,
-  ) {}
+  public constructor(protected readonly repo: ItemRepository<T>, protected readonly descriptor: NodeItemDescriptor<T>) {
+    this.dataLoader = this.createDataLoader();
+  }
+
+  private createDataLoader(): DataLoader<string, T> {
+    return new DataLoader(
+      async (keys: string[]): Promise<(T | Error)[]> => {
+        const results: (T | undefined)[] = await Promise.all(keys.map(id => this.repo.get(id)));
+        return keys.map(id => {
+          const item = results.find(item => !!item && this.descriptor.getObjectId(item) === id);
+          return item ? item : new Error(`Item not found for id: ${id}`);
+        });
+      },
+    );
+  }
 
   public get itemType(): string {
     return this.repo.itemType;
   }
 
-  public getAll(parentId?: string): Promise<T[]> {
-    return this.repo.getAll(parentId);
+  public async getAll(parentId?: string): Promise<T[]> {
+    return this.primeDataLoader(await this.repo.getAll(parentId));
   }
 
   public get(id: string): Promise<T | undefined> {
-    return this.repo.get(id);
+    return this.dataLoader.load(id);
   }
 
-  public put(item: T): Promise<T> {
-    return this.repo.put(item);
+  public async put(item: T): Promise<T> {
+    return this.primeDataLoader([await this.repo.put(item)])[0];
   }
 
-  public putAll(items: T[]): Promise<T[]> {
-    return this.repo.putAll(items);
+  public async putAll(items: T[]): Promise<T[]> {
+    return this.primeDataLoader(await this.repo.putAll(items));
   }
 
   public remove(id: string): Promise<T | undefined> {
+    this.dataLoader.clear(id);
     return this.repo.remove(id);
   }
 
   public removeAll(ids: string[]): Promise<string[]> {
+    ids.forEach(id => this.dataLoader.clear(id));
     return this.repo.removeAll(ids);
   }
 
@@ -60,9 +75,16 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
   }
 
   protected asNode(item: T): T & Node {
-    if (!Object.keys(item).includes('id')) {
+    if (!Object.keys((item as unknown) as object).includes('id')) {
       item['id'] = this.getNodeId(item).id;
     }
     return item as T & Node;
+  }
+
+  private primeDataLoader(items: T[]): T[] {
+    items.forEach(item =>
+      this.dataLoader.clear(this.descriptor.getObjectId(item)).prime(this.descriptor.getObjectId(item), item),
+    );
+    return items;
   }
 }
