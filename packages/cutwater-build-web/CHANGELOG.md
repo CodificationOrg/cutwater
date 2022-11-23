@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.35.0 (2022-11-23)
+
+### Features
+
+- add DataLoader support to adapter ([16494d8](https://github.com/CodificationOrg/cutwater/commit/16494d84368cb79302fdc410737a9df8f77c48df))
+
 ## 0.34.17 (2022-11-10)
 
 **Note:** Version bump only for package @codification/cutwater-build-web
