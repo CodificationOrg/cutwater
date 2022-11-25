@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.35.1 (2022-11-25)
+
+
+### Bug Fixes
+
+* use undefined instead of error in DataLoader ([8be4cfc](https://github.com/CodificationOrg/cutwater/commit/8be4cfc31f9a4d05a61759170cc6a89852033c50))
+
+
+
+
+
 # 0.35.0 (2022-11-23)
 
 ### Features
