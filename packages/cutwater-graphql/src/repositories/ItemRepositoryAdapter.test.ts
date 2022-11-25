@@ -100,7 +100,7 @@ describe('ItemRepositoryAdapter', () => {
       const key = keys[randomCount(keyCount) - 1];
       const result = await loader.load(key);
       expect(result).toBeTruthy();
-      expect(result.userId).toBe(key);
+      expect(result!.userId).toBe(key);
     });
   });
 
@@ -113,6 +113,15 @@ describe('ItemRepositoryAdapter', () => {
       const result = await adapter.resolve(id);
       expect(result).toBeTruthy();
       expect(result?.id).toBe(id.id);
+    });
+
+    it('returns undefined for an missing id', async () => {
+      const count = randomCount(32);
+      const adapter = await newAdapter(count);
+      const index = randomCount(count) - 1;
+      const id = NodeId.create('MockItem', `${index}abc`);
+      const result = await adapter.resolve(id);
+      expect(result).toBeUndefined();
     });
   });
 

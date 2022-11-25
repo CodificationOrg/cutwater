@@ -7,19 +7,18 @@ import { NodeItemDescriptor } from './NodeItemDescriptor';
 
 export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T & Node> {
   protected readonly LOG: Logger = LoggerFactory.getLogger();
-  public readonly dataLoader: DataLoader<string, T>;
+  public readonly dataLoader: DataLoader<string, T | undefined>;
 
   public constructor(protected readonly repo: ItemRepository<T>, protected readonly descriptor: NodeItemDescriptor<T>) {
     this.dataLoader = this.createDataLoader();
   }
 
-  private createDataLoader(): DataLoader<string, T> {
+  private createDataLoader(): DataLoader<string, T | undefined> {
     return new DataLoader(
-      async (keys: string[]): Promise<(T | Error)[]> => {
+      async (keys: string[]): Promise<(T | undefined)[]> => {
         const results: (T | undefined)[] = await Promise.all(keys.map(id => this.repo.get(id)));
         return keys.map(id => {
-          const item = results.find(item => !!item && this.descriptor.getObjectId(item) === id);
-          return item ? item : new Error(`Item not found for id: ${id}`);
+          return results.find(item => !!item && this.descriptor.getObjectId(item) === id);
         });
       },
     );
