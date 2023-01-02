@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.35.4 (2023-01-02)
+
+**Note:** Version bump only for package @codification/cutwater-build-webpack
+
+
+
+
+
 ## 0.35.3 (2023-01-02)
 
 **Note:** Version bump only for package @codification/cutwater-build-webpack
