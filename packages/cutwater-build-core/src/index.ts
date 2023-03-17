@@ -3,8 +3,8 @@ if (process.argv.indexOf('--no-color') === -1) {
 }
 
 import { Gulp } from 'gulp';
-import * as notifier from 'node-notifier';
-import * as path from 'path';
+import { join, resolve } from 'path';
+
 import { BuildConfig } from './BuildConfig';
 import { BuildContext, createContext } from './BuildContext';
 import { ExecutableTask } from './ExecutableTask';
@@ -16,6 +16,7 @@ import { CopyStaticAssetsTask } from './tasks/CopyStaticAssetsTask';
 import { GulpTask } from './tasks/GulpTask';
 import { isJestEnabled, JestTask } from './tasks/JestTask';
 import { PrettierTask } from './tasks/PrettierTask';
+
 export { BuildConfig } from './BuildConfig';
 export { BuildContext, BuildMetrics, BuildState } from './BuildContext';
 export { ExecutableTask } from './ExecutableTask';
@@ -40,16 +41,16 @@ let buildConfig: BuildConfig = {
   rootPath: undefined as any,
   packageFolder,
   srcFolder: 'src',
-  distFolder: path.join(packageFolder, 'dist'),
+  distFolder: join(packageFolder, 'dist'),
   libAMDFolder: undefined,
   libESNextFolder: undefined,
-  libFolder: path.join(packageFolder, 'lib'),
+  libFolder: join(packageFolder, 'lib'),
   tempFolder: 'temp',
   properties: {},
   relogIssues: getFlagValue('relogIssues', true),
   showToast: getFlagValue('showToast', true),
-  buildSuccessIconPath: path.resolve(__dirname, 'pass.png'),
-  buildErrorIconPath: path.resolve(__dirname, 'fail.png'),
+  buildSuccessIconPath: resolve(__dirname, 'pass.png'),
+  buildErrorIconPath: resolve(__dirname, 'fail.png'),
   verbose: getFlagValue('verbose', false),
   production: getFlagValue('production', false),
   args: args as { [name: string]: string | boolean },
@@ -136,30 +137,14 @@ export function watch(watchMatch: string | string[], taskExecutable: ExecutableT
               .then(() => {
                 if (lastError) {
                   lastError = undefined;
-
-                  if (context.buildConfig.showToast) {
-                    notifier.notify({
-                      title: successMessage,
-                      message: builtPackage ? builtPackage.name : '',
-                    });
-                  } else {
-                    logger.log(successMessage);
-                  }
+                  logger.log(successMessage);
                 }
                 return finalizeWatch();
               })
               .catch((error: Error) => {
                 if (!lastError || lastError !== error) {
                   lastError = error;
-
-                  if (context.buildConfig.showToast) {
-                    notifier.notify({
-                      title: failureMessage,
-                      message: error.toString(),
-                    });
-                  } else {
-                    logger.log(failureMessage);
-                  }
+                  logger.log(failureMessage);
                 }
 
                 return finalizeWatch();

@@ -1,4 +1,5 @@
-import * as fs from 'fs';
+import { existsSync } from 'fs';
+
 import { IOUtils } from '..';
 
 beforeAll(() => {
@@ -32,7 +33,7 @@ describe('IOUtils', () => {
   it('can properly write an object to a file', () => {
     const obj = IOUtils.readObjectFromFileSyncSafe<Record<string, unknown>>('src/utilities/test.json');
     IOUtils.writeObjectToFileSync(obj, 'temp/test/test.yaml');
-    expect(fs.existsSync('temp/test/test.yaml'));
+    expect(existsSync('temp/test/test.yaml'));
     expect(IOUtils.readObjectFromFileSyncSafe<Record<string, unknown>>('temp/test/test.yaml').Resource).toBeDefined();
   });
 });

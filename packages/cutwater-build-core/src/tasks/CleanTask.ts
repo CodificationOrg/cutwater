@@ -1,4 +1,5 @@
 import { default as del } from 'del';
+
 import { BuildConfig } from '../BuildConfig';
 import { GulpTask } from './GulpTask';
 

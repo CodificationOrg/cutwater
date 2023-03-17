@@ -1,4 +1,5 @@
 import * as gulp from 'gulp';
+
 import { initialize, setConfig } from '..';
 import { getLogger, Logger } from './Logger';
 

@@ -1,9 +1,10 @@
 import { default as Ajv } from 'ajv';
 import { default as eos } from 'end-of-stream';
 import * as gulp from 'gulp';
-import * as path from 'path';
-import * as through2 from 'through2';
-import * as Vinyl from 'vinyl';
+import { dirname, extname, join } from 'path';
+import through2 from 'through2';
+import Vinyl from 'vinyl';
+
 import { BuildConfig } from '../BuildConfig';
 import { BuildContext } from '../BuildContext';
 import { ExecutableTask } from '../ExecutableTask';
@@ -160,7 +161,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   }
 
   protected createOutputDir(outputPath: string): void {
-    const outputDir = path.extname(outputPath) ? path.dirname(outputPath) : outputPath;
+    const outputDir = extname(outputPath) ? dirname(outputPath) : outputPath;
     IOUtils.mkdirs(outputDir);
   }
 
@@ -169,7 +170,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   }
 
   protected getConfigFilePaths(): string[] {
-    return ['config', '.config'].map((directory) => path.join(process.cwd(), directory, `${this.name}.json`));
+    return ['config', '.config'].map((directory) => join(process.cwd(), directory, `${this.name}.json`));
   }
 
   protected logger(): Logger {

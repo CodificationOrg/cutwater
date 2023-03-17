@@ -1,4 +1,5 @@
-import * as path from 'path';
+import { join } from 'path';
+
 import { BuildConfig } from '../';
 import { IOUtils } from '../utilities/IOUtils';
 import { RunCommand, RunCommandConfig } from '../utilities/RunCommand';
@@ -96,7 +97,7 @@ export interface JestTaskConfig {
 }
 
 export function isJestEnabled(rootFolder: string): boolean {
-  const taskConfigFile: string = path.join(rootFolder, 'config', 'jest.json');
+  const taskConfigFile: string = join(rootFolder, 'config', 'jest.json');
   return IOUtils.fileExists(taskConfigFile) && IOUtils.readJSONSyncSafe<JestTaskConfig>(taskConfigFile).isEnabled;
 }
 
@@ -133,10 +134,10 @@ export class JestTask extends GulpTask<JestTaskConfig, void> {
   public async executeTask(): Promise<void> {
     const options: any = this.config.options || {};
     options.ci = this.buildConfig.production;
-    options.coverageDirectory = path.join(this.buildConfig.tempFolder, 'coverage');
+    options.coverageDirectory = join(this.buildConfig.tempFolder, 'coverage');
     options.rootDir = this.buildConfig.rootPath;
     options.testEnvironment = require.resolve('jest-environment-jsdom');
-    options.cacheDirectory = path.join(this.buildConfig.rootPath, this.buildConfig.tempFolder, 'jest-cache');
+    options.cacheDirectory = join(this.buildConfig.rootPath, this.buildConfig.tempFolder, 'jest-cache');
 
     const args = `${this.prepareOptions()}`;
     this.logVerbose(`Running: jest ${args}`);

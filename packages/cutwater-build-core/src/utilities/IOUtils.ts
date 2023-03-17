@@ -1,43 +1,43 @@
-import * as fs from 'fs';
-import * as yaml from 'js-yaml';
-import { SchemaDefinition } from 'js-yaml';
-import * as path from 'path';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
+import yaml, { SchemaDefinition } from 'js-yaml';
+import { basename, isAbsolute, join, resolve } from 'path';
+
 import { BuildConfig } from '../BuildConfig';
 import { getLogger } from '../logging/Logger';
 
 export class IOUtils {
   public static resolvePath(localPath: string, buildConfig?: BuildConfig): string {
-    let rval: string = path.resolve(localPath);
-    if (!path.isAbsolute(localPath) && buildConfig) {
-      rval = path.resolve(path.join(buildConfig.rootPath, localPath));
+    let rval: string = resolve(localPath);
+    if (!isAbsolute(localPath) && buildConfig) {
+      rval = resolve(join(buildConfig.rootPath, localPath));
     }
     return rval;
   }
 
   public static mkdirs(localPath: string, buildConfig?: BuildConfig): void {
     const dirsPath = this.resolvePath(localPath, buildConfig);
-    if (!fs.existsSync(dirsPath)) {
-      fs.mkdirSync(dirsPath, { recursive: true });
+    if (!existsSync(dirsPath)) {
+      mkdirSync(dirsPath, { recursive: true });
     }
   }
 
   public static rmdirs(localPath: string, buildConfig?: BuildConfig): void {
     const dirsPath = this.resolvePath(localPath, buildConfig);
-    if (fs.existsSync(dirsPath)) {
-      fs.rmdirSync(dirsPath, { recursive: true });
+    if (existsSync(dirsPath)) {
+      rmSync(dirsPath, { recursive: true });
     }
   }
 
   public static fileExists(localPath: string, buildConfig?: BuildConfig): boolean {
     const fullPath: string = this.resolvePath(localPath, buildConfig);
-    return fs.existsSync(fullPath);
+    return existsSync(fullPath);
   }
 
   public static copyFile(localSourcePath: string, localDestPath?: string, buildConfig?: BuildConfig): void {
-    const fullSourcePath: string = path.resolve(__dirname, localSourcePath);
-    const destPath = localDestPath || path.basename(localSourcePath);
-    const fullDestPath: string = buildConfig ? path.resolve(buildConfig.rootPath, destPath) : destPath;
-    fs.copyFileSync(fullSourcePath, fullDestPath);
+    const fullSourcePath: string = resolve(__dirname, localSourcePath);
+    const destPath = localDestPath || basename(localSourcePath);
+    const fullDestPath: string = buildConfig ? resolve(buildConfig.rootPath, destPath) : destPath;
+    copyFileSync(fullSourcePath, fullDestPath);
   }
 
   public static isJSON(file: string): boolean {
@@ -93,7 +93,7 @@ export class IOUtils {
   }
 
   public static readToString(localPath: string, buildConfig?: BuildConfig): string {
-    return fs.readFileSync(this.resolvePath(localPath, buildConfig), { encoding: 'utf8' });
+    return readFileSync(this.resolvePath(localPath, buildConfig), { encoding: 'utf8' });
   }
 
   public static readYamlSyncSafe<T>(localPath: string, buildConfig?: BuildConfig): T {
@@ -136,7 +136,7 @@ export class IOUtils {
   }
 
   public static writeToFile(value: string, localPath: string, buildConfig?: BuildConfig): void {
-    fs.writeFileSync(this.resolvePath(localPath, buildConfig), value, { encoding: 'utf8' });
+    writeFileSync(this.resolvePath(localPath, buildConfig), value, { encoding: 'utf8' });
   }
 
   public static afterStreamsFlushed(fastExit: boolean, callback: () => void): void {

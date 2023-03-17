@@ -1,10 +1,10 @@
 import * as path from 'path';
-import { argv as clArgs } from 'yargs';
+import yargs from 'yargs';
 import { getConfig } from './index';
 import { IOUtils } from './utilities/IOUtils';
 
 export const root: string = process.cwd();
-export const args: { [flat: string]: unknown } = clArgs;
+export const args = yargs.argv;
 
 export interface PackageJSON {
   name?: string;

@@ -1,6 +1,7 @@
 import { default as globEscape } from 'glob-escape';
 import { Gulp } from 'gulp';
-import * as path from 'path';
+import { join } from 'path';
+
 import { GulpTask } from './GulpTask';
 
 export interface CopyStaticAssetsTaskConfig {
@@ -21,8 +22,8 @@ export class CopyStaticAssetsTask extends GulpTask<CopyStaticAssetsTaskConfig, v
   }
 
   public executeTask(gulp: Gulp): NodeJS.ReadWriteStream {
-    const rootPath: string = path.join(this.buildConfig.rootPath, this.buildConfig.srcFolder || 'src');
-    const libPath: string = path.join(this.buildConfig.rootPath, this.buildConfig.libFolder || 'lib');
+    const rootPath: string = join(this.buildConfig.rootPath, this.buildConfig.srcFolder || 'src');
+    const libPath: string = join(this.buildConfig.rootPath, this.buildConfig.libFolder || 'lib');
 
     const globPatterns: string[] = [];
 
@@ -33,7 +34,7 @@ export class CopyStaticAssetsTask extends GulpTask<CopyStaticAssetsTaskConfig, v
         if (!ext.match(/^\./)) {
           ext = `.${ext}`;
         }
-        globPatterns.push(path.join(rootPath, '**', `*${globEscape(ext)}`));
+        globPatterns.push(join(rootPath, '**', `*${globEscape(ext)}`));
       }
     });
 
@@ -44,18 +45,18 @@ export class CopyStaticAssetsTask extends GulpTask<CopyStaticAssetsTaskConfig, v
         }
       }
 
-      globPatterns.push(path.join(rootPath, file));
+      globPatterns.push(join(rootPath, file));
     }
 
     for (const file of this.config.excludeFiles || []) {
-      globPatterns.push(`!${path.join(rootPath, file)}`);
+      globPatterns.push(`!${join(rootPath, file)}`);
     }
 
     let rval: NodeJS.ReadWriteStream = gulp.src(globPatterns, { base: rootPath }).pipe(gulp.dest(libPath));
     ['libAMDFolder', 'libES6Folder', 'libESNextFolder']
       .filter((dest) => !!this.buildConfig[dest])
       .forEach((dest) => {
-        rval = rval.pipe(gulp.dest(path.join(this.buildConfig.rootPath, this.buildConfig[dest])));
+        rval = rval.pipe(gulp.dest(join(this.buildConfig.rootPath, this.buildConfig[dest])));
       });
 
     return rval;

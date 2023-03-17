@@ -48,6 +48,6 @@
     "@codification/cutwater-build-typescript": "^0.35.4"
   },
   "devDependencies": {
-    "@types/node": "^12.12.6"
+    "@types/node": "^16.11.7"
   }
 }

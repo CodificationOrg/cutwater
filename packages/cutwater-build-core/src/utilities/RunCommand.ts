@@ -1,6 +1,7 @@
 import { default as spawn } from 'cross-spawn';
 import { delimiter, resolve as pathResolve } from 'path';
 import { default as spawnArgs } from 'spawn-args';
+
 import { Logger } from '../logging/Logger';
 
 export interface RunCommandConfig {
