@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-core",
-  "version": "0.35.5",
+  "version": "0.35.6",
   "description": "A library providing the basic utility classes for both the browser and node environments.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -48,8 +48,8 @@
     "rfdc": "^1.3.0"
   },
   "devDependencies": {
-    "@codification/cutwater-build-core": "^0.35.5",
-    "@codification/cutwater-build-node": "^0.35.5",
+    "@codification/cutwater-build-core": "^0.35.6",
+    "@codification/cutwater-build-node": "^0.35.6",
     "@types/rfdc": "^1.2.0"
   }
 }
