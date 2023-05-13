@@ -50,6 +50,6 @@
     "swagger-cli": "^2.3.0"
   },
   "devDependencies": {
-    "@types/node": "^16.11.7"
+    "@types/node": "^18.11.9"
   }
 }
