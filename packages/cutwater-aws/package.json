@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-aws",
-  "version": "0.35.6",
+  "version": "0.35.7",
   "description": "A library providing general functionality for TypeScript based AWS projects.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -45,16 +45,16 @@
     "middy": "^0.18.1"
   },
   "dependencies": {
-    "@codification/cutwater-core": "^0.35.6",
-    "@codification/cutwater-logging": "^0.35.6",
-    "@codification/cutwater-node-core": "^0.35.6",
-    "@codification/cutwater-repo": "^0.35.6",
+    "@codification/cutwater-core": "^0.35.7",
+    "@codification/cutwater-logging": "^0.35.7",
+    "@codification/cutwater-node-core": "^0.35.7",
+    "@codification/cutwater-repo": "^0.35.7",
     "aws-sdk": "^2.1248.0",
     "mime": "^2.4.0"
   },
   "devDependencies": {
-    "@codification/cutwater-build-core": "^0.35.6",
-    "@codification/cutwater-build-node": "^0.35.6",
+    "@codification/cutwater-build-core": "^0.35.7",
+    "@codification/cutwater-build-node": "^0.35.7",
     "@types/mime": "^2.0.1",
     "aws-lambda": "^1.0.7",
     "middy": "^0.18.1"
