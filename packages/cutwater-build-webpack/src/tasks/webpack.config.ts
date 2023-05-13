@@ -14,10 +14,9 @@ const webpackConfiguration = (env, options): Webpack.Configuration => {
     minimizer.push(
       new TerserPlugin({
         parallel: true,
-        sourceMap: true,
         include: /\.min\.js$/,
         terserOptions: {
-          ecma: 6,
+          ecma: 2020,
         },
       }),
     );
@@ -32,13 +31,15 @@ const webpackConfiguration = (env, options): Webpack.Configuration => {
       [packageJSON.name]: path.join(__dirname, buildConfig.srcFolder, 'index.ts'),
     },
 
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-    ],
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/,
+        },
+      ],
+    },
 
     resolve: {
       extensions: ['.tsx', '.ts', '.js'],
