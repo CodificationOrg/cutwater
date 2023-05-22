@@ -118,6 +118,18 @@ export class IOUtils {
     return rval;
   }
 
+  public static replaceTokensInTextFile(
+    localPath: string,
+    values: Record<string, string>,
+    buildConfig?: BuildConfig,
+  ): void {
+    let rval = IOUtils.readToString(localPath, buildConfig);
+    Object.keys(values).forEach((token) => {
+      rval = rval.replace(new RegExp(`\\$\{${token}}`, 'g'), values[token]);
+    });
+    IOUtils.writeToFile(rval, localPath, buildConfig);
+  }
+
   public static writeObjectToFileSync(
     obj: unknown,
     localPath: string,
