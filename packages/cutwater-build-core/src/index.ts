@@ -23,7 +23,7 @@ export { ExecutableTask } from './ExecutableTask';
 export { Logger } from './logging/Logger';
 export * from './tasks';
 export { IOUtils } from './utilities/IOUtils';
-export { MonorepoUtils } from './utilities/MonorepoUtils';
+export { MonorepoMetadata } from './utilities/MonorepoMetadata';
 export { RunCommand, RunCommandConfig } from './utilities/RunCommand';
 export { TextUtils } from './utilities/TextUtils';
 
