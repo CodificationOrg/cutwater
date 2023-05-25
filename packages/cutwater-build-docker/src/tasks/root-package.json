@@ -1,0 +1,8 @@
+{
+  "name": "docker-image-root",
+  "description": "Docker Image NodeJS Root",
+  "private": true,
+  "workspaces": {
+    "packages": ["packages/*"]
+  }
+}
