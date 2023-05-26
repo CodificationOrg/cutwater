@@ -12,11 +12,12 @@ export interface PrepareImageAssetsTaskConfig {
   tempAssetDirectory: string;
 }
 
-export class PrepareImageAssetsTask<
-  T extends PrepareImageAssetsTaskConfig = PrepareImageAssetsTaskConfig
-> extends GulpTask<T, void> {
-  private static readonly DOCKERFILE = 'Dockerfile';
-  private static readonly PACKAGE_JSON = 'package.json';
+export class PrepareImageAssetsTask<T extends PrepareImageAssetsTaskConfig = PrepareImageAssetsTaskConfig> extends GulpTask<
+  T,
+  void
+> {
+  public static readonly DOCKERFILE = 'Dockerfile';
+  public static readonly PACKAGE_JSON = 'package.json';
   private static readonly ROOT_PACKAGE_JSON = 'root-package.json';
 
   public constructor(name = 'prepare-image-assets', defaultConfig: Partial<T> = {}) {
@@ -51,7 +52,7 @@ export class PrepareImageAssetsTask<
   }
 
   private copyAssets(srcDir: string, dstDir: string, includes: string[], createDst = true): void {
-    includes.forEach(item => {
+    includes.forEach((item) => {
       const srcAsset = join(srcDir, item);
       const dstAsset = join(dstDir, item);
       if (existsSync(srcAsset)) {
@@ -90,7 +91,7 @@ export class PrepareImageAssetsTask<
       }
       const pkgsFolder = join(this.dockerFolder, 'packages');
       this.copyModule(rootPath, join(pkgsFolder, 'app'));
-      monorepo.findAllDependentModuleNames(currentModule.name).forEach(depName => {
+      monorepo.findAllDependentModuleNames(currentModule.name).forEach((depName) => {
         const srcDir = monorepo.getModulePath(depName);
         const dstDir = join(pkgsFolder, basename(srcDir));
         this.copyModule(srcDir, dstDir);

@@ -7,6 +7,7 @@ import { Logger } from '../logging/Logger';
 export interface RunCommandConfig {
   command: string;
   args?: string | string[];
+  stdin?: string;
   quiet?: boolean;
   ignoreErrors?: boolean;
   cwd?: string;
@@ -32,6 +33,11 @@ export class RunCommand {
     return new Promise<Buffer>((resolve, reject) => {
       let output = '';
       const proc = this.spawnProccess(config);
+
+      if (config.stdin) {
+        proc.stdin.write(config.stdin);
+        proc.stdin.end();
+      }
 
       proc.stdout.on('data', (data) => {
         output += data;

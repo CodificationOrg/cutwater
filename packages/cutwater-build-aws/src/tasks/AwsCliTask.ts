@@ -17,11 +17,16 @@ export interface AwsCliOptions {
   caBundle?: string;
   cliReadTimeout?: number;
   cliConnectTimeout?: number;
+  cliBinaryFormat?: 'base64' | 'raw-in-base64-out';
+  noCliPager?: boolean;
+  cliAutoPrompt?: boolean;
+  noCliAutoPrompt?: boolean;
 }
 
 export type AwsCliTaskConfig<P> = CliConfig<AwsCliOptions, P>;
 
-export class AwsCliTask<P> extends GulpTask<AwsCliTaskConfig<P>, void> {
+export class AwsCliTask<P = Record<string, never>> extends GulpTask<AwsCliTaskConfig<P>, void> {
+  protected output: Buffer | undefined;
   protected readonly awsCommand: string;
   protected readonly awsSubCommand: string;
   protected readonly filteredParams: string[];
@@ -103,7 +108,7 @@ export class AwsCliTask<P> extends GulpTask<AwsCliTaskConfig<P>, void> {
       filteredParams: this.filteredParams,
     });
     this.log(`Running: ${this.config.runConfig.command} ${args}`);
-    await this.runCommand.run({
+    this.output = await this.runCommand.run({
       logger: this.logger(),
       ...this.config.runConfig,
       args,
