@@ -22,6 +22,7 @@ export { BuildContext, BuildMetrics, BuildState } from './BuildContext';
 export { ExecutableTask } from './ExecutableTask';
 export { Logger } from './logging/Logger';
 export * from './tasks';
+export { EnvUtils } from './utilities/EnvUtils';
 export { IOUtils } from './utilities/IOUtils';
 export { MonorepoMetadata } from './utilities/MonorepoMetadata';
 export { RunCommand, RunCommandConfig } from './utilities/RunCommand';
