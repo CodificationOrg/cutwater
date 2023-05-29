@@ -1,6 +1,9 @@
 import { IOUtils } from '@codification/cutwater-build-core';
+import {
+  PrepareImageAssetsTask,
+  PrepareImageAssetsTaskConfig,
+} from '@codification/cutwater-build-docker/lib/tasks/PrepareImageAssetsTask';
 import { resolve } from 'path';
-import { PrepareImageAssetsTask, PrepareImageAssetsTaskConfig } from './PrepareImageAssetsTask';
 
 export interface PrepareAWSLambdaImageAssetsTaskConfig extends PrepareImageAssetsTaskConfig {
   nodeVersion: string;

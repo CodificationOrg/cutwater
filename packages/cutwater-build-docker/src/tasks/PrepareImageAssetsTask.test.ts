@@ -22,7 +22,7 @@ describe('PrepareImageAssetsTask', () => {
     it('prepares assets to build a docker image', async () => {
       const task: PrepareImageAssetsTask = new PrepareImageAssetsTask();
       task.setConfig({
-        dockerFile: `${resolve(__dirname, 'AwsLambdaDockerfile')}`,
+        dockerFile: `${resolve(__dirname, 'Dockerfile')}`,
         tempAssetDirectory: basename(dirname(ctx.createTempFilePath())),
       });
       await task.execute(createContext(getConfig(), gulp, getLogger()));
