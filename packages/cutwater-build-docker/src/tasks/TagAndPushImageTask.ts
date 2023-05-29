@@ -4,7 +4,7 @@ import { PrepareImageAssetsTask } from './PrepareImageAssetsTask';
 
 export interface TagAndPushImageTaskConfig extends RunCommandConfig {
   name?: string;
-  repo: string;
+  repo?: string;
   stage: string;
 }
 
@@ -29,7 +29,7 @@ export class TagAndPushImageTask extends GulpTask<TagAndPushImageTaskConfig, voi
   public async executeTask(): Promise<void> {
     const { repo: rawRepo, stage } = this.config;
     const image = `${this.imageName}:latest`;
-    const repo = `${rawRepo}/${this.imageName}`;
+    const repo = rawRepo ? `${rawRepo}/${this.imageName}` : undefined;
     const buildNumber = EnvUtils.buildNumber(-1);
     const buildTag = `${stage}-build-${buildNumber !== -1 ? buildNumber : await EnvUtils.gitRev()}`;
 
@@ -37,13 +37,15 @@ export class TagAndPushImageTask extends GulpTask<TagAndPushImageTaskConfig, voi
       await new RunCommand().run({
         ...this.config,
         command: 'docker',
-        args: `tag ${image} ${repo}:${tag}`,
+        args: `tag ${image} ${repo || this.imageName}:${tag}`,
       });
-      await new RunCommand().run({
-        ...this.config,
-        command: 'docker',
-        args: `push ${repo}:${tag}`,
-      });
+      if (repo) {
+        await new RunCommand().run({
+          ...this.config,
+          command: 'docker',
+          args: `push ${repo}:${tag}`,
+        });
+      }
     }
   }
 }
