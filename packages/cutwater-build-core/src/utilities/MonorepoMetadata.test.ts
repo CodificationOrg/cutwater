@@ -41,30 +41,30 @@ describe('MonorepoMetadata', () => {
     });
   });
 
-  describe('moduleNames', () => {
-    it('successfully returns repo module names', () => {
-      const result = MonorepoMetadata.create().moduleNames;
+  describe('packageNames', () => {
+    it('successfully returns repo package names', () => {
+      const result = MonorepoMetadata.create().packageNames;
       expect(result).toContain('@codification/cutwater-build-core');
     });
   });
 
-  describe('getModulePath', () => {
-    it('successfully returns path for a repo module', () => {
+  describe('getPackagePath', () => {
+    it('successfully returns path for a repo package', () => {
       const metadata = MonorepoMetadata.create();
-      expect(metadata.getModulePath('@codification/cutwater-build-core').endsWith('build-core')).toBeTruthy();
+      expect(metadata.getPackagePath('@codification/cutwater-build-core').endsWith('build-core')).toBeTruthy();
     });
   });
 
   describe('getPackageJSON', () => {
-    it('successfully returns package.json for a repo module', () => {
+    it('successfully returns package.json for a repo package', () => {
       const result = MonorepoMetadata.create().getPackageJSON('@codification/cutwater-core');
       expect(result.name).toBe('@codification/cutwater-core');
     });
   });
 
-  describe('findAllDependentModuleNames', () => {
-    it('successfully returns a list repo modules that are dependencies', () => {
-      const result = MonorepoMetadata.create().findAllDependentModuleNames('@codification/cutwater-graphql');
+  describe('findAllDependentPackageNames', () => {
+    it('successfully returns a list repo packages that are dependencies', () => {
+      const result = MonorepoMetadata.create().findAllDependentPackageNames('@codification/cutwater-graphql');
       expect(result).toHaveLength(3);
       expect(result).toContain('@codification/cutwater-core');
     });

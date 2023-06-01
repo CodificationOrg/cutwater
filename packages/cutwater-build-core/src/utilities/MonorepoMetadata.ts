@@ -1,14 +1,14 @@
 import { existsSync, lstatSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
+import { PACKAGE_JSON } from '../Constants';
 import { PackageJSON } from '../State';
 import { IOUtils } from './IOUtils';
 
 export class MonorepoMetadata {
-  private static readonly PACKAGE_JSON = 'package.json';
   private static readonly WILDCARD_SUFFIX = '/*';
 
   public static isRepoRoot(path: string): boolean {
-    const packagePath = resolve(join(path, MonorepoMetadata.PACKAGE_JSON));
+    const packagePath = resolve(join(path, PACKAGE_JSON));
     let rval: PackageJSON | undefined;
     if (existsSync(packagePath)) {
       rval = IOUtils.readObjectFromFileSync<PackageJSON>(packagePath);
@@ -16,7 +16,7 @@ export class MonorepoMetadata {
     return rval !== undefined && rval.workspaces !== undefined;
   }
 
-  public static findRepoRootPath(basePath: string): string | undefined {
+  public static findRepoRootPath(basePath = resolve(process.cwd())): string | undefined {
     if (MonorepoMetadata.isRepoRoot(basePath)) {
       return basePath;
     }
@@ -36,42 +36,42 @@ export class MonorepoMetadata {
   }
 
   public readonly rootPackageJSON: PackageJSON;
-  private readonly repoModules: Record<string, string>;
+  private readonly repoPackages: Record<string, string>;
 
-  public get moduleNames(): string[] {
-    return Object.keys(this.repoModules);
+  public get packageNames(): string[] {
+    return Object.keys(this.repoPackages);
   }
 
-  public getModulePath(moduleName: string): string {
-    return this.repoModules[moduleName];
+  public getPackagePath(packageName: string): string {
+    return this.repoPackages[packageName];
   }
 
-  public getPackageJSON(moduleName: string): PackageJSON {
-    const pkgPath = resolve(join(this.getModulePath(moduleName), MonorepoMetadata.PACKAGE_JSON));
+  public getPackageJSON(packageName: string): PackageJSON {
+    const pkgPath = resolve(join(this.getPackagePath(packageName), PACKAGE_JSON));
     return IOUtils.readObjectFromFileSyncSafe<PackageJSON>(pkgPath);
   }
 
-  private addModuleDependencies(moduleName: string, deps: string[] = []): string[] {
-    const modulePkg = this.getPackageJSON(moduleName);
-    if (modulePkg.dependencies) {
-      Object.keys(modulePkg.dependencies)
-        .filter((dep) => !deps.includes(dep) && this.moduleNames.includes(dep))
+  private addPackageDependencies(packageName: string, deps: string[] = []): string[] {
+    const pkgObj = this.getPackageJSON(packageName);
+    if (pkgObj.dependencies) {
+      Object.keys(pkgObj.dependencies)
+        .filter((dep) => !deps.includes(dep) && this.packageNames.includes(dep))
         .forEach((dep) => {
           deps.push(dep);
-          this.addModuleDependencies(dep, deps);
+          this.addPackageDependencies(dep, deps);
         });
     }
     return deps;
   }
 
-  public findAllDependentModuleNames(moduleName: string): string[] {
-    return this.addModuleDependencies(moduleName);
+  public findAllDependentPackageNames(packageName: string): string[] {
+    return this.addPackageDependencies(packageName);
   }
 
   private constructor(public readonly rootPath: string) {
-    const packagePath = resolve(join(rootPath, MonorepoMetadata.PACKAGE_JSON));
+    const packagePath = resolve(join(rootPath, PACKAGE_JSON));
     this.rootPackageJSON = IOUtils.readObjectFromFileSyncSafe<PackageJSON>(packagePath);
-    this.repoModules = this.initRepoModules();
+    this.repoPackages = this.initRepoPackages();
   }
 
   private findRepoWorkspacePaths(pkgObj: PackageJSON): string[] {
@@ -98,7 +98,7 @@ export class MonorepoMetadata {
     }
   }
 
-  private initRepoModules(): Record<string, string> {
+  private initRepoPackages(): Record<string, string> {
     const rval = {};
     if (this.rootPath && this.rootPackageJSON) {
       const wsPaths = this.findRepoWorkspacePaths(this.rootPackageJSON).reduce<string[]>((rval, wsPath) => {
@@ -106,7 +106,7 @@ export class MonorepoMetadata {
         return rval;
       }, []);
       wsPaths.forEach((wsPath) => {
-        const wsPkg = IOUtils.readJSONSync<PackageJSON>(resolve(wsPath, MonorepoMetadata.PACKAGE_JSON));
+        const wsPkg = IOUtils.readJSONSync<PackageJSON>(resolve(wsPath, PACKAGE_JSON));
         if (wsPkg && wsPkg.name) {
           rval[wsPkg.name] = wsPath;
         }
