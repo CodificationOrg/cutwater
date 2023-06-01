@@ -2,23 +2,28 @@ if (process.argv.indexOf('--no-color') === -1) {
   process.argv.push('--color');
 }
 
+import * as gulp from 'gulp';
 import { Gulp } from 'gulp';
 import { join, resolve } from 'path';
 
+import { existsSync } from 'fs';
 import { BuildConfig } from './BuildConfig';
 import { BuildContext, createContext } from './BuildContext';
+import { LOCK_FILES, LOCK_FILE_MAPPING } from './Constants';
 import { ExecutableTask } from './ExecutableTask';
-import { getLogger, Logger } from './logging/Logger';
 import { args, builtPackage, getFlagValue } from './State';
+import { Logger, getLogger } from './logging/Logger';
 import { CleanFlagTask } from './tasks/CleanFlagTask';
 import { CleanTask } from './tasks/CleanTask';
 import { CopyStaticAssetsTask } from './tasks/CopyStaticAssetsTask';
 import { GulpTask } from './tasks/GulpTask';
-import { isJestEnabled, JestTask } from './tasks/JestTask';
+import { JestTask, isJestEnabled } from './tasks/JestTask';
 import { PrettierTask } from './tasks/PrettierTask';
+import { MonorepoMetadata } from './utilities/MonorepoMetadata';
 
 export { BuildConfig } from './BuildConfig';
 export { BuildContext, BuildMetrics, BuildState } from './BuildContext';
+export * from './Constants';
 export { ExecutableTask } from './ExecutableTask';
 export { Logger } from './logging/Logger';
 export * from './tasks';
@@ -224,10 +229,23 @@ export function parallel(...tasks: Array<ExecutableTask<unknown>[] | ExecutableT
   };
 }
 
+const findLockFileName = (repoMetadata?: MonorepoMetadata): string | undefined => {
+  const basePath = repoMetadata ? repoMetadata.rootPath : resolve(process.cwd());
+  return LOCK_FILES.find((lockFile) => existsSync(resolve(basePath, lockFile)));
+};
+
 export function initialize(localGulp: Gulp): void {
   buildContext = createContext(buildConfig, localGulp, logger);
 
   getConfig().rootPath = process.cwd();
+
+  const repoMetadata = MonorepoMetadata.findRepoRootPath(process.cwd()) ? MonorepoMetadata.create() : undefined;
+  const lockFile = findLockFileName(repoMetadata);
+  const npmClient = lockFile ? LOCK_FILE_MAPPING[lockFile] : undefined;
+
+  getConfig().repoMetadata = repoMetadata;
+  getConfig().lockFile = lockFile;
+  getConfig().npmClient = npmClient;
   getConfig().gulp = localGulp;
   getConfig().uniqueTasks = uniqueTasks;
   getConfig().jestEnabled = isJestEnabled(getConfig().rootPath);
@@ -248,6 +266,15 @@ export function initialize(localGulp: Gulp): void {
 
   buildContext.metrics.taskCreationTime = process.hrtime(buildContext.metrics.start);
 }
+
+export const createTestBuildContext = (): BuildContext => {
+  initialize(gulp);
+  return createContext(buildConfig, gulp, logger);
+};
+
+export const executeTaskTest = (task: ExecutableTask<unknown>): Promise<void> => {
+  return task.execute(createTestBuildContext());
+};
 
 const registerTask = (localContext: BuildContext, taskName: string, taskExecutable: ExecutableTask<unknown>): void => {
   localContext.gulp.task(taskName, (cb) => {
