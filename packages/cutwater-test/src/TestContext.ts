@@ -1,6 +1,6 @@
 import { FileUtils } from '@codification/cutwater-node-core';
-import * as fs from 'fs';
-import * as path from 'path';
+import { copyFileSync } from 'fs';
+import { extname, join, resolve } from 'path';
 
 export class TestContext {
   public static createContext(tempDirPrefix?: string): TestContext {
@@ -11,7 +11,7 @@ export class TestContext {
   private destroyed = false;
 
   private constructor(tempDirPrefix = 'temp/test-') {
-    const tempPath = path.resolve(path.join(process.cwd(), tempDirPrefix));
+    const tempPath = resolve(join(process.cwd(), tempDirPrefix));
     this.tempDir = FileUtils.createTempDir(tempPath);
   }
 
@@ -22,9 +22,9 @@ export class TestContext {
 
   public copyToTempFile(srcPath: string): string {
     this.checkForDestroyed();
-    const ext = path.extname(srcPath).substring(1);
+    const ext = extname(srcPath).substring(1);
     const rval = this.createTempFilePath(ext);
-    fs.copyFileSync(srcPath, rval);
+    copyFileSync(srcPath, rval);
     return rval;
   }
 
