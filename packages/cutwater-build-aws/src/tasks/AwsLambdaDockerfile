@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/nodejs:18
+FROM public.ecr.aws/lambda/nodejs:${NODE_VERSION_TAG}
 
 COPY package.json yarn.lock ./
 COPY packages/ ./packages/
@@ -6,4 +6,4 @@ COPY packages/ ./packages/
 RUN npm install -g yarn &&\
   yarn install
 
-CMD [ "packages/app/lib/lambda.handler" ]
+CMD [ "packages/app/lib/${HANDLER_NAME}" ]
