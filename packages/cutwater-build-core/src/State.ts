@@ -1,6 +1,6 @@
 import * as path from 'path';
 import yargs from 'yargs';
-import { getConfig } from './index';
+import { PACKAGE_JSON, getConfig } from './index';
 import { IOUtils } from './utilities/IOUtils';
 
 export const root: string = process.cwd();
@@ -13,6 +13,7 @@ export interface PackageJSON {
   resolutions?: Record<string, string>;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
+  optionalDependencies?: Record<string, string>;
   directories:
     | {
         packagePath: string | undefined;
@@ -26,7 +27,7 @@ let packageJson: PackageJSON = {
   },
 };
 try {
-  packageJson = IOUtils.readJSONSyncSafe(path.join(root, 'package.json'));
+  packageJson = IOUtils.readJSONSyncSafe<PackageJSON>(path.join(root, PACKAGE_JSON));
 } catch (e) {
   // Package.json probably doesn't exit
 }
