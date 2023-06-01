@@ -19,7 +19,7 @@ import { CopyStaticAssetsTask } from './tasks/CopyStaticAssetsTask';
 import { GulpTask } from './tasks/GulpTask';
 import { JestTask, isJestEnabled } from './tasks/JestTask';
 import { PrettierTask } from './tasks/PrettierTask';
-import { MonorepoMetadata } from './utilities/MonorepoMetadata';
+import { MonorepoMetadata } from './support/MonorepoMetadata';
 
 export { BuildConfig } from './BuildConfig';
 export { BuildContext, BuildMetrics, BuildState } from './BuildContext';
@@ -27,11 +27,7 @@ export * from './Constants';
 export { ExecutableTask } from './ExecutableTask';
 export { Logger } from './logging/Logger';
 export * from './tasks';
-export { EnvUtils } from './utilities/EnvUtils';
-export { IOUtils } from './utilities/IOUtils';
-export { MonorepoMetadata } from './utilities/MonorepoMetadata';
-export { RunCommand, RunCommandConfig } from './utilities/RunCommand';
-export { TextUtils } from './utilities/TextUtils';
+export * from './support';
 
 const taskMap: { [key: string]: ExecutableTask<unknown> } = {};
 const uniqueTasks: ExecutableTask<unknown>[] = [];

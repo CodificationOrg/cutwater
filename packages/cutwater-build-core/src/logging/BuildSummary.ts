@@ -1,8 +1,8 @@
 import { default as prettyTime } from 'pretty-hrtime';
 import { BuildContext } from '../BuildContext';
 import { builtPackage, coreBuildPackage, getFlagValue } from '../State';
-import { duration, error, failure, info, success, warn } from '../utilities/ColorUtils';
-import { IOUtils } from '../utilities/IOUtils';
+import { duration, error, failure, info, success, warn } from '../support/ColorUtils';
+import { IOUtils } from '../support/IOUtils';
 
 type LogFunction = (...args: string[]) => void;
 

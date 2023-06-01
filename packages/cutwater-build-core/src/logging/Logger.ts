@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { default as prettyTime } from 'pretty-hrtime';
 import { getFlagValue } from '../State';
-import { duration as elapsed, error, label, msg, warn } from '../utilities/ColorUtils';
+import { duration as elapsed, error, label, msg, warn } from '../support/ColorUtils';
 
 export class Logger {
   public static timestamp(): string {

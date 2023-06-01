@@ -1,4 +1,4 @@
-import { RunCommand, RunCommandConfig as RunCommandTaskConfig } from '../utilities/RunCommand';
+import { RunCommand, RunCommandConfig as RunCommandTaskConfig } from '../support/RunCommand';
 import { GulpTask } from './GulpTask';
 
 export { RunCommandTaskConfig };

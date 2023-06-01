@@ -1,7 +1,7 @@
 import * as gulp from 'gulp';
 
 import { ExecutableTask } from './ExecutableTask';
-import { MonorepoMetadata } from './utilities/MonorepoMetadata';
+import { MonorepoMetadata } from './support/MonorepoMetadata';
 import { NpmClient } from './Constants';
 
 export interface BuildConfig {

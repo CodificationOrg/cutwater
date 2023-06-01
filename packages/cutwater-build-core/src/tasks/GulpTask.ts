@@ -9,8 +9,8 @@ import { BuildConfig } from '../BuildConfig';
 import { BuildContext } from '../BuildContext';
 import { ExecutableTask } from '../ExecutableTask';
 import { getLogger, Logger } from '../logging/Logger';
-import { label } from '../utilities/ColorUtils';
-import { IOUtils } from '../utilities/IOUtils';
+import { label } from '../support/ColorUtils';
+import { IOUtils } from '../support/IOUtils';
 
 export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   public readonly CONFIG_ENV_VAR: string = 'CUTWATER_BUILD_CONFIG';

@@ -25,7 +25,10 @@ describe('BuildLambdaImageTask', () => {
   describe('executeTask', () => {
     it('builds a docker image to host a lambda function', async () => {
       const task: BuildLambdaImageTask = new BuildLambdaImageTask();
-      task.setConfig({ imageConfigs: { name, handler: 'lambda.handler' }, contextFolder });
+      task.setConfig({
+        imageConfigs: { name, handler: 'lambda.handler', options: 'RUN echo "hello world"' },
+        contextFolder,
+      });
       await executeTaskTest(task);
       const result = (await new RunCommand().run({ command: 'docker', args: 'images' })).toString('utf-8');
       expect(result.indexOf(name)).toBeTruthy();

@@ -1,7 +1,7 @@
 import * as path from 'path';
 import yargs from 'yargs';
 import { PACKAGE_JSON, getConfig } from './index';
-import { IOUtils } from './utilities/IOUtils';
+import { IOUtils } from './support/IOUtils';
 
 export const root: string = process.cwd();
 export const args = yargs.argv;

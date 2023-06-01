@@ -1,8 +1,8 @@
 import { join } from 'path';
 
 import { BuildConfig, PACKAGE_JSON } from '../';
-import { IOUtils } from '../utilities/IOUtils';
-import { RunCommand, RunCommandConfig } from '../utilities/RunCommand';
+import { IOUtils } from '../support/IOUtils';
+import { RunCommand, RunCommandConfig } from '../support/RunCommand';
 import { GulpTask } from './GulpTask';
 
 export interface JestOptions {

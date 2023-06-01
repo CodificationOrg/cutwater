@@ -27,11 +27,11 @@ export class BuildImageTask<T extends BuildImageTaskConfig = BuildImageTaskConfi
     });
   }
 
-  public get contextFolderPath(): string {
+  protected get contextFolderPath(): string {
     return DockerUtils.toContextFolderPath(this.config.contextFolder, this.buildConfig);
   }
 
-  public toDockerFilePath(config: ImageConfig): string {
+  protected toDockerFilePath(config: ImageConfig): string {
     if (config.dockerFile && isAbsolute(config.dockerFile)) {
       return config.dockerFile;
     } else if (config.dockerFile) {

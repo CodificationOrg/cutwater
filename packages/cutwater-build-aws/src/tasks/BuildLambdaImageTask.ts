@@ -1,4 +1,4 @@
-import { IOUtils } from '@codification/cutwater-build-core';
+import { IOUtils, NodeUtils, TextUtils } from '@codification/cutwater-build-core';
 import { DOCKERFILE } from '@codification/cutwater-build-docker';
 import {
   BuildImageTask,
@@ -10,6 +10,7 @@ import { isAbsolute, join, resolve } from 'path';
 
 export interface HandlerImageConfig extends ImageConfig {
   handler: string;
+  options?: string | string[];
 }
 
 export interface BuildLambdaImageTaskConfig extends BuildImageTaskConfig {
@@ -41,7 +42,7 @@ export class BuildLambdaImageTask<
     return IOUtils.resolvePath(tempPath, this.buildConfig);
   }
 
-  public toDockerFilePath(config: ImageConfig): string {
+  protected toDockerFilePath(config: ImageConfig): string {
     if (config.dockerFile && isAbsolute(config.dockerFile)) {
       return config.dockerFile;
     } else if (config.dockerFile) {
@@ -50,21 +51,26 @@ export class BuildLambdaImageTask<
     return resolve(__dirname, BuildLambdaImageTask.DEFAULT_DOCKERFILE);
   }
 
+  private toOptions(config: HandlerImageConfig): string {
+    if (!config.options) {
+      return '';
+    }
+    return TextUtils.combineToMultilineText(NodeUtils.toArray<string>(config.options));
+  }
+
   private generateTempDockefile(config: HandlerImageConfig): string {
     const rval = this.toTempDockerfilePath(config);
     copyFileSync(this.toDockerFilePath(config), rval);
     IOUtils.replaceTokensInTextFile(rval, {
       NODE_VERSION_TAG: this.config.nodeVersion,
       HANDLER_NAME: config.handler,
+      OPTIONS: this.toOptions(config),
     });
     return rval;
   }
 
   private processHandlerImageConfigs(): void {
-    const configs: HandlerImageConfig[] = Array.isArray(this.config.imageConfigs)
-      ? this.config.imageConfigs
-      : [this.config.imageConfigs];
-
+    const configs = NodeUtils.toArray<HandlerImageConfig>(this.config.imageConfigs);
     configs.forEach(config => {
       if (!config.name) {
         throw new Error('An image name is required.');
