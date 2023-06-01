@@ -1,12 +1,17 @@
 import * as gulp from 'gulp';
 
 import { ExecutableTask } from './ExecutableTask';
+import { MonorepoMetadata } from './utilities/MonorepoMetadata';
+import { NpmClient } from './Constants';
 
 export interface BuildConfig {
   maxBuildTimeMs: number;
   gulp: gulp.Gulp;
   uniqueTasks?: ExecutableTask<unknown>[];
   rootPath: string;
+  repoMetadata?: MonorepoMetadata;
+  npmClient?: NpmClient;
+  lockFile?: string;
   packageFolder: string;
   srcFolder: string;
   libFolder: string;
