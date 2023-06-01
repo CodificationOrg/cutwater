@@ -1,6 +1,6 @@
 import { join } from 'path';
 
-import { BuildConfig } from '../';
+import { BuildConfig, PACKAGE_JSON } from '../';
 import { IOUtils } from '../utilities/IOUtils';
 import { RunCommand, RunCommandConfig } from '../utilities/RunCommand';
 import { GulpTask } from './GulpTask';
@@ -115,7 +115,7 @@ export class JestTask extends GulpTask<JestTaskConfig, void> {
         coverageReporters: ['json', 'html'],
         testMatch: ['<rootDir>/src/**/*.(test|spec).(ts|js)?(x)'],
         testPathIgnorePatterns: ['<rootDir>/(lib|lib-amd|lib-es6|coverage|build|docs|node_modules)/'],
-        modulePathIgnorePatterns: ['<rootDir>/(src|lib)/.*/package.json'],
+        modulePathIgnorePatterns: [`<rootDir>/(src|lib)/.*/${PACKAGE_JSON}`],
       },
       runConfig: {
         command: 'jest',
