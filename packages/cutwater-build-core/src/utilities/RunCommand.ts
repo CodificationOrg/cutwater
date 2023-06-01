@@ -32,6 +32,7 @@ export class RunCommand {
   private doExec(config: RunCommandConfig): Promise<Buffer> {
     return new Promise<Buffer>((resolve, reject) => {
       let output = '';
+      let stderr = '';
       const proc = this.spawnProccess(config);
 
       if (config.stdin) {
@@ -45,13 +46,19 @@ export class RunCommand {
           process.stdout.write(data);
         }
       });
+      proc.stderr?.on('data', (chunk) => {
+        stderr += chunk;
+        if (!config.quiet) {
+          process.stderr.write(chunk);
+        }
+      });
 
       // On error, throw the err back up the chain
       proc.on('error', (err) => {
         if (!config.ignoreErrors) {
           reject(err);
         } else {
-          resolve(Buffer.alloc(0));
+          resolve(Buffer.from(output, 'binary'));
         }
       });
 
@@ -61,9 +68,9 @@ export class RunCommand {
           resolve(Buffer.from(output, 'binary'));
         } else {
           if (!config.ignoreErrors) {
-            reject(new Error(`Non-zero exit code of "${code}"`));
+            reject(new Error(`Non-zero exit code of [${code}: ${stderr}`));
           } else {
-            resolve(Buffer.alloc(0));
+            resolve(Buffer.from(output, 'binary'));
           }
         }
       });
@@ -76,7 +83,7 @@ export class RunCommand {
       config.logger.verbose('Executing command: %s', this.getCommandText(config));
     }
     return spawn(config.command, this.toArgs(config.args), {
-      stdio: this.toStdio(config.quiet || false),
+      stdio: this.toStdio(config),
       cwd,
       env: this.toEnv(config),
     });
@@ -95,9 +102,9 @@ export class RunCommand {
     }
   }
 
-  private toStdio(quiet: boolean): string[] {
-    const ioSetting: string = quiet ? 'ignore' : 'inherit';
-    return ['ignore', 'pipe', ioSetting];
+  private toStdio(config: RunCommandConfig): string[] {
+    const ioSetting: string = config.quiet ? 'ignore' : 'inherit';
+    return [config.stdin ? 'pipe' : 'ignore', 'pipe', ioSetting];
   }
 
   private toEnv(config: RunCommandConfig): { [key: string]: string } {
