@@ -1,51 +1,61 @@
 import { GulpTask, IOUtils, RunCommand, RunCommandConfig } from '@codification/cutwater-build-core';
-import { PackageJSON } from '@codification/cutwater-build-core/lib/State';
-import { join } from 'path';
-import { PrepareImageAssetsTask } from './PrepareImageAssetsTask';
+import { readFileSync } from 'fs';
+import { isAbsolute, resolve } from 'path';
+import { DOCKERFILE, DOCKER_CONTEXT_FOLDER } from '../Constants';
+import { DockerUtils } from '../support/DockerUtils';
 
-export interface BuildImageTaskConfig extends RunCommandConfig {
-  name?: string;
-  platform: string;
-  dockerFile: string;
-  tempAssetDirectory: string;
+export interface ImageConfig {
+  name: string;
+  dockerFile?: string;
 }
 
-export class BuildImageTask extends GulpTask<BuildImageTaskConfig, void> {
-  public constructor() {
-    super('build-image', {
+export interface BuildImageTaskConfig extends RunCommandConfig {
+  platform: string;
+  contextFolder: string;
+  imageConfigs: ImageConfig | ImageConfig[];
+}
+
+export class BuildImageTask<T extends BuildImageTaskConfig = BuildImageTaskConfig> extends GulpTask<T, void> {
+  public constructor(name = 'build-image', defaultConfig: Partial<T> = {}) {
+    super(name, {
       platform: 'linux/amd64',
-      dockerFile: PrepareImageAssetsTask.DOCKERFILE,
-      tempAssetDirectory: 'docker',
+      contextFolder: DOCKER_CONTEXT_FOLDER,
+      imageConfigs: {
+        name: '',
+      },
+      ...defaultConfig,
     });
   }
 
-  public get imageName(): string {
-    if (this.config.name) {
-      return this.config.name;
-    }
-    const pkgObj = IOUtils.readJSONSyncSafe<PackageJSON>(PrepareImageAssetsTask.PACKAGE_JSON, this.buildConfig);
-    if (!pkgObj.name) {
-      throw new Error('No image name provided and no name found in packag.json.');
-    }
-    return pkgObj.name;
+  public get contextFolderPath(): string {
+    return DockerUtils.toContextFolderPath(this.config.contextFolder, this.buildConfig);
   }
 
-  public get dockerFolder(): string {
-    const { tempFolder } = this.buildConfig;
-    const { tempAssetDirectory } = this.config;
-    return IOUtils.resolvePath(join(tempFolder, tempAssetDirectory), this.buildConfig);
-  }
-
-  public get dockerFile(): string {
-    return join(this.dockerFolder, PrepareImageAssetsTask.DOCKERFILE);
+  public toDockerFilePath(config: ImageConfig): string {
+    if (config.dockerFile && isAbsolute(config.dockerFile)) {
+      return config.dockerFile;
+    } else if (config.dockerFile) {
+      return IOUtils.resolvePath(config.dockerFile, this.buildConfig);
+    }
+    return resolve(__dirname, DOCKERFILE);
   }
 
   public async executeTask(): Promise<void> {
-    await new RunCommand().run({
-      logger: this.logger(),
-      ...this.config,
-      command: 'docker',
-      args: `build --file ${this.dockerFile} -t ${this.imageName} --platform ${this.config.platform} ${this.dockerFolder}`,
+    const configs: ImageConfig[] = Array.isArray(this.config.imageConfigs)
+      ? this.config.imageConfigs
+      : [this.config.imageConfigs];
+    const builds = configs.map(config => {
+      if (!config.name) {
+        throw new Error('An image name is required.');
+      }
+      return new RunCommand().run({
+        logger: this.logger(),
+        ...this.config,
+        command: 'docker',
+        stdin: readFileSync(this.toDockerFilePath(config), 'utf-8'),
+        args: `build -t ${config.name} --platform ${this.config.platform} -f - ${this.contextFolderPath}`,
+      });
     });
+    await Promise.all(builds);
   }
 }

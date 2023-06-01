@@ -1,6 +1,12 @@
-import { EnvUtils, GulpTask, IOUtils, RunCommand, RunCommandConfig } from '@codification/cutwater-build-core';
+import {
+  EnvUtils,
+  GulpTask,
+  IOUtils,
+  PACKAGE_JSON,
+  RunCommand,
+  RunCommandConfig,
+} from '@codification/cutwater-build-core';
 import { PackageJSON } from '@codification/cutwater-build-core/lib/State';
-import { PrepareImageAssetsTask } from './PrepareImageAssetsTask';
 
 export interface TagAndPushImageTaskConfig extends RunCommandConfig {
   name?: string;
@@ -19,7 +25,7 @@ export class TagAndPushImageTask extends GulpTask<TagAndPushImageTaskConfig, voi
     if (this.config.name) {
       return this.config.name;
     }
-    const pkgObj = IOUtils.readJSONSyncSafe<PackageJSON>(PrepareImageAssetsTask.PACKAGE_JSON, this.buildConfig);
+    const pkgObj = IOUtils.readJSONSyncSafe<PackageJSON>(PACKAGE_JSON, this.buildConfig);
     if (!pkgObj.name) {
       throw new Error('No image name provided and no name found in packag.json.');
     }
