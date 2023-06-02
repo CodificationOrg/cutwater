@@ -10,6 +10,8 @@ import { S3CopyTask } from './tasks/S3CopyTask';
 import { SamPackageTask } from './tasks/SamPackageTask';
 import { SamPublishTask } from './tasks/SamPublishTask';
 
+export * from '@codification/cutwater-build-node';
+
 export const ecrLoginTask: ExecutableTask<unknown> = new EcrLoginTask();
 export const s3CopyTask: ExecutableTask<unknown> = new S3CopyTask();
 export const samPackageTask: ExecutableTask<unknown> = new SamPackageTask();

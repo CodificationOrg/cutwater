@@ -4,6 +4,7 @@ import { PrepareImageContextTask } from './tasks/PrepareImageContextTask';
 import { TagAndPushImageTask } from './tasks/TagAndPushImageTask';
 
 export * from './Constants';
+export * from '@codification/cutwater-build-node';
 
 export const prepareImageContextTask: ExecutableTask<unknown> = new PrepareImageContextTask();
 export const buildImageTask: ExecutableTask<unknown> = new BuildImageTask();
