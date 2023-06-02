@@ -1,5 +1,4 @@
 import { GulpTask, IOUtils, RunCommand, RunCommandConfig } from '@codification/cutwater-build-core';
-import { readFileSync } from 'fs';
 import { isAbsolute, resolve } from 'path';
 import { DOCKERFILE, DOCKER_CONTEXT_FOLDER } from '../Constants';
 import { DockerUtils } from '../support/DockerUtils';
@@ -52,8 +51,9 @@ export class BuildImageTask<T extends BuildImageTaskConfig = BuildImageTaskConfi
         logger: this.logger(),
         ...this.config,
         command: 'docker',
-        stdin: readFileSync(this.toDockerFilePath(config), 'utf-8'),
-        args: `build -t ${config.name} --platform ${this.config.platform} -f - ${this.contextFolderPath}`,
+        args: `build -t ${config.name} --platform ${this.config.platform} -f ${this.toDockerFilePath(config)} ${
+          this.contextFolderPath
+        }`,
       });
     });
     await Promise.all(builds);
