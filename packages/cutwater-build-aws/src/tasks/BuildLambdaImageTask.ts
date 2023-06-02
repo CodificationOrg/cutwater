@@ -19,12 +19,12 @@ export interface BuildLambdaImageTaskConfig extends BuildImageTaskConfig {
 }
 
 export class BuildLambdaImageTask<
-  T extends BuildLambdaImageTaskConfig = BuildLambdaImageTaskConfig
+  T extends BuildLambdaImageTaskConfig = BuildLambdaImageTaskConfig,
 > extends BuildImageTask<T> {
   private static readonly DEFAULT_DOCKERFILE = 'AwsLambdaDockerfile';
   private static readonly DOCKERFILES_FOLDER = 'dockerfiles';
 
-  public constructor(name = 'prepare-aws-lambda-image-assets', defaultConfig: Partial<T> = {}) {
+  public constructor(name = 'build-lambda-image', defaultConfig: Partial<T> = {}) {
     super(name, {
       nodeVersion: '18',
       imageConfigs: {
@@ -71,7 +71,7 @@ export class BuildLambdaImageTask<
 
   private processHandlerImageConfigs(): void {
     const configs = NodeUtils.toArray<HandlerImageConfig>(this.config.imageConfigs);
-    configs.forEach(config => {
+    configs.forEach((config) => {
       if (!config.name) {
         throw new Error('An image name is required.');
       }
