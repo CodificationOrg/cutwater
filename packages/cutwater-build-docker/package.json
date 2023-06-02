@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-docker",
-  "version": "0.35.12",
+  "version": "0.35.13",
   "description": "Tasks for preparing, building and publishing docker images.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -46,11 +46,11 @@
     ]
   },
   "dependencies": {
-    "@codification/cutwater-build-core": "^0.35.12",
-    "@codification/cutwater-build-node": "^0.35.12"
+    "@codification/cutwater-build-core": "^0.35.13",
+    "@codification/cutwater-build-node": "^0.35.13"
   },
   "devDependencies": {
-    "@codification/cutwater-test": "^0.35.12",
+    "@codification/cutwater-test": "^0.35.13",
     "@types/node": "^18.11.9"
   }
 }

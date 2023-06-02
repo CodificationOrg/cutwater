@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.35.13 (2023-06-02)
+
+
+### Bug Fixes
+
+* use Dockerfile path instead of pipe ([5f368dd](https://github.com/CodificationOrg/cutwater/commit/5f368dd0ac55889f3027ab9d62014e09241451f0))
+
+
+
+
+
 ## 0.35.12 (2023-06-02)
 
 
