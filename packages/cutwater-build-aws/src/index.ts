@@ -1,5 +1,5 @@
 import { ExecutableTask, serial, task } from '@codification/cutwater-build-core';
-import { buildImageTask, tagAndPushImageTask } from '@codification/cutwater-build-docker';
+import { prepareImageContextTask, tagAndPushImageTask } from '@codification/cutwater-build-docker';
 import { buildTasks } from '@codification/cutwater-build-node';
 import { openapiBundle } from '@codification/cutwater-build-openapi';
 import { BuildLambdaImageTask } from './tasks/BuildLambdaImageTask';
@@ -21,7 +21,11 @@ export const buildLambdaImageTask: ExecutableTask<unknown> = new BuildLambdaImag
 export const openApiCfPackageTasks: ExecutableTask<unknown> = serial(openapiBundle, cfPackageTask);
 export const openApiCfDeployTasks: ExecutableTask<unknown> = serial(openApiCfPackageTasks, cfDeployTask);
 
-export const packageDockerLambdaTask: ExecutableTask<unknown> = serial(buildTasks, buildImageTask);
+export const packageDockerLambdaTask: ExecutableTask<unknown> = serial(
+  buildTasks,
+  prepareImageContextTask,
+  buildLambdaImageTask,
+);
 export const publishDockerLambdaTask: ExecutableTask<unknown> = serial(
   packageDockerLambdaTask,
   ecrLoginTask,
