@@ -1,5 +1,5 @@
+import { BuildContext } from '../core/BuildContext';
 import { BuildConfig } from './BuildConfig';
-import { BuildContext } from './BuildContext';
 
 export interface ExecutableTask<T> {
   maxBuildTimeMs?: number;

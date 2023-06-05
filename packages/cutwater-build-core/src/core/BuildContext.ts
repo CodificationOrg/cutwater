@@ -1,11 +1,9 @@
-import { Gulp } from 'gulp';
 import { Logger } from '../logging';
 import { BuildConfig, BuildContextState, BuildMetrics } from '../types';
 import { BuildState, getBuildState } from './BuildState';
 import { BuildSummary } from './BuildSummary';
 
 export interface BuildContext {
-  gulp: Gulp;
   logger: Logger;
   warnings: string[];
   errors: string[];
@@ -32,7 +30,6 @@ export const createBuildContext = (
 
 class BuildContextImpl implements BuildContext {
   public buildConfig: BuildConfig;
-  public readonly gulp: Gulp;
   public readonly logger: Logger;
   public warnings: string[] = [];
   public errors: string[] = [];
@@ -68,7 +65,6 @@ class BuildContextImpl implements BuildContext {
 
   constructor(private readonly buildState: BuildState, config: BuildConfig, logger: Logger) {
     this.buildConfig = config;
-    this.gulp = config.gulp;
     this.logger = logger;
     this.wireUpProcessErrorHandling();
   }
@@ -78,13 +74,11 @@ class BuildContextImpl implements BuildContext {
       this.state.wiredUpErrorHandling = true;
 
       const wroteToStdErr = false;
-      const summary = new BuildSummary(this, this.buildState);
-
       process.on('exit', (code: number) => {
         this.state.duringFastExit = true;
         if (!global['dontWatchExit']) {
           if (!this.state.wroteSummary) {
-            summary.write(() => {
+            new BuildSummary(this, this.buildState).write(() => {
               this.exitProcess(code);
             });
           } else {
@@ -103,7 +97,7 @@ class BuildContextImpl implements BuildContext {
       process.on('uncaughtException', (err: Error) => {
         this.logger.writeTaskError(err);
         this.metrics.taskErrors++;
-        summary.write(() => {
+        new BuildSummary(this, this.buildState).write(() => {
           this.exitProcess(1);
           if (this.gulpErrorCallback) {
             this.gulpErrorCallback(err);

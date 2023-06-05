@@ -2,6 +2,7 @@ if (process.argv.indexOf('--no-color') === -1) {
   process.argv.push('--color');
 }
 
+import { Gulp } from 'gulp';
 import { BuildEngine } from './core';
 import { CleanFlagTask } from './tasks/CleanFlagTask';
 import { CleanTask } from './tasks/CleanTask';
@@ -10,15 +11,20 @@ import { JestTask } from './tasks/JestTask';
 import { PrettierTask } from './tasks/PrettierTask';
 import { ExecutableTask } from './types';
 
-export { BuildState } from './core/BuildState';
+export { BuildContext } from './core/BuildContext';
+export { BuildState, getBuildState } from './core/BuildState';
 export * from './core/Constants';
 export { Logger } from './logging';
 export * from './support';
 export * from './tasks';
-export { BuildConfig, BuildContext, BuildMetrics, ExecutableTask } from './types';
+export { BuildConfig, BuildMetrics, ExecutableTask } from './types';
 
 export const buildEngine = new BuildEngine();
 export const cleanFlag: ExecutableTask<unknown> = new CleanFlagTask();
+
+export const initialize = (gulp: Gulp): void => {
+  buildEngine.initialize(gulp);
+};
 
 export const task = (taskName: string, taskExecutable: ExecutableTask<unknown>): ExecutableTask<unknown> => {
   return buildEngine.task(taskName, serial(cleanFlag, taskExecutable));

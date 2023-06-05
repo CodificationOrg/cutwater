@@ -1,4 +1,5 @@
 import {
+  buildEngine,
   copyStaticAssets,
   eslint,
   ExecutableTask,
@@ -7,17 +8,14 @@ import {
   parallel,
   prettier,
   serial,
-  setConfig,
-  SRC_WATCH_GLOB,
   task,
   tsc,
-  watch,
 } from '@codification/cutwater-build-typescript';
 
 export * from '@codification/cutwater-build-typescript';
 
 const PRODUCTION: boolean = process.argv.indexOf('--production') !== -1 || process.argv.indexOf('--ship') !== -1;
-setConfig({
+buildEngine.setConfig({
   production: PRODUCTION,
   shouldWarningsFailBuild: PRODUCTION,
 });
@@ -32,5 +30,4 @@ export const defaultTasks: ExecutableTask<unknown> = serial(testTasks, tsc, copy
 task('build', buildTasks);
 task('test', testTasks);
 task('test-integ', integrationTask);
-task('watch', watch(SRC_WATCH_GLOB, testTasks));
 task('default', defaultTasks);

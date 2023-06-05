@@ -1,9 +1,9 @@
-import { BuildConfig, getConfig, IOUtils } from '@codification/cutwater-build-core';
-import * as path from 'path';
-import * as TerserPlugin from 'terser-webpack-plugin';
-import * as Webpack from 'webpack';
+import { BuildConfig, IOUtils, buildEngine } from '@codification/cutwater-build-core';
+import { join } from 'path';
+import TerserPlugin from 'terser-webpack-plugin';
+import Webpack from 'webpack';
 
-const buildConfig: BuildConfig = getConfig();
+const buildConfig: BuildConfig = buildEngine.getConfig();
 const packageJSON: { name: string } = IOUtils.readJSONSyncSafe('./package.json');
 
 const webpackConfiguration = (env, options): Webpack.Configuration => {
@@ -28,7 +28,7 @@ const webpackConfiguration = (env, options): Webpack.Configuration => {
     devtool: isProduction ? undefined : 'inline-source-map',
 
     entry: {
-      [packageJSON.name]: path.join(__dirname, buildConfig.srcFolder, 'index.ts'),
+      [packageJSON.name]: join(__dirname, buildConfig.srcFolder, 'index.ts'),
     },
 
     module: {
@@ -47,7 +47,7 @@ const webpackConfiguration = (env, options): Webpack.Configuration => {
 
     output: {
       libraryTarget: 'umd',
-      path: path.join(__dirname, buildConfig.distFolder),
+      path: join(__dirname, buildConfig.distFolder),
       filename: `[name]${isProduction ? '.min' : ''}.js`,
       globalObject: 'this',
     },

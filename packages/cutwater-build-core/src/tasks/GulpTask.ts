@@ -4,9 +4,10 @@ import gulp from 'gulp';
 import { dirname, extname, join } from 'path';
 import through2 from 'through2';
 import Vinyl from 'vinyl';
+import { BuildContext } from '../core';
 import { Logger } from '../logging';
 import { IOUtils, label } from '../support';
-import { BuildConfig, BuildContext, ExecutableTask } from '../types';
+import { BuildConfig, ExecutableTask } from '../types';
 
 export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   public readonly CONFIG_ENV_VAR: string = 'CUTWATER_BUILD_CONFIG';

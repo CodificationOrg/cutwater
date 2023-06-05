@@ -1,17 +1,17 @@
 import prettyTime from 'pretty-hrtime';
+import { Logger } from '../logging';
 import { IOUtils, duration, error, failure, info, success, warn } from '../support';
-import { BuildContext, BuildContextState, Callback } from '../types';
-import { RELOG_ISSUES_FLAG } from './Constants';
+import { BuildContextState, Callback } from '../types';
+import { BuildContext } from './BuildContext';
 import { BuildState } from './BuildState';
-
-type LogFunction = (...args: string[]) => void;
+import { RELOG_ISSUES_FLAG } from './Constants';
 
 export class BuildSummary {
-  private readonly log: LogFunction;
+  private readonly logger: Logger;
   private readonly contextState: BuildContextState;
 
   public constructor(private readonly context: BuildContext, private readonly state: BuildState) {
-    this.log = context.logger.log;
+    this.logger = context.logger;
     this.contextState = context.state;
   }
 
@@ -22,7 +22,7 @@ export class BuildSummary {
       this.contextState.writingSummary = true;
 
       IOUtils.afterStreamsFlushed(this.contextState.duringFastExit, () => {
-        this.log(duration('==================[ Finished ]=================='));
+        this.logger.log(duration('==================[ Finished ]=================='));
 
         this.relogIssues();
 
@@ -64,26 +64,26 @@ export class BuildSummary {
   }
 
   private logSummaries(): void {
-    this.context.writeSummaryLogs.forEach((summary) => this.log(summary));
+    this.context.writeSummaryLogs.forEach((summary) => this.logger.log(summary));
   }
 
   private logContextInfo(): void {
     const totalDuration: [number, number] = process.hrtime(this.context.metrics.start);
     const name: string = this.state.builtPackage.name || 'with unknown name';
     const version: string = this.state.builtPackage.version || 'unknown';
-    this.log(`Project ${name} version:`, info(version));
+    this.logger.log(`Project ${name} version:`, info(version));
 
     const toolVersion =
       this.state.toolPackage && this.state.toolPackage.version ? this.state.toolPackage.version : 'unknown';
-    this.log('Build tools version:', info(toolVersion));
+    this.logger.log('Build tools version:', info(toolVersion));
 
-    this.log('Node version:', info(process.version));
-    this.log('Total duration:', info(prettyTime(totalDuration)));
+    this.logger.log('Node version:', info(process.version));
+    this.logger.log('Total duration:', info(prettyTime(totalDuration)));
   }
 
   private logTestResults(): void {
     if (this.context.metrics.testsRun > 0) {
-      this.log(
+      this.logger.log(
         'Tests results -',
         'Passed:',
         success(`${this.context.metrics.testsPassed}`),
@@ -97,7 +97,7 @@ export class BuildSummary {
 
   private logCoverageResults(): void {
     if (this.context.metrics.coverageResults > 0) {
-      this.log(
+      this.logger.log(
         'Coverage results -',
         'Passed:',
         success(`${this.context.metrics.coveragePass}`),
@@ -111,7 +111,7 @@ export class BuildSummary {
 
   private logWarnings(): void {
     if (this.context.warnings.length) {
-      this.log('Task warnings:', warn(`${this.context.warnings.length.toString()}`));
+      this.logger.log('Task warnings:', warn(`${this.context.warnings.length.toString()}`));
     }
   }
 
@@ -119,7 +119,7 @@ export class BuildSummary {
     let totalErrors = 0;
     if (this.context.metrics.taskErrors > 0 || this.context.errors.length) {
       totalErrors = this.context.metrics.taskErrors + this.context.errors.length;
-      this.log('Task errors:', error(`${totalErrors}`));
+      this.logger.log('Task errors:', error(`${totalErrors}`));
     }
   }
 

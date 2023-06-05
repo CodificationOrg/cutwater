@@ -5,7 +5,7 @@ import { Logger } from '../logging';
 import { MonorepoMetadata } from '../support';
 import { isJestEnabled } from '../tasks';
 import { BuildConfig, Callback, ExecutableTask } from '../types';
-import { BuildContext, createBuildContext } from './BuildContextImpl';
+import { BuildContext, createBuildContext } from './BuildContext';
 import { BuildState, getBuildState } from './BuildState';
 import {
   DIST_FOLDER,
