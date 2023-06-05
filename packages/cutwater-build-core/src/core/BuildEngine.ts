@@ -1,8 +1,12 @@
 import { existsSync } from 'fs';
 import { Gulp } from 'gulp';
 import { join, resolve } from 'path';
-import { BuildContextImpl } from './BuildContextImpl';
-import { BuildStateImpl } from './BuildState';
+import { Logger } from '../logging';
+import { MonorepoMetadata } from '../support';
+import { isJestEnabled } from '../tasks';
+import { BuildConfig, Callback, ExecutableTask } from '../types';
+import { BuildContext, createBuildContext } from './BuildContextImpl';
+import { BuildState, getBuildState } from './BuildState';
 import {
   DIST_FOLDER,
   FAIL_ICON,
@@ -13,12 +17,9 @@ import {
   RELOG_ISSUES_FLAG,
   SHOW_TOAST_FLAG,
   SUCCESS_ICON,
+  TEMP_FOLDER,
   VERBOSE_FLAG,
 } from './Constants';
-import { Logger } from './logging';
-import { MonorepoMetadata } from './support';
-import { isJestEnabled } from './tasks';
-import { BuildConfig, BuildContext, BuildState, Callback, ExecutableTask } from './types';
 
 export class BuildEngine {
   private readonly state: BuildState;
@@ -28,17 +29,17 @@ export class BuildEngine {
   private readonly logger: Logger;
   private readonly buildContext: BuildContext;
 
-  private constructor(gulp: Gulp) {
-    this.state = BuildStateImpl.instance;
+  public constructor() {
+    this.state = getBuildState();
     this.packageFolder =
       this.state.builtPackage.directories && this.state.builtPackage.directories.packagePath
         ? this.state.builtPackage.directories.packagePath
         : '';
-    this.logger = Logger.getLogger(this.state);
+    this.logger = Logger.create(this.state.getFlagValue(VERBOSE_FLAG));
 
     const rootPath = process.cwd();
     const buildConfig: BuildConfig = {
-      gulp,
+      gulp: undefined as any,
       rootPath,
       maxBuildTimeMs: 0,
       jestEnabled: isJestEnabled(rootPath),
@@ -46,7 +47,7 @@ export class BuildEngine {
       srcFolder: 'src',
       distFolder: join(this.packageFolder, DIST_FOLDER),
       libFolder: join(this.packageFolder, LIB_FOLDER),
-      tempFolder: 'temp',
+      tempFolder: join(this.packageFolder, TEMP_FOLDER),
       properties: {},
       uniqueTasks: this.uniqueTasks,
       relogIssues: this.state.getFlagValue(RELOG_ISSUES_FLAG, true),
@@ -58,7 +59,7 @@ export class BuildEngine {
       args: this.state.args,
       shouldWarningsFailBuild: false,
     };
-    this.buildContext = BuildContextImpl.create(this.state, buildConfig, this.logger);
+    this.buildContext = createBuildContext(buildConfig, this.logger, this.state);
   }
 
   private static findLockFileName(repoMetadata?: MonorepoMetadata): string | undefined {
@@ -66,12 +67,12 @@ export class BuildEngine {
     return LOCK_FILES.find((lockFile) => existsSync(resolve(basePath, lockFile)));
   }
 
-  private static handleCommandLineArguments(buildConfig: BuildConfig): void {
-    this.handleTasksListArguments(buildConfig);
+  private handleCommandLineArguments(): void {
+    this.handleTasksListArguments();
   }
 
-  private static handleTasksListArguments(buildConfig: BuildConfig): void {
-    const { args } = buildConfig;
+  private handleTasksListArguments(): void {
+    const { args } = this.buildContext.buildConfig;
     if (args['tasks'] || args['tasks-simple'] || args['T']) {
       global['dontWatchExit'] = true;
     }
@@ -165,7 +166,7 @@ export class BuildEngine {
     }, maxBuildTimeMs);
   }
 
-  public registerTask(taskName: string, taskExecutable: ExecutableTask<unknown>): void {
+  private registerTask(taskName: string, taskExecutable: ExecutableTask<unknown>): void {
     const { buildConfig } = this.buildContext;
     const { gulp } = buildConfig;
 
@@ -186,17 +187,85 @@ export class BuildEngine {
     });
   }
 
-  public static initialize(localGulp: Gulp): BuildEngine {
-    const rval = new BuildEngine(localGulp);
+  private trackTask(taskExecutable: ExecutableTask<unknown>): void {
+    if (this.uniqueTasks.indexOf(taskExecutable) < 0) {
+      this.uniqueTasks.push(taskExecutable);
+    }
+  }
 
-    const { taskMap, uniqueTasks, buildContext } = rval;
-    const { buildConfig } = buildContext;
+  private flatten<T>(oArr: Array<T | T[]>): T[] {
+    const rval: T[] = [];
 
+    const traverse = (arr: Array<T | T[]>): void => {
+      arr.forEach((el) => {
+        if (Array.isArray(el)) {
+          traverse(el as T[]);
+        } else {
+          rval.push(el as T);
+        }
+      });
+    };
+
+    traverse(oArr);
+    return rval;
+  }
+
+  public task(taskName: string, taskExecutable: ExecutableTask<unknown>): ExecutableTask<unknown> {
+    this.taskMap[taskName] = taskExecutable;
+    this.trackTask(taskExecutable);
+    return taskExecutable;
+  }
+
+  public serial(...tasks: Array<ExecutableTask<unknown>[] | ExecutableTask<unknown>>): ExecutableTask<unknown> {
+    const flatTasks: ExecutableTask<unknown>[] = this.flatten(tasks).filter((taskExecutable) => {
+      return taskExecutable !== null && taskExecutable !== undefined;
+    }) as ExecutableTask<unknown>[];
+    flatTasks.forEach((task) => this.trackTask(task));
+    return {
+      execute: async (): Promise<void> => {
+        for (const taskExecutable of flatTasks) {
+          await this.executeTask(taskExecutable);
+        }
+      },
+    };
+  }
+
+  public parallel(...tasks: Array<ExecutableTask<unknown>[] | ExecutableTask<unknown>>): ExecutableTask<void> {
+    const flatTasks: ExecutableTask<unknown>[] = this.flatten<ExecutableTask<unknown>>(tasks).filter(
+      (taskExecutable) => {
+        return taskExecutable !== null && taskExecutable !== undefined;
+      },
+    );
+    flatTasks.forEach((task) => this.trackTask(task));
+    return {
+      execute: async (): Promise<void> => {
+        await Promise.all<void>(flatTasks.map((task) => this.executeTask(task)));
+      },
+    };
+  }
+
+  public getConfig(): BuildConfig {
+    return this.buildContext.buildConfig;
+  }
+
+  public setConfig(config: Partial<BuildConfig>): void {
+    this.buildContext.buildConfig = { ...this.getConfig(), ...config };
+  }
+
+  public replaceConfig(config: BuildConfig): void {
+    this.buildContext.buildConfig = config;
+  }
+
+  public initialize(localGulp: Gulp): void {
+    const { taskMap, uniqueTasks, buildContext } = this;
+    const { buildConfig } = this.buildContext;
+
+    buildConfig.gulp = localGulp;
     buildConfig.repoMetadata = MonorepoMetadata.findRepoRootPath(process.cwd()) ? MonorepoMetadata.create() : undefined;
     buildConfig.lockFile = BuildEngine.findLockFileName(buildConfig.repoMetadata);
     buildConfig.npmClient = buildConfig.lockFile ? LOCK_FILE_MAPPING[buildConfig.lockFile] : undefined;
 
-    BuildEngine.handleCommandLineArguments(buildConfig);
+    this.handleCommandLineArguments();
 
     for (const uniqueTask of uniqueTasks || []) {
       if (uniqueTask.onRegister) {
@@ -208,9 +277,7 @@ export class BuildEngine {
       buildContext.metrics.start = process.hrtime();
     }
 
-    Object.keys(taskMap).forEach((taskName) => rval.registerTask(taskName, taskMap[taskName]));
-    buildContext.metrics.taskCreationTime = process.hrtime(rval.buildContext.metrics.start);
-
-    return rval;
+    Object.keys(taskMap).forEach((taskName) => this.registerTask(taskName, taskMap[taskName]));
+    buildContext.metrics.taskCreationTime = process.hrtime(this.buildContext.metrics.start);
   }
 }

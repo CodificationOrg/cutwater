@@ -170,7 +170,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   }
 
   protected logger(): Logger {
-    return Logger.getLogger();
+    return Logger.create();
   }
 
   private readConfigs(): T | undefined {

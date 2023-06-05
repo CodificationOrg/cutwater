@@ -1,6 +1,6 @@
 import { join } from 'path';
 
-import { PACKAGE_JSON } from '../Constants';
+import { PACKAGE_JSON } from '../core/Constants';
 import { IOUtils, RunCommand, RunCommandConfig } from '../support';
 import { BuildConfig } from '../types';
 import { GulpTask } from './GulpTask';

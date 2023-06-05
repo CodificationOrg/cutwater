@@ -1,8 +1,8 @@
 import { join, resolve } from 'path';
 import yargs from 'yargs';
-import { PACKAGE_JSON } from './Constants';
 import { IOUtils } from '../support/IOUtils';
 import { PackageJSON } from '../types';
+import { PACKAGE_JSON } from './Constants';
 
 export interface BuildState {
   readonly root: string;
@@ -23,7 +23,7 @@ class BuildStateImpl implements BuildState {
   public readonly args = yargs.argv as Record<string, string | boolean>;
   public readonly builtPackage: PackageJSON;
   public readonly toolPackage: PackageJSON = IOUtils.readObjectFromFileSyncSafe<PackageJSON>(
-    resolve(__dirname, '..', PACKAGE_JSON),
+    resolve(__dirname, '..', '..', PACKAGE_JSON),
   );
   public readonly nodeVersion: string = process.version;
 

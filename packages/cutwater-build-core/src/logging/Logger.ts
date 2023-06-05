@@ -1,13 +1,19 @@
 import { EventEmitter } from 'events';
 import { isAbsolute, relative } from 'path';
 import prettyTime from 'pretty-hrtime';
-import { VERBOSE_FLAG, getBuildState } from '../core';
 import { OutputTracker, duration as elapsed, error, label, msg, warn } from '../support';
 import { Console } from './Console';
 
 export class Logger {
-  public static create(): Logger {
-    return new Logger(Console.create(), getBuildState().getFlagValue(VERBOSE_FLAG));
+  private static readonly LOGGERS: Record<string, Logger> = {};
+
+  public static create(verboseEnabled = false): Logger {
+    let rval = Logger.LOGGERS[`${verboseEnabled}`];
+    if (!rval) {
+      rval = new Logger(Console.create(), verboseEnabled);
+      Logger.LOGGERS[`${verboseEnabled}`] = rval;
+    }
+    return rval;
   }
 
   public static createNull(verboseEnabled = false, console = Console.createNull()): Logger {
@@ -170,7 +176,7 @@ export class Logger {
     }
   }
 
-  private markErrorAsWritten(err: Error): void {
+  public markErrorAsWritten(err: Error): void {
     try {
       err[Logger.WROTE_ERROR_KEY] = true;
     } catch (e) {

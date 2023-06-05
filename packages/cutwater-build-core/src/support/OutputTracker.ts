@@ -14,11 +14,11 @@ export class OutputTracker {
     this.emitter.on(this.event, this.trackerFn);
   }
 
-  get data() {
+  get data(): string[] {
     return this.buffer;
   }
 
-  clear() {
+  clear(): string[] {
     const result = [...this.buffer];
     this.buffer.length = 0;
     return result;

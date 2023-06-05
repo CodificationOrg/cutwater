@@ -1,8 +1,7 @@
 import * as gulp from 'gulp';
-
-import { ExecutableTask } from './ExecutableTask';
+import { NpmClient } from '../core/Constants';
 import { MonorepoMetadata } from '../support/MonorepoMetadata';
-import { NpmClient } from '../Constants';
+import { ExecutableTask } from './ExecutableTask';
 
 export interface BuildConfig {
   maxBuildTimeMs: number;

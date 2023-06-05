@@ -1,7 +1,7 @@
-import { BuildStateImpl } from './BuildState';
+import { getBuildState } from './BuildState';
 
 describe('BuildStateImpl', () => {
-  const { toolPackage } = BuildStateImpl.instance;
+  const { toolPackage } = getBuildState();
 
   describe('coreBuildPackage', () => {
     it('should return the resource', () => {

@@ -1,22 +1,6 @@
 import { Logger } from './Logger';
 
-const logEntries: string[] = [];
-
-beforeAll(() => {
-  const writeEntry = (message?: any): void => {
-    const value: string = message ? message.toString() : '';
-    logEntries.push(value);
-  };
-  console['log'] = jest.fn(writeEntry);
-});
-
-beforeEach(() => {
-  logEntries.length = 0;
-});
-
 describe('Logger', () => {
-  const QUIET_LOGGER = Logger.createNull();
-
   describe('timestamp', () => {
     it('can create a timestamp string', () => expect(Logger.timestamp()).toBeTruthy());
   });
@@ -32,14 +16,14 @@ describe('Logger', () => {
       const tracker = log.trackOutput();
       expect(log.isVerboseEnabled()).toBeFalsy();
       log.verbose('test entry');
-      expect(tracker.clear.length).toEqual(0);
+      expect(tracker.clear().length).toEqual(0);
     });
     it('correctly handles verbose logging when enabled', () => {
       const log = Logger.createNull(true);
       const tracker = log.trackOutput();
       expect(log.isVerboseEnabled()).toBeTruthy();
       log.verbose('test entry');
-      expect(tracker.clear.length).toEqual(1);
+      expect(tracker.clear().length).toEqual(1);
     });
   });
 
@@ -49,7 +33,7 @@ describe('Logger', () => {
       const tracker = log.trackOutput();
       log.warn('another iffy entry');
       expect(tracker.data.length).toEqual(1);
-      expect(tracker.clear[0].indexOf('Warning -')).not.toEqual(-1);
+      expect(tracker.clear()[0].indexOf('Warning -')).not.toEqual(-1);
     });
   });
 
@@ -59,7 +43,7 @@ describe('Logger', () => {
       const tracker = log.trackOutput();
       log.error('just plain wrong entry');
       expect(tracker.data.length).toEqual(1);
-      expect(tracker.clear[0].indexOf('Error -')).not.toEqual(-1);
+      expect(tracker.clear()[0].indexOf('Error -')).not.toEqual(-1);
     });
   });
 });

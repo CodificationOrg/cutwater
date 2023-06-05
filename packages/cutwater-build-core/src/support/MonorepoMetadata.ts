@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { PACKAGE_JSON } from '../Constants';
+import { PACKAGE_JSON } from '../core/Constants';
 import { PackageJSON } from '../types/PackageJSON';
 import { IOUtils } from './IOUtils';
 

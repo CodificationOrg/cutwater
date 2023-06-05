@@ -2,8 +2,8 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSyn
 import yaml, { SchemaDefinition } from 'js-yaml';
 import { basename, isAbsolute, join, resolve } from 'path';
 
+import { Logger } from '../logging';
 import { BuildConfig } from '../types/BuildConfig';
-import { getLogger } from '../logging/Logger';
 
 export class IOUtils {
   public static resolvePath(localPath: string, buildConfig?: BuildConfig): string {
@@ -87,7 +87,7 @@ export class IOUtils {
     try {
       rval = JSON.parse(this.readToString(localPath, buildConfig));
     } catch (e) {
-      getLogger().error(`Error reading JSON file[${this.resolvePath(localPath, buildConfig)}]: ${e}`);
+      Logger.create().error(`Error reading JSON file[${this.resolvePath(localPath, buildConfig)}]: ${e}`);
     }
     return rval;
   }
@@ -113,7 +113,7 @@ export class IOUtils {
     try {
       rval = yaml.load(this.readToString(localPath, buildConfig), schema ? { schema } : undefined);
     } catch (e) {
-      getLogger().error(`Error reading YAML file[${this.resolvePath(localPath, buildConfig)}]: ${e}`);
+      Logger.create().error(`Error reading YAML file[${this.resolvePath(localPath, buildConfig)}]: ${e}`);
     }
     return rval;
   }
