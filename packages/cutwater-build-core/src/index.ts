@@ -3,62 +3,21 @@ if (process.argv.indexOf('--no-color') === -1) {
 }
 
 import * as gulp from 'gulp';
-import { Gulp } from 'gulp';
-import { join, resolve } from 'path';
 
-import { existsSync } from 'fs';
-import { BuildConfig } from './BuildConfig';
-import { BuildContext, createContext } from './BuildContext';
-import { LOCK_FILES, LOCK_FILE_MAPPING } from './Constants';
-import { ExecutableTask } from './ExecutableTask';
-import { args, builtPackage, getFlagValue } from './State';
-import { Logger, getLogger } from './logging/Logger';
+import { CustomTask } from './CustomTask';
 import { CleanFlagTask } from './tasks/CleanFlagTask';
 import { CleanTask } from './tasks/CleanTask';
 import { CopyStaticAssetsTask } from './tasks/CopyStaticAssetsTask';
-import { GulpTask } from './tasks/GulpTask';
-import { JestTask, isJestEnabled } from './tasks/JestTask';
+import { JestTask } from './tasks/JestTask';
 import { PrettierTask } from './tasks/PrettierTask';
-import { MonorepoMetadata } from './support/MonorepoMetadata';
+import { BuildConfig, BuildContext, ExecutableTask } from './types';
+import { CustomGulpTask } from './types/CustomGulpTask';
 
-export { BuildConfig } from './BuildConfig';
-export { BuildContext, BuildMetrics, BuildState } from './BuildContext';
 export * from './Constants';
-export { ExecutableTask } from './ExecutableTask';
-export { Logger } from './logging/Logger';
-export * from './tasks';
+export { Logger } from './logging';
 export * from './support';
-
-const taskMap: { [key: string]: ExecutableTask<unknown> } = {};
-const uniqueTasks: ExecutableTask<unknown>[] = [];
-
-const packageFolder: string =
-  builtPackage.directories && builtPackage.directories.packagePath ? builtPackage.directories.packagePath : '';
-
-const logger: Logger = getLogger();
-
-let buildContext: BuildContext;
-let buildConfig: BuildConfig = {
-  maxBuildTimeMs: 0,
-  gulp: undefined as any,
-  rootPath: undefined as any,
-  packageFolder,
-  srcFolder: 'src',
-  distFolder: join(packageFolder, 'dist'),
-  libAMDFolder: undefined,
-  libESNextFolder: undefined,
-  libFolder: join(packageFolder, 'lib'),
-  tempFolder: 'temp',
-  properties: {},
-  relogIssues: getFlagValue('relogIssues', true),
-  showToast: getFlagValue('showToast', true),
-  buildSuccessIconPath: resolve(__dirname, 'pass.png'),
-  buildErrorIconPath: resolve(__dirname, 'fail.png'),
-  verbose: getFlagValue('verbose', false),
-  production: getFlagValue('production', false),
-  args: args as { [name: string]: string | boolean },
-  shouldWarningsFailBuild: false,
-};
+export * from './tasks';
+export { BuildConfig, BuildContext, BuildMetrics, BuildState, ExecutableTask } from './types';
 
 export const setConfig = (config: Partial<BuildConfig>): void => {
   const newConfig: BuildConfig = { ...getConfig(), ...config };
@@ -81,34 +40,11 @@ export const getConfig = (): BuildConfig => {
   return buildContext ? buildContext.buildConfig : buildConfig;
 };
 
-export const cleanFlag: ExecutableTask<unknown> = new CleanFlagTask();
-
 export function task(taskName: string, taskExecutable: ExecutableTask<unknown>): ExecutableTask<unknown> {
   taskExecutable = serial(cleanFlag, taskExecutable);
   taskMap[taskName] = taskExecutable;
   trackTask(taskExecutable);
   return taskExecutable;
-}
-
-export type CustomGulpTask = (
-  gulp: Gulp,
-  buildConfig: BuildConfig,
-  done?: (failure?: string | Error) => void,
-) => Promise<unknown> | NodeJS.ReadWriteStream | void;
-
-class CustomTask extends GulpTask<void, unknown> {
-  private customTask: CustomGulpTask;
-  constructor(name: string, fn: CustomGulpTask) {
-    super(name);
-    this.customTask = fn.bind(this);
-  }
-
-  public executeTask(
-    localGulp: Gulp,
-    completeCallback?: (error?: string | Error) => void,
-  ): Promise<unknown> | NodeJS.ReadWriteStream | void {
-    return this.customTask(localGulp, getConfig(), completeCallback);
-  }
 }
 
 export function subTask(taskName: string, fn: CustomGulpTask): ExecutableTask<unknown> {
@@ -225,44 +161,6 @@ export function parallel(...tasks: Array<ExecutableTask<unknown>[] | ExecutableT
   };
 }
 
-const findLockFileName = (repoMetadata?: MonorepoMetadata): string | undefined => {
-  const basePath = repoMetadata ? repoMetadata.rootPath : resolve(process.cwd());
-  return LOCK_FILES.find((lockFile) => existsSync(resolve(basePath, lockFile)));
-};
-
-export function initialize(localGulp: Gulp): void {
-  buildContext = createContext(buildConfig, localGulp, logger);
-
-  getConfig().rootPath = process.cwd();
-
-  const repoMetadata = MonorepoMetadata.findRepoRootPath(process.cwd()) ? MonorepoMetadata.create() : undefined;
-  const lockFile = findLockFileName(repoMetadata);
-  const npmClient = lockFile ? LOCK_FILE_MAPPING[lockFile] : undefined;
-
-  getConfig().repoMetadata = repoMetadata;
-  getConfig().lockFile = lockFile;
-  getConfig().npmClient = npmClient;
-  getConfig().gulp = localGulp;
-  getConfig().uniqueTasks = uniqueTasks;
-  getConfig().jestEnabled = isJestEnabled(getConfig().rootPath);
-
-  handleCommandLineArguments();
-
-  for (const uniqueTask of getConfig().uniqueTasks || []) {
-    if (uniqueTask.onRegister) {
-      uniqueTask.onRegister();
-    }
-  }
-
-  if (!buildContext.metrics.start) {
-    buildContext.metrics.start = process.hrtime();
-  }
-
-  Object.keys(taskMap).forEach((taskName) => registerTask(buildContext, taskName, taskMap[taskName]));
-
-  buildContext.metrics.taskCreationTime = process.hrtime(buildContext.metrics.start);
-}
-
 export const createTestBuildContext = (): BuildContext => {
   initialize(gulp);
   return createContext(buildConfig, gulp, logger);
@@ -271,93 +169,6 @@ export const createTestBuildContext = (): BuildContext => {
 export const executeTaskTest = (task: ExecutableTask<unknown>): Promise<void> => {
   return task.execute(createTestBuildContext());
 };
-
-const registerTask = (localContext: BuildContext, taskName: string, taskExecutable: ExecutableTask<unknown>): void => {
-  localContext.gulp.task(taskName, (cb) => {
-    const maxBuildTimeMs: number =
-      taskExecutable.maxBuildTimeMs === undefined ? getConfig().maxBuildTimeMs : taskExecutable.maxBuildTimeMs;
-    const timer: NodeJS.Timer | undefined =
-      maxBuildTimeMs === 0
-        ? undefined
-        : setTimeout(() => {
-            logger.error(
-              `Build ran for ${maxBuildTimeMs} milliseconds without completing. Cancelling build with error.`,
-            );
-            cb(new Error('Timeout'));
-          }, maxBuildTimeMs);
-    executeTask(taskExecutable, localContext)
-      .then(() => {
-        if (timer) {
-          clearTimeout(timer);
-        }
-        cb();
-      })
-      .catch((executionError: Error) => {
-        if (timer) {
-          clearTimeout(timer);
-        }
-        cb(generateGulpError(executionError));
-      });
-  });
-};
-
-const generateGulpError = (err: Error): Error => {
-  let rval: Error;
-  if (logger.isVerboseEnabled()) {
-    rval = err;
-  } else {
-    rval = {
-      showStack: false,
-      toString: (): string => {
-        return '';
-      },
-    } as unknown as Error;
-    logger.markErrorAsWritten(rval);
-  }
-  return rval as Error;
-};
-
-function executeTask(taskExecutable: ExecutableTask<unknown>, localContext: BuildContext): Promise<void> {
-  if (taskExecutable && !taskExecutable.execute) {
-    if ((taskExecutable as any).default) {
-      taskExecutable = (taskExecutable as any).default;
-    }
-  }
-
-  // If the task is missing, throw a meaningful error.
-  if (!taskExecutable || !taskExecutable.execute) {
-    return Promise.reject(
-      new Error(`A task was scheduled, but the task was null. This probably means the task wasn't imported correctly.`),
-    );
-  }
-
-  if (taskExecutable.isEnabled === undefined || taskExecutable.isEnabled(localContext.buildConfig)) {
-    const startTime: [number, number] = process.hrtime();
-
-    if (localContext.buildConfig.onTaskStart && taskExecutable.name) {
-      localContext.buildConfig.onTaskStart(taskExecutable.name);
-    }
-
-    const taskPromise: Promise<void> = taskExecutable
-      .execute(localContext)
-      .then(() => {
-        if (localContext.buildConfig.onTaskEnd && taskExecutable.name) {
-          localContext.buildConfig.onTaskEnd(taskExecutable.name, process.hrtime(startTime));
-        }
-      })
-      .catch((promiseError: Error) => {
-        if (localContext.buildConfig.onTaskEnd && taskExecutable.name) {
-          localContext.buildConfig.onTaskEnd(taskExecutable.name, process.hrtime(startTime), promiseError);
-        }
-        return Promise.reject(promiseError);
-      });
-
-    return taskPromise;
-  }
-
-  // No-op otherwise.
-  return Promise.resolve();
-}
 
 function trackTask(taskExecutable: ExecutableTask<unknown>): void {
   if (uniqueTasks.indexOf(taskExecutable) < 0) {
@@ -382,20 +193,7 @@ function flatten<T>(oArr: Array<T | T[]>): T[] {
   return output;
 }
 
-function handleCommandLineArguments(): void {
-  handleTasksListArguments();
-}
-
-function handleTasksListArguments(): void {
-  if (args['tasks'] || args['tasks-simple'] || args['T']) {
-    global['dontWatchExit'] = true;
-  }
-  if (args['h']) {
-    // we are showing a help command prompt via yargs or ts-command-line
-    global['dontWatchExit'] = true;
-  }
-}
-
+export const cleanFlag: ExecutableTask<unknown> = new CleanFlagTask();
 export const clean: ExecutableTask<unknown> = new CleanTask();
 export const prettier: ExecutableTask<unknown> = new PrettierTask();
 export const copyStaticAssets: CopyStaticAssetsTask = new CopyStaticAssetsTask();

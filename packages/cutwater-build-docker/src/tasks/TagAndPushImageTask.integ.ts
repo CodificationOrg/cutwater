@@ -1,5 +1,5 @@
 import { RunCommand, getConfig, initialize } from '@codification/cutwater-build-core';
-import { createContext } from '@codification/cutwater-build-core/lib/BuildContext';
+import { createContext } from '@codification/cutwater-build-core/lib/types/BuildContext';
 import { getLogger } from '@codification/cutwater-build-core/lib/logging/Logger';
 import { TestContext } from '@codification/cutwater-test';
 import * as gulp from 'gulp';

@@ -1,4 +1,4 @@
-import { BuildConfig } from '../BuildConfig';
+import { BuildConfig } from '../types';
 import { CleanTask } from './CleanTask';
 
 const FLAGS: string[] = ['clean', 'c'];

@@ -1,7 +1,7 @@
 export class NodeUtils {
-  public static toArray<T>(value?: T | T[]): T[] {
+  public static toArray<T>(value?: T | T[], defaultArray: T[] = []): T[] {
     if (value === undefined || value === null) {
-      return [];
+      return defaultArray;
     }
     return Array.isArray(value) ? value : [value];
   }

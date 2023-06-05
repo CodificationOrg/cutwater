@@ -2,7 +2,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSyn
 import yaml, { SchemaDefinition } from 'js-yaml';
 import { basename, isAbsolute, join, resolve } from 'path';
 
-import { BuildConfig } from '../BuildConfig';
+import { BuildConfig } from '../types/BuildConfig';
 import { getLogger } from '../logging/Logger';
 
 export class IOUtils {

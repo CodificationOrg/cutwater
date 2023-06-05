@@ -1,7 +1,7 @@
 import { existsSync, lstatSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
 import { PACKAGE_JSON } from '../Constants';
-import { PackageJSON } from '../State';
+import { PackageJSON } from '../types/PackageJSON';
 import { IOUtils } from './IOUtils';
 
 export class MonorepoMetadata {

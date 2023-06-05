@@ -1,18 +1,23 @@
-import { GulpTask, IOUtils, PACKAGE_JSON } from '@codification/cutwater-build-core';
-import { PackageJSON } from '@codification/cutwater-build-core/lib/State';
+import { GulpTask, IOUtils, NodeUtils, PACKAGE_JSON } from '@codification/cutwater-build-core';
+import { PackageJSON } from '@codification/cutwater-build-core/lib/BuildState';
 import { cpSync, existsSync } from 'fs';
-import { copyFile } from 'fs/promises';
-import { basename, join, resolve } from 'path';
-import { DOCKER_CONTEXT_FOLDER } from '../Constants';
+import { basename, isAbsolute, join, resolve } from 'path';
+import { DOCKERFILE, DOCKER_CONTEXT_FOLDER } from '../Constants';
 import { DockerUtils } from '../support/DockerUtils';
+
+export interface ImageConfig {
+  name: string;
+  dockerfile: string;
+}
 
 export interface PrepareImageContextTaskConfig {
   includes?: string[];
+  configs?: ImageConfig | ImageConfig[];
   contextFolder: string;
 }
 
 export class PrepareImageContextTask<
-  T extends PrepareImageContextTaskConfig = PrepareImageContextTaskConfig
+  T extends PrepareImageContextTaskConfig = PrepareImageContextTaskConfig,
 > extends GulpTask<T, void> {
   private static readonly DIRECTORY_WILDCARD = '/*';
   private static readonly ROOT_PACKAGE_JSON = 'root-package.json';
@@ -24,18 +29,38 @@ export class PrepareImageContextTask<
     });
   }
 
-  private async copyLockFile(): Promise<void> {
+  protected get contextFolderPath(): string {
+    return DockerUtils.toContextFolderPath(this.config.contextFolder, this.buildConfig);
+  }
+
+  protected toDockerFilePath(config: ImageConfig): string {
+    if (isAbsolute(config.dockerfile)) {
+      return config.dockerfile;
+    }
+    return IOUtils.resolvePath(config.dockerfile, this.buildConfig);
+  }
+
+  protected copyDockerfiles(): string[] {
+    const configs = NodeUtils.toArray<ImageConfig>(this.config.configs, [
+      { name: '', dockerfile: resolve(__dirname, DOCKERFILE) },
+    ]);
+    return configs.map((config) => {
+      const trgName = config.name ? `${DOCKERFILE}.${config.name}` : DOCKERFILE;
+      const rval = resolve(this.contextFolderPath, trgName);
+      cpSync(this.toDockerFilePath(config), rval);
+      return rval;
+    });
+  }
+
+  private copyLockFile(): void {
     if (this.buildConfig.lockFile) {
       const basePath = this.buildConfig.repoMetadata ? this.buildConfig.repoMetadata.rootPath : process.cwd();
-      copyFile(
-        resolve(basePath, this.buildConfig.lockFile),
-        resolve(this.contextFolderPath, this.buildConfig.lockFile),
-      );
+      cpSync(resolve(basePath, this.buildConfig.lockFile), resolve(this.contextFolderPath, this.buildConfig.lockFile));
     }
   }
 
   private copyAssets(srcDir: string, dstDir: string, includes: string[]): void {
-    includes.forEach(item => {
+    includes.forEach((item) => {
       const isFolder = item.endsWith(PrepareImageContextTask.DIRECTORY_WILDCARD);
       const itemName = isFolder
         ? item.substring(0, item.length - PrepareImageContextTask.DIRECTORY_WILDCARD.length)
@@ -65,15 +90,12 @@ export class PrepareImageContextTask<
     this.cleanPackage(join(dstDir, PACKAGE_JSON));
   }
 
-  public get contextFolderPath(): string {
-    return DockerUtils.toContextFolderPath(this.config.contextFolder, this.buildConfig);
-  }
-
   public async executeTask(): Promise<void> {
     const { rootPath, repoMetadata } = this.buildConfig;
 
     IOUtils.mkdirs(this.contextFolderPath);
-    await this.copyLockFile();
+    this.copyDockerfiles();
+    this.copyLockFile();
 
     if (repoMetadata) {
       const currentPackage = IOUtils.readJSONSyncSafe<PackageJSON>(PACKAGE_JSON, this.buildConfig);
@@ -82,7 +104,7 @@ export class PrepareImageContextTask<
       }
       const pkgsFolder = join(this.contextFolderPath, 'packages');
       this.copyPackage(rootPath, join(pkgsFolder, 'app'));
-      repoMetadata.findAllDependentPackageNames(currentPackage.name).forEach(depName => {
+      repoMetadata.findAllDependentPackageNames(currentPackage.name).forEach((depName) => {
         const srcDir = repoMetadata.getPackagePath(depName);
         const dstDir = join(pkgsFolder, basename(srcDir));
         this.copyPackage(srcDir, dstDir);

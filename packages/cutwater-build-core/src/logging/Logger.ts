@@ -1,9 +1,29 @@
-import * as path from 'path';
-import { default as prettyTime } from 'pretty-hrtime';
-import { getFlagValue } from '../State';
-import { duration as elapsed, error, label, msg, warn } from '../support/ColorUtils';
+import { isAbsolute, relative } from 'path';
+import prettyTime from 'pretty-hrtime';
+import { BuildStateImpl } from '../BuildStateImpl';
+import { VERBOSE_FLAG } from '../Constants';
+import { duration as elapsed, error, label, msg, warn } from '../support';
+import { BuildState } from '../types';
 
 export class Logger {
+  private static readonly LOGGERS: Record<string, Logger> = {};
+
+  public static createNull(verboseEnabled = false): Logger {
+    return new Logger(verboseEnabled);
+  }
+
+  public static getLogger(state: BuildState = BuildStateImpl.instance): Logger {
+    const verboseEnabled = state.getFlagValue(VERBOSE_FLAG);
+    let rval = Logger.LOGGERS[`${verboseEnabled}`];
+    if (!rval) {
+      rval = new Logger(rval);
+      Logger.LOGGERS[`${verboseEnabled}`] = rval;
+    }
+    return rval;
+  }
+
+  private constructor(private verboseEnabled: boolean) {}
+
   public static timestamp(): string {
     const currentTime: Date = new Date();
     return [
@@ -17,10 +37,10 @@ export class Logger {
     return `${part < 10 ? '0' : ''}${part.toString(10)}`;
   }
 
-  private readonly WROTE_ERROR_KEY: string = '__gulpCutwaterCoreBuildWroteError';
+  private static readonly WROTE_ERROR_KEY: string = '__gulpCutwaterCoreBuildWroteError';
 
   public isVerboseEnabled(): boolean {
-    return getFlagValue('verbose');
+    return this.verboseEnabled;
   }
 
   public verbose(...args: string[]): void {
@@ -76,8 +96,8 @@ export class Logger {
   ): void {
     if (!filePath) {
       filePath = '<undefined path>';
-    } else if (path.isAbsolute(filePath)) {
-      filePath = path.relative(process.cwd(), filePath);
+    } else if (isAbsolute(filePath)) {
+      filePath = relative(process.cwd(), filePath);
     }
     write(`${label(taskName)} - ${filePath}(${line},${column}): error ${errorCode}: ${message}`);
   }
@@ -104,16 +124,16 @@ export class Logger {
   }
 
   public writeTaskError(e: any): void {
-    if (!e || !(e.err && e.err[this.WROTE_ERROR_KEY])) {
+    if (!e || !(e.err && e.err[Logger.WROTE_ERROR_KEY])) {
       this.writeError(e);
     }
   }
 
   public writeError(e: any): void {
     if (e) {
-      if (!e[this.WROTE_ERROR_KEY]) {
+      if (!e[Logger.WROTE_ERROR_KEY]) {
         if (e.err) {
-          if (!e.err[this.WROTE_ERROR_KEY]) {
+          if (!e.err[Logger.WROTE_ERROR_KEY]) {
             const msg: string | undefined = this.formatError(e);
             const time: string = prettyTime(e.hrDuration);
 
@@ -124,7 +144,7 @@ export class Logger {
               '\r\n',
               msg || '',
             );
-            this.markErrorAsWritten(e.err[this.WROTE_ERROR_KEY]);
+            this.markErrorAsWritten(e.err[Logger.WROTE_ERROR_KEY]);
           }
         } else if (e.fileName) {
           // This is probably a plugin error
@@ -149,7 +169,7 @@ export class Logger {
 
   public markErrorAsWritten(err: Error): void {
     try {
-      err[this.WROTE_ERROR_KEY] = true;
+      err[Logger.WROTE_ERROR_KEY] = true;
     } catch (e) {
       // Do Nothing
     }
@@ -206,7 +226,3 @@ export class Logger {
     }
   }
 }
-
-const LOG = new Logger();
-
-export const getLogger = (): Logger => LOG;

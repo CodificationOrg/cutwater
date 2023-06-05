@@ -2,7 +2,7 @@ import { ExecutableTask, serial, task } from '@codification/cutwater-build-core'
 import { prepareImageContextTask, tagAndPushImageTask } from '@codification/cutwater-build-docker';
 import { buildTasks } from '@codification/cutwater-build-node';
 import { openapiBundle } from '@codification/cutwater-build-openapi';
-import { BuildLambdaImageTask } from './tasks/BuildLambdaImageTask';
+import { PrepareLambdaImageContextTask } from './tasks/PrepareLambdaImageContextTask';
 import { CloudFormationDeployTask } from './tasks/CloudFormationDeployTask';
 import { CloudFormationPackageTask } from './tasks/CloudFormationPackageTask';
 import { EcrLoginTask } from './tasks/EcrLoginTask';
@@ -18,7 +18,7 @@ export const samPackageTask: ExecutableTask<unknown> = new SamPackageTask();
 export const samPublishTask: ExecutableTask<unknown> = new SamPublishTask();
 export const cfPackageTask: ExecutableTask<unknown> = new CloudFormationPackageTask();
 export const cfDeployTask: ExecutableTask<unknown> = new CloudFormationDeployTask();
-export const buildLambdaImageTask: ExecutableTask<unknown> = new BuildLambdaImageTask();
+export const buildLambdaImageTask: ExecutableTask<unknown> = new PrepareLambdaImageContextTask();
 
 export const openApiCfPackageTasks: ExecutableTask<unknown> = serial(openapiBundle, cfPackageTask);
 export const openApiCfDeployTasks: ExecutableTask<unknown> = serial(openApiCfPackageTasks, cfDeployTask);

@@ -2,7 +2,7 @@ import { RunCommand, executeTaskTest } from '@codification/cutwater-build-core';
 import { PrepareImageContextTask } from '@codification/cutwater-build-docker/lib/tasks/PrepareImageContextTask';
 import { TestContext } from '@codification/cutwater-test';
 import { basename, dirname } from 'path';
-import { BuildLambdaImageTask } from './BuildLambdaImageTask';
+import { PrepareLambdaImageContextTask } from './PrepareLambdaImageContextTask';
 
 let ctx: TestContext;
 let contextFolder: string;
@@ -24,7 +24,7 @@ afterAll(async () => {
 describe('BuildLambdaImageTask', () => {
   describe('executeTask', () => {
     it('builds a docker image to host a lambda function', async () => {
-      const task: BuildLambdaImageTask = new BuildLambdaImageTask();
+      const task: PrepareLambdaImageContextTask = new PrepareLambdaImageContextTask();
       task.setConfig({
         imageConfigs: { name, handler: 'lambda.handler', options: 'RUN echo "hello world"' },
         contextFolder,

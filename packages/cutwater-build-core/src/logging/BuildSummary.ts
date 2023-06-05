@@ -1,123 +1,130 @@
-import { default as prettyTime } from 'pretty-hrtime';
-import { BuildContext } from '../BuildContext';
-import { builtPackage, coreBuildPackage, getFlagValue } from '../State';
-import { duration, error, failure, info, success, warn } from '../support/ColorUtils';
-import { IOUtils } from '../support/IOUtils';
+import prettyTime from 'pretty-hrtime';
+import { RELOG_ISSUES_FLAG } from '../Constants';
+import { IOUtils, duration, error, failure, info, success, warn } from '../support';
+import { BuildContext, BuildContextState, BuildState, Callback } from '../types';
 
 type LogFunction = (...args: string[]) => void;
 
 export class BuildSummary {
-  public static write(context: BuildContext, callback: () => void): void {
-    const log: LogFunction = context.logger.log;
-    context.writeSummaryCallbacks.push(callback);
+  private readonly log: LogFunction;
+  private readonly contextState: BuildContextState;
 
-    if (!context.state.writingSummary) {
-      context.state.writingSummary = true;
+  public constructor(private readonly context: BuildContext, private readonly state: BuildState) {
+    this.log = context.logger.log;
+    this.contextState = context.state;
+  }
 
-      IOUtils.afterStreamsFlushed(context.state.duringFastExit, () => {
-        log(duration('==================[ Finished ]=================='));
+  public write(callback: Callback): void {
+    this.context.writeSummaryCallbacks.push(callback);
 
-        this.relogIssues(context);
+    if (!this.contextState.writingSummary) {
+      this.contextState.writingSummary = true;
 
-        IOUtils.afterStreamsFlushed(context.state.duringFastExit, () => {
-          this.logSummaries(context, log);
-          this.logContextInfo(context, log);
-          this.logTestResults(context, log);
-          this.logCoverageResults(context, log);
-          this.logWarnings(context, log);
-          this.logErrors(context, log);
+      IOUtils.afterStreamsFlushed(this.contextState.duringFastExit, () => {
+        this.log(duration('==================[ Finished ]=================='));
 
-          context.state.wroteSummary = true;
+        this.relogIssues();
 
-          this.doWriteSumaryCallbacks(context);
+        IOUtils.afterStreamsFlushed(this.contextState.duringFastExit, () => {
+          this.logSummaries();
+          this.logContextInfo();
+          this.logTestResults();
+          this.logCoverageResults();
+          this.logWarnings();
+          this.logErrors();
 
-          const callbacks: Array<() => void> = context.writeSummaryCallbacks;
-          context.writeSummaryCallbacks = [];
+          this.contextState.wroteSummary = true;
+
+          this.doWriteSumaryCallbacks();
+
+          const callbacks: Callback[] = this.context.writeSummaryCallbacks;
+          this.context.writeSummaryCallbacks = [];
           callbacks.forEach((writeSummaryCallback) => writeSummaryCallback());
         });
       });
-    } else if (context.state.wroteSummary) {
-      this.doWriteSumaryCallbacks(context);
+    } else if (this.contextState.wroteSummary) {
+      this.doWriteSumaryCallbacks();
     }
   }
 
-  private static relogIssues(context: BuildContext): void {
-    const shouldRelogIssues: boolean = getFlagValue('relogIssues');
+  private relogIssues(): void {
+    const shouldRelogIssues: boolean = this.state.getFlagValue(RELOG_ISSUES_FLAG);
     if (shouldRelogIssues) {
-      context.warnings.forEach((warning) => {
+      this.context.warnings.forEach((warning) => {
         console.error(warn(warning));
       });
     }
 
-    if (shouldRelogIssues && (context.metrics.taskErrors > 0 || context.errors.length)) {
-      context.errors.forEach((err) => {
+    if (shouldRelogIssues && (this.context.metrics.taskErrors > 0 || this.context.errors.length)) {
+      this.context.errors.forEach((err) => {
         console.error(error(err));
       });
     }
   }
 
-  private static logSummaries(context: BuildContext, log: LogFunction): void {
-    context.writeSummaryLogs.forEach((summary) => log(summary));
+  private logSummaries(): void {
+    this.context.writeSummaryLogs.forEach((summary) => this.log(summary));
   }
 
-  private static logContextInfo(context: BuildContext, log: LogFunction): void {
-    const totalDuration: [number, number] = process.hrtime(context.metrics.start);
-    const name: string = builtPackage.name || 'with unknown name';
-    const version: string = builtPackage.version || 'unknown';
-    log(`Project ${name} version:`, info(version));
+  private logContextInfo(): void {
+    const totalDuration: [number, number] = process.hrtime(this.context.metrics.start);
+    const name: string = this.state.builtPackage.name || 'with unknown name';
+    const version: string = this.state.builtPackage.version || 'unknown';
+    this.log(`Project ${name} version:`, info(version));
 
-    const coreBuildVersion = coreBuildPackage && coreBuildPackage.version ? coreBuildPackage.version : 'unknown';
-    log('Build tools version:', info(coreBuildVersion));
+    const toolVersion =
+      this.state.toolPackage && this.state.toolPackage.version ? this.state.toolPackage.version : 'unknown';
+    this.log('Build tools version:', info(toolVersion));
 
-    log('Node version:', info(process.version));
-    log('Total duration:', info(prettyTime(totalDuration)));
+    this.log('Node version:', info(process.version));
+    this.log('Total duration:', info(prettyTime(totalDuration)));
   }
 
-  private static logTestResults(context: BuildContext, log: LogFunction): void {
-    if (context.metrics.testsRun > 0) {
-      log(
+  private logTestResults(): void {
+    if (this.context.metrics.testsRun > 0) {
+      this.log(
         'Tests results -',
         'Passed:',
-        success(`${context.metrics.testsPassed}`),
+        success(`${this.context.metrics.testsPassed}`),
         'Failed:',
-        failure(`${context.metrics.testsFailed}`),
+        failure(`${this.context.metrics.testsFailed}`),
         'Skipped:',
-        warn(`${context.metrics.testsSkipped}`),
+        warn(`${this.context.metrics.testsSkipped}`),
       );
     }
   }
 
-  private static logCoverageResults(context: BuildContext, log: LogFunction): void {
-    if (context.metrics.coverageResults > 0) {
-      log(
+  private logCoverageResults(): void {
+    if (this.context.metrics.coverageResults > 0) {
+      this.log(
         'Coverage results -',
         'Passed:',
-        success(`${context.metrics.coveragePass}`),
+        success(`${this.context.metrics.coveragePass}`),
         'Failed:',
-        failure(`${context.metrics.coverageResults - context.metrics.coveragePass}`),
+        failure(`${this.context.metrics.coverageResults - this.context.metrics.coveragePass}`),
         'Avg. Cov.:',
-        info(`${Math.floor(context.metrics.coverageTotal / context.metrics.coverageResults)}%`),
+        info(`${Math.floor(this.context.metrics.coverageTotal / this.context.metrics.coverageResults)}%`),
       );
     }
   }
 
-  private static logWarnings(context: BuildContext, log: LogFunction): void {
-    if (context.warnings.length) {
-      log('Task warnings:', warn(`${context.warnings.length.toString()}`));
+  private logWarnings(): void {
+    if (this.context.warnings.length) {
+      this.log('Task warnings:', warn(`${this.context.warnings.length.toString()}`));
     }
   }
 
-  private static logErrors(context: BuildContext, log: LogFunction): void {
+  private logErrors(): void {
     let totalErrors = 0;
-    if (context.metrics.taskErrors > 0 || context.errors.length) {
-      totalErrors = context.metrics.taskErrors + context.errors.length;
-      log('Task errors:', error(`${totalErrors}`));
+    if (this.context.metrics.taskErrors > 0 || this.context.errors.length) {
+      totalErrors = this.context.metrics.taskErrors + this.context.errors.length;
+      this.log('Task errors:', error(`${totalErrors}`));
     }
   }
 
-  private static doWriteSumaryCallbacks(context: BuildContext): void {
-    const callbacks: Array<() => void> = context.writeSummaryCallbacks;
-    context.writeSummaryCallbacks = [];
+  private doWriteSumaryCallbacks(): void {
+    const callbacks: Callback[] = this.context.writeSummaryCallbacks;
+    this.context.writeSummaryCallbacks = [];
     callbacks.forEach((writeSummaryCallback) => writeSummaryCallback());
   }
 }

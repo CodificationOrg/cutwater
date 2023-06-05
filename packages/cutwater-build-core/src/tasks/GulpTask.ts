@@ -1,16 +1,12 @@
-import { default as Ajv } from 'ajv';
-import { default as eos } from 'end-of-stream';
-import * as gulp from 'gulp';
+import Ajv from 'ajv';
+import eos from 'end-of-stream';
+import gulp from 'gulp';
 import { dirname, extname, join } from 'path';
 import through2 from 'through2';
 import Vinyl from 'vinyl';
-
-import { BuildConfig } from '../BuildConfig';
-import { BuildContext } from '../BuildContext';
-import { ExecutableTask } from '../ExecutableTask';
-import { getLogger, Logger } from '../logging/Logger';
-import { label } from '../support/ColorUtils';
-import { IOUtils } from '../support/IOUtils';
+import { Logger } from '../logging';
+import { IOUtils, label } from '../support';
+import { BuildConfig, BuildContext, ExecutableTask } from '../types';
 
 export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   public readonly CONFIG_ENV_VAR: string = 'CUTWATER_BUILD_CONFIG';
@@ -174,7 +170,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   }
 
   protected logger(): Logger {
-    return getLogger();
+    return Logger.getLogger();
   }
 
   private readConfigs(): T | undefined {

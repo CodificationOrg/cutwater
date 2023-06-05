@@ -1,4 +1,4 @@
-import { default as globEscape } from 'glob-escape';
+import globEscape from 'glob-escape';
 import { Gulp } from 'gulp';
 import { join } from 'path';
 

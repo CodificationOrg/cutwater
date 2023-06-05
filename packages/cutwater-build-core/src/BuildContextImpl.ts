@@ -1,59 +1,8 @@
 import { Gulp } from 'gulp';
+import { BuildSummary, Logger } from './logging';
+import { BuildConfig, BuildContext, BuildContextState, BuildMetrics, BuildState } from './types';
 
-import { BuildConfig } from './BuildConfig';
-import { BuildSummary } from './logging/BuildSummary';
-import { Logger } from './logging/Logger';
-
-export interface BuildMetrics {
-  start?: [number, number];
-  coverageResults: number;
-  coveragePass: number;
-  coverageTotal: number;
-  testsRun: number;
-  testsPassed: number;
-  testsFailed: number;
-  testsFlakyFailed: number;
-  testsSkipped: number;
-  taskRun: number;
-  subTasksRun: number;
-  taskErrors: number;
-  totalTaskSrc: number;
-  totalTaskHrTime: [number, number] | undefined;
-  taskCreationTime?: [number, number];
-}
-
-export interface BuildState {
-  wroteSummary: boolean;
-  writingSummary: boolean;
-  watchMode?: boolean;
-  fromRunGulp?: boolean;
-  wiredUpErrorHandling: boolean;
-  duringFastExit: boolean;
-}
-
-export interface BuildContext {
-  logger: Logger;
-  warnings: string[];
-  errors: string[];
-  metrics: BuildMetrics;
-  state: BuildState;
-  writeSummaryCallbacks: Array<() => void>;
-  exitCode: number;
-  writeSummaryLogs: string[];
-  buildConfig: BuildConfig;
-  gulp: Gulp;
-  gulpErrorCallback: undefined | ((err: Error) => void);
-  gulpStopCallback: undefined | ((err: Error) => void);
-  errorAndWarningSuppressions: Array<string | RegExp>;
-  shouldLogWarningsDuringSummary: boolean;
-  shouldLogErrorsDuringSummary: boolean;
-}
-
-export const createContext = (buildConfig: BuildConfig, localGulp: Gulp, logger: Logger): BuildContext => {
-  return new BuildContextImpl(buildConfig, localGulp, logger);
-};
-
-class BuildContextImpl implements BuildContext {
+export class BuildContextImpl implements BuildContext {
   public buildConfig: BuildConfig;
   public readonly gulp: Gulp;
   public readonly logger: Logger;
@@ -74,7 +23,7 @@ class BuildContextImpl implements BuildContext {
     totalTaskSrc: 0,
     totalTaskHrTime: undefined,
   };
-  public state: BuildState = {
+  public state: BuildContextState = {
     wroteSummary: false,
     writingSummary: false,
     wiredUpErrorHandling: false,
@@ -89,9 +38,13 @@ class BuildContextImpl implements BuildContext {
   public shouldLogWarningsDuringSummary = false;
   public shouldLogErrorsDuringSummary = false;
 
-  public constructor(config: BuildConfig, localGulp: Gulp, logger: Logger) {
+  public static create(state: BuildState, buildConfig: BuildConfig, logger: Logger): BuildContext {
+    return new BuildContextImpl(state, buildConfig, logger);
+  }
+
+  private constructor(private readonly buildState: BuildState, config: BuildConfig, logger: Logger) {
     this.buildConfig = config;
-    this.gulp = localGulp || config.gulp;
+    this.gulp = config.gulp;
     this.logger = logger;
     this.wireUpProcessErrorHandling();
   }
@@ -101,12 +54,13 @@ class BuildContextImpl implements BuildContext {
       this.state.wiredUpErrorHandling = true;
 
       const wroteToStdErr = false;
+      const summary = new BuildSummary(this, this.buildState);
 
       process.on('exit', (code: number) => {
         this.state.duringFastExit = true;
         if (!global['dontWatchExit']) {
           if (!this.state.wroteSummary) {
-            BuildSummary.write(this, () => {
+            summary.write(() => {
               this.exitProcess(code);
             });
           } else {
@@ -125,7 +79,7 @@ class BuildContextImpl implements BuildContext {
       process.on('uncaughtException', (err: Error) => {
         this.logger.writeTaskError(err);
         this.metrics.taskErrors++;
-        BuildSummary.write(this, () => {
+        summary.write(() => {
           this.exitProcess(1);
           if (this.gulpErrorCallback) {
             this.gulpErrorCallback(err);

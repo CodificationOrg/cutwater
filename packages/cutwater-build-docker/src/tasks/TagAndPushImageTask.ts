@@ -6,7 +6,7 @@ import {
   RunCommand,
   RunCommandConfig,
 } from '@codification/cutwater-build-core';
-import { PackageJSON } from '@codification/cutwater-build-core/lib/State';
+import { PackageJSON } from '@codification/cutwater-build-core/lib/BuildState';
 
 export interface TagAndPushImageTaskConfig extends RunCommandConfig {
   name?: string;

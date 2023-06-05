@@ -1,6 +1,6 @@
-import { default as del } from 'del';
+import del from 'del';
 
-import { BuildConfig } from '../BuildConfig';
+import { BuildConfig } from '../types';
 import { GulpTask } from './GulpTask';
 
 export interface CleanTaskConfig {

@@ -1,4 +1,4 @@
-import * as gulp from 'gulp';
+import gulp from 'gulp';
 
 import { initialize } from '..';
 import { RunCommandTask, RunCommandTaskConfig } from './RunCommandTask';

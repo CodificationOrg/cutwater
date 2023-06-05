@@ -1,6 +1,6 @@
 import { GulpTask, IOUtils, RunCommand, RunCommandConfig } from '@codification/cutwater-build-core';
-import { isAbsolute, resolve } from 'path';
-import { DOCKERFILE, DOCKER_CONTEXT_FOLDER } from '../Constants';
+import { isAbsolute } from 'path';
+import { DOCKER_CONTEXT_FOLDER } from '../Constants';
 import { DockerUtils } from '../support/DockerUtils';
 
 export interface ImageConfig {
@@ -30,13 +30,14 @@ export class BuildImageTask<T extends BuildImageTaskConfig = BuildImageTaskConfi
     return DockerUtils.toContextFolderPath(this.config.contextFolder, this.buildConfig);
   }
 
-  protected toDockerFilePath(config: ImageConfig): string {
-    if (config.dockerFile && isAbsolute(config.dockerFile)) {
-      return config.dockerFile;
-    } else if (config.dockerFile) {
-      return IOUtils.resolvePath(config.dockerFile, this.buildConfig);
+  protected toDockerFilePath(config: ImageConfig): string | undefined {
+    if (!config.dockerFile) {
+      return undefined;
     }
-    return resolve(__dirname, DOCKERFILE);
+    if (isAbsolute(config.dockerFile)) {
+      return config.dockerFile;
+    }
+    return IOUtils.resolvePath(config.dockerFile, this.buildConfig);
   }
 
   public async executeTask(): Promise<void> {
@@ -47,13 +48,12 @@ export class BuildImageTask<T extends BuildImageTaskConfig = BuildImageTaskConfi
       if (!config.name) {
         throw new Error('An image name is required.');
       }
+      const fileArg = config.dockerFile ? `-f ${this.toDockerFilePath(config)} ` : '';
       return new RunCommand().run({
         logger: this.logger(),
         ...this.config,
         command: 'docker',
-        args: `build -t ${config.name} --platform ${this.config.platform} -f ${this.toDockerFilePath(config)} ${
-          this.contextFolderPath
-        }`,
+        args: `build -t ${config.name} --platform ${this.config.platform} ${fileArg}${this.contextFolderPath}`,
       });
     });
     await Promise.all(builds);
