@@ -1,7 +1,8 @@
 import prettyTime from 'pretty-hrtime';
-import { RELOG_ISSUES_FLAG } from '../Constants';
 import { IOUtils, duration, error, failure, info, success, warn } from '../support';
-import { BuildContext, BuildContextState, BuildState, Callback } from '../types';
+import { BuildContext, BuildContextState, Callback } from '../types';
+import { RELOG_ISSUES_FLAG } from './Constants';
+import { BuildState } from './BuildState';
 
 type LogFunction = (...args: string[]) => void;
 

@@ -1,4 +1,4 @@
-import { BuildStateImpl } from './BuildStateImpl';
+import { BuildStateImpl } from './BuildState';
 
 describe('BuildStateImpl', () => {
   const { toolPackage } = BuildStateImpl.instance;

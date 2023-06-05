@@ -1,28 +1,24 @@
+import { EventEmitter } from 'events';
 import { isAbsolute, relative } from 'path';
 import prettyTime from 'pretty-hrtime';
-import { BuildStateImpl } from '../BuildStateImpl';
-import { VERBOSE_FLAG } from '../Constants';
-import { duration as elapsed, error, label, msg, warn } from '../support';
-import { BuildState } from '../types';
+import { VERBOSE_FLAG, getBuildState } from '../core';
+import { OutputTracker, duration as elapsed, error, label, msg, warn } from '../support';
+import { Console } from './Console';
 
 export class Logger {
-  private static readonly LOGGERS: Record<string, Logger> = {};
-
-  public static createNull(verboseEnabled = false): Logger {
-    return new Logger(verboseEnabled);
+  public static create(): Logger {
+    return new Logger(Console.create(), getBuildState().getFlagValue(VERBOSE_FLAG));
   }
 
-  public static getLogger(state: BuildState = BuildStateImpl.instance): Logger {
-    const verboseEnabled = state.getFlagValue(VERBOSE_FLAG);
-    let rval = Logger.LOGGERS[`${verboseEnabled}`];
-    if (!rval) {
-      rval = new Logger(rval);
-      Logger.LOGGERS[`${verboseEnabled}`] = rval;
-    }
-    return rval;
+  public static createNull(verboseEnabled = false, console = Console.createNull()): Logger {
+    return new Logger(console, verboseEnabled);
   }
 
-  private constructor(private verboseEnabled: boolean) {}
+  private static readonly WROTE_ERROR_KEY: string = '__gulpCutwaterCoreBuildWroteError';
+  private static readonly OUTPUT_EVENT: string = 'loggerOutput';
+  private readonly emitter: EventEmitter = new EventEmitter();
+
+  private constructor(private readonly console: Console, private readonly verboseEnabled: boolean) {}
 
   public static timestamp(): string {
     const currentTime: Date = new Date();
@@ -37,7 +33,9 @@ export class Logger {
     return `${part < 10 ? '0' : ''}${part.toString(10)}`;
   }
 
-  private static readonly WROTE_ERROR_KEY: string = '__gulpCutwaterCoreBuildWroteError';
+  public trackOutput(): OutputTracker {
+    return OutputTracker.create(this.emitter, Logger.OUTPUT_EVENT);
+  }
 
   public isVerboseEnabled(): boolean {
     return this.verboseEnabled;
@@ -60,7 +58,12 @@ export class Logger {
   }
 
   public log(...args: string[]): void {
-    console.log(`[${msg(Logger.timestamp())}] ${args.join('')}`);
+    const data = {
+      timestamp: Logger.timestamp(),
+      message: args.join(''),
+    };
+    this.console.log(`[${msg(data.timestamp)}] ${data.message}`);
+    this.emitter.emit(Logger.OUTPUT_EVENT, JSON.stringify(data));
   }
 
   public fileWarning(
@@ -85,7 +88,7 @@ export class Logger {
     this.fileLog(this.error, taskName, filePath, line, column, errorCode, message);
   }
 
-  public fileLog(
+  private fileLog(
     write: (text: string) => void,
     taskName: string,
     filePath: string,
@@ -129,7 +132,7 @@ export class Logger {
     }
   }
 
-  public writeError(e: any): void {
+  private writeError(e: any): void {
     if (e) {
       if (!e[Logger.WROTE_ERROR_KEY]) {
         if (e.err) {
@@ -167,7 +170,7 @@ export class Logger {
     }
   }
 
-  public markErrorAsWritten(err: Error): void {
+  private markErrorAsWritten(err: Error): void {
     try {
       err[Logger.WROTE_ERROR_KEY] = true;
     } catch (e) {

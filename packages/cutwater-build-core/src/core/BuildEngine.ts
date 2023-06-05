@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import { Gulp } from 'gulp';
 import { join, resolve } from 'path';
 import { BuildContextImpl } from './BuildContextImpl';
-import { BuildStateImpl } from './BuildStateImpl';
+import { BuildStateImpl } from './BuildState';
 import {
   DIST_FOLDER,
   FAIL_ICON,

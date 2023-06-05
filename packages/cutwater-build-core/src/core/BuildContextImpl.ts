@@ -1,8 +1,36 @@
 import { Gulp } from 'gulp';
-import { BuildSummary, Logger } from './logging';
-import { BuildConfig, BuildContext, BuildContextState, BuildMetrics, BuildState } from './types';
+import { Logger } from '../logging';
+import { BuildConfig, BuildContextState, BuildMetrics } from '../types';
+import { BuildState, getBuildState } from './BuildState';
+import { BuildSummary } from './BuildSummary';
 
-export class BuildContextImpl implements BuildContext {
+export interface BuildContext {
+  gulp: Gulp;
+  logger: Logger;
+  warnings: string[];
+  errors: string[];
+  metrics: BuildMetrics;
+  state: BuildContextState;
+  writeSummaryCallbacks: Array<() => void>;
+  exitCode: number;
+  writeSummaryLogs: string[];
+  buildConfig: BuildConfig;
+  gulpErrorCallback: undefined | ((err: Error) => void);
+  gulpStopCallback: undefined | ((err: Error) => void);
+  errorAndWarningSuppressions: Array<string | RegExp>;
+  shouldLogWarningsDuringSummary: boolean;
+  shouldLogErrorsDuringSummary: boolean;
+}
+
+export const createBuildContext = (
+  buildConfig: BuildConfig,
+  logger: Logger = Logger.create(),
+  state: BuildState = getBuildState(),
+): BuildContext => {
+  return new BuildContextImpl(state, buildConfig, logger);
+};
+
+class BuildContextImpl implements BuildContext {
   public buildConfig: BuildConfig;
   public readonly gulp: Gulp;
   public readonly logger: Logger;
@@ -38,11 +66,7 @@ export class BuildContextImpl implements BuildContext {
   public shouldLogWarningsDuringSummary = false;
   public shouldLogErrorsDuringSummary = false;
 
-  public static create(state: BuildState, buildConfig: BuildConfig, logger: Logger): BuildContext {
-    return new BuildContextImpl(state, buildConfig, logger);
-  }
-
-  private constructor(private readonly buildState: BuildState, config: BuildConfig, logger: Logger) {
+  constructor(private readonly buildState: BuildState, config: BuildConfig, logger: Logger) {
     this.buildConfig = config;
     this.gulp = config.gulp;
     this.logger = logger;

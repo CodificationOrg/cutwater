@@ -1,10 +1,24 @@
 import { join, resolve } from 'path';
 import yargs from 'yargs';
 import { PACKAGE_JSON } from './Constants';
-import { IOUtils } from './support/IOUtils';
-import { BuildState, PackageJSON } from './types';
+import { IOUtils } from '../support/IOUtils';
+import { PackageJSON } from '../types';
 
-export class BuildStateImpl implements BuildState {
+export interface BuildState {
+  readonly root: string;
+  readonly args: Record<string, string | boolean>;
+  readonly builtPackage: PackageJSON;
+  readonly toolPackage: PackageJSON;
+  readonly nodeVersion: string;
+  getFlagValue(name: string, defaultValue?: boolean): boolean;
+  getConfigValue(name: string, defaultValue?: string | boolean): string | boolean | undefined;
+}
+
+export const getBuildState = (): BuildState => {
+  return BuildStateImpl.instance;
+};
+
+class BuildStateImpl implements BuildState {
   public readonly root: string = process.cwd();
   public readonly args = yargs.argv as Record<string, string | boolean>;
   public readonly builtPackage: PackageJSON;

@@ -1,2 +1,2 @@
-export * from './BuildSummary';
+export * from './Console';
 export * from './Logger';
