@@ -10,7 +10,8 @@
     "clean": "gulp clean",
     "format": "prettier --loglevel warn --write \"src/**/*.ts\"",
     "lint": "eslint --fix src/**/*.ts",
-    "test": "jest",
+    "test": "jest ",
+    "test-integ": "jest --testMatch \"<rootDir>/src/**/*.(integ).(ts|js)?(x)\"",
     "build:compile": "yarn clean && yarn format && yarn lint && tsc",
     "build": "yarn test && yarn build:compile"
   },
@@ -70,6 +71,7 @@
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
-    "@types/js-yaml": "^3.12.3"
+    "@types/js-yaml": "^3.12.3",
+    "tmp": "^0.2.1"
   }
 }
