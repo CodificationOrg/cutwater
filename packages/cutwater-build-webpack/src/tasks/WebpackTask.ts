@@ -34,7 +34,6 @@ export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
   constructor() {
     super('webpack', {
       options: {
-        config: [],
         stats: true,
       },
       spawn: Spawn.create(),
@@ -42,7 +41,6 @@ export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
         command: 'webpack',
         quiet: false,
         ignoreErrors: false,
-        cwd: process.cwd(),
         env: {},
       },
     });
@@ -61,26 +59,27 @@ export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
       this.log(
         'Initializing a webpack.config.js, which bundles lib/index.js into dist/packagename.js into a UMD module.',
       );
-      const webpackFile = this.system.toFileReference(resolve(this.system.cwd(), 'webpack.config.js'));
-      webpackFile.copyTo(this.system.toFileReference('.'));
+      const webpackFile = this.system.toFileReference(resolve(__dirname, 'webpack.config.js'));
+      webpackFile.copyTo(this.system.toFileReference('webpack.config.js'));
       return;
     } else {
-      if (!this.config.options?.config && !defaultConfig) {
-        this.logMissingConfigWarning();
-        return;
-      }
       if (!this.config.options) {
         this.config.options = {};
       }
-      if (!this.config.options.config) {
+      if (!this.config.options.config && defaultConfig) {
         this.config.options.config = [defaultConfig];
       }
+      if (!this.config.options.config) {
+        this.logMissingConfigWarning();
+        return;
+      }
+
       this.config.options.mode = this.buildConfig.production ? 'production' : 'development';
       const args = `${this.prepareOptions()}`;
-      this.logVerbose(`Running: webpack ${args}`);
+      this.logVerbose(`Running: webpack with: ${args}`);
       await this.config.spawn.execute({
         logger: this.logger(),
-        ...this.config.spawnOpts!,
+        ...this.config.spawnOpts,
         args,
       });
     }
@@ -125,9 +124,8 @@ export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
     console.warn('No webpack config has been provided. ' + 'Run again using --initwebpack to create a default config.');
   }
 
-  private defaultConfig(): string {
-    const includedConfig = resolve(__dirname, 'webpack.config.js');
+  private defaultConfig(): string | undefined {
     const localConfig = resolve(this.system.cwd(), 'webpack.config.js');
-    return this.system.fileExists(localConfig) ? localConfig : includedConfig;
+    return this.system.fileExists(localConfig) ? localConfig : undefined;
   }
 }
