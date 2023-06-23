@@ -1,4 +1,4 @@
-import { join, resolve } from 'path';
+import { join, resolve } from 'path/win32';
 
 import { PackageJSON } from '../types';
 import { PACKAGE_JSON } from './Constants';

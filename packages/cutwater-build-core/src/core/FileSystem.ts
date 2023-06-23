@@ -13,7 +13,7 @@ import {
   utimesSync,
   writeFileSync,
 } from 'fs';
-import { basename, isAbsolute } from 'path';
+import { basename, isAbsolute } from 'path/win32';
 import { dirname, resolve } from 'path/win32';
 
 interface FileSystemProvider {

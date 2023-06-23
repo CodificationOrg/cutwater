@@ -1,7 +1,7 @@
 import Ajv from 'ajv';
 import eos from 'end-of-stream';
 import gulp from 'gulp';
-import { dirname, extname, join } from 'path';
+import { dirname, extname, join } from 'path/win32';
 import through2 from 'through2';
 import Vinyl from 'vinyl';
 import { BuildContext, BuildState } from '../core';

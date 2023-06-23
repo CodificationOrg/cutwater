@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join } from 'path/win32';
 
 import { PACKAGE_JSON } from '../core/Constants';
 import { Spawn, SpawnOptions } from '../core/Spawn';

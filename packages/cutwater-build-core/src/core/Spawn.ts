@@ -1,7 +1,7 @@
 import { ChildProcess } from 'child_process';
 import spawn from 'cross-spawn';
 import { EventEmitter } from 'events';
-import { delimiter, resolve } from 'path';
+import { delimiter, resolve } from 'path/win32';
 import spawnArgs from 'spawn-args';
 
 import { Logger } from '../logging/Logger';

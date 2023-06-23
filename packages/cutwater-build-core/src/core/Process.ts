@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import { resolve } from 'path/win32';
 import { ReadStream, WriteStream } from 'tty';
 
 import EventEmitter from 'events';

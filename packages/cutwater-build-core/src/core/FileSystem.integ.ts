@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync } from 'fs';
-import { dirname, resolve } from 'path';
+import { dirname, resolve } from 'path/win32';
 import tmp from 'tmp';
 
 import { FileSystem } from './FileSystem';

@@ -1,6 +1,6 @@
 import globEscape from 'glob-escape';
 import { Gulp } from 'gulp';
-import { join } from 'path';
+import { join } from 'path/win32';
 
 import { GulpTask } from './GulpTask';
 

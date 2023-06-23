@@ -1,4 +1,4 @@
-import { join, resolve } from 'path';
+import { join, resolve } from 'path/win32';
 
 import { BuildContext, PACKAGE_JSON } from '@codification/cutwater-build-core';
 

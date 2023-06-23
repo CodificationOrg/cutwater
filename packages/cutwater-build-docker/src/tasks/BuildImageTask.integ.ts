@@ -1,7 +1,7 @@
 import { BuildContext, Spawn, initialize } from '@codification/cutwater-build-core';
 import { TestContext } from '@codification/cutwater-test';
 import * as gulp from 'gulp';
-import { basename, dirname } from 'path';
+import { basename, dirname } from 'path/win32';
 import { BuildImageTask } from './BuildImageTask';
 import { PrepareImageContextTask } from './PrepareImageContextTask';
 
