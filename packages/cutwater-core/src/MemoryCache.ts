@@ -1,4 +1,4 @@
-import * as rfdc from 'rfdc';
+import rfdc from 'rfdc';
 import { TimeUnit } from './TimeUnit';
 
 interface CacheEntry<T> {

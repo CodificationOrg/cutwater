@@ -4,9 +4,10 @@ import gulp from 'gulp';
 import { dirname, extname, join } from 'path';
 import through2 from 'through2';
 import Vinyl from 'vinyl';
-import { BuildContext } from '../core';
+import { BuildContext, BuildState } from '../core';
+import { System } from '../core/System';
 import { Logger } from '../logging';
-import { IOUtils, label } from '../support';
+import { label } from '../support';
 import { BuildConfig, ExecutableTask } from '../types';
 
 export abstract class GulpTask<T, R> implements ExecutableTask<T> {
@@ -17,6 +18,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   public config: T;
   public cleanMatch: string[];
   public enabled = true;
+  public buildContext: BuildContext;
   private taskSchema: Record<string, unknown> | undefined;
 
   public constructor(name: string, initialTaskConfig: Partial<T> = {}) {
@@ -40,7 +42,8 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
     this.config = taskConfig;
   }
 
-  public onRegister(): void {
+  public onRegister(context: BuildContext): void {
+    this.buildContext = context;
     const rawConfig: T | undefined = this.readConfigs();
     if (rawConfig) {
       this.setConfig(rawConfig);
@@ -81,6 +84,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   }
 
   public execute(context: BuildContext): Promise<void> {
+    this.buildContext = context;
     this.buildConfig = context.buildConfig;
 
     const startTime: [number, number] = process.hrtime();
@@ -159,7 +163,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
 
   protected createOutputDir(outputPath: string): void {
     const outputDir = extname(outputPath) ? dirname(outputPath) : outputPath;
-    IOUtils.mkdirs(outputDir);
+    this.buildContext.buildState.system.mkdir(outputDir, true);
   }
 
   protected loadSchema(): Record<string, unknown> | undefined {
@@ -170,8 +174,16 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
     return ['config', '.config'].map((directory) => join(process.cwd(), directory, `${this.name}.json`));
   }
 
+  protected get system(): System {
+    return this.buildState.system;
+  }
+
+  protected get buildState(): BuildState {
+    return this.buildContext.buildState;
+  }
+
   protected logger(): Logger {
-    return Logger.create();
+    return this.buildContext.logger || Logger.create();
   }
 
   private readConfigs(): T | undefined {
@@ -203,10 +215,11 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   }
 
   private readConfigFile(filePath: string): T | undefined {
-    if (!IOUtils.fileExists(filePath)) {
+    const { system } = this.buildContext.buildState;
+    if (!system.fileExists(filePath)) {
       return undefined;
     } else {
-      return this.verifyConfig(IOUtils.readJSONSyncSafe(filePath));
+      return this.verifyConfig(system.toFileReference(filePath).readObjectSyncSafe());
     }
   }
 

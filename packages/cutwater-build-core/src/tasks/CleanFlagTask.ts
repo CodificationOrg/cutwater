@@ -14,10 +14,9 @@ export class CleanFlagTask extends CleanTask {
     return (!!buildConfig.args[FLAGS[0]] || !!buildConfig.args[FLAGS[1]]) && !this.finished;
   }
 
-  public executeTask(): Promise<string[]> {
-    return super.executeTask().then((result) => {
-      this.finished = true;
-      return result;
-    });
+  public async executeTask(): Promise<string[]> {
+    const rval = await super.executeTask();
+    this.finished = true;
+    return rval;
   }
 }

@@ -10,7 +10,7 @@ export class OutputTracker {
     this.buffer.push(data);
   };
 
-  constructor(private readonly emitter: EventEmitter, private readonly event: string) {
+  private constructor(private readonly emitter: EventEmitter, private readonly event: string) {
     this.emitter.on(this.event, this.trackerFn);
   }
 

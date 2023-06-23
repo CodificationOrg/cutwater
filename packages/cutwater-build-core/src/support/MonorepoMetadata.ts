@@ -1,42 +1,54 @@
-import { existsSync, lstatSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
+
 import { PACKAGE_JSON } from '../core/Constants';
+import { System } from '../core/System';
 import { PackageJSON } from '../types/PackageJSON';
-import { IOUtils } from './IOUtils';
 
 export class MonorepoMetadata {
   private static readonly WILDCARD_SUFFIX = '/*';
 
-  public static isRepoRoot(path: string): boolean {
-    const packagePath = resolve(join(path, PACKAGE_JSON));
-    let rval: PackageJSON | undefined;
-    if (existsSync(packagePath)) {
-      rval = IOUtils.readObjectFromFileSync<PackageJSON>(packagePath);
+  public static create(basePath?: string): MonorepoMetadata | undefined {
+    try {
+      return new MonorepoMetadata(System.create(), basePath);
+    } catch (err) {
+      return undefined;
     }
-    return rval !== undefined && rval.workspaces !== undefined;
   }
 
-  public static findRepoRootPath(basePath = resolve(process.cwd())): string | undefined {
-    if (MonorepoMetadata.isRepoRoot(basePath)) {
-      return basePath;
+  public static createNull(
+    basePath = '/project/packages',
+    system: System = System.createNull(),
+  ): MonorepoMetadata | undefined {
+    try {
+      return new MonorepoMetadata(system, basePath);
+    } catch (err) {
+      return undefined;
     }
-    const nextPath = resolve(basePath, '..');
-    if (nextPath.length < basePath.length) {
-      return MonorepoMetadata.findRepoRootPath(nextPath);
-    }
-    return undefined;
-  }
-
-  public static create(basePath = resolve(process.cwd())): MonorepoMetadata {
-    const repoRootPath = MonorepoMetadata.findRepoRootPath(basePath);
-    if (!repoRootPath) {
-      throw new Error(`Could not find monorepo root from base path: ${basePath}`);
-    }
-    return new MonorepoMetadata(repoRootPath);
   }
 
   public readonly rootPackageJSON: PackageJSON;
   private readonly repoPackages: Record<string, string>;
+
+  public isRepoRoot(path: string): boolean {
+    const packagePath = resolve(join(path, PACKAGE_JSON));
+    let rval: PackageJSON | undefined;
+    const packageFile = this.system.toFileReference(packagePath);
+    if (packageFile.exists()) {
+      rval = packageFile.readObjectSync<PackageJSON>();
+    }
+    return rval !== undefined && rval.workspaces !== undefined;
+  }
+
+  public findRepoRootPath(basePath: string): string | undefined {
+    if (this.isRepoRoot(basePath)) {
+      return basePath;
+    }
+    const nextPath = resolve(basePath, '..');
+    if (nextPath.length < basePath.length) {
+      return this.findRepoRootPath(nextPath);
+    }
+    return undefined;
+  }
 
   public get packageNames(): string[] {
     return Object.keys(this.repoPackages);
@@ -48,7 +60,7 @@ export class MonorepoMetadata {
 
   public getPackageJSON(packageName: string): PackageJSON {
     const pkgPath = resolve(join(this.getPackagePath(packageName), PACKAGE_JSON));
-    return IOUtils.readObjectFromFileSyncSafe<PackageJSON>(pkgPath);
+    return this.system.toFileReference(pkgPath).readObjectSyncSafe<PackageJSON>();
   }
 
   private addPackageDependencies(packageName: string, deps: string[] = []): string[] {
@@ -68,9 +80,16 @@ export class MonorepoMetadata {
     return this.addPackageDependencies(packageName);
   }
 
-  private constructor(public readonly rootPath: string) {
-    const packagePath = resolve(join(rootPath, PACKAGE_JSON));
-    this.rootPackageJSON = IOUtils.readObjectFromFileSyncSafe<PackageJSON>(packagePath);
+  public readonly rootPath: string;
+
+  private constructor(public readonly system: System, basePath?: string) {
+    const repoRootPath = this.findRepoRootPath(basePath || process.cwd());
+    if (!repoRootPath) {
+      throw new Error(`Could not find monorepo root from base path: ${basePath}`);
+    }
+    this.rootPath = repoRootPath;
+    const packagePath = resolve(join(this.rootPath, PACKAGE_JSON));
+    this.rootPackageJSON = system.toFileReference(packagePath).readObjectSyncSafe<PackageJSON>();
     this.repoPackages = this.initRepoPackages();
   }
 
@@ -90,9 +109,11 @@ export class MonorepoMetadata {
   private expandWorkspacePath(basePath: string, wsPath: string): string[] {
     if (wsPath.endsWith(MonorepoMetadata.WILDCARD_SUFFIX)) {
       const dir = resolve(basePath, wsPath.substring(0, wsPath.length - MonorepoMetadata.WILDCARD_SUFFIX.length));
-      return readdirSync(dir)
-        .map((fn) => resolve(join(dir, fn)))
-        .filter((p) => lstatSync(p).isDirectory());
+      return this.system
+        .toFileReference(dir)
+        .children()
+        .filter((ref) => ref.isDirectory())
+        .map((ref) => ref.path);
     } else {
       return [wsPath];
     }
@@ -106,7 +127,7 @@ export class MonorepoMetadata {
         return rval;
       }, []);
       wsPaths.forEach((wsPath) => {
-        const wsPkg = IOUtils.readJSONSync<PackageJSON>(resolve(wsPath, PACKAGE_JSON));
+        const wsPkg = this.system.toFileReference(resolve(wsPath, PACKAGE_JSON)).readObjectSync<PackageJSON>();
         if (wsPkg && wsPkg.name) {
           rval[wsPkg.name] = wsPath;
         }

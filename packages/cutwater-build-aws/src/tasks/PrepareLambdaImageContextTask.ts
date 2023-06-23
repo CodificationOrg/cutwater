@@ -1,27 +1,25 @@
-import { IOUtils, NodeUtils, TextUtils } from '@codification/cutwater-build-core';
-import { DOCKERFILE } from '@codification/cutwater-build-docker';
+import { NodeUtils, TextUtils } from '@codification/cutwater-build-core';
 import {
-  ImageConfig,
   PrepareImageContextTask,
   PrepareImageContextTaskConfig,
 } from '@codification/cutwater-build-docker/lib/tasks/PrepareImageContextTask';
-import { copyFileSync } from 'fs';
-import { isAbsolute, join, resolve } from 'path';
+import { ImageConfig } from '@codification/cutwater-build-docker/lib/types/ImageConfig';
+import { resolve } from 'path';
 
-export interface HandlerImageConfig extends Omit<ImageConfig, 'dockerfile'> {
+export interface HandlerImageConfig extends ImageConfig {
   handler: string;
   options?: string | string[];
   dockerfile?: string;
 }
 
-export interface PrepareLambdaImageContextTaskConfig extends PrepareImageContextTaskConfig {
+export interface PrepareLambdaImageContextTaskConfig extends PrepareImageContextTaskConfig<HandlerImageConfig> {
   nodeVersion: string;
   imageConfigs?: HandlerImageConfig | HandlerImageConfig[];
 }
 
 export class PrepareLambdaImageContextTask<
-  T extends PrepareLambdaImageContextTaskConfig = PrepareLambdaImageContextTaskConfig,
-> extends PrepareImageContextTask<T> {
+  T extends PrepareLambdaImageContextTaskConfig = PrepareLambdaImageContextTaskConfig
+> extends PrepareImageContextTask<HandlerImageConfig, T> {
   private static readonly DEFAULT_DOCKERFILE = 'AwsLambdaDockerfile';
 
   public constructor(name = 'prepare-lambda-image-context', defaultConfig: Partial<T> = {}) {
@@ -31,22 +29,6 @@ export class PrepareLambdaImageContextTask<
     });
   }
 
-  private toTempDockerfilePath(config: HandlerImageConfig): string {
-    const tempFolder = join(this.buildConfig.tempFolder, PrepareLambdaImageContextTask.DOCKERFILES_FOLDER);
-    IOUtils.mkdirs(tempFolder, this.buildConfig);
-    const tempPath = join(tempFolder, `${DOCKERFILE}.${config.name}`);
-    return IOUtils.resolvePath(tempPath, this.buildConfig);
-  }
-
-  protected toDockerFilePath(config: ImageConfig): string {
-    if (config.dockerFile && isAbsolute(config.dockerFile)) {
-      return config.dockerFile;
-    } else if (config.dockerFile) {
-      return IOUtils.resolvePath(config.dockerFile, this.buildConfig);
-    }
-    return resolve(__dirname, PrepareLambdaImageContextTask.DEFAULT_DOCKERFILE);
-  }
-
   private toOptions(config: HandlerImageConfig): string {
     if (!config.options) {
       return '';
@@ -54,16 +36,14 @@ export class PrepareLambdaImageContextTask<
     return TextUtils.combineToMultilineText(NodeUtils.toArray<string>(config.options));
   }
 
-  protected copyDockerfiles(): string[] {
-    const rval = super.copyDockerfiles();
-    rval.forEach((dockerfile) => {
-      IOUtils.replaceTokensInTextFile(dockerfile, {
+  private processDockerfiles(): void {
+    this.imageContexts.forEach(context => {
+      context.dockerfile.replaceTokens({
         NODE_VERSION_TAG: this.config.nodeVersion,
-        HANDLER_NAME: config.handler,
-        OPTIONS: this.toOptions(config),
+        HANDLER_NAME: context.imageConfig.handler,
+        OPTIONS: this.toOptions(context.imageConfig),
       });
     });
-    return rval;
   }
 
   private processHandlerImageConfigs(): void {
@@ -73,9 +53,9 @@ export class PrepareLambdaImageContextTask<
         handler: 'lambda.handler',
       },
     ]);
-    configs.forEach((config) => {
+    configs.forEach(config => {
       if (!config.dockerfile) {
-        config.dockerfile = resolve(__dirname, PrepareLambdaImageContextTask.DEFAULT_DOCKERFILE);
+        config.dockerfile = resolve(this.system.dirname, PrepareLambdaImageContextTask.DEFAULT_DOCKERFILE);
       }
     });
   }
@@ -83,5 +63,6 @@ export class PrepareLambdaImageContextTask<
   public async executeTask(): Promise<void> {
     this.processHandlerImageConfigs();
     await super.executeTask();
+    this.processDockerfiles();
   }
 }

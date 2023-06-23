@@ -1,19 +1,26 @@
 import {
   closeSync,
   copyFileSync,
+  cpSync,
   existsSync,
+  lstatSync,
   mkdirSync,
   openSync,
   readFileSync,
+  readdirSync,
   rmSync,
   statSync,
   utimesSync,
   writeFileSync,
 } from 'fs';
-import { dirname } from 'path/win32';
+import { basename, isAbsolute } from 'path';
+import { dirname, resolve } from 'path/win32';
 
 interface FileSystemProvider {
   exists(path: string): boolean;
+  isFile(path: string): boolean;
+  isDirectory(path: string): boolean;
+  listFiles(path: string): string[];
   getByteCount(path: string): number | undefined;
   delete(path: string, recursive: boolean): void;
   touch(path: string): void;
@@ -29,6 +36,57 @@ export interface NullFileSystemEntry {
   byteCount?: number;
 }
 
+export const defaultNullFileSystemEntries: NullFileSystemEntry[] = [
+  {
+    name: 'project/package.json',
+    content: Buffer.from(
+      JSON.stringify({
+        name: 'rootPackageJson',
+        workspaces: {
+          packages: ['packages/*'],
+        },
+      }),
+    ),
+  },
+  {
+    name: 'project/package.yaml',
+    content: Buffer.from(`
+    name: rootPackageJson
+    workspaces:
+      packages:
+        - 'packages/*'
+    `),
+  },
+  {
+    name: 'project/yarn.lock',
+    content: Buffer.from('Not really.'),
+  },
+  {
+    name: 'project/test.txt',
+    content: Buffer.from('Test text.'),
+  },
+  {
+    name: 'project/temp',
+  },
+  {
+    name: 'project/packages/package1/package.json',
+    content: Buffer.from(
+      JSON.stringify({
+        name: 'package1',
+      }),
+    ),
+  },
+  {
+    name: 'project/packages/package2/package.json',
+    content: Buffer.from(
+      JSON.stringify({
+        name: 'package2',
+        dependencies: { package1: '^1.x' },
+      }),
+    ),
+  },
+];
+
 export class FileSystem {
   private static instance: FileSystem;
 
@@ -39,14 +97,26 @@ export class FileSystem {
     return FileSystem.instance;
   }
 
-  public static createNull(entries: NullFileSystemEntry[] = []): FileSystem {
-    return new FileSystem(new StubFeatureProvider([...entries]));
+  public static createNull(entries: NullFileSystemEntry[] = defaultNullFileSystemEntries): FileSystem {
+    return new FileSystem(new StubFileSystemProvider([...entries]));
   }
 
   private constructor(private readonly fileSystemProvider: FileSystemProvider) {}
 
   public exists(path: string): boolean {
     return this.fileSystemProvider.exists(path);
+  }
+
+  public isFile(path: string): boolean {
+    return this.fileSystemProvider.isFile(path);
+  }
+
+  isDirectory(path: string): boolean {
+    return this.fileSystemProvider.isDirectory(path);
+  }
+
+  listFiles(path: string): string[] {
+    return this.fileSystemProvider.listFiles(path);
   }
 
   public byteCount(path: string): number | undefined {
@@ -81,6 +151,18 @@ export class FileSystem {
 class NodeFileSystemProvider implements FileSystemProvider {
   exists(path: string): boolean {
     return existsSync(path);
+  }
+
+  isFile(path: string): boolean {
+    return lstatSync(path).isFile();
+  }
+
+  isDirectory(path: string): boolean {
+    return lstatSync(path).isDirectory();
+  }
+
+  listFiles(path: string): string[] {
+    return readdirSync(path);
   }
 
   getByteCount(path: string): number | undefined {
@@ -120,20 +202,27 @@ class NodeFileSystemProvider implements FileSystemProvider {
   }
 
   copy(srcPath: string, trgPath: string): void {
-    copyFileSync(srcPath, trgPath);
+    if (this.isFile(srcPath)) {
+      copyFileSync(srcPath, trgPath);
+    } else {
+      cpSync(srcPath, trgPath, { recursive: true });
+    }
   }
 }
 
-class StubFeatureProvider implements FileSystemProvider {
-  constructor(private readonly entries: NullFileSystemEntry[] = []) {
+class StubFileSystemProvider implements FileSystemProvider {
+  constructor(private readonly entries: NullFileSystemEntry[]) {
     entries.forEach((entry) => {
+      if (!isAbsolute(entry.name)) {
+        entry.name = resolve('/', entry.name);
+      }
       const parentDir = dirname(entry.name);
       this.mkdir(parentDir, true);
     });
   }
 
   private findEntry(path: string): NullFileSystemEntry | undefined {
-    return this.entries.find((e) => e.name === path);
+    return this.entries.find((e) => e.name === resolve(path));
   }
 
   exists(path: string): boolean {
@@ -146,22 +235,34 @@ class StubFeatureProvider implements FileSystemProvider {
     }
   }
 
+  isFile(path: string): boolean {
+    return !this.isDirectory(path);
+  }
+
+  isDirectory(path: string): boolean {
+    this.verifyPath(path);
+    return !this.findEntry(path)!.content;
+  }
+
+  listFiles(path: string): string[] {
+    if (!this.isDirectory(path)) {
+      throw new Error(`Path does not refer to a directory: ${path}`);
+    }
+    return this.entries.filter((entry) => dirname(entry.name) === resolve(path)).map((entry) => basename(entry.name));
+  }
+
   getByteCount(path: string): number | undefined {
     this.verifyPath(path);
     const entry = this.findEntry(path);
     return entry ? entry.content?.byteLength || entry.byteCount || 0 : undefined;
   }
 
-  isDirectory(entry?: NullFileSystemEntry): boolean {
-    return entry !== undefined && !entry.content;
-  }
-
   delete(path: string, recursive: boolean): void {
     const entry = this.findEntry(path);
-    if (this.isDirectory(entry) && !recursive) {
+    if (this.exists(path) && this.isDirectory(path) && !recursive) {
       throw new Error(`Cannot delete directory without recursive flag: ${path}`);
     }
-    const children = this.entries.filter((child) => child.name.startsWith(path) && child !== entry);
+    const children = this.entries.filter((child) => child.name.startsWith(resolve(path)) && child !== entry);
     if (entry) {
       this.entries.splice(this.entries.indexOf(entry), 1);
     }
@@ -170,7 +271,7 @@ class StubFeatureProvider implements FileSystemProvider {
 
   read(path: string): Buffer | undefined {
     const entry = this.findEntry(path);
-    if (this.isDirectory(entry)) {
+    if (this.isDirectory(path)) {
       throw new Error(`Cannot read from a directory: ${path}`);
     }
     return Buffer.from(entry!.content!);
@@ -188,12 +289,12 @@ class StubFeatureProvider implements FileSystemProvider {
       this.verifyParentPath(path);
     }
     const parentPath = dirname(path);
-    while (parentPath !== path && !this.exists(parentPath)) {
+    while (parentPath !== resolve(path) && !this.exists(parentPath)) {
       this.mkdir(parentPath, true);
     }
     if (!this.exists(path)) {
       this.entries.push({
-        name: path,
+        name: resolve(path),
       });
     }
   }
@@ -203,7 +304,7 @@ class StubFeatureProvider implements FileSystemProvider {
     const entry = this.findEntry(path);
     if (!entry) {
       this.entries.push({
-        name: path,
+        name: resolve(path),
         byteCount: 0,
       });
     }
@@ -211,9 +312,11 @@ class StubFeatureProvider implements FileSystemProvider {
 
   write(path: string, data?: ArrayBuffer | Buffer): void {
     this.verifyParentPath(path);
-    this.delete(path, false);
+    if (this.exists(path)) {
+      this.delete(path, false);
+    }
     const entry = {
-      name: path,
+      name: resolve(path),
       content: data,
       byteCount: data?.byteLength || 0,
     };
@@ -221,9 +324,23 @@ class StubFeatureProvider implements FileSystemProvider {
   }
 
   copy(srcPath: string, trgPath: string): void {
-    const srcEntry = this.findEntry(srcPath);
-    if (srcEntry) {
-      this.write(trgPath, srcEntry.content);
+    this.verifyPath(srcPath);
+    if (this.exists(trgPath)) {
+      this.delete(trgPath, true);
+    }
+    if (this.isFile(srcPath)) {
+      this.verifyParentPath(trgPath);
+      const srcEntry = this.findEntry(srcPath);
+      if (srcEntry) {
+        this.write(resolve(trgPath), srcEntry.content);
+      }
+    } else {
+      this.mkdir(trgPath, true);
+      this.listFiles(srcPath).forEach((file) => {
+        const srcChild = resolve(srcPath, file);
+        const dstChild = resolve(trgPath, file);
+        this.copy(srcChild, dstChild);
+      });
     }
   }
 }

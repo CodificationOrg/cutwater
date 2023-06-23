@@ -1,41 +1,58 @@
-import { IOUtils, PACKAGE_JSON, executeTaskTest } from '@codification/cutwater-build-core';
-import { TestContext } from '@codification/cutwater-test';
-import { existsSync } from 'fs';
-import { basename, dirname, resolve } from 'path';
+import { BuildContext, PACKAGE_JSON } from '@codification/cutwater-build-core';
+import { join, resolve } from 'path';
 import { DOCKERFILE } from '../Constants';
 import { PrepareImageContextTask } from './PrepareImageContextTask';
 
-let ctx: TestContext;
+let context: BuildContext;
 
 beforeEach(() => {
-  ctx = TestContext.createContext();
-});
+  context = BuildContext.createNull();
+  const { system } = context.buildState;
+  system.mkdir(system.dirname, true);
+  system.toFileReference(resolve(system.dirname, DOCKERFILE)).write(`
+  FROM node:18.16
 
-afterEach(() => {
-  ctx.teardown();
+  COPY package.json yarn.lock ./
+  COPY packages/ ./packages/
+
+  RUN yarn install
+  `);
+  system.toFileReference(resolve(system.dirname, 'root-package.json')).write(`
+  {
+    "name": "docker-image-root",
+    "description": "Docker Image NodeJS Root",
+    "private": true,
+    "workspaces": {
+      "packages": ["packages/*"]
+    }
+  }
+  `);
 });
 
 describe('PrepareImageContextTask', () => {
   describe('executeTask', () => {
     it('prepares context to build a docker image', async () => {
       const task: PrepareImageContextTask = new PrepareImageContextTask();
-      const contextFolder = basename(dirname(ctx.createTempFilePath()));
-      task.setConfig({ contextFolder });
-      await executeTaskTest(task);
-      const contextPath = IOUtils.resolvePath(`${task.buildConfig.tempFolder}/${contextFolder}`, task.buildConfig);
-      expect(existsSync(`${contextPath}/${PACKAGE_JSON}`)).toBeTruthy();
-      expect(existsSync(`${contextPath}/packages/app`)).toBeTruthy();
-      expect(existsSync(`${contextPath}/Dockerfile`)).toBeTruthy();
+      await task.execute(context);
+      const contextFolder = context.buildState.system.toFileReference(
+        join(`${task.buildConfig.tempFolder}`, `${task.config.contextFolder}`),
+      );
+      const contextFiles = contextFolder.children().map(ref => ref.path);
+      const contextPath = contextFolder.path;
+      expect(contextFiles.includes(resolve(contextPath, PACKAGE_JSON))).toBeTruthy();
+      expect(contextFiles.includes(resolve(contextPath, DOCKERFILE))).toBeTruthy();
     });
     it('prepares context to build a docker image using an image config', async () => {
       const task: PrepareImageContextTask = new PrepareImageContextTask();
-      const contextFolder = basename(dirname(ctx.createTempFilePath()));
-      task.setConfig({ contextFolder, configs: { name: 'foo', dockerfile: resolve(__dirname, DOCKERFILE) } });
-      await executeTaskTest(task);
-      const contextPath = IOUtils.resolvePath(`${task.buildConfig.tempFolder}/${contextFolder}`, task.buildConfig);
-      expect(existsSync(`${contextPath}/${PACKAGE_JSON}`)).toBeTruthy();
-      expect(existsSync(`${contextPath}/packages/app`)).toBeTruthy();
-      expect(existsSync(`${contextPath}/Dockerfile.foo`)).toBeTruthy();
+      task.setConfig({ configs: { name: 'foo' } });
+      await task.execute(context);
+      const contextFolder = context.buildState.system.toFileReference(
+        join(`${task.buildConfig.tempFolder}`, `${task.config.contextFolder}`),
+      );
+      const contextFiles = contextFolder.children().map(ref => ref.path);
+      const contextPath = contextFolder.path;
+      expect(contextFiles.includes(resolve(contextPath, PACKAGE_JSON))).toBeTruthy();
+      expect(contextFiles.includes(resolve(contextPath, `${DOCKERFILE}.foo`))).toBeTruthy();
     });
   });
 });

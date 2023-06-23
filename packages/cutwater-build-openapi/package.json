@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "gulp clean",
     "test": "gulp test",
+    "test-integ": "gulp test-integ",
     "format": "gulp prettier",
     "lint": "gulp lint --fix",
     "build": "gulp --fix --clean"

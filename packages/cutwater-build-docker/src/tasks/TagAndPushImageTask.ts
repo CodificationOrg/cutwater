@@ -1,14 +1,8 @@
-import {
-  EnvUtils,
-  GulpTask,
-  IOUtils,
-  PACKAGE_JSON,
-  RunCommand,
-  RunCommandConfig,
-} from '@codification/cutwater-build-core';
-import { PackageJSON } from '@codification/cutwater-build-core/lib/BuildState';
+import { GulpTask, PACKAGE_JSON, Spawn, SpawnOptions } from '@codification/cutwater-build-core';
+import { PackageJSON } from '@codification/cutwater-build-core/lib/types/PackageJSON';
 
-export interface TagAndPushImageTaskConfig extends RunCommandConfig {
+export interface TagAndPushImageTaskConfig extends SpawnOptions {
+  spawn: Spawn;
   name?: string;
   repo?: string;
   stage: string;
@@ -25,7 +19,7 @@ export class TagAndPushImageTask extends GulpTask<TagAndPushImageTaskConfig, voi
     if (this.config.name) {
       return this.config.name;
     }
-    const pkgObj = IOUtils.readJSONSyncSafe<PackageJSON>(PACKAGE_JSON, this.buildConfig);
+    const pkgObj = this.system.toFileReference(PACKAGE_JSON).readObjectSyncSafe<PackageJSON>();
     if (!pkgObj.name) {
       throw new Error('No image name provided and no name found in packag.json.');
     }
@@ -36,17 +30,17 @@ export class TagAndPushImageTask extends GulpTask<TagAndPushImageTaskConfig, voi
     const { repo: rawRepo, stage } = this.config;
     const image = `${this.imageName}:latest`;
     const repo = rawRepo ? `${rawRepo}/${this.imageName}` : undefined;
-    const buildNumber = EnvUtils.buildNumber(-1);
-    const buildTag = `${stage}-build-${buildNumber !== -1 ? buildNumber : await EnvUtils.gitRev()}`;
+    const buildNumber = this.buildState.buildNumber(-1);
+    const buildTag = `${stage}-build-${buildNumber !== -1 ? buildNumber : await this.buildState.gitRev()}`;
 
     for (const tag of ['latest', buildTag, stage]) {
-      await new RunCommand().run({
+      await this.config.spawn.execute({
         ...this.config,
         command: 'docker',
         args: `tag ${image} ${repo || this.imageName}:${tag}`,
       });
       if (repo) {
-        await new RunCommand().run({
+        await this.config.spawn.execute({
           ...this.config,
           command: 'docker',
           args: `push ${repo}:${tag}`,

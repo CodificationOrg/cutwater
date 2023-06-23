@@ -1,8 +1,7 @@
-import { EventEmitter } from 'events';
 import { isAbsolute, relative } from 'path';
 import prettyTime from 'pretty-hrtime';
+import { Console } from '../core/Console';
 import { OutputTracker, duration as elapsed, error, label, msg, warn } from '../support';
-import { Console } from './Console';
 
 export class Logger {
   private static readonly LOGGERS: Record<string, Logger> = {};
@@ -21,8 +20,6 @@ export class Logger {
   }
 
   private static readonly WROTE_ERROR_KEY: string = '__gulpCutwaterCoreBuildWroteError';
-  private static readonly OUTPUT_EVENT: string = 'loggerOutput';
-  private readonly emitter: EventEmitter = new EventEmitter();
 
   private constructor(private readonly console: Console, private readonly verboseEnabled: boolean) {}
 
@@ -40,7 +37,7 @@ export class Logger {
   }
 
   public trackOutput(): OutputTracker {
-    return OutputTracker.create(this.emitter, Logger.OUTPUT_EVENT);
+    return this.console.trackOutput();
   }
 
   public isVerboseEnabled(): boolean {
@@ -69,7 +66,6 @@ export class Logger {
       message: args.join(''),
     };
     this.console.log(`[${msg(data.timestamp)}] ${data.message}`);
-    this.emitter.emit(Logger.OUTPUT_EVENT, JSON.stringify(data));
   }
 
   public fileWarning(

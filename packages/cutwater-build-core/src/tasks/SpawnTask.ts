@@ -1,24 +1,25 @@
-import { RunCommand, RunCommandConfig as RunCommandTaskConfig } from '../support';
+import { Spawn, SpawnOptions } from '../core/Spawn';
 import { GulpTask } from './GulpTask';
 
-export { RunCommandTaskConfig };
+export interface SpawnTaskConfig extends SpawnOptions {
+  spawn: Spawn;
+}
 
-export class RunCommandTask<T extends RunCommandTaskConfig> extends GulpTask<T, void> {
-  private readonly runCommand: RunCommand = new RunCommand();
-
+export class SpawnTask<T extends SpawnTaskConfig> extends GulpTask<T, void> {
   public constructor(taskName = 'run-command', defaultConfig: Partial<T> = {}) {
     super(taskName, {
       quiet: false,
       ignoreErrors: false,
       cwd: process.cwd(),
       env: {},
+      spawn: Spawn.create(),
       ...defaultConfig,
     } as T);
   }
 
   public async executeTask(): Promise<void> {
     this.logVerbose(`Running: ${this.preparedCommand()} ${this.preparedArgs()}`);
-    await this.runCommand.run({
+    await this.config.spawn.execute({
       ...this.config,
       logger: this.logger(),
       command: this.preparedCommand(),

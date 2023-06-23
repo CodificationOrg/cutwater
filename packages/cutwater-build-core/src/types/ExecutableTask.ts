@@ -3,7 +3,7 @@ import { BuildConfig } from './BuildConfig';
 
 export interface ExecutableTask<T> {
   maxBuildTimeMs?: number;
-  onRegister?: () => void;
+  onRegister?: (context: BuildContext) => void;
   execute: (context: BuildContext) => Promise<void>;
   name?: string;
   isEnabled?: (buildConfig: BuildConfig) => boolean;

@@ -11,15 +11,16 @@ import { JestTask } from './tasks/JestTask';
 import { PrettierTask } from './tasks/PrettierTask';
 import { ExecutableTask } from './types';
 
+export { Spawn, SpawnOptions, System } from './core';
 export { BuildContext } from './core/BuildContext';
-export { BuildState, getBuildState } from './core/BuildState';
+export { BuildState } from './core/BuildState';
 export * from './core/Constants';
 export { Logger } from './logging';
 export * from './support';
 export * from './tasks';
 export { BuildConfig, BuildMetrics, ExecutableTask } from './types';
 
-export const buildEngine = new BuildEngine();
+export const buildEngine = BuildEngine.create();
 export const cleanFlag: ExecutableTask<unknown> = new CleanFlagTask();
 
 export const initialize = (gulp: Gulp): void => {

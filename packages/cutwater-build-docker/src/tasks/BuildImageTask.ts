@@ -1,59 +1,45 @@
-import { GulpTask, IOUtils, RunCommand, RunCommandConfig } from '@codification/cutwater-build-core';
-import { isAbsolute } from 'path';
-import { DOCKER_CONTEXT_FOLDER } from '../Constants';
-import { DockerUtils } from '../support/DockerUtils';
+import { GulpTask, Spawn, SpawnOptions } from '@codification/cutwater-build-core';
+import { DOCKERFILE, DOCKER_CONTEXT_DIRECTORY } from '../Constants';
+import { ImageContext } from '../support/ImageContext';
+import { ImageConfig } from '../types';
 
-export interface ImageConfig {
-  name: string;
-  dockerFile?: string;
-}
-
-export interface BuildImageTaskConfig extends RunCommandConfig {
+export interface BuildImageTaskConfig extends SpawnOptions {
+  spawn: Spawn;
   platform: string;
-  contextFolder: string;
+  contextDirectory: string;
   imageConfigs: ImageConfig | ImageConfig[];
 }
 
 export class BuildImageTask<T extends BuildImageTaskConfig = BuildImageTaskConfig> extends GulpTask<T, void> {
   public constructor(name = 'build-image', defaultConfig: Partial<T> = {}) {
     super(name, {
+      spawn: Spawn.create(),
       platform: 'linux/amd64',
-      contextFolder: DOCKER_CONTEXT_FOLDER,
+      contextDirectory: DOCKER_CONTEXT_DIRECTORY,
       imageConfigs: {
         name: '',
+        dockerfile: DOCKERFILE,
       },
       ...defaultConfig,
     });
   }
 
-  protected get contextFolderPath(): string {
-    return DockerUtils.toContextFolderPath(this.config.contextFolder, this.buildConfig);
-  }
-
-  protected toDockerFilePath(config: ImageConfig): string | undefined {
-    if (!config.dockerFile) {
-      return undefined;
-    }
-    if (isAbsolute(config.dockerFile)) {
-      return config.dockerFile;
-    }
-    return IOUtils.resolvePath(config.dockerFile, this.buildConfig);
-  }
-
   public async executeTask(): Promise<void> {
-    const configs: ImageConfig[] = Array.isArray(this.config.imageConfigs)
+    const { platform } = this.config;
+    const imageConfigs: ImageConfig[] = Array.isArray(this.config.imageConfigs)
       ? this.config.imageConfigs
       : [this.config.imageConfigs];
-    const builds = configs.map(config => {
-      if (!config.name) {
+
+    const builds = imageConfigs.map(imageConfig => {
+      if (!imageConfig.name) {
         throw new Error('An image name is required.');
       }
-      const fileArg = config.dockerFile ? `-f ${this.toDockerFilePath(config)} ` : '';
-      return new RunCommand().run({
+      const context = new ImageContext(this.config.contextDirectory, imageConfig, this.buildConfig, this.system);
+      return this.config.spawn.execute({
         logger: this.logger(),
         ...this.config,
         command: 'docker',
-        args: `build -t ${config.name} --platform ${this.config.platform} ${fileArg}${this.contextFolderPath}`,
+        args: `build -t ${imageConfig.name} --platform ${platform} -f ${context.dockerfile} ${context.contextDirectory.path}`,
       });
     });
     await Promise.all(builds);

@@ -1,71 +1,21 @@
-import { existsSync } from 'fs';
 import { Gulp } from 'gulp';
-import { join, resolve } from 'path';
-import { Logger } from '../logging';
-import { MonorepoMetadata } from '../support';
-import { isJestEnabled } from '../tasks';
+
 import { BuildConfig, Callback, ExecutableTask } from '../types';
-import { BuildContext, createBuildContext } from './BuildContext';
-import { BuildState, getBuildState } from './BuildState';
-import {
-  DIST_FOLDER,
-  FAIL_ICON,
-  LIB_FOLDER,
-  LOCK_FILES,
-  LOCK_FILE_MAPPING,
-  PRODUCTION_FLAG,
-  RELOG_ISSUES_FLAG,
-  SHOW_TOAST_FLAG,
-  SUCCESS_ICON,
-  TEMP_FOLDER,
-  VERBOSE_FLAG,
-} from './Constants';
+import { BuildContext } from './BuildContext';
+import { System } from './System';
 
 export class BuildEngine {
-  private readonly state: BuildState;
+  public static createNull(context: BuildContext = BuildContext.createNull()): BuildEngine {
+    return new BuildEngine(context);
+  }
+
+  public static create(): BuildEngine {
+    return new BuildEngine(BuildContext.create());
+  }
+
   private readonly taskMap: Record<string, ExecutableTask<unknown>> = {};
-  private readonly uniqueTasks: ExecutableTask<unknown>[] = [];
-  private readonly packageFolder: string;
-  private readonly logger: Logger;
-  private readonly buildContext: BuildContext;
 
-  public constructor() {
-    this.state = getBuildState();
-    this.packageFolder =
-      this.state.builtPackage.directories && this.state.builtPackage.directories.packagePath
-        ? this.state.builtPackage.directories.packagePath
-        : '';
-    this.logger = Logger.create(this.state.getFlagValue(VERBOSE_FLAG));
-
-    const rootPath = process.cwd();
-    const buildConfig: BuildConfig = {
-      gulp: undefined as any,
-      rootPath,
-      maxBuildTimeMs: 0,
-      jestEnabled: isJestEnabled(rootPath),
-      packageFolder: this.packageFolder,
-      srcFolder: 'src',
-      distFolder: join(this.packageFolder, DIST_FOLDER),
-      libFolder: join(this.packageFolder, LIB_FOLDER),
-      tempFolder: join(this.packageFolder, TEMP_FOLDER),
-      properties: {},
-      uniqueTasks: this.uniqueTasks,
-      relogIssues: this.state.getFlagValue(RELOG_ISSUES_FLAG, true),
-      showToast: this.state.getFlagValue(SHOW_TOAST_FLAG, true),
-      buildSuccessIconPath: resolve(__dirname, SUCCESS_ICON),
-      buildErrorIconPath: resolve(__dirname, FAIL_ICON),
-      verbose: this.state.getFlagValue(VERBOSE_FLAG, false),
-      production: this.state.getFlagValue(PRODUCTION_FLAG, false),
-      args: this.state.args,
-      shouldWarningsFailBuild: false,
-    };
-    this.buildContext = createBuildContext(buildConfig, this.logger, this.state);
-  }
-
-  private static findLockFileName(repoMetadata?: MonorepoMetadata): string | undefined {
-    const basePath = repoMetadata ? repoMetadata.rootPath : resolve(process.cwd());
-    return LOCK_FILES.find((lockFile) => existsSync(resolve(basePath, lockFile)));
-  }
+  public constructor(private readonly buildContext: BuildContext) {}
 
   private handleCommandLineArguments(): void {
     this.handleTasksListArguments();
@@ -188,8 +138,9 @@ export class BuildEngine {
   }
 
   private trackTask(taskExecutable: ExecutableTask<unknown>): void {
-    if (this.uniqueTasks.indexOf(taskExecutable) < 0) {
-      this.uniqueTasks.push(taskExecutable);
+    const { uniqueTasks } = this.buildContext.buildConfig;
+    if (uniqueTasks.indexOf(taskExecutable) < 0) {
+      uniqueTasks.push(taskExecutable);
     }
   }
 
@@ -244,6 +195,14 @@ export class BuildEngine {
     };
   }
 
+  public get system(): System {
+    return this.buildContext.buildState.system;
+  }
+
+  public getContext(): BuildContext {
+    return this.buildContext;
+  }
+
   public getConfig(): BuildConfig {
     return this.buildContext.buildConfig;
   }
@@ -257,19 +216,17 @@ export class BuildEngine {
   }
 
   public initialize(localGulp: Gulp): void {
-    const { taskMap, uniqueTasks, buildContext } = this;
+    const { taskMap, buildContext } = this;
     const { buildConfig } = this.buildContext;
+    const { uniqueTasks } = buildConfig;
 
     buildConfig.gulp = localGulp;
-    buildConfig.repoMetadata = MonorepoMetadata.findRepoRootPath(process.cwd()) ? MonorepoMetadata.create() : undefined;
-    buildConfig.lockFile = BuildEngine.findLockFileName(buildConfig.repoMetadata);
-    buildConfig.npmClient = buildConfig.lockFile ? LOCK_FILE_MAPPING[buildConfig.lockFile] : undefined;
 
     this.handleCommandLineArguments();
 
     for (const uniqueTask of uniqueTasks || []) {
       if (uniqueTask.onRegister) {
-        uniqueTask.onRegister();
+        uniqueTask.onRegister(this.buildContext);
       }
     }
 

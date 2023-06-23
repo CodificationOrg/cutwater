@@ -1,10 +1,10 @@
-import { BuildConfig, IOUtils, buildEngine } from '@codification/cutwater-build-core';
+import { BuildConfig, buildEngine } from '@codification/cutwater-build-core';
 import { join } from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import Webpack from 'webpack';
 
 const buildConfig: BuildConfig = buildEngine.getConfig();
-const packageJSON: { name: string } = IOUtils.readJSONSyncSafe('./package.json');
+const packageJSON: { name: string } = buildEngine.system.toFileReference('package.json').readObjectSyncSafe();
 
 const webpackConfiguration = (env, options): Webpack.Configuration => {
   const isProduction: boolean = options.mode === 'production';

@@ -1,6 +1,6 @@
 import prettyTime from 'pretty-hrtime';
 import { Logger } from '../logging';
-import { IOUtils, duration, error, failure, info, success, warn } from '../support';
+import { duration, error, failure, info, success, warn } from '../support';
 import { BuildContextState, Callback } from '../types';
 import { BuildContext } from './BuildContext';
 import { BuildState } from './BuildState';
@@ -21,12 +21,12 @@ export class BuildSummary {
     if (!this.contextState.writingSummary) {
       this.contextState.writingSummary = true;
 
-      IOUtils.afterStreamsFlushed(this.contextState.duringFastExit, () => {
+      this.afterStreamsFlushed(this.contextState.duringFastExit, () => {
         this.logger.log(duration('==================[ Finished ]=================='));
 
         this.relogIssues();
 
-        IOUtils.afterStreamsFlushed(this.contextState.duringFastExit, () => {
+        this.afterStreamsFlushed(this.contextState.duringFastExit, () => {
           this.logSummaries();
           this.logContextInfo();
           this.logTestResults();
@@ -45,6 +45,34 @@ export class BuildSummary {
       });
     } else if (this.contextState.wroteSummary) {
       this.doWriteSumaryCallbacks();
+    }
+  }
+
+  private afterStreamsFlushed(fastExit: boolean, callback: () => void): void {
+    this.afterStreamFlushed('stdout', fastExit, () => {
+      this.afterStreamFlushed('stderr', fastExit, () => {
+        callback();
+      });
+    });
+  }
+
+  private afterStreamFlushed(streamName: string, fastExit: boolean, callback: () => void): void {
+    if (fastExit) {
+      callback();
+    } else {
+      const stream: NodeJS.WritableStream = process[streamName];
+      const outputWritten: boolean = stream.write('');
+      if (outputWritten) {
+        setTimeout(() => {
+          callback();
+        }, 250);
+      } else {
+        stream.once('drain', () => {
+          setTimeout(() => {
+            callback();
+          }, 250);
+        });
+      }
     }
   }
 
@@ -73,8 +101,7 @@ export class BuildSummary {
     const version: string = this.state.builtPackage.version || 'unknown';
     this.logger.log(`Project ${name} version:`, info(version));
 
-    const toolVersion =
-      this.state.toolPackage && this.state.toolPackage.version ? this.state.toolPackage.version : 'unknown';
+    const toolVersion = this.state.toolVersion;
     this.logger.log('Build tools version:', info(toolVersion));
 
     this.logger.log('Node version:', info(process.version));

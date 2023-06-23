@@ -1,41 +1,80 @@
 import { join, resolve } from 'path';
-import yargs from 'yargs';
-import { IOUtils } from '../support/IOUtils';
+
 import { PackageJSON } from '../types';
 import { PACKAGE_JSON } from './Constants';
+import { Spawn } from './Spawn';
+import { System } from './System';
 
-export interface BuildState {
-  readonly root: string;
-  readonly args: Record<string, string | boolean>;
-  readonly builtPackage: PackageJSON;
-  readonly toolPackage: PackageJSON;
-  readonly nodeVersion: string;
-  getFlagValue(name: string, defaultValue?: boolean): boolean;
-  getConfigValue(name: string, defaultValue?: string | boolean): string | boolean | undefined;
+export interface BuildStateResponses {
+  toolVersion?: string;
+  gitRevision?: string;
 }
 
-export const getBuildState = (): BuildState => {
-  return BuildStateImpl.instance;
-};
+export class BuildState {
+  private static instance: BuildState;
 
-class BuildStateImpl implements BuildState {
-  public readonly root: string = process.cwd();
-  public readonly args = yargs.argv as Record<string, string | boolean>;
+  public static createNull(responses: BuildStateResponses = {}, system: System = System.createNull()): BuildState {
+    const spawnOutput = responses.gitRevision ? { output: responses.gitRevision } : undefined;
+    return new BuildState(
+      system.args,
+      responses.toolVersion || 'nullable',
+      system,
+      Spawn.createNull(spawnOutput, system),
+    );
+  }
+
+  public static create(): BuildState {
+    if (!BuildState.instance) {
+      const system = System.create();
+      const toolVersion =
+        system.toFileReference(resolve(system.dirname, '..', '..', PACKAGE_JSON)).readObjectSyncSafe<PackageJSON>()
+          ?.version || 'unknown';
+
+      BuildState.instance = new BuildState(system.args, toolVersion, system, Spawn.create());
+    }
+    return BuildState.instance;
+  }
+
+  private static readonly CI_BUILD_VARIABLE = 'CI';
+  private static readonly BUILD_NUMBER_VARIABLE = 'GITHUB_RUN_NUMBER';
+  private static readonly BUILD_ATTEMPT_VARIABLE = 'GITHUB_RUN_ATTEMPT';
+
+  public readonly root: string;
+  public readonly nodeVersion: string;
   public readonly builtPackage: PackageJSON;
-  public readonly toolPackage: PackageJSON = IOUtils.readObjectFromFileSyncSafe<PackageJSON>(
-    resolve(__dirname, '..', '..', PACKAGE_JSON),
-  );
-  public readonly nodeVersion: string = process.version;
-
   private readonly packageJson: PackageJSON;
-
-  public static readonly instance: BuildState = new BuildStateImpl();
 
   private static readonly ENVIRONMENT_VARIABLE_PREFIX = 'CCB_';
 
+  private constructor(
+    public readonly args: Record<string, string | boolean>,
+    public readonly toolVersion: string,
+    public readonly system: System,
+    private readonly command: Spawn,
+  ) {
+    this.root = this.system.cwd();
+    this.nodeVersion = this.system.version;
+    this.packageJson = this.loadPackageJson();
+    this.builtPackage = this.packageJson;
+  }
+
+  public isCiBuild(): boolean {
+    return !!this.system.env[BuildState.CI_BUILD_VARIABLE];
+  }
+
+  public buildNumber(defaultValue: number): number {
+    const rval: string | undefined = this.system.env[BuildState.BUILD_NUMBER_VARIABLE];
+    return rval ? +rval : defaultValue;
+  }
+
+  public attemptNumber(defaultValue: number): number {
+    const rval: string | undefined = this.system.env[BuildState.BUILD_ATTEMPT_VARIABLE];
+    return rval ? +rval : defaultValue;
+  }
+
   public getConfigValue(name: string, defaultValue?: string | boolean): string | boolean | undefined {
-    const envVariable: string = BuildStateImpl.ENVIRONMENT_VARIABLE_PREFIX + name.toUpperCase();
-    const envValue: string | undefined = process.env[envVariable];
+    const envVariable: string = BuildState.ENVIRONMENT_VARIABLE_PREFIX + name.toUpperCase();
+    const envValue: string | undefined = this.system.env[envVariable];
     const argsValue: string | boolean | undefined =
       this.args[name.toLowerCase()] === undefined
         ? undefined
@@ -61,21 +100,26 @@ class BuildStateImpl implements BuildState {
   }
 
   private loadPackageJson(): PackageJSON {
-    let rval: PackageJSON = {
+    const packageFile = this.system.toFileReference(join(this.system.cwd(), PACKAGE_JSON));
+    if (packageFile.exists()) {
+      return packageFile.readObjectSyncSafe<PackageJSON>();
+    }
+    return {
       directories: {
         packagePath: undefined,
       },
     };
-    try {
-      rval = IOUtils.readJSONSyncSafe<PackageJSON>(join(process.cwd(), PACKAGE_JSON));
-    } catch (e) {
-      // Package.json probably doesn't exit
-    }
-    return rval;
   }
 
-  private constructor() {
-    this.packageJson = this.loadPackageJson();
-    this.builtPackage = this.packageJson;
+  public async gitRev(): Promise<string> {
+    return (
+      await this.command.execute({
+        quiet: true,
+        command: 'git',
+        args: 'rev-parse --verify HEAD',
+      })
+    )
+      .toString()
+      .trim();
   }
 }

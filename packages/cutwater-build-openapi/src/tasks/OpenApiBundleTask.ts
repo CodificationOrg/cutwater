@@ -1,4 +1,4 @@
-import { GulpTask, IOUtils } from '@codification/cutwater-build-core';
+import { GulpTask } from '@codification/cutwater-build-core';
 import { bundle } from 'swagger-cli';
 
 export interface OpenApiBundleTaskConfig {
@@ -21,11 +21,12 @@ export class OpenApiBundleTask extends GulpTask<OpenApiBundleTaskConfig, void> {
 
   public async executeTask(): Promise<void> {
     const { apiFile, ...bundleConfig } = this.config;
-    if (IOUtils.fileExists(apiFile)) {
+    const { system } = this.buildContext.buildState;
+    if (system.fileExists(apiFile)) {
       this.createOutputDir(this.config.outfile);
       await bundle(apiFile, bundleConfig);
     } else {
-      this.log(`Skipping bundle, api file not found: ${IOUtils.resolvePath(apiFile)}`);
+      this.log(`Skipping bundle, api file not found: ${system.toFileReference(apiFile).path}`);
     }
   }
 }

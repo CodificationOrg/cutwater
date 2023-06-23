@@ -1,72 +1,64 @@
-import { join, resolve } from 'path';
-import { MonorepoMetadata } from '..';
+import { resolve } from 'path';
+
+import { MonorepoMetadata } from './MonorepoMetadata';
+
+const metadata: MonorepoMetadata = MonorepoMetadata.createNull()!;
 
 describe('MonorepoMetadata', () => {
   describe('isRepoRoot', () => {
     it('returns false if not a repo root directory', () => {
-      expect(MonorepoMetadata.isRepoRoot(process.cwd())).toBeFalsy();
+      expect(metadata.isRepoRoot(resolve('/'))).toBeFalsy();
     });
     it('returns true at the repo root', () => {
-      expect(MonorepoMetadata.isRepoRoot(resolve(process.cwd(), '../..')));
+      expect(metadata.isRepoRoot(resolve('/project')));
     });
   });
 
   describe('findRepoRootPath', () => {
     it('successfully returns proper repo root path', () => {
-      const expected = resolve(join(process.cwd(), '../..'));
-      expect(MonorepoMetadata.findRepoRootPath(process.cwd())).toBe(expected);
+      expect(metadata.findRepoRootPath(resolve('/project/packages/package1'))).toBe(resolve('/project'));
     });
     it('returns undefined for invalid repo', () => {
-      expect(MonorepoMetadata.findRepoRootPath(resolve('/'))).toBeUndefined();
+      expect(metadata.findRepoRootPath(resolve('/'))).toBeUndefined();
     });
   });
 
   describe('create', () => {
-    it('can successfully create monorepo metadata', () => {
-      const result = MonorepoMetadata.create();
-      const expected = resolve(join(process.cwd(), '../..'));
-      expect(result.rootPath).toBe(expected);
-    });
-    it('throws and error for an invalid repo', () => {
-      expect(() => {
-        MonorepoMetadata.create('/');
-      }).toThrow(Error);
+    it('returns undefined for an invalid repo', () => {
+      expect(MonorepoMetadata.createNull('/')).toBeUndefined();
     });
   });
 
   describe('rootPackageJSON', () => {
     it('successfully returns the root package.json object', () => {
-      const result = MonorepoMetadata.create();
-      expect(result.rootPackageJSON.name).toBe('cutwater');
+      expect(metadata.rootPackageJSON.name).toBe('rootPackageJson');
     });
   });
 
   describe('packageNames', () => {
     it('successfully returns repo package names', () => {
-      const result = MonorepoMetadata.create().packageNames;
-      expect(result).toContain('@codification/cutwater-build-core');
+      expect(metadata.packageNames).toContain('package1');
     });
   });
 
   describe('getPackagePath', () => {
     it('successfully returns path for a repo package', () => {
-      const metadata = MonorepoMetadata.create();
-      expect(metadata.getPackagePath('@codification/cutwater-build-core').endsWith('build-core')).toBeTruthy();
+      expect(metadata.getPackagePath('package2')).toBe(resolve('/project/packages/package2'));
     });
   });
 
   describe('getPackageJSON', () => {
     it('successfully returns package.json for a repo package', () => {
-      const result = MonorepoMetadata.create().getPackageJSON('@codification/cutwater-core');
-      expect(result.name).toBe('@codification/cutwater-core');
+      const result = metadata.getPackageJSON('package1');
+      expect(result.name).toBe('package1');
     });
   });
 
   describe('findAllDependentPackageNames', () => {
     it('successfully returns a list repo packages that are dependencies', () => {
-      const result = MonorepoMetadata.create().findAllDependentPackageNames('@codification/cutwater-graphql');
-      expect(result).toHaveLength(3);
-      expect(result).toContain('@codification/cutwater-core');
+      const result = metadata.findAllDependentPackageNames('package2');
+      expect(result).toHaveLength(1);
+      expect(result).toContain('package1');
     });
   });
 });

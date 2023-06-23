@@ -9,7 +9,7 @@ beforeAll(() => {
 describe('SamPublishTask', () => {
   it('it properly sets the version from package.json', () => {
     const task: SamPublishTask = new SamPublishTask();
-    task.setRunConfig({ dryrun: true });
+    task.setSpawnOptions({ dryrun: true });
     return expect(task.executeTask()).resolves.toBeUndefined();
   }, 15000);
 });

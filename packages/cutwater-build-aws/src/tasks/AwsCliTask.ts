@@ -1,4 +1,4 @@
-import { GulpTask, RunCommand, RunCommandConfig } from '@codification/cutwater-build-core';
+import { GulpTask, Spawn, SpawnOptions } from '@codification/cutwater-build-core';
 import { CliUtils } from '../support/CliUtils';
 import { CliConfig } from '../types/CliConfig';
 
@@ -23,14 +23,15 @@ export interface AwsCliOptions {
   noCliAutoPrompt?: boolean;
 }
 
-export type AwsCliTaskConfig<P> = CliConfig<AwsCliOptions, P>;
+export interface AwsCliTaskConfig<P> extends CliConfig<AwsCliOptions, P> {
+  spawn: Spawn;
+}
 
 export class AwsCliTask<P = Record<string, never>> extends GulpTask<AwsCliTaskConfig<P>, void> {
   protected output: Buffer | undefined;
   protected readonly awsCommand: string;
   protected readonly awsSubCommand: string;
   protected readonly filteredParams: string[];
-  protected readonly runCommand: RunCommand = new RunCommand();
 
   public constructor(
     taskName = 'aws-cli',
@@ -40,7 +41,8 @@ export class AwsCliTask<P = Record<string, never>> extends GulpTask<AwsCliTaskCo
     defaultConfig: Partial<AwsCliTaskConfig<P>> = {},
   ) {
     super(taskName, {
-      runConfig: {
+      spawn: Spawn.create(),
+      spawnOptions: {
         command: 'aws',
         quiet: false,
         ignoreErrors: false,
@@ -58,8 +60,8 @@ export class AwsCliTask<P = Record<string, never>> extends GulpTask<AwsCliTaskCo
     if (!this.config) {
       this.config = {} as AwsCliTaskConfig<P>;
     }
-    if (!!taskConfig.runConfig) {
-      this.setRunConfig(taskConfig.runConfig);
+    if (!!taskConfig.spawnOptions) {
+      this.setSpawnOptions(taskConfig.spawnOptions);
     }
     if (!!taskConfig.options) {
       this.setOptions(taskConfig.options);
@@ -73,12 +75,12 @@ export class AwsCliTask<P = Record<string, never>> extends GulpTask<AwsCliTaskCo
     this.config = taskConfig;
   }
 
-  public setRunConfig(config: Partial<RunCommandConfig>): void {
-    this.config.runConfig = { ...this.config.runConfig, ...config };
+  public setSpawnOptions(options: Partial<SpawnOptions>): void {
+    this.config.spawnOptions = { ...this.config.spawnOptions, ...options };
   }
 
-  public replaceRunConfig(config: RunCommandConfig): void {
-    this.config.runConfig = config;
+  public replaceSpawnOptions(options: SpawnOptions): void {
+    this.config.spawnOptions = options;
   }
 
   public setOptions(options: Partial<AwsCliOptions>): void {
@@ -107,10 +109,10 @@ export class AwsCliTask<P = Record<string, never>> extends GulpTask<AwsCliTaskCo
       subCommand: this.awsSubCommand,
       filteredParams: this.filteredParams,
     });
-    this.log(`Running: ${this.config.runConfig.command} ${args}`);
-    this.output = await this.runCommand.run({
+    this.log(`Running: ${this.config.spawnOptions.command} ${args}`);
+    this.output = await this.config.spawn.execute({
       logger: this.logger(),
-      ...this.config.runConfig,
+      ...this.config.spawnOptions,
       args,
     });
   }

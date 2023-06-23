@@ -1,4 +1,3 @@
-import { RunCommand } from '@codification/cutwater-build-core';
 import { AwsCliTask } from './AwsCliTask';
 
 export interface EcrLoginParameters {
@@ -22,9 +21,9 @@ export class EcrLoginTask extends AwsCliTask<EcrLoginParameters> {
       const password = this.output.toString('utf-8');
       this.output = undefined;
 
-      await new RunCommand().run({
+      await this.config.spawn.execute({
         logger: this.logger(),
-        ...this.config.runConfig,
+        ...this.config.spawnOptions,
         command: 'docker',
         args: `login --username AWS --password-stdin ${this.config.parameters?.accountId}.dkr.ecr.${this.config.options?.region}.amazonaws.com`,
         stdin: password,

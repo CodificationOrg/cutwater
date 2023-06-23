@@ -1,5 +1,5 @@
-import { IOUtils } from '@codification/cutwater-build-core';
-import * as md5 from 'md5';
+import { System } from '@codification/cutwater-build-core';
+import md5 from 'md5';
 import { schema } from 'yaml-cfn';
 import { CloudFormationTemplate } from './CloudFormationTemplate';
 
@@ -14,8 +14,10 @@ export class ApiGatewayDeploymentUpdater {
 
   private template: CloudFormationTemplate;
 
+  public constructor(private readonly system: System = System.create()) {}
+
   public load(templateFile: string): void {
-    this.template = IOUtils.readObjectFromFileSyncSafe<CloudFormationTemplate>(templateFile, undefined, schema);
+    this.template = this.system.toFileReference(templateFile).readObjectSyncSafe<CloudFormationTemplate>(schema);
   }
 
   public performOpenApiMerges(outputFile: string): void {
@@ -41,7 +43,7 @@ export class ApiGatewayDeploymentUpdater {
     });
     this.updateDeploymentReferences(deployToHash);
 
-    IOUtils.writeObjectToFileSync(this.template, outputFile, undefined, schema);
+    this.system.toFileReference(outputFile).writeObjectSync(schema);
     this.template = {} as CloudFormationTemplate;
   }
 
@@ -99,7 +101,7 @@ export class ApiGatewayDeploymentUpdater {
     let rval: any | undefined;
     const body: any = this.toRestApiBody(restApiName);
     if (!!body && !!body[this.OPENAPI_LOCATION_PROPERTY]) {
-      return IOUtils.readObjectFromFileSync(body[this.OPENAPI_LOCATION_PROPERTY]);
+      return this.system.toFileReference(body[this.OPENAPI_LOCATION_PROPERTY]).readObjectSync();
     } else if (!!body && !body[this.TRANSFORM_PROPERTY]) {
       rval = body;
     }
