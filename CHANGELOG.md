@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.35.14 (2023-06-23)
+
+
+### Bug Fixes
+
+* revert to straight path import ([3fbf8d7](https://github.com/CodificationOrg/cutwater/commit/3fbf8d7806c9ebf1a04cf25a229abf1183616dab))
+
+
+
+
+
 ## 0.35.13 (2023-06-02)
 
 
