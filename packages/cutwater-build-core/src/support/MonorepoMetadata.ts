@@ -1,4 +1,4 @@
-import { join, resolve } from 'path';
+import { join, resolve } from 'path/win32';
 
 import { PACKAGE_JSON } from '../core/Constants';
 import { System } from '../core/System';
@@ -16,7 +16,7 @@ export class MonorepoMetadata {
   }
 
   public static createNull(
-    basePath = '/project/packages',
+    basePath = resolve('/project/packages'),
     system: System = System.createNull(),
   ): MonorepoMetadata | undefined {
     try {
@@ -83,7 +83,7 @@ export class MonorepoMetadata {
   public readonly rootPath: string;
 
   private constructor(public readonly system: System, basePath?: string) {
-    const repoRootPath = this.findRepoRootPath(basePath || process.cwd());
+    const repoRootPath = this.findRepoRootPath(basePath || system.cwd());
     if (!repoRootPath) {
       throw new Error(`Could not find monorepo root from base path: ${basePath}`);
     }
