@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import * as path from 'path/win32';
+import * as path from 'path';
 import { TestContext } from './TestContext';
 
 describe('TestContext', () => {

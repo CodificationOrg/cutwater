@@ -1,5 +1,5 @@
 import { BuildConfig, GulpTask, Spawn, SpawnOptions, TextUtils } from '@codification/cutwater-build-core';
-import { resolve } from 'path/win32';
+import { resolve } from 'path';
 
 export interface WebpackOptions {
   entry: string[];

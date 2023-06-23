@@ -1,4 +1,4 @@
-import { resolve } from 'path/win32';
+import { resolve } from 'path';
 
 import { FileSystem, NullFileSystemEntry, defaultNullFileSystemEntries } from './FileSystem';
 

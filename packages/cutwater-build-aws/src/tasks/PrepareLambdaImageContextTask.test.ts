@@ -1,5 +1,5 @@
 import { BuildContext } from '@codification/cutwater-build-core';
-import { join, resolve } from 'path/win32';
+import { join, resolve } from 'path';
 import { PrepareLambdaImageContextTask } from './PrepareLambdaImageContextTask';
 import { DOCKERFILE } from '@codification/cutwater-build-docker';
 

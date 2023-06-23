@@ -1,7 +1,7 @@
 import { LoggerFactory } from '@codification/cutwater-logging';
 import { existsSync, mkdirSync, mkdtempSync, rmdirSync } from 'fs';
 import os from 'os';
-import { dirname, join, resolve } from 'path/win32';
+import { dirname, join, resolve } from 'path';
 import uuid from 'uuid/v4';
 
 const LOG = LoggerFactory.getLogger();

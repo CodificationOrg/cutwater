@@ -1,4 +1,4 @@
-import { join, resolve } from 'path/win32';
+import { join, resolve } from 'path';
 import { Logger } from '../logging';
 import { MonorepoMetadata } from '../support';
 import { isJestEnabled } from '../tasks';

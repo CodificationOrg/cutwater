@@ -1,4 +1,4 @@
-import { join, resolve } from 'path/win32';
+import { join, resolve } from 'path';
 
 import { PACKAGE_JSON } from '../core/Constants';
 import { System } from '../core/System';

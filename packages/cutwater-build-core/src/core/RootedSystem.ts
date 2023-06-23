@@ -1,4 +1,4 @@
-import { isAbsolute, join, resolve } from 'path/win32';
+import { isAbsolute, join, resolve } from 'path';
 import yargs from 'yargs';
 
 import { FileSystem } from './FileSystem';

@@ -1,7 +1,7 @@
 import { BuildConfig, PACKAGE_JSON, System } from '@codification/cutwater-build-core';
 import { FileReference } from '@codification/cutwater-build-core/lib/types/FileReference';
 import { PackageJSON } from '@codification/cutwater-build-core/lib/types/PackageJSON';
-import { basename, isAbsolute, join, resolve } from 'path/win32';
+import { basename, isAbsolute, join, resolve } from 'path';
 import { DOCKERFILE } from '../Constants';
 import { ImageConfig } from '../types';
 

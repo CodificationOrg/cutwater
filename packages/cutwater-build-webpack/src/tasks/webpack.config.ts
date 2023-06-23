@@ -1,5 +1,5 @@
 import { BuildConfig, buildEngine } from '@codification/cutwater-build-core';
-import { join } from 'path/win32';
+import { join } from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import Webpack from 'webpack';
 

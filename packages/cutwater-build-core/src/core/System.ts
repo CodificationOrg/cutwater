@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import yaml, { SchemaDefinition } from 'js-yaml';
-import { basename, isAbsolute, join, resolve } from 'path/win32';
+import { basename, isAbsolute, join, resolve } from 'path';
 import { ReadStream, WriteStream } from 'tty';
 import yargs from 'yargs';
 

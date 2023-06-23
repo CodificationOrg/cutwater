@@ -13,8 +13,8 @@ import {
   utimesSync,
   writeFileSync,
 } from 'fs';
-import { basename, isAbsolute } from 'path/win32';
-import { dirname, resolve } from 'path/win32';
+import { basename, isAbsolute } from 'path';
+import { dirname, resolve } from 'path';
 
 interface FileSystemProvider {
   exists(path: string): boolean;

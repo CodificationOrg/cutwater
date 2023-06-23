@@ -1,6 +1,6 @@
 import { FileUtils } from '@codification/cutwater-node-core';
 import { copyFileSync } from 'fs';
-import { extname, join, resolve } from 'path/win32';
+import { extname, join, resolve } from 'path';
 
 export class TestContext {
   public static createContext(tempDirPrefix?: string): TestContext {

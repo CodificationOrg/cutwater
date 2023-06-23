@@ -4,7 +4,7 @@ import {
   PrepareImageContextTaskConfig,
 } from '@codification/cutwater-build-docker/lib/tasks/PrepareImageContextTask';
 import { ImageConfig } from '@codification/cutwater-build-docker/lib/types/ImageConfig';
-import { resolve } from 'path/win32';
+import { resolve } from 'path';
 
 export interface HandlerImageConfig extends ImageConfig {
   handler: string;

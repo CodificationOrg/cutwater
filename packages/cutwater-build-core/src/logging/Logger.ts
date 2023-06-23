@@ -1,4 +1,4 @@
-import { isAbsolute, relative } from 'path/win32';
+import { isAbsolute, relative } from 'path';
 import prettyTime from 'pretty-hrtime';
 import { Console } from '../core/Console';
 import { OutputTracker, duration as elapsed, error, label, msg, warn } from '../support';
