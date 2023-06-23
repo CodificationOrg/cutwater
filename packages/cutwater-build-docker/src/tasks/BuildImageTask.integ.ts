@@ -6,7 +6,7 @@ import { BuildImageTask } from './BuildImageTask';
 import { PrepareImageContextTask } from './PrepareImageContextTask';
 
 let ctx: TestContext;
-let contextFolder: string;
+let contextDirectory: string;
 let buildCtx: BuildContext;
 const name = 'build-image-test-image';
 
@@ -14,11 +14,11 @@ beforeAll(async () => {
   ctx = TestContext.createContext();
   initialize(gulp);
   const prepTask = new PrepareImageContextTask();
-  contextFolder = basename(dirname(ctx.createTempFilePath()));
-  prepTask.setConfig({ contextFolder });
+  contextDirectory = basename(dirname(ctx.createTempFilePath()));
+  prepTask.setConfig({ imageConfigs: { name }, contextDirectory });
   buildCtx = BuildContext.create();
   await prepTask.execute(buildCtx);
-}, 60000);
+}, 120000);
 
 afterAll(async () => {
   ctx.teardown();
@@ -29,10 +29,10 @@ describe('BuildImageTask', () => {
   describe('executeTask', () => {
     it('builds a docker image', async () => {
       const task: BuildImageTask = new BuildImageTask();
-      task.setConfig({ imageConfigs: { name }, contextDirectory: contextFolder });
+      task.setConfig({ imageConfigs: { name }, contextDirectory });
       await task.execute(buildCtx);
       const result = (await Spawn.create().execute({ command: 'docker', args: 'images' })).toString('utf-8');
       expect(result.indexOf(name)).toBeTruthy();
-    }, 60000);
+    }, 120000);
   });
 });

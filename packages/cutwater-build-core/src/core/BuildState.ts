@@ -27,7 +27,7 @@ export class BuildState {
     if (!BuildState.instance) {
       const system = System.create();
       const toolVersion =
-        system.toFileReference(resolve(system.dirname, '..', '..', PACKAGE_JSON)).readObjectSyncSafe<PackageJSON>()
+        system.toFileReference(resolve(__dirname, '..', '..', PACKAGE_JSON)).readObjectSyncSafe<PackageJSON>()
           ?.version || 'unknown';
 
       BuildState.instance = new BuildState(system.args, toolVersion, system, Spawn.create());

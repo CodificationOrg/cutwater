@@ -29,10 +29,6 @@ export class System extends EventEmitter {
     super();
   }
 
-  public get dirname(): string {
-    return this.process.dirname;
-  }
-
   public cwd(): string {
     return this.process.cwd();
   }

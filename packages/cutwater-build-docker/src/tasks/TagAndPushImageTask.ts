@@ -1,9 +1,8 @@
-import { GulpTask, PACKAGE_JSON, Spawn, SpawnOptions } from '@codification/cutwater-build-core';
-import { PackageJSON } from '@codification/cutwater-build-core/lib/types/PackageJSON';
+import { GulpTask, Spawn, SpawnOptions } from '@codification/cutwater-build-core';
 
 export interface TagAndPushImageTaskConfig extends SpawnOptions {
   spawn: Spawn;
-  name?: string;
+  name: string;
   repo?: string;
   stage: string;
 }
@@ -11,25 +10,15 @@ export interface TagAndPushImageTaskConfig extends SpawnOptions {
 export class TagAndPushImageTask extends GulpTask<TagAndPushImageTaskConfig, void> {
   public constructor() {
     super('tag-and-push-image', {
+      spawn: Spawn.create(),
       stage: 'dev',
     });
   }
 
-  public get imageName(): string {
-    if (this.config.name) {
-      return this.config.name;
-    }
-    const pkgObj = this.system.toFileReference(PACKAGE_JSON).readObjectSyncSafe<PackageJSON>();
-    if (!pkgObj.name) {
-      throw new Error('No image name provided and no name found in packag.json.');
-    }
-    return pkgObj.name;
-  }
-
   public async executeTask(): Promise<void> {
     const { repo: rawRepo, stage } = this.config;
-    const image = `${this.imageName}:latest`;
-    const repo = rawRepo ? `${rawRepo}/${this.imageName}` : undefined;
+    const image = `${this.config.name}:latest`;
+    const repo = rawRepo ? `${rawRepo}/${this.config.name}` : undefined;
     const buildNumber = this.buildState.buildNumber(-1);
     const buildTag = `${stage}-build-${buildNumber !== -1 ? buildNumber : await this.buildState.gitRev()}`;
 
@@ -37,7 +26,7 @@ export class TagAndPushImageTask extends GulpTask<TagAndPushImageTaskConfig, voi
       await this.config.spawn.execute({
         ...this.config,
         command: 'docker',
-        args: `tag ${image} ${repo || this.imageName}:${tag}`,
+        args: `tag ${image} ${repo || this.config.name}:${tag}`,
       });
       if (repo) {
         await this.config.spawn.execute({

@@ -5,9 +5,26 @@ import { basename, isAbsolute, join, resolve } from 'path';
 import { DOCKERFILE } from '../Constants';
 import { ImageConfig } from '../types';
 
+const rootPackageJson = {
+  name: 'docker-image-root',
+  description: 'Docker Image NodeJS Root',
+  private: true,
+  workspaces: {
+    packages: ['packages/*'],
+  },
+};
+
+const defaultDockerfile = `
+FROM node:18.16
+
+COPY package.json yarn.lock ./
+COPY packages/ ./packages/
+
+RUN yarn install
+`;
+
 export class ImageContext<T extends ImageConfig> {
   private static readonly DIRECTORY_WILDCARD = '/*';
-  private static readonly ROOT_PACKAGE_JSON = 'root-package.json';
 
   public readonly contextDirectory: FileReference;
 
@@ -31,17 +48,22 @@ export class ImageContext<T extends ImageConfig> {
 
   public get dockerfile(): FileReference {
     const { name } = this.imageConfig;
-    const trgName = name ? `${DOCKERFILE}.${name}` : DOCKERFILE;
-    return this.system.toFileReference(resolve(this.contextDirectory.path, trgName));
+    return this.system.toFileReference(resolve(this.contextDirectory.path, `${DOCKERFILE}.${name}`));
   }
 
-  public get sourceDockerfile(): FileReference {
-    return this.system.toFileReference(this.imageConfig.dockerfile || resolve(this.system.dirname, DOCKERFILE));
+  private get sourceDockerfile(): FileReference | undefined {
+    return this.imageConfig.dockerfile ? this.system.toFileReference(this.imageConfig.dockerfile) : undefined;
   }
 
   private copyDockerfile(): FileReference {
     const dockerfile = this.dockerfile;
-    return dockerfile.exists() ? dockerfile : this.sourceDockerfile.copyTo(dockerfile);
+    if (dockerfile.exists()) {
+      return dockerfile;
+    }
+    if (this.sourceDockerfile) {
+      return this.sourceDockerfile.copyTo(dockerfile);
+    }
+    return dockerfile.write(defaultDockerfile);
   }
 
   private copyLockFile(): void {
@@ -103,9 +125,7 @@ export class ImageContext<T extends ImageConfig> {
         this.copyPackage(srcDir, dstDir, includes);
       });
 
-      const imgRootPkg = this.system
-        .toFileReference(resolve(this.system.dirname, ImageContext.ROOT_PACKAGE_JSON))
-        .readObjectSyncSafe<PackageJSON>();
+      const imgRootPkg = (rootPackageJson as unknown) as PackageJSON;
       imgRootPkg.resolutions = repoMetadata.rootPackageJSON.resolutions;
       this.system.toFileReference(resolve(this.contextDirectory.path, PACKAGE_JSON)).writeObjectSync(imgRootPkg);
     } else {

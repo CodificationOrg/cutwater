@@ -14,13 +14,12 @@ export interface HandlerImageConfig extends ImageConfig {
 
 export interface PrepareLambdaImageContextTaskConfig extends PrepareImageContextTaskConfig<HandlerImageConfig> {
   nodeVersion: string;
-  imageConfigs?: HandlerImageConfig | HandlerImageConfig[];
 }
 
 export class PrepareLambdaImageContextTask<
   T extends PrepareLambdaImageContextTaskConfig = PrepareLambdaImageContextTaskConfig
 > extends PrepareImageContextTask<HandlerImageConfig, T> {
-  private static readonly DEFAULT_DOCKERFILE = 'AwsLambdaDockerfile';
+  public static readonly DEFAULT_DOCKERFILE = 'AwsLambdaDockerfile';
 
   public constructor(name = 'prepare-lambda-image-context', defaultConfig: Partial<T> = {}) {
     super(name, {
@@ -55,7 +54,7 @@ export class PrepareLambdaImageContextTask<
     ]);
     configs.forEach(config => {
       if (!config.dockerfile) {
-        config.dockerfile = resolve(this.system.dirname, PrepareLambdaImageContextTask.DEFAULT_DOCKERFILE);
+        config.dockerfile = resolve(__dirname, PrepareLambdaImageContextTask.DEFAULT_DOCKERFILE);
       }
     });
   }

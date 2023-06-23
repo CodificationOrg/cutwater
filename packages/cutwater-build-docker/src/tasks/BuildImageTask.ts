@@ -35,11 +35,13 @@ export class BuildImageTask<T extends BuildImageTaskConfig = BuildImageTaskConfi
         throw new Error('An image name is required.');
       }
       const context = new ImageContext(this.config.contextDirectory, imageConfig, this.buildConfig, this.system);
+      const args = `build -t ${imageConfig.name} --platform ${platform} -f ${context.dockerfile.path} ${context.contextDirectory.path}`;
+      console.error(`Using docker args: ${args}`);
       return this.config.spawn.execute({
         logger: this.logger(),
         ...this.config,
         command: 'docker',
-        args: `build -t ${imageConfig.name} --platform ${platform} -f ${context.dockerfile} ${context.contextDirectory.path}`,
+        args,
       });
     });
     await Promise.all(builds);

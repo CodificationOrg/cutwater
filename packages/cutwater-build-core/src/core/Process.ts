@@ -6,13 +6,11 @@ import { TrackedIOStreams } from '../support/TrackedIOStreams';
 
 export interface LimitedProcess
   extends Pick<NodeJS.Process, 'cwd' | 'stdin' | 'stdout' | 'stderr' | 'version' | 'env' | 'exit'> {
-  dirname: string;
   on: (event: string | symbol, listener: (...args: any[]) => void) => LimitedProcess;
 }
 
 export interface ProcessResponses {
   cwd?: string;
-  dirname?: string;
   version?: string;
   env?: Record<string, string>;
   stdin?: ReadStream & { fd: 0 };
@@ -28,7 +26,6 @@ export class Process implements LimitedProcess {
   public static create(): Process {
     return new Process({
       ...process,
-      dirname: __dirname,
       on: (event: string | symbol, listener: (...args: any[]) => void): LimitedProcess => {
         process.on(event, listener);
         return this as unknown as LimitedProcess;
@@ -45,10 +42,6 @@ export class Process implements LimitedProcess {
 
   public cwd(): string {
     return this.process.cwd();
-  }
-
-  public get dirname(): string {
-    return this.process.dirname;
   }
 
   public get version(): string {
@@ -95,10 +88,6 @@ class StubbedProcessProvider implements LimitedProcess {
 
   public cwd(): string {
     return this.responses.cwd || resolve('/project/packages/package1');
-  }
-
-  public get dirname(): string {
-    return this.responses.dirname || '/';
   }
 
   public get version(): string {

@@ -7,21 +7,21 @@ import { PrepareImageContextTask } from './PrepareImageContextTask';
 import { TagAndPushImageTask } from './TagAndPushImageTask';
 
 let ctx: TestContext;
-let contextFolder: string;
+let contextDirectory: string;
 const name = 'tag-and-push-test-image';
 
 beforeAll(async () => {
   ctx = TestContext.createContext();
   initialize(gulp);
-  contextFolder = basename(dirname(ctx.createTempFilePath()));
+  contextDirectory = basename(dirname(ctx.createTempFilePath()));
   const prepTask = new PrepareImageContextTask();
-  prepTask.setConfig({ contextFolder });
+  prepTask.setConfig({ imageConfigs: { name }, contextDirectory });
   await prepTask.execute(BuildContext.create());
 
   const buildTask = new BuildImageTask();
-  buildTask.setConfig({ imageConfigs: { name }, contextDirectory: contextFolder });
+  buildTask.setConfig({ imageConfigs: { name }, contextDirectory });
   await buildTask.execute(BuildContext.create());
-}, 60000);
+}, 120000);
 
 afterAll(async () => {
   ctx.teardown();
@@ -36,6 +36,6 @@ describe('TagAndPushImageTask', () => {
       await task.execute(BuildContext.create());
       const result = (await Spawn.create().execute({ command: 'docker', args: 'images' })).toString('utf-8');
       expect(result.indexOf(name)).toBeTruthy();
-    }, 30000);
+    }, 120000);
   });
 });
