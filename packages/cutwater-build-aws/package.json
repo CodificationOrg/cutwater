@@ -55,7 +55,7 @@
     "yaml-cfn": "^0.2.3"
   },
   "devDependencies": {
-    "@codification/cutwater-build-docker": "^0.35.14",
+    "@codification/cutwater-build-docker": "^0.35.15",
     "@types/js-yaml": "^3.12.3",
     "@types/node": "^18.11.9"
   },
