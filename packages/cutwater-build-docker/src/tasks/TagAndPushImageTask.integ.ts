@@ -1,30 +1,26 @@
 import { BuildContext, Spawn, initialize } from '@codification/cutwater-build-core';
-import { TestContext } from '@codification/cutwater-test';
 import * as gulp from 'gulp';
-import { basename, dirname } from 'path';
 import { BuildImageTask } from './BuildImageTask';
 import { PrepareImageContextTask } from './PrepareImageContextTask';
 import { TagAndPushImageTask } from './TagAndPushImageTask';
 
-let ctx: TestContext;
-let contextDirectory: string;
+let buildCtx: BuildContext;
 const name = 'tag-and-push-test-image';
 
 beforeAll(async () => {
-  ctx = TestContext.createContext();
   initialize(gulp);
-  contextDirectory = basename(dirname(ctx.createTempFilePath()));
   const prepTask = new PrepareImageContextTask();
-  prepTask.setConfig({ imageConfigs: { name }, contextDirectory });
+  prepTask.setConfig({ imageConfigs: { name } });
   await prepTask.execute(BuildContext.create());
 
+  buildCtx = BuildContext.create();
   const buildTask = new BuildImageTask();
-  buildTask.setConfig({ imageConfigs: { name }, contextDirectory });
-  await buildTask.execute(BuildContext.create());
+  buildTask.setConfig({ imageConfigs: { name } });
+  await buildTask.execute(buildCtx);
 }, 120000);
 
 afterAll(async () => {
-  ctx.teardown();
+  buildCtx.buildState.system.toFileReference(buildCtx.buildConfig.distFolder).delete(true);
   await Spawn.create().execute({ command: 'docker', args: ['image', 'rm', name] });
 });
 

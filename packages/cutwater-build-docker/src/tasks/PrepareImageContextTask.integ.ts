@@ -1,4 +1,4 @@
-import { join, resolve } from 'path';
+import { resolve } from 'path';
 
 import { BuildContext, PACKAGE_JSON } from '@codification/cutwater-build-core';
 
@@ -17,9 +17,7 @@ describe('PrepareImageContextTask', () => {
       const task: PrepareImageContextTask = new PrepareImageContextTask();
       task.setConfig({ imageConfigs: { name: 'foo' } });
       await task.execute(context);
-      const contextDirectory = context.buildState.system.toFileReference(
-        join(`${task.buildConfig.tempFolder}`, `${task.config.contextDirectory}`),
-      );
+      const contextDirectory = context.buildState.system.toFileReference(task.buildConfig.distFolder);
       const contextFiles = contextDirectory.children().map(ref => ref.path);
       const contextPath = contextDirectory.path;
       expect(contextFiles.includes(resolve(contextPath, PACKAGE_JSON))).toBeTruthy();

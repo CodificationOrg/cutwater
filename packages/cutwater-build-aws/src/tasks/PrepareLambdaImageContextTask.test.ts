@@ -1,7 +1,7 @@
 import { BuildContext } from '@codification/cutwater-build-core';
+import { DOCKERFILE } from '@codification/cutwater-build-docker';
 import { join, resolve } from 'path';
 import { PrepareLambdaImageContextTask } from './PrepareLambdaImageContextTask';
-import { DOCKERFILE } from '@codification/cutwater-build-docker';
 
 let context: BuildContext;
 const name = 'prepare-lambda-image-context';
@@ -33,9 +33,7 @@ describe('PrepareLambdaImageContextTask', () => {
         imageConfigs: { name, handler: 'lambda.handler', options: 'RUN echo "hello world"' },
       });
       await task.execute(context);
-      const contextDirectory = context.buildState.system.toFileReference(
-        join(`${task.buildConfig.tempFolder}`, `${task.config.contextDirectory}`),
-      );
+      const contextDirectory = context.buildState.system.toFileReference(task.buildConfig.distFolder);
       const dockerfile = context.buildState.system.toFileReference(
         join(contextDirectory.path, `${DOCKERFILE}.${name}`),
       );

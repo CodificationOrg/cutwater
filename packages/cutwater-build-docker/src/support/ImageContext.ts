@@ -1,7 +1,6 @@
-import { BuildConfig, PACKAGE_JSON, System } from '@codification/cutwater-build-core';
-import { FileReference } from '@codification/cutwater-build-core';
+import { BuildConfig, FileReference, PACKAGE_JSON, System } from '@codification/cutwater-build-core';
 import { PackageJSON } from '@codification/cutwater-build-core/lib/types/PackageJSON';
-import { basename, isAbsolute, join, resolve } from 'path';
+import { basename, join, resolve } from 'path';
 import { DOCKERFILE } from '../Constants';
 import { ImageConfig } from '../types';
 
@@ -29,21 +28,15 @@ export class ImageContext<T extends ImageConfig> {
   public readonly contextDirectory: FileReference;
 
   public constructor(
-    contextDirectory: string,
     public readonly imageConfig: T,
     private readonly buildConfig: BuildConfig,
     private readonly system: System = System.create(),
   ) {
-    this.contextDirectory = this.toContextDirectoryReference(contextDirectory);
+    this.contextDirectory = this.toContextDirectoryReference(buildConfig.distFolder);
   }
 
   private toContextDirectoryReference(contextDirectory: string): FileReference {
-    if (isAbsolute(contextDirectory)) {
-      return this.system.toFileReference(contextDirectory);
-    } else {
-      const { tempFolder } = this.buildConfig;
-      return this.system.toFileReference(join(tempFolder, contextDirectory));
-    }
+    return this.system.toFileReference(contextDirectory);
   }
 
   public get dockerfile(): FileReference {

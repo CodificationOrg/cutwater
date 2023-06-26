@@ -1,5 +1,5 @@
 import { GulpTask, Spawn, SpawnOptions } from '@codification/cutwater-build-core';
-import { DOCKERFILE, DOCKER_CONTEXT_DIRECTORY } from '../Constants';
+import { DOCKERFILE } from '../Constants';
 import { ImageContext } from '../support/ImageContext';
 import { ImageConfig } from '../types';
 
@@ -15,7 +15,6 @@ export class BuildImageTask<T extends BuildImageTaskConfig = BuildImageTaskConfi
     super(name, {
       spawn: Spawn.create(),
       platform: 'linux/amd64',
-      contextDirectory: DOCKER_CONTEXT_DIRECTORY,
       imageConfigs: {
         name: '',
         dockerfile: DOCKERFILE,
@@ -34,9 +33,8 @@ export class BuildImageTask<T extends BuildImageTaskConfig = BuildImageTaskConfi
       if (!imageConfig.name) {
         throw new Error('An image name is required.');
       }
-      const context = new ImageContext(this.config.contextDirectory, imageConfig, this.buildConfig, this.system);
+      const context = new ImageContext(imageConfig, this.buildConfig, this.system);
       const args = `build -t ${imageConfig.name} --platform ${platform} -f ${context.dockerfile.path} ${context.contextDirectory.path}`;
-      console.error(`Using docker args: ${args}`);
       return this.config.spawn.execute({
         logger: this.logger(),
         ...this.config,
