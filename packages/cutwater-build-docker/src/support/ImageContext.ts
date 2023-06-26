@@ -24,7 +24,7 @@ RUN yarn install
 
 export class ImageContext<T extends ImageConfig> {
   private static readonly DIRECTORY_WILDCARD = '/*';
-  private static readonly PACKAGE_INCLUDE_PROPERTIES = ['main', 'typings'];
+  private static readonly PACKAGE_INCLUDE_PROPERTIES = ['main', 'types', 'typings'];
 
   public readonly contextDirectory: FileReference;
 
@@ -105,7 +105,7 @@ export class ImageContext<T extends ImageConfig> {
     const rval = [...includes];
     ImageContext.PACKAGE_INCLUDE_PROPERTIES.forEach(prop => {
       const directory = this.findIncludeDirectory(prop, packageDirectory);
-      if (directory && !includes.includes(directory)) {
+      if (directory && !rval.includes(directory)) {
         rval.push(directory);
       }
     });
