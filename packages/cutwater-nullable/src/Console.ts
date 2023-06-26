@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 
-import { OutputTracker } from '../support/OutputTracker';
+import { OutputTracker } from './OutputTracker';
 
 export class Console {
   public static create() {

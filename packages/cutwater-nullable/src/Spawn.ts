@@ -4,10 +4,9 @@ import { EventEmitter } from 'events';
 import { delimiter, resolve } from 'path';
 import spawnArgs from 'spawn-args';
 
-import { Logger } from '../logging/Logger';
-import { OutputTracker } from '../support/OutputTracker';
-import { TrackedDuplex } from '../support/TrackedDuplex';
+import { OutputTracker } from './OutputTracker';
 import { System } from './System';
+import { TrackedDuplex } from './TrackedDuplex';
 
 export interface SpawnOptions {
   command: string;
@@ -20,7 +19,9 @@ export interface SpawnOptions {
     [key: string]: string;
   };
   dryrun?: boolean;
-  logger?: Logger;
+  logger?: {
+    verbose: (...args: string[]) => void;
+  };
 }
 
 type SpawnFn = (command: string, args?: ReadonlyArray<string>, options?: any) => ChildProcess;

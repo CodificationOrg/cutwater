@@ -1,8 +1,7 @@
+import { Spawn, SpawnOptions, System } from '@codification/cutwater-nullable';
 import { join } from 'path';
 
 import { PACKAGE_JSON } from '../core/Constants';
-import { Spawn, SpawnOptions } from '../core/Spawn';
-import { System } from '../core/System';
 import { BuildConfig } from '../types';
 import { GulpTask } from './GulpTask';
 

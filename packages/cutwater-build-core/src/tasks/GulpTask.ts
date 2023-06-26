@@ -1,11 +1,12 @@
+import { System } from '@codification/cutwater-nullable';
 import Ajv from 'ajv';
 import eos from 'end-of-stream';
 import gulp from 'gulp';
 import { dirname, extname, join } from 'path';
 import through2 from 'through2';
 import Vinyl from 'vinyl';
+
 import { BuildContext, BuildState } from '../core';
-import { System } from '../core/System';
 import { Logger } from '../logging';
 import { label } from '../support';
 import { BuildConfig, ExecutableTask } from '../types';

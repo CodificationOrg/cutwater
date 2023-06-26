@@ -1,4 +1,3 @@
-import { PackageJSON } from '../types';
 import { System } from './System';
 
 describe('System', () => {
@@ -33,12 +32,16 @@ describe('System', () => {
     });
     describe('readObjectSyncSafe', () => {
       it('can read a yaml file', () => {
-        const result = System.createNull().toFileReference('/project/package.yaml').readObjectSyncSafe<PackageJSON>();
+        const result = System.createNull()
+          .toFileReference('/project/package.yaml')
+          .readObjectSyncSafe<{ name: string }>();
         expect(result).toBeDefined();
         expect(result.name).toBe('rootPackageJson');
       });
       it('can read a json file', () => {
-        const result = System.createNull().toFileReference('/project/package.json').readObjectSyncSafe<PackageJSON>();
+        const result = System.createNull()
+          .toFileReference('/project/package.json')
+          .readObjectSyncSafe<{ name: string }>();
         expect(result).toBeDefined();
         expect(result.name).toBe('rootPackageJson');
       });

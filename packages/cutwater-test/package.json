@@ -42,8 +42,10 @@
     ]
   },
   "dependencies": {
-    "@codification/cutwater-build-node": "^0.35.17",
     "@codification/cutwater-node-core": "^0.35.17",
     "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "@codification/cutwater-build-node": "^0.35.17"
   }
 }

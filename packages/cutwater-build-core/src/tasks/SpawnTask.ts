@@ -1,4 +1,4 @@
-import { Spawn, SpawnOptions } from '../core/Spawn';
+import { Spawn, SpawnOptions } from '@codification/cutwater-nullable';
 import { GulpTask } from './GulpTask';
 
 export interface SpawnTaskConfig extends SpawnOptions {

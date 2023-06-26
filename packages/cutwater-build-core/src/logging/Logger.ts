@@ -1,7 +1,8 @@
+import { Console, OutputTracker } from '@codification/cutwater-nullable';
 import { isAbsolute, relative } from 'path';
 import prettyTime from 'pretty-hrtime';
-import { Console } from '../core/Console';
-import { OutputTracker, duration as elapsed, error, label, msg, warn } from '../support';
+
+import { duration as elapsed, error, label, msg, warn } from '../support';
 
 export class Logger {
   private static readonly LOGGERS: Record<string, Logger> = {};

@@ -4,7 +4,7 @@ import { basename, isAbsolute, join, resolve } from 'path';
 import { ReadStream, WriteStream } from 'tty';
 import yargs from 'yargs';
 
-import { FileReference } from '../types/FileReference';
+import { FileReference } from './FileReference';
 import { FileSystem } from './FileSystem';
 import { LimitedProcess, Process } from './Process';
 

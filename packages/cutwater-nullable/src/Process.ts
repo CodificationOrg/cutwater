@@ -2,7 +2,7 @@ import { resolve } from 'path';
 import { ReadStream, WriteStream } from 'tty';
 
 import EventEmitter from 'events';
-import { TrackedIOStreams } from '../support/TrackedIOStreams';
+import { TrackedIOStreams } from './TrackedIOStreams';
 
 export interface LimitedProcess
   extends Pick<NodeJS.Process, 'cwd' | 'stdin' | 'stdout' | 'stderr' | 'version' | 'env' | 'exit'> {

@@ -1,3 +1,4 @@
+import { System } from '@codification/cutwater-nullable';
 import { join, resolve } from 'path';
 import { Logger } from '../logging';
 import { MonorepoMetadata } from '../support';
@@ -18,7 +19,6 @@ import {
   TEMP_FOLDER,
   VERBOSE_FLAG,
 } from './Constants';
-import { System } from './System';
 
 export class BuildContext {
   private static generateBaseBuildConfig(state: BuildState): BuildConfig {

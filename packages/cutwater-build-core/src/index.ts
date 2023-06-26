@@ -11,7 +11,7 @@ import { JestTask } from './tasks/JestTask';
 import { PrettierTask } from './tasks/PrettierTask';
 import { ExecutableTask } from './types';
 
-export { Spawn, SpawnOptions, System } from './core';
+export { FileReference, Spawn, SpawnOptions, System } from '@codification/cutwater-nullable';
 export { BuildContext } from './core/BuildContext';
 export { BuildState } from './core/BuildState';
 export * from './core/Constants';

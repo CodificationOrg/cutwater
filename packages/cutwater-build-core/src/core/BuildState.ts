@@ -1,9 +1,8 @@
 import { join, resolve } from 'path';
 
+import { Spawn, System } from '@codification/cutwater-nullable';
 import { PackageJSON } from '../types';
 import { PACKAGE_JSON } from './Constants';
-import { Spawn } from './Spawn';
-import { System } from './System';
 
 export interface BuildStateResponses {
   toolVersion?: string;

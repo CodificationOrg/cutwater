@@ -1,7 +1,7 @@
 import { join, resolve } from 'path';
 
+import { System } from '@codification/cutwater-nullable';
 import { PACKAGE_JSON } from '../core/Constants';
-import { System } from '../core/System';
 import { PackageJSON } from '../types/PackageJSON';
 
 export class MonorepoMetadata {

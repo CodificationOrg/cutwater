@@ -1,5 +1,5 @@
+import { Spawn } from '@codification/cutwater-nullable';
 import { BuildContext } from '../core';
-import { Spawn } from '../core/Spawn';
 import { SpawnTask, SpawnTaskConfig } from './SpawnTask';
 
 describe('SpawnTask', () => {
