@@ -13,8 +13,7 @@ import {
   utimesSync,
   writeFileSync,
 } from 'fs';
-import { basename, isAbsolute } from 'path';
-import { dirname, resolve } from 'path';
+import { basename, dirname, isAbsolute, resolve } from 'path';
 
 interface FileSystemProvider {
   exists(path: string): boolean;
@@ -73,8 +72,17 @@ export const defaultNullFileSystemEntries: NullFileSystemEntry[] = [
     content: Buffer.from(
       JSON.stringify({
         name: 'package1',
+        main: 'lib/index.js',
       }),
     ),
+  },
+  {
+    name: 'project/packages/package1/lib/index.js',
+    content: Buffer.from('Index content.'),
+  },
+  {
+    name: 'project/packages/package1/lib/foo.txt',
+    content: Buffer.from('Another file.'),
   },
   {
     name: 'project/packages/package2/package.json',

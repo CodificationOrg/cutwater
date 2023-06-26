@@ -1,6 +1,7 @@
 export interface PackageJSON {
   name?: string;
   version?: string;
+  main?: string;
   workspaces?: string[] | Record<string, string[]>;
   resolutions?: Record<string, string>;
   dependencies?: Record<string, string>;

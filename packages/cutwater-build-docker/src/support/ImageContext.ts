@@ -1,6 +1,6 @@
 import { BuildConfig, FileReference, PACKAGE_JSON, System } from '@codification/cutwater-build-core';
 import { PackageJSON } from '@codification/cutwater-build-core/lib/types/PackageJSON';
-import { basename, join, resolve } from 'path';
+import { basename, dirname, join, resolve } from 'path';
 import { DOCKERFILE } from '../Constants';
 import { ImageConfig } from '../types';
 
@@ -24,6 +24,7 @@ RUN yarn install
 
 export class ImageContext<T extends ImageConfig> {
   private static readonly DIRECTORY_WILDCARD = '/*';
+  private static readonly PACKAGE_INCLUDE_PROPERTIES = ['main', 'typings'];
 
   public readonly contextDirectory: FileReference;
 
@@ -71,7 +72,7 @@ export class ImageContext<T extends ImageConfig> {
   }
 
   private copyAssets(srcDir: string, dstDir: string, includes: string[]): void {
-    includes.forEach(item => {
+    includes.forEach((item) => {
       const isFolder = item.endsWith(ImageContext.DIRECTORY_WILDCARD);
       const itemName = isFolder ? item.substring(0, item.length - ImageContext.DIRECTORY_WILDCARD.length) : item;
       const srcAsset = this.system.toFileReference(join(srcDir, itemName));
@@ -90,13 +91,34 @@ export class ImageContext<T extends ImageConfig> {
     pkgFile.writeObjectSync(pkg);
   }
 
+  private findIncludeDirectory(propertyName: string, packageDirectory: string): string | undefined {
+    const packageObj = this.system
+      .toFileReference(resolve(packageDirectory, PACKAGE_JSON))
+      .readObjectSync<PackageJSON>();
+    if (packageObj && packageObj[propertyName]) {
+      return `${basename(dirname(this.system.toFileReference(packageObj[propertyName]).path))}/*`;
+    }
+    return undefined;
+  }
+
+  private toNormalizedIncludes(packageDirectory: string, includes: string[]): string[] {
+    const rval = [...includes];
+    ImageContext.PACKAGE_INCLUDE_PROPERTIES.forEach((prop) => {
+      const directory = this.findIncludeDirectory(prop, packageDirectory);
+      if (directory && !includes.includes(directory)) {
+        rval.push(directory);
+      }
+    });
+    return rval;
+  }
+
   private copyPackage(srcDir: string, dstDir: string, includes: string[]): void {
     this.system.mkdir(dstDir, true);
-    this.copyAssets(srcDir, dstDir, includes);
+    this.copyAssets(srcDir, dstDir, this.toNormalizedIncludes(srcDir, includes));
     this.cleanPackage(join(dstDir, PACKAGE_JSON));
   }
 
-  public prepare(includes: string[] = [PACKAGE_JSON, `${this.buildConfig.libFolder}/*`]): void {
+  public prepare(includes: string[] = [PACKAGE_JSON]): void {
     const { rootPath, repoMetadata } = this.buildConfig;
 
     if (!this.contextDirectory.exists()) {
@@ -112,13 +134,13 @@ export class ImageContext<T extends ImageConfig> {
       }
       const pkgsDirectory = this.system.toFileReference(join(this.contextDirectory.path, 'packages'));
       this.copyPackage(rootPath, join(pkgsDirectory.path, 'app'), includes);
-      repoMetadata.findAllDependentPackageNames(currentPackage.name).forEach(depName => {
+      repoMetadata.findAllDependentPackageNames(currentPackage.name).forEach((depName) => {
         const srcDir = repoMetadata.getPackagePath(depName);
         const dstDir = join(pkgsDirectory.path, basename(srcDir));
         this.copyPackage(srcDir, dstDir, includes);
       });
 
-      const imgRootPkg = (rootPackageJson as unknown) as PackageJSON;
+      const imgRootPkg = rootPackageJson as unknown as PackageJSON;
       imgRootPkg.resolutions = repoMetadata.rootPackageJSON.resolutions;
       this.system.toFileReference(resolve(this.contextDirectory.path, PACKAGE_JSON)).writeObjectSync(imgRootPkg);
     } else {

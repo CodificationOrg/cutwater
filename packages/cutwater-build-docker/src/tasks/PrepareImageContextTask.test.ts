@@ -14,6 +14,7 @@ beforeEach(() => {
 describe('PrepareImageContextTask', () => {
   describe('executeTask', () => {
     it('prepares context to build a docker image using an image config', async () => {
+      const { system } = context.buildState;
       const task: PrepareImageContextTask = new PrepareImageContextTask();
       task.setConfig({ imageConfigs: { name: 'foo' } });
       await task.execute(context);
@@ -22,6 +23,7 @@ describe('PrepareImageContextTask', () => {
       const contextPath = contextDirectory.path;
       expect(contextFiles.includes(resolve(contextPath, PACKAGE_JSON))).toBeTruthy();
       expect(contextFiles.includes(resolve(contextPath, `${DOCKERFILE}.foo`))).toBeTruthy();
+      expect(system.toFileReference(resolve(contextPath, 'packages', 'app', 'lib', 'index.js')).exists()).toBeTruthy();
     });
   });
 });
