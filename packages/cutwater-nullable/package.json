@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-nullable",
-  "version": "0.35.18",
+  "version": "0.35.19",
   "description": "A library providing useful nullables.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
