@@ -164,11 +164,15 @@ class FileReferenceImpl implements FileReference {
   }
 
   public read(): string {
+    return this.readToBuffer().toString(FileReferenceImpl.DEFAULT_STRING_ENCODING);
+  }
+
+  public readToBuffer(): Buffer {
     const rval = this.fileSystem.read(this.path);
     if (!rval) {
       throw new Error(`File not found: ${this.path}`);
     }
-    return rval ? rval.toString(FileReferenceImpl.DEFAULT_STRING_ENCODING) : '';
+    return rval;
   }
 
   private readYamlSync<T>(schema?: SchemaDefinition): T | undefined {
@@ -201,8 +205,10 @@ class FileReferenceImpl implements FileReference {
     return this.write(serialized);
   }
 
-  public write(value: string): FileReference {
-    this.fileSystem.write(this.path, Buffer.from(value, FileReferenceImpl.DEFAULT_STRING_ENCODING));
+  public write(value: string | Buffer): FileReference {
+    const buffer: Buffer =
+      typeof value === 'string' ? Buffer.from(value, FileReferenceImpl.DEFAULT_STRING_ENCODING) : value;
+    this.fileSystem.write(this.path, buffer);
     return this;
   }
 }

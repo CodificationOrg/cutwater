@@ -11,7 +11,8 @@ export interface FileReference {
   readObjectSyncSafe<T>(schema?: SchemaDefinition): T;
   readObjectSync<T>(schema?: SchemaDefinition): T | undefined;
   read(): string;
+  readToBuffer(): Buffer;
   replaceTokens(values: Record<string, string>): FileReference;
   writeObjectSync(obj: unknown, schema?: SchemaDefinition): FileReference;
-  write(value: string): FileReference;
+  write(value: string | Buffer): FileReference;
 }
