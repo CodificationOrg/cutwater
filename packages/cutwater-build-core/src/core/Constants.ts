@@ -12,6 +12,7 @@ export const LOCK_FILE_MAPPING: Record<string, NpmClient> = {
 export const DIST_FOLDER = 'dist';
 export const LIB_FOLDER = 'lib';
 export const TEMP_FOLDER = 'temp';
+export const CACHE_FOLDER = '.cache';
 
 export const RELOG_ISSUES_FLAG = 'relogIssues';
 export const SHOW_TOAST_FLAG = 'showToast';

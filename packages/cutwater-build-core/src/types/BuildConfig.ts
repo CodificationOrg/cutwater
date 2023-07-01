@@ -19,6 +19,7 @@ export interface BuildConfig {
   libESNextFolder?: string;
   distFolder: string;
   tempFolder: string;
+  cacheFolder: string;
   relogIssues?: boolean;
   showToast?: boolean;
   buildSuccessIconPath?: string;

@@ -1,8 +1,8 @@
-import { System } from '@codification/cutwater-nullable';
+import { FileReference, System } from '@codification/cutwater-nullable';
 import Ajv from 'ajv';
 import eos from 'end-of-stream';
 import gulp from 'gulp';
-import { dirname, extname, join } from 'path';
+import { dirname, extname, join, resolve } from 'path';
 import through2 from 'through2';
 import Vinyl from 'vinyl';
 
@@ -185,6 +185,14 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
 
   protected logger(): Logger {
     return this.buildContext.logger || Logger.create();
+  }
+
+  protected tempFolder(): FileReference {
+    return this.system.toFileReference(resolve(this.buildConfig.tempFolder));
+  }
+
+  protected cacheFolder(): FileReference {
+    return this.system.toFileReference(resolve(this.buildConfig.cacheFolder));
   }
 
   private readConfigs(): T | undefined {

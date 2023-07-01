@@ -7,6 +7,7 @@ import { BuildConfig, BuildContextState, BuildMetrics } from '../types';
 import { BuildState } from './BuildState';
 import { BuildSummary } from './BuildSummary';
 import {
+  CACHE_FOLDER,
   DIST_FOLDER,
   FAIL_ICON,
   LIB_FOLDER,
@@ -35,6 +36,7 @@ export class BuildContext {
       distFolder: join(packageFolder, DIST_FOLDER),
       libFolder: join(packageFolder, LIB_FOLDER),
       tempFolder: join(packageFolder, TEMP_FOLDER),
+      cacheFolder: join(packageFolder, CACHE_FOLDER),
       properties: {},
       uniqueTasks: [],
       relogIssues: state.getFlagValue(RELOG_ISSUES_FLAG, true),
