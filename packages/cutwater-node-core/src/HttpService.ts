@@ -1,6 +1,8 @@
 import { LoggerFactory } from '@codification/cutwater-logging';
+import { System } from '@codification/cutwater-nullable';
 import { IncomingMessage } from 'http';
 import needle, { NeedleResponse } from 'needle';
+import { dirname } from 'path';
 import { HttpUtils } from './HttpUtils';
 
 export interface HttpResponse {
@@ -23,6 +25,8 @@ export interface ObjectResponse<T> extends HttpResponse {
 
 export class HttpService {
   private readonly LOG = LoggerFactory.getLogger();
+
+  public constructor(private readonly system: System = System.create()) {}
 
   public async exists(url: string): Promise<boolean> {
     try {
@@ -79,6 +83,18 @@ export class HttpService {
         response.body,
       );
       throw new Error('Data could not be fetched from url.');
+    }
+  }
+
+  public async downloadToFile(url: string, path: string): Promise<void> {
+    this.system.mkdir(dirname(path), true);
+    const response: DataResponse | undefined = await this.fetchData(url);
+    if (!!response && response.statusCode === 200) {
+      this.system.toFileReference(path).write(response.data);
+    } else if (response) {
+      throw new Error(`Received error code during download[${url}]: ${response.statusCode}`);
+    } else {
+      throw new Error(`Failed to receive response: ${url}`);
     }
   }
 

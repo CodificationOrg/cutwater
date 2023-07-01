@@ -1,4 +1,8 @@
+import { System } from '@codification/cutwater-nullable';
+import { createWriteStream } from 'fs';
+import { join } from 'path';
 import { Readable } from 'stream';
+import yauzl from 'yauzl';
 
 /**
  * Utility for handling common IO related tasks.
@@ -29,6 +33,39 @@ export class IOUtils {
       stream.on('error', err => reject(err));
       stream.on('end', () => {
         resolve(Buffer.concat(rval));
+      });
+    });
+  }
+
+  public static async unzip(zipFilePath: string, destPath: string, system: System = System.create()): Promise<void> {
+    return new Promise<void>((res, rej) => {
+      yauzl.open(zipFilePath, { lazyEntries: true }, (err, zipfile) => {
+        if (err) {
+          rej(err);
+        }
+        zipfile.readEntry();
+        zipfile.on('entry', entry => {
+          const entryPath = join(destPath, entry.fileName);
+          if (/\/$/.test(entry.fileName)) {
+            system.mkdir(entryPath, true);
+            zipfile.readEntry();
+          } else {
+            zipfile.openReadStream(entry, (err, readStream) => {
+              if (err) {
+                rej(err);
+              }
+              readStream.on('end', () => {
+                zipfile.readEntry();
+              });
+              const writeStream = createWriteStream(entryPath);
+              writeStream.on('error', err => {
+                rej(err);
+              });
+              readStream.pipe(writeStream);
+            });
+          }
+        });
+        zipfile.on('end', res);
       });
     });
   }
