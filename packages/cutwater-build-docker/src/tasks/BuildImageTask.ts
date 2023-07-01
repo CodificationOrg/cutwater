@@ -6,7 +6,6 @@ import { ImageConfig } from '../types';
 export interface BuildImageTaskConfig extends SpawnOptions {
   spawn: Spawn;
   platform: string;
-  contextDirectory: string;
   imageConfigs: ImageConfig | ImageConfig[];
 }
 

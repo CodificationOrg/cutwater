@@ -1,4 +1,4 @@
-import { GulpTask, NodeUtils } from '@codification/cutwater-build-core';
+import { FileReference, GulpTask, NodeUtils } from '@codification/cutwater-build-core';
 import { ImageContext } from '../support/ImageContext';
 import { ImageConfig } from '../types';
 
@@ -21,6 +21,10 @@ export class PrepareImageContextTask<
     return NodeUtils.toArray<C>(this.config.imageConfigs).map(
       config => new ImageContext<C>(config, this.buildConfig, this.system),
     );
+  }
+
+  protected contextDirectoryReference(): FileReference {
+    return this.system.toFileReference(this.buildConfig.distFolder);
   }
 
   public async executeTask(): Promise<void> {

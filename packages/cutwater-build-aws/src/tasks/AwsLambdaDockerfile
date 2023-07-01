@@ -6,6 +6,8 @@ COPY packages/ ./packages/
 RUN npm install -g yarn &&\
   yarn install
 
+${LAYERS}
+
 ${OPTIONS}
 
 CMD [ "packages/app/lib/${HANDLER_NAME}" ]
