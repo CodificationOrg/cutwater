@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-nullable",
-  "version": "0.35.22",
+  "version": "0.35.23",
   "description": "A library providing useful nullables.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -48,8 +48,8 @@
   "dependencies": {
     "cross-spawn": "^7.0.1",
     "js-yaml": "^3.13.1",
-    "yargs": "^17.7.1",
-    "spawn-args": "^0.2.0"
+    "spawn-args": "^0.2.0",
+    "yargs": "^17.7.1"
   },
   "devDependencies": {
     "@types/jest": "^29.x",
