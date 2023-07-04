@@ -29,7 +29,7 @@ export interface PrepareLambdaImageContextTaskConfig extends PrepareImageContext
 }
 
 export class PrepareLambdaImageContextTask<
-  T extends PrepareLambdaImageContextTaskConfig = PrepareLambdaImageContextTaskConfig
+  T extends PrepareLambdaImageContextTaskConfig = PrepareLambdaImageContextTaskConfig,
 > extends PrepareImageContextTask<HandlerImageConfig, T> {
   public static readonly DEFAULT_DOCKERFILE = 'AwsLambdaDockerfile';
 
@@ -56,7 +56,7 @@ export class PrepareLambdaImageContextTask<
         handler: 'lambda.handler',
       },
     ]);
-    configs.forEach(config => {
+    configs.forEach((config) => {
       if (!config.dockerfile) {
         config.dockerfile = resolve(__dirname, PrepareLambdaImageContextTask.DEFAULT_DOCKERFILE);
       }
@@ -118,7 +118,7 @@ export class PrepareLambdaImageContextTask<
   private findRequiredLayers(): LayerConfig[] {
     const rval = NodeUtils.toArray<HandlerImageConfig>(this.config.imageConfigs).reduce<Record<string, LayerConfig>>(
       (rval, img) => {
-        NodeUtils.toArray<LayerConfig>(img.layers).forEach(layer => {
+        NodeUtils.toArray<LayerConfig>(img.layers).forEach((layer) => {
           rval[`${this.toLayerName(layer)}`] = layer;
         });
         return rval;
@@ -135,8 +135,8 @@ export class PrepareLambdaImageContextTask<
       return;
     }
     await Promise.all(
-      layers.map(layer =>
-        this.downloadLayer(layer).then(file => {
+      layers.map((layer) =>
+        this.downloadLayer(layer).then((file) => {
           const layerDir = resolve(this.toLayerDirectoryReference(layer).path);
           this.system.mkdir(layerDir, true);
           IOUtils.unzip(file.path, layerDir);
@@ -150,12 +150,12 @@ export class PrepareLambdaImageContextTask<
     if (layers.length < 1) {
       return '';
     }
-    const copyCommands: string[] = layers.map(layer => `COPY layers/${this.toLayerName(layer)}/ /`);
+    const copyCommands: string[] = layers.map((layer) => `COPY layers/${this.toLayerName(layer)}/ /`);
     return TextUtils.combineToMultilineText(copyCommands);
   }
 
   private processDockerfiles(): void {
-    this.imageContexts.forEach(context => {
+    this.imageContexts.forEach((context) => {
       context.dockerfile.replaceTokens({
         NODE_VERSION_TAG: this.config.nodeVersion,
         HANDLER_NAME: context.imageConfig.handler,
