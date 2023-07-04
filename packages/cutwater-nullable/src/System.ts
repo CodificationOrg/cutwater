@@ -16,7 +16,7 @@ export class System extends EventEmitter {
   public static createNull(
     args: Record<string, string | boolean> = {},
     process: Process = Process.createNull(),
-    fileSystem: FileSystem = FileSystem.createNull(),
+    fileSystem: FileSystem = FileSystem.createNull()
   ): System {
     return new System(process, fileSystem, args);
   }
@@ -24,7 +24,7 @@ export class System extends EventEmitter {
   protected constructor(
     private readonly process: LimitedProcess,
     private readonly fileSystem: FileSystem,
-    public readonly args: Record<string, string | boolean>,
+    public readonly args: Record<string, string | boolean>
   ) {
     super();
   }

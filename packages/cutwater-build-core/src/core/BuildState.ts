@@ -18,7 +18,7 @@ export class BuildState {
       system.args,
       responses.toolVersion || 'nullable',
       system,
-      Spawn.createNull(spawnOutput, system),
+      Spawn.createNull(spawnOutput, system)
     );
   }
 
@@ -49,7 +49,7 @@ export class BuildState {
     public readonly args: Record<string, string | boolean>,
     public readonly toolVersion: string,
     public readonly system: System,
-    private readonly command: Spawn,
+    private readonly command: Spawn
   ) {
     this.root = this.system.cwd();
     this.nodeVersion = this.system.version;

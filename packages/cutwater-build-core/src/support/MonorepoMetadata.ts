@@ -17,7 +17,7 @@ export class MonorepoMetadata {
 
   public static createNull(
     basePath = resolve('/project/packages'),
-    system: System = System.createNull(),
+    system: System = System.createNull()
   ): MonorepoMetadata | undefined {
     try {
       return new MonorepoMetadata(system, basePath);

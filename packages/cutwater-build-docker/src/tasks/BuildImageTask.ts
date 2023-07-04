@@ -28,7 +28,7 @@ export class BuildImageTask<T extends BuildImageTaskConfig = BuildImageTaskConfi
       ? this.config.imageConfigs
       : [this.config.imageConfigs];
 
-    const builds = imageConfigs.map(imageConfig => {
+    const builds = imageConfigs.map((imageConfig) => {
       if (!imageConfig.name) {
         throw new Error('An image name is required.');
       }

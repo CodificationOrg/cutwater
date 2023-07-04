@@ -8,7 +8,7 @@ export class MemoryItemRepository<T> implements ItemRepository<T> {
 
   public getAll(parentId?: string): Promise<T[]> {
     if (parentId) {
-      return Promise.resolve(Object.values(this.repo).filter(item => this.descriptor.getParentId(item) === parentId));
+      return Promise.resolve(Object.values(this.repo).filter((item) => this.descriptor.getParentId(item) === parentId));
     } else {
       return Promise.resolve(Object.values(this.repo));
     }
@@ -24,7 +24,7 @@ export class MemoryItemRepository<T> implements ItemRepository<T> {
   }
 
   public putAll(items: T[]): Promise<T[]> {
-    items.forEach(item => {
+    items.forEach((item) => {
       this.repo[this.descriptor.getId(item)] = item;
     });
     return Promise.resolve(items);

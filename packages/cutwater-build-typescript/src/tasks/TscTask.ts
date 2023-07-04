@@ -131,7 +131,7 @@ export class TscTask extends GulpTask<TscTaskConfig, void> {
   }
 
   protected toArgString(args: Partial<TscOptions>): string {
-    const argArray: string[] = Object.keys(args).map(property => {
+    const argArray: string[] = Object.keys(args).map((property) => {
       const value = args[property];
       const arg = `--${property}`;
       if (typeof value === 'string') {
@@ -150,7 +150,7 @@ export class TscTask extends GulpTask<TscTaskConfig, void> {
 
   protected toOptionList(arg: any[]): string {
     return arg
-      .map(value => {
+      .map((value) => {
         if (typeof value === 'string') {
           return `"${value}"`;
         } else if (typeof value === 'number') {

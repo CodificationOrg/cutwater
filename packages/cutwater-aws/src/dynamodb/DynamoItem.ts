@@ -23,12 +23,12 @@ export class DynamoItem {
 
   public prune(): AttributeMap {
     const removes: string[] = [];
-    Object.keys(this.item).forEach(att => {
+    Object.keys(this.item).forEach((att) => {
       if (this.isEmtptyAttribute(att)) {
         removes.push(att);
       }
     });
-    removes.forEach(att => delete this.item[att]);
+    removes.forEach((att) => delete this.item[att]);
     return this.item;
   }
 
@@ -125,7 +125,7 @@ export class DynamoItem {
 
   protected isEmtptyAttribute(key: string): boolean {
     const attValue: AttributeValue = this.item[key];
-    let attKey = Object.keys(attValue).find(k => attValue[k] !== undefined);
+    let attKey = Object.keys(attValue).find((k) => attValue[k] !== undefined);
     if (!!attKey && Array.isArray(attValue[attKey]) && attValue[attKey].length === 0) {
       attKey = undefined;
     }

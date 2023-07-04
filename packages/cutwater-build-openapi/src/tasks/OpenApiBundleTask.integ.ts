@@ -1,11 +1,7 @@
 import { BuildContext, System } from '@codification/cutwater-build-core';
 import { OpenApiBundleTask } from './OpenApiBundleTask';
 
-afterAll(() =>
-  System.create()
-    .toFileReference('temp/test')
-    .delete(true),
-);
+afterAll(() => System.create().toFileReference('temp/test').delete(true));
 
 describe('OpenApiBundleTask', () => {
   it('bundles the api files', async () => {

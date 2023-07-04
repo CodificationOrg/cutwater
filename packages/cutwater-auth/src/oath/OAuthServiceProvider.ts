@@ -9,6 +9,6 @@ export const toOAuthServiceProvider = (provider?: OAuthServiceProviderLike): OAu
   if (!provider || typeof provider !== 'string') {
     return provider as OAuthServiceProvider;
   }
-  const key = Object.keys(OAuthServiceProvider).find(k => OAuthServiceProvider[k] === provider.toUpperCase().trim());
+  const key = Object.keys(OAuthServiceProvider).find((k) => OAuthServiceProvider[k] === provider.toUpperCase().trim());
   return key ? OAuthServiceProvider[key] : undefined;
 };

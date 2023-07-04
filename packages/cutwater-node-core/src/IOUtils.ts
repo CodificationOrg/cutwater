@@ -29,8 +29,8 @@ export class IOUtils {
   public static readableToBuffer(stream: Readable): Promise<Buffer> {
     const rval: any[] = [];
     return new Promise((resolve, reject) => {
-      stream.on('data', data => rval.push(data));
-      stream.on('error', err => reject(err));
+      stream.on('data', (data) => rval.push(data));
+      stream.on('error', (err) => reject(err));
       stream.on('end', () => {
         resolve(Buffer.concat(rval));
       });
@@ -44,7 +44,7 @@ export class IOUtils {
           rej(err);
         }
         zipfile.readEntry();
-        zipfile.on('entry', entry => {
+        zipfile.on('entry', (entry) => {
           const entryPath = join(destPath, entry.fileName);
           if (/\/$/.test(entry.fileName)) {
             system.mkdir(entryPath, true);
@@ -58,7 +58,7 @@ export class IOUtils {
                 zipfile.readEntry();
               });
               const writeStream = createWriteStream(entryPath);
-              writeStream.on('error', err => {
+              writeStream.on('error', (err) => {
                 rej(err);
               });
               readStream.pipe(writeStream);

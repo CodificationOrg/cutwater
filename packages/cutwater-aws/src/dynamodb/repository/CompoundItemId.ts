@@ -39,10 +39,7 @@ export class CompoundItemId {
   }
 
   public static toParentId(itemId: string): string | undefined {
-    const rval = itemId
-      .split(CompoundItemId.ID_SEPARATOR)
-      .slice(0, -1)
-      .join(this.ID_SEPARATOR);
+    const rval = itemId.split(CompoundItemId.ID_SEPARATOR).slice(0, -1).join(this.ID_SEPARATOR);
     return rval.length !== 0 ? rval : undefined;
   }
 

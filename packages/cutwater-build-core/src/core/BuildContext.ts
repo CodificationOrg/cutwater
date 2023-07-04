@@ -56,7 +56,7 @@ export class BuildContext {
   public static createNull(
     buildConfig?: BuildConfig,
     state: BuildState = BuildState.createNull(),
-    logger: Logger = Logger.createNull(),
+    logger: Logger = Logger.createNull()
   ): BuildContext {
     const baseBuildConfig = BuildContext.generateBaseBuildConfig(state);
     const repoMetadata = MonorepoMetadata.createNull(baseBuildConfig.rootPath, state.system);

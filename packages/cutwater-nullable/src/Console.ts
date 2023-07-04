@@ -29,7 +29,7 @@ export class Console {
       JSON.stringify({
         message,
         optionalParams,
-      }),
+      })
     );
   }
 }

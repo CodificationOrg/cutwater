@@ -65,9 +65,9 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   }
 
   public async get(id: string): Promise<T | undefined> {
-    return new Promise<T | undefined>(res => {
+    return new Promise<T | undefined>((res) => {
       const cmd: Cmd = () =>
-        this.doGet(id, result => {
+        this.doGet(id, (result) => {
           res(result);
         });
       if (this.greedy) {
@@ -165,7 +165,7 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   }
 
   private getItemCacheForItemId(id: string): ItemCache<T> | undefined {
-    const parentId = Object.keys(this.itemCaches).find(parentId => this.itemCaches[parentId].includes(id));
+    const parentId = Object.keys(this.itemCaches).find((parentId) => this.itemCaches[parentId].includes(id));
     return parentId ? this.getItemCache(parentId) : undefined;
   }
 }

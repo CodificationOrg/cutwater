@@ -7,8 +7,8 @@ export const toValuePart = (value: string, index: number, defaultValue?: string)
 
 export const formatValue = (...elements: Array<string | number | undefined>): string => {
   return elements
-    .filter(el => el !== undefined)
-    .map(el => (typeof el === 'number' ? el.toString() : el))
+    .filter((el) => el !== undefined)
+    .map((el) => (typeof el === 'number' ? el.toString() : el))
     .join(VALUE_SEPERATOR);
 };
 

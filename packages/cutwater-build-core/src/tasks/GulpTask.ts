@@ -53,7 +53,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
 
   public abstract executeTask(
     gulp: gulp.Gulp,
-    completeCallback?: (error?: string | Error) => void,
+    completeCallback?: (error?: string | Error) => void
   ): Promise<R | void> | NodeJS.ReadWriteStream | void;
 
   public log(message: string): void {
@@ -131,7 +131,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
               } else {
                 resolve();
               }
-            },
+            }
           );
 
           // Make sure the stream is completely read
@@ -142,8 +142,8 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
               },
               (callback: () => void) => {
                 callback();
-              },
-            ),
+              }
+            )
           );
         } else if (this.executeTask.length === 1) {
           resolve(stream);
@@ -158,7 +158,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
       (ex) => {
         this.logger().logEndSubtask(this.name, startTime, ex);
         throw ex;
-      },
+      }
     );
   }
 

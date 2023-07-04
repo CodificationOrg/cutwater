@@ -72,7 +72,7 @@ export class ImageContext<T extends ImageConfig> {
   }
 
   private copyAssets(srcDir: string, dstDir: string, includes: string[]): void {
-    includes.forEach(item => {
+    includes.forEach((item) => {
       const isFolder = item.endsWith(ImageContext.DIRECTORY_WILDCARD);
       const itemName = isFolder ? item.substring(0, item.length - ImageContext.DIRECTORY_WILDCARD.length) : item;
       const srcAsset = this.system.toFileReference(join(srcDir, itemName));
@@ -103,7 +103,7 @@ export class ImageContext<T extends ImageConfig> {
 
   private toNormalizedIncludes(packageDirectory: string, includes: string[]): string[] {
     const rval = [...includes];
-    ImageContext.PACKAGE_INCLUDE_PROPERTIES.forEach(prop => {
+    ImageContext.PACKAGE_INCLUDE_PROPERTIES.forEach((prop) => {
       const directory = this.findIncludeDirectory(prop, packageDirectory);
       if (directory && !rval.includes(directory)) {
         rval.push(directory);
@@ -134,13 +134,13 @@ export class ImageContext<T extends ImageConfig> {
       }
       const pkgsDirectory = this.system.toFileReference(join(this.contextDirectory.path, 'packages'));
       this.copyPackage(rootPath, join(pkgsDirectory.path, 'app'), includes);
-      repoMetadata.findAllDependentPackageNames(currentPackage.name).forEach(depName => {
+      repoMetadata.findAllDependentPackageNames(currentPackage.name).forEach((depName) => {
         const srcDir = repoMetadata.getPackagePath(depName);
         const dstDir = join(pkgsDirectory.path, basename(srcDir));
         this.copyPackage(srcDir, dstDir, includes);
       });
 
-      const imgRootPkg = (rootPackageJson as unknown) as PackageJSON;
+      const imgRootPkg = rootPackageJson as unknown as PackageJSON;
       imgRootPkg.resolutions = repoMetadata.rootPackageJSON.resolutions;
       this.system.toFileReference(resolve(this.contextDirectory.path, PACKAGE_JSON)).writeObjectSync(imgRootPkg);
     } else {

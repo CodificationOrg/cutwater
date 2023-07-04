@@ -26,10 +26,10 @@ const BLACK_LISTED_HEADERS: string[] = [
   'X-Cache',
   'X-Forwarded-Proto',
   'X-Real-IP',
-].map(header => header.toLowerCase());
+].map((header) => header.toLowerCase());
 
-const READ_ONLY_HEADERS_VIEWER_REQUEST: string[] = ['Content-Length', 'Host', 'Transfer-Encoding', 'Via'].map(header =>
-  header.toLowerCase(),
+const READ_ONLY_HEADERS_VIEWER_REQUEST: string[] = ['Content-Length', 'Host', 'Transfer-Encoding', 'Via'].map(
+  (header) => header.toLowerCase(),
 );
 
 const READ_ONLY_HEADERS_ORIGIN_REQUEST: string[] = [
@@ -42,9 +42,9 @@ const READ_ONLY_HEADERS_ORIGIN_REQUEST: string[] = [
   'Range',
   'Transfer-Encoding',
   'Via',
-].map(header => header.toLowerCase());
+].map((header) => header.toLowerCase());
 
-const READ_ONLY_HEADERS_ORIGIN_RESPONSE: string[] = ['Transfer-Encoding', 'Via'].map(header => header.toLowerCase());
+const READ_ONLY_HEADERS_ORIGIN_RESPONSE: string[] = ['Transfer-Encoding', 'Via'].map((header) => header.toLowerCase());
 
 const READ_ONLY_HEADERS_VIEWER_RESPONSE: string[] = [
   'Content-Encoding',
@@ -52,7 +52,7 @@ const READ_ONLY_HEADERS_VIEWER_RESPONSE: string[] = [
   'Transfer-Encoding',
   'Warning',
   'Via',
-].map(header => header.toLowerCase());
+].map((header) => header.toLowerCase());
 
 /**
  * @beta
@@ -73,8 +73,8 @@ export class LambdaEdgeUtils {
     const fullHeaderList: string[] = [];
     fullHeaderList.push(...headerList, ...BLACK_LISTED_HEADERS);
     Object.keys(headers)
-      .filter(headerName => fullHeaderList.indexOf(headerName) === -1)
-      .forEach(headerName => {
+      .filter((headerName) => fullHeaderList.indexOf(headerName) === -1)
+      .forEach((headerName) => {
         rval[headerName] = headers[headerName];
       });
     return rval;
@@ -149,13 +149,13 @@ export class LambdaEdgeUtils {
   public static toCloudFrontHeaders(headers: IncomingHttpHeaders): CloudFrontHeaders {
     const rval: CloudFrontHeaders = {};
     let value: string | undefined | string[];
-    Object.keys(headers).forEach(headerName => {
+    Object.keys(headers).forEach((headerName) => {
       value = headers[headerName];
       if (typeof value === 'string') {
         value = [value];
       }
       if (typeof value !== 'undefined') {
-        rval[headerName.toLowerCase()] = value.map(headerValue => ({ key: headerName, value: headerValue }));
+        rval[headerName.toLowerCase()] = value.map((headerValue) => ({ key: headerName, value: headerValue }));
       }
     });
     return rval;
@@ -179,12 +179,12 @@ export class LambdaEdgeUtils {
     if (HttpUtils.isResponseOk(originResponse)) {
       return new Promise((resolve, reject) => {
         HttpUtils.toBodyText(originResponse)
-          .then(bodyText => {
+          .then((bodyText) => {
             rval.bodyEncoding = 'text';
             rval.body = bodyText;
             resolve(rval);
           })
-          .catch(reason => reject(reason));
+          .catch((reason) => reject(reason));
       });
     } else {
       return Promise.resolve(rval);
@@ -212,10 +212,10 @@ export class LambdaEdgeUtils {
   public static toIncomingHttpHeaders(headers?: CloudFrontHeaders): IncomingHttpHeaders {
     const rval: IncomingHttpHeaders = {};
     if (headers) {
-      Object.keys(headers).forEach(name => {
+      Object.keys(headers).forEach((name) => {
         const header = headers[name];
         if (header && header.length > 0 && header[0].key) {
-          rval[header[0].key] = header.length > 1 ? header.map(obj => obj.value) : header[0].value;
+          rval[header[0].key] = header.length > 1 ? header.map((obj) => obj.value) : header[0].value;
         }
       });
     }

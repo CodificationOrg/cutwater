@@ -73,7 +73,7 @@ export class LoggerFactory {
    * @param logger - The logger to output levels for.
    */
   public static logEnabledLevels(logger: Logger): void {
-    Level.LEVELS.forEach(level => {
+    Level.LEVELS.forEach((level) => {
       logger[level.name.toLowerCase()](`${level.name}: ENABLED`);
     });
   }

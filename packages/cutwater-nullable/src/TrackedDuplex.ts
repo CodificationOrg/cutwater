@@ -12,7 +12,7 @@ export class TrackedDuplex extends Socket {
     private readonly emitter: EventEmitter = new EventEmitter(),
     public readonly fd = 0,
     public readonly isTTY = false,
-    options?: DuplexOptions,
+    options?: DuplexOptions
   ) {
     super(options);
     this.raw = false;

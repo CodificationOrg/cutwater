@@ -117,7 +117,7 @@ export class BuildSummary {
         'Failed:',
         failure(`${this.context.metrics.testsFailed}`),
         'Skipped:',
-        warn(`${this.context.metrics.testsSkipped}`),
+        warn(`${this.context.metrics.testsSkipped}`)
       );
     }
   }
@@ -131,7 +131,7 @@ export class BuildSummary {
         'Failed:',
         failure(`${this.context.metrics.coverageResults - this.context.metrics.coveragePass}`),
         'Avg. Cov.:',
-        info(`${Math.floor(this.context.metrics.coverageTotal / this.context.metrics.coverageResults)}%`),
+        info(`${Math.floor(this.context.metrics.coverageTotal / this.context.metrics.coverageResults)}%`)
       );
     }
   }

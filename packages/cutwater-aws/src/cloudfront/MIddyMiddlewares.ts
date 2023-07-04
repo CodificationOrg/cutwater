@@ -65,11 +65,11 @@ export const withOriginRequestResponse = (config?: OriginRequestConfig): IMiddyM
         LOG.trace('Origin request options: %j', options);
         const req: ClientRequest = HttpRequest(options, (response: IncomingMessage) => {
           LambdaEdgeUtils.originResponseToCloudFrontResultResponse(response)
-            .then(result => {
+            .then((result) => {
               handler.event.originResponse = result;
               next();
             })
-            .catch(reason => {
+            .catch((reason) => {
               throw new Error(reason);
             });
         });
@@ -88,7 +88,7 @@ const findPrefixedHeaders = (
   stripPrefix = false,
 ): IncomingHttpHeaders => {
   const rval: IncomingHttpHeaders = {};
-  Object.keys(headers).forEach(header => {
+  Object.keys(headers).forEach((header) => {
     if (header.toLowerCase().indexOf(prefix.toLowerCase()) === 0) {
       const headerName: string = stripPrefix ? header.substr(prefix.length) : header;
       rval[headerName] = headers[header];
@@ -135,7 +135,7 @@ export const withRequestHeaderConfig = (customHeaderPrefix = 'x-config-'): IMidd
           customHeaderPrefix,
           true,
         );
-        Object.keys(customHeaders).forEach(header => {
+        Object.keys(customHeaders).forEach((header) => {
           const headerValue: string | string[] = customHeaders[header] || '';
           Config.put(header, headerValue.toString());
           LOG.debug('Adding [%s] config value: %s', header, headerValue.toString());

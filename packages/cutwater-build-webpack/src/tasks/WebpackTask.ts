@@ -86,7 +86,7 @@ export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
   }
 
   protected toArgString(args: Partial<WebpackOptions>): string {
-    const argArray: string[] = Object.keys(args).map(property => {
+    const argArray: string[] = Object.keys(args).map((property) => {
       const value = args[property];
       const arg = TextUtils.convertPropertyNameToArg(property);
       if (typeof value === 'string') {
@@ -105,7 +105,7 @@ export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
 
   protected toOptionList(arg: any[]): string {
     return arg
-      .map(value => {
+      .map((value) => {
         if (typeof value === 'string') {
           return `"${value}"`;
         } else if (typeof value === 'number') {

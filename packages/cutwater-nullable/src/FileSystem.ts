@@ -44,7 +44,7 @@ export const defaultNullFileSystemEntries: NullFileSystemEntry[] = [
         workspaces: {
           packages: ['packages/*'],
         },
-      }),
+      })
     ),
   },
   {
@@ -73,7 +73,7 @@ export const defaultNullFileSystemEntries: NullFileSystemEntry[] = [
       JSON.stringify({
         name: 'package1',
         main: 'lib/index.js',
-      }),
+      })
     ),
   },
   {
@@ -90,7 +90,7 @@ export const defaultNullFileSystemEntries: NullFileSystemEntry[] = [
       JSON.stringify({
         name: 'package2',
         dependencies: { package1: '^1.x' },
-      }),
+      })
     ),
   },
 ];

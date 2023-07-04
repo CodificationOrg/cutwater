@@ -60,7 +60,7 @@ export class BuildEngine {
     // If the task is missing, throw a meaningful error.
     if (!rval || !rval.execute) {
       throw new Error(
-        `A task was scheduled, but the task was null. This probably means the task wasn't imported correctly.`,
+        `A task was scheduled, but the task was null. This probably means the task wasn't imported correctly.`
       );
     }
     return rval;
@@ -185,7 +185,7 @@ export class BuildEngine {
     const flatTasks: ExecutableTask<unknown>[] = this.flatten<ExecutableTask<unknown>>(tasks).filter(
       (taskExecutable) => {
         return taskExecutable !== null && taskExecutable !== undefined;
-      },
+      }
     );
     flatTasks.forEach((task) => this.trackTask(task));
     return {

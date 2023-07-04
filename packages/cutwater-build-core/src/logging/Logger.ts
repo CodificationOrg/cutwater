@@ -75,7 +75,7 @@ export class Logger {
     line: number,
     column: number,
     errorCode: string,
-    message: string,
+    message: string
   ): void {
     this.fileLog(this.warn, taskName, filePath, line, column, errorCode, message);
   }
@@ -86,7 +86,7 @@ export class Logger {
     line: number,
     column: number,
     errorCode: string,
-    message: string,
+    message: string
   ): void {
     this.fileLog(this.error, taskName, filePath, line, column, errorCode, message);
   }
@@ -98,7 +98,7 @@ export class Logger {
     line: number,
     column: number,
     errorCode: string,
-    message: string,
+    message: string
   ): void {
     if (!filePath) {
       filePath = '<undefined path>';
@@ -148,7 +148,7 @@ export class Logger {
               error(e.subTask ? 'sub task errored after' : 'errored after'),
               elapsed(time),
               '\r\n',
-              msg || '',
+              msg || ''
             );
             this.markErrorAsWritten(e.err[Logger.WROTE_ERROR_KEY]);
           }

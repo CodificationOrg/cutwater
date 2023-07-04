@@ -18,7 +18,7 @@ describe('PrepareImageContextTask', () => {
       task.setConfig({ imageConfigs: { name: 'foo' } });
       await task.execute(context);
       const contextDirectory = context.buildState.system.toFileReference(task.buildConfig.distFolder);
-      const contextFiles = contextDirectory.children().map(ref => ref.path);
+      const contextFiles = contextDirectory.children().map((ref) => ref.path);
       const contextPath = contextDirectory.path;
       expect(contextFiles.includes(resolve(contextPath, PACKAGE_JSON))).toBeTruthy();
       expect(contextFiles.includes(resolve(contextPath, `${DOCKERFILE}.foo`))).toBeTruthy();
