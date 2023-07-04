@@ -4501,10 +4501,10 @@ escodegen@^2.0.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-prettier@8.7.0:
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.7.0.tgz#f1cc58a8afebc50980bd53475451df146c13182d"
-  integrity sha512-HHVXLSlVUhMSmyW4ZzEuvjpwqamgmlfkutD53cYXLikh4pt/modINRcCIApJ84czDxM4GZInwUrromsDdTImTA==
+eslint-config-prettier@8.8.0:
+  version "8.8.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.8.0.tgz#bfda738d412adc917fd7b038857110efe98c9348"
+  integrity sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==
 
 eslint-plugin-react@7.32.2:
   version "7.32.2"
@@ -5753,6 +5753,15 @@ gulp-prettier@^2.2.0:
     prettier "^1.5.3"
     safe-buffer "^5.1.2"
     through2 "^3.0.0"
+
+gulp-prettier@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/gulp-prettier/-/gulp-prettier-4.0.0.tgz#95e783084d1efbdd588625b2a8214e11d43f2557"
+  integrity sha512-REx99tBRRKJD7qLPaKpplReM9cq2vFvqhMbcUZtJEVjxGjb5Ji+gN9vi8bsM8UhnDV+l0Zrf5x6L4uZiDmvGFQ==
+  dependencies:
+    plugin-error "^1.0.1"
+    prettier "^2.0.0"
+    through2 "^4.0.2"
 
 gulp@^4.0.2:
   version "4.0.2"
@@ -9491,6 +9500,11 @@ prettier@^1.5.3:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
+prettier@^2.0.0, prettier@^2.8.8:
+  version "2.8.8"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
+  integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
+
 prettier@^2.8.4:
   version "2.8.4"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.4.tgz#34dd2595629bfbb79d344ac4a91ff948694463c3"
@@ -11068,7 +11082,7 @@ through2@^3.0.0, through2@^3.0.1:
     inherits "^2.0.4"
     readable-stream "2 || 3"
 
-through2@^4.0.0:
+through2@^4.0.0, through2@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/through2/-/through2-4.0.2.tgz#a7ce3ac2a7a8b0b966c80e7c49f0484c3b239764"
   integrity sha512-iOqSav00cVxEEICeD7TjLB1sueEL+81Wpzp2bY17uZjZN0pWZPuo4suZ/61VujxmqSGFfgOcNuTZ85QJwNZQpw==
