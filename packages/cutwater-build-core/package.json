@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-core",
-  "version": "0.35.23",
+  "version": "0.35.24",
   "description": "A library providing basic build tasks.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -46,7 +46,7 @@
   },
   "prettier": "./includes/prettier-config",
   "dependencies": {
-    "@codification/cutwater-nullable": "^0.35.23",
+    "@codification/cutwater-nullable": "^0.35.24",
     "@types/gulp": "^4.0.7",
     "@types/jest": "^29.x",
     "@types/node": "^18.11.9",
