@@ -43,12 +43,11 @@ export class LambdaAuthService implements AuthService<APIGatewayProxyEvent, APIG
   }
 
   private async generateIdTokenCookieValue(userId?: string): Promise<string> {
-    const expires: Date | undefined = !!userId ? new Date(Date.now() + this.opts.tokenTTLSeconds * 1000) : new Date(0);
     return cookie.serialize(this.opts.tokenCookie, await this.createTokenValue(userId), {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
-      expires,
+      maxAge: this.opts.tokenTTLSeconds,
     });
   }
 
