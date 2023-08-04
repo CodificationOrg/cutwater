@@ -1,5 +1,5 @@
-import { CompoundKey } from '.';
-import { parseValue } from '../DynamoUtils';
+import { CompoundValue } from '../CompoundValue';
+import { CompoundKey } from './CompoundKey';
 
 export class CompoundItemId {
   public static readonly ID_SEPARATOR = ':';
@@ -14,8 +14,8 @@ export class CompoundItemId {
     const parent =
       partitionKey === CompoundKey.DEFAULT_PARENT
         ? undefined
-        : parseValue(partitionKey).join(CompoundItemId.ID_SEPARATOR);
-    return new CompoundItemId(parent, parseValue(sortKey).pop()!);
+        : CompoundValue.create(partitionKey).parts.join(CompoundItemId.ID_SEPARATOR);
+    return new CompoundItemId(parent, CompoundValue.create(sortKey).parts.pop()!);
   }
 
   public static create(parentId: string, name: string): CompoundItemId {

@@ -1,5 +1,5 @@
 import { AttributeMap, AttributeValue } from 'aws-sdk/clients/dynamodb';
-import { formatValue, parseValue } from './DynamoUtils';
+import { CompoundValue } from './CompoundValue';
 
 enum ValueType {
   S = 'S',
@@ -50,7 +50,7 @@ export class DynamoItem {
 
   public setStringParts(key: string, ...values: Array<string | number | undefined>): void {
     if (values && values.length > 0) {
-      this.setString(key, formatValue(...values));
+      this.setString(key, CompoundValue.create(...values).value);
     }
   }
 
@@ -110,8 +110,7 @@ export class DynamoItem {
   }
 
   public toStringPart(key: string, index: number, defaultValue?: string): string | undefined {
-    const parts = parseValue(this.getValue<string>(key, ValueType.S));
-    return parts.length > index ? parts[index] : defaultValue;
+    return CompoundValue.create(this.getValue<string>(key, ValueType.S)).getPart(index, defaultValue);
   }
 
   public toNumberPart(key: string, index: number, defaultValue?: number): number | undefined {

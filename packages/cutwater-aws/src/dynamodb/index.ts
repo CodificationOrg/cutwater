@@ -1,3 +1,3 @@
+export * from './CompoundValue';
 export * from './DynamoItem';
-export * from './DynamoUtils';
 export * from './repository';
