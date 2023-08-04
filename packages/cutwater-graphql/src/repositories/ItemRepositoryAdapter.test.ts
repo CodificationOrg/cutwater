@@ -23,7 +23,7 @@ export const newMemoryRepo = async (count?: number): Promise<ItemRepository<Mock
   return rval;
 };
 
-export const randomCount = (max = 25) => Math.floor(Math.random() * max + 1);
+export const randomCount = (max = 25) => Math.max(Math.floor(Math.random() * max), 1);
 export const mockItems = (count: number = randomCount()) => {
   const rval: MockItem[] = [];
   for (let i = 0; i < count; i++) {
