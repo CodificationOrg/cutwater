@@ -1,5 +1,6 @@
 import { AttributeMap, Key } from 'aws-sdk/clients/dynamodb';
-import { DynamoItem, formatValue } from '..';
+import { CompoundValue } from '../CompoundValue';
+import { DynamoItem } from '../DynamoItem';
 import { CompoundItemId } from './CompoundItemId';
 
 export class CompoundKey {
@@ -19,11 +20,13 @@ export class CompoundKey {
   }
 
   public get partitionKey(): string {
-    return this.hasParent() ? formatValue(...this.compoundItemId.parentIdParts) : CompoundKey.DEFAULT_PARENT;
+    return this.hasParent()
+      ? CompoundValue.create(...this.compoundItemId.parentIdParts).value
+      : CompoundKey.DEFAULT_PARENT;
   }
 
   public get sortKey(): string {
-    return formatValue(this.itemType, this.compoundItemId.name);
+    return CompoundValue.create(this.itemType, this.compoundItemId.name).value;
   }
 
   public toKey(partitionKey = 'pk', sortKey = 'sk'): Key {
@@ -42,10 +45,12 @@ export class CompoundKey {
   }
 
   public static toPartitionKey(parentId?: string): string {
-    return parentId ? formatValue(...CompoundItemId.fromItemId(parentId).idParts) : CompoundKey.DEFAULT_PARENT;
+    return parentId
+      ? CompoundValue.create(...CompoundItemId.fromItemId(parentId).idParts).value
+      : CompoundKey.DEFAULT_PARENT;
   }
 
   public static toSortKey(itemType: string, itemId: string): string {
-    return formatValue(itemType, CompoundItemId.toName(itemId));
+    return CompoundValue.create(itemType, CompoundItemId.toName(itemId)).value;
   }
 }
