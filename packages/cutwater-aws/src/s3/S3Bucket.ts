@@ -1,5 +1,6 @@
 import { S3 } from 'aws-sdk';
 import {
+  DeleteObjectsRequest,
   GetObjectOutput,
   GetObjectRequest,
   HeadObjectOutput,
@@ -32,6 +33,17 @@ export class S3Bucket {
     this.bucketName = name;
   }
 
+  private async headObject(fileName: string): Promise<HeadObjectOutput | undefined> {
+    try {
+      return await this.s3Client.headObject({ Bucket: this.bucketName, Key: fileName }).promise();
+    } catch (err) {
+      if (err.code !== 'NotFound') {
+        throw err;
+      }
+    }
+    return undefined;
+  }
+
   public async size(fileName: string): Promise<number | undefined> {
     const head = await this.headObject(fileName);
     return !!head ? head.ContentLength : undefined;
@@ -41,8 +53,22 @@ export class S3Bucket {
     return !!(await this.headObject(fileName));
   }
 
-  public async remove(fileName: string): Promise<void> {
-    await this.s3Client.deleteObject(this.toBaseObjectRequest(fileName)).promise();
+  private toDeleteObjectsRequest(keys: string[]): DeleteObjectsRequest {
+    return {
+      Bucket: this.bucketName,
+      Delete: {
+        Objects: keys.map((key) => {
+          return { Key: key };
+        }),
+      },
+    };
+  }
+
+  public async remove(...fileNames: string[]): Promise<void> {
+    if (fileNames.length < 1) {
+      return;
+    }
+    await this.s3Client.deleteObjects(this.toDeleteObjectsRequest(fileNames)).promise();
   }
 
   public async loadBuffer(fileName: string): Promise<Buffer> {
@@ -53,27 +79,11 @@ export class S3Bucket {
     return output.Body;
   }
 
-  public async load(fileName: string): Promise<GetObjectOutput> {
-    return await this.s3Client.getObject(this.toBaseObjectRequest(fileName)).promise();
-  }
-
-  public async store(
-    fileName: string,
-    content: string | Buffer | Readable,
-    options?: Partial<PutObjectRequest>,
-  ): Promise<PutObjectOutput> {
-    return await this.s3Client.putObject(this.toPutObjectRequest(fileName, content, options)).promise();
-  }
-
-  private async headObject(fileName: string): Promise<HeadObjectOutput | undefined> {
-    try {
-      return await this.s3Client.headObject({ Bucket: this.bucketName, Key: fileName }).promise();
-    } catch (err) {
-      if (err.code !== 'NotFound') {
-        throw err;
-      }
-    }
-    return undefined;
+  private toBaseObjectRequest(key: string): GetObjectRequest {
+    return {
+      Bucket: this.bucketName,
+      Key: key,
+    };
   }
 
   private toPutObjectRequest(
@@ -89,10 +99,15 @@ export class S3Bucket {
     return rval;
   }
 
-  private toBaseObjectRequest(key: string): GetObjectRequest {
-    return {
-      Bucket: this.bucketName,
-      Key: key,
-    };
+  public async load(fileName: string): Promise<GetObjectOutput> {
+    return await this.s3Client.getObject(this.toBaseObjectRequest(fileName)).promise();
+  }
+
+  public async store(
+    fileName: string,
+    content: string | Buffer | Readable,
+    options?: Partial<PutObjectRequest>,
+  ): Promise<PutObjectOutput> {
+    return await this.s3Client.putObject(this.toPutObjectRequest(fileName, content, options)).promise();
   }
 }
