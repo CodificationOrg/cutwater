@@ -80,7 +80,7 @@ export class OAuthServices {
           : (this.config as OAuthServiceOptions);
 
       this.availableServices = {};
-      Object.keys(options).forEach(provider => {
+      Object.keys(options).forEach((provider) => {
         const { clientId, clientSecret } = options[provider]!;
         switch (provider) {
           case OAuthServiceProvider.GOOGLE: {

@@ -113,16 +113,16 @@ describe('ItemCache', () => {
       const existingItem = (await cache.get(selected))!;
       existingItem.age = 422;
       await cache.put(existingItem);
-      const item = (await cache.getAll()).find(item => item.userId === selected);
+      const item = (await cache.getAll()).find((item) => item.userId === selected);
       expect(item?.age).toBe(422);
     });
     it('returns copies', async () => {
       const count = randomCount(100, 50);
       const selected = (randomCount(count) - 1).toString();
       const cache = await newInstance(count);
-      const existingItem = (await cache.getAll()).find(item => item.userId === selected)!;
+      const existingItem = (await cache.getAll()).find((item) => item.userId === selected)!;
       existingItem.age = 422;
-      const item = (await cache.getAll()).find(item => item.userId === selected);
+      const item = (await cache.getAll()).find((item) => item.userId === selected);
       expect(item?.age).toBe(+selected);
     });
     it('excludes removed items', async () => {

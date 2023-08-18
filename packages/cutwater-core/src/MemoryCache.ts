@@ -1,4 +1,4 @@
-import * as rfdc from 'rfdc';
+import rfdc from 'rfdc';
 import { TimeUnit } from './TimeUnit';
 
 interface CacheEntry<T> {
@@ -26,7 +26,7 @@ export class MemoryCache {
   }
 
   public clear(): void {
-    Object.keys(this.CACHE).forEach(key => delete this.CACHE[key]);
+    Object.keys(this.CACHE).forEach((key) => delete this.CACHE[key]);
   }
 
   public size(): number {
@@ -86,7 +86,7 @@ export class MemoryCache {
   private sweep(): void {
     if (Date.now() >= this.nextExpiration) {
       this.resetNextExpiration();
-      this.keys().forEach(key => {
+      this.keys().forEach((key) => {
         const entry = this.CACHE[key];
         if (this.isExpired(entry)) {
           delete this.CACHE[key];

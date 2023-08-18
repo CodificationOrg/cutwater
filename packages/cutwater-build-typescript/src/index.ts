@@ -1,4 +1,4 @@
-import { ExecutableTask, getConfig, setConfig, task } from '@codification/cutwater-build-core';
+import { ExecutableTask, buildEngine, task } from '@codification/cutwater-build-core';
 import { EsLintTask } from './tasks/EsLintTask';
 import { TscTask } from './tasks/TscTask';
 
@@ -6,7 +6,10 @@ export * from '@codification/cutwater-build-core';
 export * from './tasks/EsLintTask';
 export * from './tasks/TscTask';
 
-export const SRC_WATCH_GLOB: string[] = [`${getConfig().srcFolder}/**/*.ts*`, `!${getConfig().srcFolder}/**/*.test.*`];
+export const SRC_WATCH_GLOB: string[] = [
+  `${buildEngine.getConfig().srcFolder}/**/*.ts*`,
+  `!${buildEngine.getConfig().srcFolder}/**/*.test.*`,
+];
 
 export const tsc: ExecutableTask<unknown> = new TscTask();
 
@@ -28,7 +31,7 @@ export const tscAlt = (module: 'amd' | 'es6' | 'esNext'): TscTask => {
     },
   });
   rval.cleanMatch = [folder];
-  setConfig({
+  buildEngine.setConfig({
     [`lib${configFolderMapping[module]}Folder`]: folder,
   });
   return rval;

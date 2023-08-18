@@ -14,14 +14,12 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
   }
 
   private createDataLoader(): DataLoader<string, T | undefined> {
-    return new DataLoader(
-      async (keys: string[]): Promise<(T | undefined)[]> => {
-        const results: (T | undefined)[] = await Promise.all(keys.map(id => this.repo.get(id)));
-        return keys.map(id => {
-          return results.find(item => !!item && this.descriptor.getObjectId(item) === id);
-        });
-      },
-    );
+    return new DataLoader(async (keys: string[]): Promise<(T | undefined)[]> => {
+      const results: (T | undefined)[] = await Promise.all(keys.map((id) => this.repo.get(id)));
+      return keys.map((id) => {
+        return results.find((item) => !!item && this.descriptor.getObjectId(item) === id);
+      });
+    });
   }
 
   public get itemType(): string {
@@ -50,7 +48,7 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
   }
 
   public removeAll(ids: string[]): Promise<string[]> {
-    ids.forEach(id => this.dataLoader.clear(id));
+    ids.forEach((id) => this.dataLoader.clear(id));
     return this.repo.removeAll(ids);
   }
 
@@ -70,18 +68,18 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
 
   public async resolveConnections(parentId?: NodeId): Promise<(T & Node)[]> {
     const result = await this.getAll(parentId ? this.descriptor.getItemId(parentId) : undefined);
-    return result.map(item => this.asNode(item));
+    return result.map((item) => this.asNode(item));
   }
 
   protected asNode(item: T): T & Node {
-    if (!Object.keys((item as unknown) as object).includes('id')) {
+    if (!Object.keys(item as unknown as object).includes('id')) {
       item['id'] = this.getNodeId(item).id;
     }
     return item as T & Node;
   }
 
   private primeDataLoader(items: T[]): T[] {
-    items.forEach(item =>
+    items.forEach((item) =>
       this.dataLoader.clear(this.descriptor.getObjectId(item)).prime(this.descriptor.getObjectId(item), item),
     );
     return items;

@@ -23,7 +23,7 @@ export const newMemoryRepo = async (count?: number): Promise<ItemRepository<Mock
   return rval;
 };
 
-export const randomCount = (max = 25) => Math.floor(Math.random() * max + 1);
+export const randomCount = (max = 25) => Math.max(Math.floor(Math.random() * max), 1);
 export const mockItems = (count: number = randomCount()) => {
   const rval: MockItem[] = [];
   for (let i = 0; i < count; i++) {
@@ -96,8 +96,9 @@ describe('ItemRepositoryAdapter', () => {
           keys.push(item.userId);
         }
       }
+      expect(keys.length).toBeGreaterThan(0);
       loader.loadMany(keys);
-      const key = keys[randomCount(keyCount) - 1];
+      const key = keys[Math.max(randomCount(keyCount) - 1, 0)];
       const result = await loader.load(key);
       expect(result).toBeTruthy();
       expect(result!.userId).toBe(key);

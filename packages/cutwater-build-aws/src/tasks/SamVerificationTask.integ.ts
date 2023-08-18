@@ -1,14 +1,9 @@
-import { initialize } from '@codification/cutwater-build-core';
-import * as gulp from 'gulp';
+import { BuildContext } from '@codification/cutwater-build-core';
 import { SamVerificationTask } from './SamVerificationTask';
-
-beforeAll(() => {
-  initialize(gulp);
-});
 
 describe('SamVerificationTask', () => {
   it('it properly verifies that sam-cli is installed', () => {
     const task: SamVerificationTask = new SamVerificationTask();
-    return expect(task.executeTask()).resolves.toBeUndefined();
+    return expect(task.execute(BuildContext.create())).resolves.toBeUndefined();
   }, 15000);
 });

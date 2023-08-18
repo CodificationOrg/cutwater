@@ -1,5 +1,5 @@
-import { CompoundKey } from '.';
-import { parseValue } from '../DynamoUtils';
+import { CompoundValue } from '../CompoundValue';
+import { CompoundKey } from './CompoundKey';
 
 export class CompoundItemId {
   public static readonly ID_SEPARATOR = ':';
@@ -14,8 +14,8 @@ export class CompoundItemId {
     const parent =
       partitionKey === CompoundKey.DEFAULT_PARENT
         ? undefined
-        : parseValue(partitionKey).join(CompoundItemId.ID_SEPARATOR);
-    return new CompoundItemId(parent, parseValue(sortKey).pop()!);
+        : CompoundValue.create(partitionKey).parts.join(CompoundItemId.ID_SEPARATOR);
+    return new CompoundItemId(parent, CompoundValue.create(sortKey).parts.pop()!);
   }
 
   public static create(parentId: string, name: string): CompoundItemId {
@@ -39,10 +39,7 @@ export class CompoundItemId {
   }
 
   public static toParentId(itemId: string): string | undefined {
-    const rval = itemId
-      .split(CompoundItemId.ID_SEPARATOR)
-      .slice(0, -1)
-      .join(this.ID_SEPARATOR);
+    const rval = itemId.split(CompoundItemId.ID_SEPARATOR).slice(0, -1).join(this.ID_SEPARATOR);
     return rval.length !== 0 ? rval : undefined;
   }
 

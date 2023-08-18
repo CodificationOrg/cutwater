@@ -47,9 +47,6 @@ export class AuthState {
   }
 
   private async generateStateHash(state: string): Promise<string> {
-    return crypto
-      .createHmac('sha1', this.clientSecret)
-      .update(state)
-      .digest('hex');
+    return crypto.createHmac('sha1', this.clientSecret).update(state).digest('hex');
   }
 }

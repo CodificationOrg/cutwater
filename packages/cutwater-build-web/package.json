@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-web",
-  "version": "0.35.6",
+  "version": "0.35.25",
   "description": "Configuration for building web compatible projects.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -44,12 +44,12 @@
     ]
   },
   "dependencies": {
-    "@codification/cutwater-build-core": "^0.35.6",
-    "@codification/cutwater-build-webpack": "^0.35.6",
-    "webpack": "^4.46.0",
-    "webpack-dev-server": "^3.11.3"
+    "@codification/cutwater-build-core": "^0.35.25",
+    "@codification/cutwater-build-webpack": "^0.35.25",
+    "webpack": "^5.82.1",
+    "webpack-dev-server": "^4.15.0"
   },
   "devDependencies": {
-    "@types/node": "^16.11.7"
+    "@types/node": "^18.11.9"
   }
 }

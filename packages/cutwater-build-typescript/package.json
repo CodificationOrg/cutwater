@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-typescript",
-  "version": "0.35.6",
+  "version": "0.35.25",
   "description": "Tasks for compiling and linting TypeScript.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -47,8 +47,8 @@
   },
   "prettier": "@codification/cutwater-build-core/includes/prettier-config",
   "dependencies": {
-    "@codification/cutwater-build-core": "^0.35.6",
-    "@codification/eslint-config-cutwater": "^0.35.6",
+    "@codification/cutwater-build-core": "^0.35.25",
+    "@codification/eslint-config-cutwater": "^0.35.25",
     "eslint": "8.36.0",
     "gulp-eslint": "^6.0.0",
     "typescript": "^4.9.3"

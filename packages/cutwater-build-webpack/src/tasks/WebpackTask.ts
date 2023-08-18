@@ -1,13 +1,5 @@
-import {
-  BuildConfig,
-  GulpTask,
-  IOUtils,
-  RunCommand,
-  RunCommandConfig,
-  TextUtils,
-} from '@codification/cutwater-build-core';
-import * as fs from 'fs';
-import * as path from 'path';
+import { BuildConfig, GulpTask, Spawn, SpawnOptions, TextUtils } from '@codification/cutwater-build-core';
+import { resolve } from 'path';
 
 export interface WebpackOptions {
   entry: string[];
@@ -34,23 +26,21 @@ export interface WebpackOptions {
 
 export interface WebpackTaskConfig {
   options?: Partial<WebpackOptions>;
-  runConfig?: RunCommandConfig;
+  spawnOpts: SpawnOptions;
+  spawn: Spawn;
 }
 
 export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
-  protected readonly runCommand: RunCommand = new RunCommand();
-
   constructor() {
     super('webpack', {
       options: {
-        config: [WebpackTask.defaultConfig()],
         stats: true,
       },
-      runConfig: {
+      spawn: Spawn.create(),
+      spawnOpts: {
         command: 'webpack',
         quiet: false,
         ignoreErrors: false,
-        cwd: process.cwd(),
         env: {},
       },
     });
@@ -61,33 +51,42 @@ export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
   }
 
   public async executeTask(): Promise<void> {
-    const shouldInitWebpack: boolean = process.argv.indexOf('--initwebpack') > -1;
+    const defaultConfig = this.defaultConfig();
+    const { initwebpack } = this.buildContext.buildState.args;
+    const shouldInitWebpack: boolean = typeof initwebpack === 'boolean' && initwebpack;
 
     if (shouldInitWebpack) {
       this.log(
         'Initializing a webpack.config.js, which bundles lib/index.js into dist/packagename.js into a UMD module.',
       );
-      IOUtils.copyFile(path.resolve(__dirname, 'webpack.config.js'));
+      const webpackFile = this.system.toFileReference(resolve(__dirname, 'webpack.config.js'));
+      webpackFile.copyTo(this.system.toFileReference('webpack.config.js'));
       return;
     } else {
-      if (!this.config.options?.config) {
+      if (!this.config.options) {
+        this.config.options = {};
+      }
+      if (!this.config.options.config && defaultConfig) {
+        this.config.options.config = [defaultConfig];
+      }
+      if (!this.config.options.config) {
         this.logMissingConfigWarning();
         return;
       }
 
       this.config.options.mode = this.buildConfig.production ? 'production' : 'development';
       const args = `${this.prepareOptions()}`;
-      this.logVerbose(`Running: webpack ${args}`);
-      await this.runCommand.run({
+      this.logVerbose(`Running: webpack with: ${args}`);
+      await this.config.spawn.execute({
         logger: this.logger(),
-        ...this.config.runConfig!,
+        ...this.config.spawnOpts,
         args,
       });
     }
   }
 
   protected toArgString(args: Partial<WebpackOptions>): string {
-    const argArray: string[] = Object.keys(args).map(property => {
+    const argArray: string[] = Object.keys(args).map((property) => {
       const value = args[property];
       const arg = TextUtils.convertPropertyNameToArg(property);
       if (typeof value === 'string') {
@@ -106,7 +105,7 @@ export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
 
   protected toOptionList(arg: any[]): string {
     return arg
-      .map(value => {
+      .map((value) => {
         if (typeof value === 'string') {
           return `"${value}"`;
         } else if (typeof value === 'number') {
@@ -125,9 +124,8 @@ export class WebpackTask extends GulpTask<WebpackTaskConfig, void> {
     console.warn('No webpack config has been provided. ' + 'Run again using --initwebpack to create a default config.');
   }
 
-  private static defaultConfig(): string {
-    const includedConfig = path.resolve(__dirname, 'webpack.config.js');
-    const localConfig = path.resolve(process.cwd(), 'webpack.config.js');
-    return fs.existsSync(localConfig) ? localConfig : includedConfig;
+  private defaultConfig(): string | undefined {
+    const localConfig = resolve(this.system.cwd(), 'webpack.config.js');
+    return this.system.fileExists(localConfig) ? localConfig : undefined;
   }
 }

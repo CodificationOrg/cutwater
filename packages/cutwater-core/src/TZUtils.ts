@@ -1,4 +1,5 @@
-import * as fmt from 'date-fns/format';
+import fmt from 'date-fns/format';
+
 import { Config } from './Config';
 import { TimeUnit } from './TimeUnit';
 

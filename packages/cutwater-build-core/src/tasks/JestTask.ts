@@ -1,8 +1,8 @@
+import { Spawn, SpawnOptions, System } from '@codification/cutwater-nullable';
 import { join } from 'path';
 
-import { BuildConfig } from '../';
-import { IOUtils } from '../utilities/IOUtils';
-import { RunCommand, RunCommandConfig } from '../utilities/RunCommand';
+import { PACKAGE_JSON } from '../core/Constants';
+import { BuildConfig } from '../types';
 import { GulpTask } from './GulpTask';
 
 export interface JestOptions {
@@ -91,19 +91,18 @@ export interface JestOptions {
 }
 
 export interface JestTaskConfig {
+  spawn: Spawn;
   isEnabled: boolean;
   options?: Partial<JestOptions>;
-  runConfig?: RunCommandConfig;
+  runConfig: SpawnOptions;
 }
 
-export function isJestEnabled(rootFolder: string): boolean {
-  const taskConfigFile: string = join(rootFolder, 'config', 'jest.json');
-  return IOUtils.fileExists(taskConfigFile) && IOUtils.readJSONSyncSafe<JestTaskConfig>(taskConfigFile).isEnabled;
+export function isJestEnabled(rootFolder: string, system: System): boolean {
+  const configFile = system.toFileReference(join(rootFolder, 'config', 'jest.json'));
+  return configFile.exists() && configFile.readObjectSyncSafe<JestTaskConfig>().isEnabled;
 }
 
 export class JestTask extends GulpTask<JestTaskConfig, void> {
-  protected readonly runCommand: RunCommand = new RunCommand();
-
   public constructor() {
     super('jest', {
       options: {
@@ -115,8 +114,9 @@ export class JestTask extends GulpTask<JestTaskConfig, void> {
         coverageReporters: ['json', 'html'],
         testMatch: ['<rootDir>/src/**/*.(test|spec).(ts|js)?(x)'],
         testPathIgnorePatterns: ['<rootDir>/(lib|lib-amd|lib-es6|coverage|build|docs|node_modules)/'],
-        modulePathIgnorePatterns: ['<rootDir>/(src|lib)/.*/package.json'],
+        modulePathIgnorePatterns: [`<rootDir>/(src|lib)/.*/${PACKAGE_JSON}`],
       },
+      spawn: Spawn.create(),
       runConfig: {
         command: 'jest',
         quiet: false,
@@ -141,10 +141,9 @@ export class JestTask extends GulpTask<JestTaskConfig, void> {
 
     const args = `${this.prepareOptions()}`;
     this.logVerbose(`Running: jest ${args}`);
-    await this.runCommand.run({
+    await this.config.spawn.execute({
       logger: this.logger(),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      ...this.config.runConfig!,
+      ...this.config.runConfig,
       args,
     });
   }

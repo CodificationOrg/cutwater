@@ -1,16 +1,15 @@
-import { default as Ajv } from 'ajv';
-import { default as eos } from 'end-of-stream';
-import * as gulp from 'gulp';
-import { dirname, extname, join } from 'path';
+import { FileReference, System } from '@codification/cutwater-nullable';
+import Ajv from 'ajv';
+import eos from 'end-of-stream';
+import gulp from 'gulp';
+import { dirname, extname, join, resolve } from 'path';
 import through2 from 'through2';
 import Vinyl from 'vinyl';
 
-import { BuildConfig } from '../BuildConfig';
-import { BuildContext } from '../BuildContext';
-import { ExecutableTask } from '../ExecutableTask';
-import { getLogger, Logger } from '../logging/Logger';
-import { label } from '../utilities/ColorUtils';
-import { IOUtils } from '../utilities/IOUtils';
+import { BuildContext, BuildState } from '../core';
+import { Logger } from '../logging';
+import { label } from '../support';
+import { BuildConfig, ExecutableTask } from '../types';
 
 export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   public readonly CONFIG_ENV_VAR: string = 'CUTWATER_BUILD_CONFIG';
@@ -20,6 +19,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   public config: T;
   public cleanMatch: string[];
   public enabled = true;
+  public buildContext: BuildContext;
   private taskSchema: Record<string, unknown> | undefined;
 
   public constructor(name: string, initialTaskConfig: Partial<T> = {}) {
@@ -43,7 +43,8 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
     this.config = taskConfig;
   }
 
-  public onRegister(): void {
+  public onRegister(context: BuildContext): void {
+    this.buildContext = context;
     const rawConfig: T | undefined = this.readConfigs();
     if (rawConfig) {
       this.setConfig(rawConfig);
@@ -52,7 +53,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
 
   public abstract executeTask(
     gulp: gulp.Gulp,
-    completeCallback?: (error?: string | Error) => void,
+    completeCallback?: (error?: string | Error) => void
   ): Promise<R | void> | NodeJS.ReadWriteStream | void;
 
   public log(message: string): void {
@@ -84,6 +85,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   }
 
   public execute(context: BuildContext): Promise<void> {
+    this.buildContext = context;
     this.buildConfig = context.buildConfig;
 
     const startTime: [number, number] = process.hrtime();
@@ -129,7 +131,7 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
               } else {
                 resolve();
               }
-            },
+            }
           );
 
           // Make sure the stream is completely read
@@ -140,8 +142,8 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
               },
               (callback: () => void) => {
                 callback();
-              },
-            ),
+              }
+            )
           );
         } else if (this.executeTask.length === 1) {
           resolve(stream);
@@ -156,13 +158,13 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
       (ex) => {
         this.logger().logEndSubtask(this.name, startTime, ex);
         throw ex;
-      },
+      }
     );
   }
 
   protected createOutputDir(outputPath: string): void {
     const outputDir = extname(outputPath) ? dirname(outputPath) : outputPath;
-    IOUtils.mkdirs(outputDir);
+    this.buildContext.buildState.system.mkdir(outputDir, true);
   }
 
   protected loadSchema(): Record<string, unknown> | undefined {
@@ -173,8 +175,24 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
     return ['config', '.config'].map((directory) => join(process.cwd(), directory, `${this.name}.json`));
   }
 
+  protected get system(): System {
+    return this.buildState.system;
+  }
+
+  protected get buildState(): BuildState {
+    return this.buildContext.buildState;
+  }
+
   protected logger(): Logger {
-    return getLogger();
+    return this.buildContext.logger || Logger.create();
+  }
+
+  protected tempFolder(): FileReference {
+    return this.system.toFileReference(resolve(this.buildConfig.tempFolder));
+  }
+
+  protected cacheFolder(): FileReference {
+    return this.system.toFileReference(resolve(this.buildConfig.cacheFolder));
   }
 
   private readConfigs(): T | undefined {
@@ -206,10 +224,11 @@ export abstract class GulpTask<T, R> implements ExecutableTask<T> {
   }
 
   private readConfigFile(filePath: string): T | undefined {
-    if (!IOUtils.fileExists(filePath)) {
+    const { system } = this.buildContext.buildState;
+    if (!system.fileExists(filePath)) {
       return undefined;
     } else {
-      return this.verifyConfig(IOUtils.readJSONSyncSafe(filePath));
+      return this.verifyConfig(system.toFileReference(filePath).readObjectSyncSafe());
     }
   }
 

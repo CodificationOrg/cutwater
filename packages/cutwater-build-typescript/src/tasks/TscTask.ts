@@ -1,4 +1,4 @@
-import { GulpTask, RunCommand, RunCommandConfig } from '@codification/cutwater-build-core';
+import { GulpTask, Spawn, SpawnOptions } from '@codification/cutwater-build-core';
 
 export interface TscOptions {
   allowJs: boolean;
@@ -98,16 +98,16 @@ export interface TscOptions {
 
 export interface TscTaskConfig {
   options?: Partial<TscOptions>;
-  runConfig?: RunCommandConfig;
+  spawn: Spawn;
+  spawnOpts: SpawnOptions;
 }
 
 export class TscTask extends GulpTask<TscTaskConfig, void> {
-  protected readonly runCommand: RunCommand = new RunCommand();
-
   public constructor() {
     super('tsc', {
+      spawn: Spawn.create(),
       options: {},
-      runConfig: {
+      spawnOpts: {
         command: 'tsc',
         quiet: false,
         ignoreErrors: false,
@@ -123,15 +123,15 @@ export class TscTask extends GulpTask<TscTaskConfig, void> {
 
     const args = `${this.prepareOptions()}`;
     this.logVerbose(`Running: tsc ${args}`);
-    await this.runCommand.run({
+    await this.config.spawn.execute({
       logger: this.logger(),
-      ...this.config.runConfig!,
+      ...this.config.spawnOpts,
       args,
     });
   }
 
   protected toArgString(args: Partial<TscOptions>): string {
-    const argArray: string[] = Object.keys(args).map(property => {
+    const argArray: string[] = Object.keys(args).map((property) => {
       const value = args[property];
       const arg = `--${property}`;
       if (typeof value === 'string') {
@@ -150,7 +150,7 @@ export class TscTask extends GulpTask<TscTaskConfig, void> {
 
   protected toOptionList(arg: any[]): string {
     return arg
-      .map(value => {
+      .map((value) => {
         if (typeof value === 'string') {
           return `"${value}"`;
         } else if (typeof value === 'number') {

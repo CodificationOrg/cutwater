@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-core",
-  "version": "0.35.6",
+  "version": "0.35.25",
   "description": "A library providing basic build tasks.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -10,7 +10,8 @@
     "clean": "gulp clean",
     "format": "prettier --loglevel warn --write \"src/**/*.ts\"",
     "lint": "eslint --fix src/**/*.ts",
-    "test": "jest",
+    "test": "jest ",
+    "test-integ": "jest --testMatch \"<rootDir>/src/**/*.(integ).(ts|js)?(x)\"",
     "build:compile": "yarn clean && yarn format && yarn lint && tsc",
     "build": "yarn test && yarn build:compile"
   },
@@ -45,23 +46,21 @@
   },
   "prettier": "./includes/prettier-config",
   "dependencies": {
+    "@codification/cutwater-nullable": "^0.35.25",
     "@types/gulp": "^4.0.7",
     "@types/jest": "^29.x",
-    "@types/node": "^16.11.7",
+    "@types/node": "^18.11.9",
     "ajv": "^6.10.2",
     "chalk": "^4.1.2",
-    "cross-spawn": "^7.0.1",
     "del": "^5.1.0",
     "end-of-stream": "^1.4.1",
     "glob-escape": "^0.0.2",
     "gulp": "^4.0.2",
-    "gulp-prettier": "^2.2.0",
+    "gulp-prettier": "^4.0.0",
     "jest": "^29.x",
     "jest-environment-jsdom": "^29.x",
-    "js-yaml": "^3.13.1",
-    "prettier": "^2.8.4",
+    "prettier": "^2.8.8",
     "pretty-hrtime": "^1.0.3",
-    "spawn-args": "^0.2.0",
     "through2": "^3.0.1",
     "ts-jest": "^29.0.5",
     "vinyl": "^2.2.0",
@@ -70,6 +69,7 @@
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
-    "@types/js-yaml": "^3.12.3"
+    "@types/js-yaml": "^3.12.3",
+    "tmp": "^0.2.1"
   }
 }

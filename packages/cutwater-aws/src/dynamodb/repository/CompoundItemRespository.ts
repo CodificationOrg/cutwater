@@ -76,8 +76,8 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
   }
 
   public async removeAll(ids: string[]): Promise<string[]> {
-    const keys = ids.map(id => CompoundKey.fromItemId(this.itemType, id));
-    return (await this.batchPutOrDelete(keys)).map(key => key.compoundItemId.itemId);
+    const keys = ids.map((id) => CompoundKey.fromItemId(this.itemType, id));
+    return (await this.batchPutOrDelete(keys)).map((key) => key.compoundItemId.itemId);
   }
 
   public toItemInput(id: string): any {
@@ -181,11 +181,11 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
       return requests;
     }
     if ((requests[0] as CompoundKey).partitionKey !== undefined) {
-      const failIds = unprocessed.map(key => CompoundKey.fromAttributeMap(key).compoundItemId.itemId);
-      return requests.filter(key => !failIds.includes((key as CompoundKey).compoundItemId.itemId));
+      const failIds = unprocessed.map((key) => CompoundKey.fromAttributeMap(key).compoundItemId.itemId);
+      return requests.filter((key) => !failIds.includes((key as CompoundKey).compoundItemId.itemId));
     } else {
-      const failIds = unprocessed.map(map => CompoundKey.fromAttributeMap(map).compoundItemId.itemId);
-      return requests.filter(item => !failIds.includes(this.toItemId((item as unknown) as T)));
+      const failIds = unprocessed.map((map) => CompoundKey.fromAttributeMap(map).compoundItemId.itemId);
+      return requests.filter((item) => !failIds.includes(this.toItemId(item as unknown as T)));
     }
   }
 
@@ -213,7 +213,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
   private async toWriteRequest<V extends T | CompoundKey>(itemOrKey: V): Promise<WriteRequest> {
     return (itemOrKey as CompoundKey).partitionKey !== undefined
       ? { DeleteRequest: { Key: (itemOrKey as CompoundKey).toKey() } }
-      : { PutRequest: { Item: await this.itemToAttributeMap((itemOrKey as unknown) as T) } };
+      : { PutRequest: { Item: await this.itemToAttributeMap(itemOrKey as unknown as T) } };
   }
 
   private async batchWithRetry(input: BatchWriteItemInput, maxTries = 10, currentTry = 0): Promise<AttributeMap[]> {
@@ -222,9 +222,9 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     if (currentTry === maxTries) {
       const remaining = input.RequestItems[this.config.tableName];
       if ((remaining[0] as DeleteRequest).Key !== undefined) {
-        return remaining.map(req => req.DeleteRequest!.Key);
+        return remaining.map((req) => req.DeleteRequest!.Key);
       } else {
-        return remaining.map(req => req.PutRequest!.Item);
+        return remaining.map((req) => req.PutRequest!.Item);
       }
     }
     const result: BatchWriteItemOutput = await this.db.batchWriteItem(input).promise();

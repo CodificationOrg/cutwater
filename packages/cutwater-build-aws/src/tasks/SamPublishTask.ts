@@ -1,5 +1,4 @@
-import { IOUtils } from '@codification/cutwater-build-core';
-import * as path from 'path';
+import { PackageJSON } from '@codification/cutwater-build-core/lib/types';
 import { SamCliTask } from './SamCliTask';
 
 export interface SamPublishParameters {
@@ -27,7 +26,7 @@ export class SamPublishTask extends SamCliTask<SamPublishParameters> {
   }
 
   protected packageVersion(): string | undefined {
-    const pkg: any = IOUtils.readJSONSyncSafe(path.join(process.cwd(), 'package.json'));
+    const pkg: any = this.system.toFileReference('package.json').readObjectSync<PackageJSON>();
     return pkg?.['version'];
   }
 }

@@ -64,7 +64,7 @@ export class Level {
     if (typeof level === 'number' && level >= this.OFF.priority && level <= this.ALL.priority) {
       rval = this.ALL_LEVELS[level];
     } else if (typeof level === 'string') {
-      rval = this.ALL_LEVELS.find(lvl => lvl.name === level.toUpperCase()) || defaultLevel;
+      rval = this.ALL_LEVELS.find((lvl) => lvl.name === level.toUpperCase()) || defaultLevel;
     }
     return rval;
   }

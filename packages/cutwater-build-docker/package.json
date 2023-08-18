@@ -1,0 +1,56 @@
+{
+  "name": "@codification/cutwater-build-docker",
+  "version": "0.35.25",
+  "description": "Tasks for preparing, building and publishing docker images.",
+  "homepage": "https://github.com/CodificationOrg/cutwater",
+  "bugs": "https://github.com/CodificationOrg/cutwater/issues",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "clean": "gulp clean",
+    "format": "gulp prettier",
+    "lint": "gulp lint --fix",
+    "test": "gulp test",
+    "test-integ": "gulp test-integ",
+    "build": "gulp --fix --clean"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodificationOrg/cutwater.git",
+    "directory": "packages/cutwater-build-docker"
+  },
+  "keywords": [
+    "common",
+    "cutwater",
+    "utilities",
+    "support",
+    "build",
+    "gulp",
+    "task",
+    "codification",
+    "docker"
+  ],
+  "author": {
+    "name": "William Weiss",
+    "url": "https://github.com/wweiss"
+  },
+  "license": "Apache-2.0",
+  "private": false,
+  "prettier": "@codification/cutwater-build-core/includes/prettier-config",
+  "eslintConfig": {
+    "extends": [
+      "@codification/cutwater"
+    ]
+  },
+  "dependencies": {
+    "@codification/cutwater-build-core": "^0.35.25",
+    "@codification/cutwater-build-node": "^0.35.25"
+  },
+  "devDependencies": {
+    "@codification/cutwater-test": "^0.35.25",
+    "@types/node": "^18.11.9"
+  }
+}

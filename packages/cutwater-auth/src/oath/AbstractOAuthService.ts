@@ -111,7 +111,7 @@ export abstract class AbstractOAuthService implements OAuthService {
     if (!!this.jwtVerificationFunction) {
       return Promise.resolve(this.jwtVerificationFunction);
     }
-    return this.getDiscoveryDocumentValue(this.KEY_ENDPOINT).then(uri => {
+    return this.getDiscoveryDocumentValue(this.KEY_ENDPOINT).then((uri) => {
       this.jwksClient = jwks({ jwksUri: uri });
       this.LOG.info(`[${this.provider}] JWKS client created.`);
       this.jwtVerificationFunction = (header: JwtHeader, callback) => {
