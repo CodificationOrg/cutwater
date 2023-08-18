@@ -16,7 +16,6 @@ import {
 } from 'aws-sdk/clients/dynamodb';
 import { CompoundKey } from '.';
 import { DynamoItem } from '..';
-import { CompoundItemId } from './CompoundItemId';
 import { CompoundItemRepositoryConfig } from './CompoundItemRepositoryConfig';
 
 export class CompoundItemRepository<T> implements ItemRepository<T> {
@@ -51,18 +50,35 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     return result.Item ? this.attributeMapToItem(result.Item) : undefined;
   }
 
+  private toId(item: T | DynamoItem): string {
+    if (item instanceof DynamoItem) {
+      return CompoundKey.fromAttributeMap(item.item).compoundItemId.itemId;
+    }
+    return item[this.config.idProperty];
+  }
+
+  private async refreshItem(item: T): Promise<T> {
+    return this.attributeMapToItem(await this.itemToAttributeMap(item));
+  }
+
   public async put(item: T): Promise<T> {
+    const attributeMap = await this.itemToAttributeMap(item);
     const params: PutItemInput = {
-      Item: await this.itemToAttributeMap(item),
+      Item: attributeMap,
       ...this.baseInput,
     };
     this.LOG.trace('DynamoDB Put: ', params);
     await this.db.putItem(params).promise();
-    return item;
+    return this.attributeMapToItem(attributeMap);
   }
 
   public async putAll(items: T[]): Promise<T[]> {
-    return await this.batchPutOrDelete(items);
+    const result = await this.batchPutOrDelete(items);
+    const rval: T[] = [];
+    for (const val of result) {
+      rval.push(await this.refreshItem(val));
+    }
+    return rval;
   }
 
   public async remove(id: string): Promise<T | undefined> {
@@ -105,23 +121,16 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
   protected attributeMapToItem(map: AttributeMap): T {
     const dynamoItem = new DynamoItem(map);
     const rval = this.config.toItem(map);
-    rval[this.config.idProperty] = CompoundItemId.fromKeys(
-      dynamoItem.toString(this.config.partitionKey)!,
-      dynamoItem.toString(this.config.sortKey)!,
-    ).itemId;
+    rval[this.config.idProperty] = this.toId(dynamoItem);
     return rval;
   }
 
   protected async itemToAttributeMap(item: T): Promise<AttributeMap> {
-    const key = CompoundKey.fromItemId(this.itemType, item[this.config.idProperty]);
+    const key = CompoundKey.fromItemId(this.itemType, this.toId(item));
     const rval = new DynamoItem(this.config.toAttributeMap(item));
     rval.setString(this.config.partitionKey, key.partitionKey);
     rval.setString(this.config.sortKey, key.sortKey);
     return rval.item;
-  }
-
-  protected toItemId(item: T): string {
-    return CompoundKey.fromItemId(this.itemType, item[this.config.idProperty]).compoundItemId.itemId;
   }
 
   protected async getAllMaps(partitionValue: string, cursor?: string): Promise<AttributeMap[]> {
@@ -185,7 +194,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
       return requests.filter((key) => !failIds.includes((key as CompoundKey).compoundItemId.itemId));
     } else {
       const failIds = unprocessed.map((map) => CompoundKey.fromAttributeMap(map).compoundItemId.itemId);
-      return requests.filter((item) => !failIds.includes(this.toItemId(item as unknown as T)));
+      return requests.filter((item) => !failIds.includes(this.toId(item as T)));
     }
   }
 
@@ -211,9 +220,9 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
   }
 
   private async toWriteRequest<V extends T | CompoundKey>(itemOrKey: V): Promise<WriteRequest> {
-    return (itemOrKey as CompoundKey).partitionKey !== undefined
-      ? { DeleteRequest: { Key: (itemOrKey as CompoundKey).toKey() } }
-      : { PutRequest: { Item: await this.itemToAttributeMap(itemOrKey as unknown as T) } };
+    return itemOrKey instanceof CompoundKey
+      ? { DeleteRequest: { Key: itemOrKey.toKey() } }
+      : { PutRequest: { Item: await this.itemToAttributeMap(itemOrKey as T) } };
   }
 
   private async batchWithRetry(input: BatchWriteItemInput, maxTries = 10, currentTry = 0): Promise<AttributeMap[]> {
