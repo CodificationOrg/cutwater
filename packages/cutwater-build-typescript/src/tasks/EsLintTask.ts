@@ -1,7 +1,6 @@
 import { GulpTask } from '@codification/cutwater-build-core';
-import { getFlagValue } from '@codification/cutwater-build-core/lib/State';
-import * as gulp from 'gulp';
-import * as eslint from 'gulp-eslint';
+import gulp from 'gulp';
+import eslint from 'gulp-eslint';
 
 export class EsLintTask extends GulpTask<any, void> {
   public constructor() {
@@ -13,7 +12,7 @@ export class EsLintTask extends GulpTask<any, void> {
       .src(`${this.buildConfig.srcFolder}/**/*.ts`)
       .pipe(
         eslint({
-          fix: getFlagValue('fix'),
+          fix: this.buildContext.buildState.getFlagValue('fix'),
         }),
       )
       .pipe(eslint.format())

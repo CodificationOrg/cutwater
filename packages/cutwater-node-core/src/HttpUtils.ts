@@ -28,8 +28,8 @@ export class HttpUtils {
   public static toBodyText(response: IncomingMessage): Promise<string> {
     return new Promise((resolve, reject) => {
       this.toBuffer(response)
-        .then(data => resolve(data.toString()))
-        .catch(err => reject(err));
+        .then((data) => resolve(data.toString()))
+        .catch((err) => reject(err));
     });
   }
 
@@ -47,13 +47,13 @@ export class HttpUtils {
     return new Promise<Buffer>((resolve, reject) => {
       LOG.debug(`Processing toBuffer as standard IncomingMessage...`);
       response.setEncoding('binary');
-      response.on('data', chunk => {
+      response.on('data', (chunk) => {
         rval += chunk;
       });
       response.on('end', () => {
         resolve(Buffer.from(rval, 'binary'));
       });
-      response.on('error', err => reject(err));
+      response.on('error', (err) => reject(err));
     });
   }
 
@@ -71,7 +71,7 @@ export class HttpUtils {
     overwrite = true,
   ): IncomingHttpHeaders {
     const rval: IncomingHttpHeaders = this.toIncomingHttpHeaders(dst);
-    Object.keys(src).forEach(headerName => {
+    Object.keys(src).forEach((headerName) => {
       if (!dst[headerName] || overwrite) {
         rval[headerName] = this.toNormalizedHeaderValue(src[headerName]);
       }
@@ -87,7 +87,7 @@ export class HttpUtils {
    */
   public static toIncomingHttpHeaders(headers: IncomingHttpHeaders | OutgoingHttpHeaders): IncomingHttpHeaders {
     const rval: IncomingHttpHeaders = {};
-    Object.keys(headers).forEach(headerName => {
+    Object.keys(headers).forEach((headerName) => {
       rval[headerName] = this.toNormalizedHeaderValue(headers[headerName]);
     });
     return rval;

@@ -1,6 +1,7 @@
-import * as gulp from 'gulp';
-import { default as prettier } from 'gulp-prettier';
+import gulp from 'gulp';
+import prettier from 'gulp-prettier';
 import { Options as PrettierTaskConfig } from 'prettier';
+
 import { GulpTask } from './GulpTask';
 
 export { PrettierTaskConfig };

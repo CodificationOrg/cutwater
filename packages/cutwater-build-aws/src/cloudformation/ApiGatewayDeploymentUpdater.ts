@@ -1,5 +1,5 @@
-import { IOUtils } from '@codification/cutwater-build-core';
-import * as md5 from 'md5';
+import { System } from '@codification/cutwater-build-core';
+import md5 from 'md5';
 import { schema } from 'yaml-cfn';
 import { CloudFormationTemplate } from './CloudFormationTemplate';
 
@@ -14,15 +14,17 @@ export class ApiGatewayDeploymentUpdater {
 
   private template: CloudFormationTemplate;
 
+  public constructor(private readonly system: System = System.create()) {}
+
   public load(templateFile: string): void {
-    this.template = IOUtils.readObjectFromFileSyncSafe<CloudFormationTemplate>(templateFile, undefined, schema);
+    this.template = this.system.toFileReference(templateFile).readObjectSyncSafe<CloudFormationTemplate>(schema);
   }
 
   public performOpenApiMerges(outputFile: string): void {
     this.validateState();
 
     const apiToHash: Record<string, string> = {};
-    this.findRestApiResourceNames().forEach(rn => {
+    this.findRestApiResourceNames().forEach((rn) => {
       const hash: string | undefined = this.mergeOpenApi(rn);
       if (!!hash) {
         apiToHash[rn] = hash;
@@ -30,7 +32,7 @@ export class ApiGatewayDeploymentUpdater {
     });
 
     const deployToHash: Record<string, string> = {};
-    Object.keys(apiToHash).forEach(api => {
+    Object.keys(apiToHash).forEach((api) => {
       const deployName = this.findDeploymentResourceName(api);
       if (!!deployName) {
         deployToHash[deployName] = `${deployName}${apiToHash[api]}`;
@@ -41,7 +43,7 @@ export class ApiGatewayDeploymentUpdater {
     });
     this.updateDeploymentReferences(deployToHash);
 
-    IOUtils.writeObjectToFileSync(this.template, outputFile, undefined, schema);
+    this.system.toFileReference(outputFile).writeObjectSync(schema);
     this.template = {} as CloudFormationTemplate;
   }
 
@@ -51,12 +53,12 @@ export class ApiGatewayDeploymentUpdater {
 
   public findResourcesByType(resourceType: string): string[] {
     this.validateState();
-    return Object.keys(this.template.Resources).filter(rn => this.template.Resources[rn].Type === resourceType);
+    return Object.keys(this.template.Resources).filter((rn) => this.template.Resources[rn].Type === resourceType);
   }
 
   public findDeploymentResourceName(restApiName: string): string | undefined {
     this.validateState();
-    return this.findResourcesByType(this.DEPLOYMENT_TYPE).find(name => {
+    return this.findResourcesByType(this.DEPLOYMENT_TYPE).find((name) => {
       return (
         JSON.stringify(this.template.Resources[name].Properties[this.REST_API_ID_PROPERTY]).indexOf(restApiName) !== -1
       );
@@ -64,7 +66,7 @@ export class ApiGatewayDeploymentUpdater {
   }
 
   private updateDeploymentReferences(deployNameMapping: any, context: any = this.template): void {
-    Object.keys(context).forEach(property => {
+    Object.keys(context).forEach((property) => {
       if (typeof context[property] === 'string') {
         context[property] = this.replace(context[property], deployNameMapping);
       } else if (typeof context[property] === 'object') {
@@ -76,7 +78,7 @@ export class ApiGatewayDeploymentUpdater {
   private replace(value: string, deployNameMapping: any): string {
     let rval = value;
     if (typeof value === 'string') {
-      Object.keys(deployNameMapping).some(srcName => {
+      Object.keys(deployNameMapping).some((srcName) => {
         const matcher = new RegExp('(?=\\W*)' + srcName + '(?=\\W*)', 'g');
         if (matcher.test(value)) {
           rval = value.replace(matcher, deployNameMapping[srcName]);
@@ -99,7 +101,7 @@ export class ApiGatewayDeploymentUpdater {
     let rval: any | undefined;
     const body: any = this.toRestApiBody(restApiName);
     if (!!body && !!body[this.OPENAPI_LOCATION_PROPERTY]) {
-      return IOUtils.readObjectFromFileSync(body[this.OPENAPI_LOCATION_PROPERTY]);
+      return this.system.toFileReference(body[this.OPENAPI_LOCATION_PROPERTY]).readObjectSync();
     } else if (!!body && !body[this.TRANSFORM_PROPERTY]) {
       rval = body;
     }

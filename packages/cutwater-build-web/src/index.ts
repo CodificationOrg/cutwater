@@ -1,13 +1,12 @@
 import {
+  buildEngine,
   copyStaticAssets,
   eslint,
   ExecutableTask,
-  getConfig,
   jest,
   jestIntegration,
   prettier,
   serial,
-  setConfig,
   task,
 } from '@codification/cutwater-build-typescript';
 import { webpack } from '@codification/cutwater-build-webpack';
@@ -16,8 +15,8 @@ import { WebpackDevServerTask } from './tasks/WebpackDevServerTask';
 export * from '@codification/cutwater-build-typescript';
 export * from '@codification/cutwater-build-webpack';
 
-const PRODUCTION: boolean = !!getConfig().args['production'] || !!getConfig().args['ship'];
-setConfig({
+const PRODUCTION: boolean = !!buildEngine.getConfig().args['production'] || !!buildEngine.getConfig().args['ship'];
+buildEngine.setConfig({
   production: PRODUCTION,
   shouldWarningsFailBuild: PRODUCTION,
 });

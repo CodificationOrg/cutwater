@@ -100,7 +100,7 @@ describe('CachingItemRepository', () => {
       existingItem.age = 442;
       const result = await repo.update(existingItem);
       expect(result.age).toBe(442);
-      const items = (await repo.getAll(existingItem.groupId)).filter(item => item.userId === selectedId);
+      const items = (await repo.getAll(existingItem.groupId)).filter((item) => item.userId === selectedId);
       expect(items.length).toBe(1);
       expect(items[0]!.age).toBe(442);
     });
@@ -110,7 +110,7 @@ describe('CachingItemRepository', () => {
       const repo = await newCachingRepo(count);
       const existingItem = (await repo.get(selectedId))!;
       existingItem.age = 442;
-      const items = (await repo.getAll(existingItem.groupId)).filter(item => item.userId === selectedId);
+      const items = (await repo.getAll(existingItem.groupId)).filter((item) => item.userId === selectedId);
       expect(items.length).toBe(1);
       expect(items[0]!.age).toBe(+selectedId);
     });

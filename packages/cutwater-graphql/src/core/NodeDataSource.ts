@@ -20,6 +20,6 @@ export class NodeDataSource {
   }
 
   private findNodeService(nodeType: string): NodeSource<Node> | undefined {
-    return this.SOURCES.find(source => source.isSource(nodeType));
+    return this.SOURCES.find((source) => source.isSource(nodeType));
   }
 }

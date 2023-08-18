@@ -11,7 +11,7 @@ const newInstance = (itemCount?: number) => {
 };
 
 const delay = (delaySeconds = 1010): Promise<void> => {
-  return new Promise<void>(resolve => {
+  return new Promise<void>((resolve) => {
     setTimeout(() => resolve(), delaySeconds);
   });
 };

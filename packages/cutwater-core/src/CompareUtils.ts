@@ -40,7 +40,7 @@ export class CompareUtils {
       if (typeof value === 'string') {
         return value.indexOf(`${expected}`) !== -1;
       } else {
-        return value.find(cur => CompareUtils.safeCompare(cur, expected) === 0) !== undefined;
+        return value.find((cur) => CompareUtils.safeCompare(cur, expected) === 0) !== undefined;
       }
     },
     [Comparator.NOT_CONTAINS]: (value: string | Array<string | number>, expected: string | number): boolean => {
@@ -50,7 +50,7 @@ export class CompareUtils {
       if (typeof value === 'string') {
         return value.indexOf(`${expected}`) === -1;
       } else {
-        return value.find(cur => CompareUtils.safeCompare(cur, expected) === 0) === undefined;
+        return value.find((cur) => CompareUtils.safeCompare(cur, expected) === 0) === undefined;
       }
     },
     [Comparator.IN]: (value: string | number, expected: Array<string | number>): boolean => {

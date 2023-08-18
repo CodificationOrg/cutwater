@@ -21,8 +21,8 @@ export class CliUtils {
 
   protected static toArgString(args: any, filteredParams: string[] = []): string {
     const argArray: string[] = Object.keys(args)
-      .filter(property => !filteredParams.includes(property))
-      .map(property => {
+      .filter((property) => !filteredParams.includes(property))
+      .map((property) => {
         const value = args[property];
         const arg = TextUtils.convertPropertyNameToArg(property);
         if (typeof value === 'string') {
@@ -43,7 +43,7 @@ export class CliUtils {
 
   protected static toParameterList(arg: any[]): string {
     return arg
-      .map(value => {
+      .map((value) => {
         if (typeof value === 'string') {
           return `"${value}"`;
         } else if (typeof value === 'number') {

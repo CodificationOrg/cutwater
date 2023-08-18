@@ -33,15 +33,17 @@
     "faker": "5.5.3",
     "follow-redirects": "^1.14.8",
     "url-parse": "^1.5.9",
-    "minimatch": "^3.0.5"
+    "minimatch": "^3.0.5",
+    "xml2js": "^0.5.0",
+    "yaml": "^2.3.1"
   },
   "devDependencies": {
-    "@nrwl/nx-cloud": "15.0.2",
-    "@types/node": "14.14.31",
-    "eslint": "8.27.0",
-    "lerna": "6.3.0",
-    "nx": "15.4.2",
-    "typescript": "4.5.5"
+    "@nrwl/nx-cloud": "16.0.5",
+    "@types/node": "18.11.9",
+    "eslint": "8.36.0",
+    "lerna": "6.6.2",
+    "nx": "16.1.4",
+    "typescript": "4.9.3"
   },
   "version": "0.21.1"
 }

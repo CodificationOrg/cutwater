@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-build-aws",
-  "version": "0.35.5",
+  "version": "0.35.25",
   "description": "Tasks for working with AWS.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
@@ -47,15 +47,20 @@
     ]
   },
   "dependencies": {
-    "@codification/cutwater-build-core": "^0.35.5",
-    "@codification/cutwater-build-node": "^0.35.5",
-    "@codification/cutwater-build-openapi": "^0.35.5",
+    "@codification/cutwater-build-core": "^0.35.25",
+    "@codification/cutwater-build-node": "^0.35.25",
+    "@codification/cutwater-build-openapi": "^0.35.25",
+    "@codification/cutwater-node-core": "^0.35.25",
     "aws-sdk": "^2.817.0",
     "md5": "^2.2.1",
     "yaml-cfn": "^0.2.3"
   },
   "devDependencies": {
+    "@codification/cutwater-build-docker": "^0.35.20",
     "@types/js-yaml": "^3.12.3",
-    "@types/node": "^12.12.6"
+    "@types/node": "^18.11.9"
+  },
+  "optionalDependencies": {
+    "@codification/cutwater-build-docker": "^0.35.25"
   }
 }

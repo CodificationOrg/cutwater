@@ -2,6 +2,8 @@ import { ExecutableTask, task } from '@codification/cutwater-build-core';
 import { OpenApiBundleTask } from './tasks/OpenApiBundleTask';
 import { OpenApiValidateTask } from './tasks/OpenApiValidateTask';
 
+export * from '@codification/cutwater-build-node';
+
 export const openapiBundle: ExecutableTask<unknown> = new OpenApiBundleTask();
 export const openapiValidate: ExecutableTask<unknown> = new OpenApiValidateTask();
 

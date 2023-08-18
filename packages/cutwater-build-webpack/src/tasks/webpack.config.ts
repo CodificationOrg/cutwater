@@ -1,10 +1,10 @@
-import { BuildConfig, getConfig, IOUtils } from '@codification/cutwater-build-core';
-import * as path from 'path';
-import * as TerserPlugin from 'terser-webpack-plugin';
-import * as Webpack from 'webpack';
+import { BuildConfig, buildEngine } from '@codification/cutwater-build-core';
+import { join } from 'path';
+import TerserPlugin from 'terser-webpack-plugin';
+import Webpack from 'webpack';
 
-const buildConfig: BuildConfig = getConfig();
-const packageJSON: { name: string } = IOUtils.readJSONSyncSafe('./package.json');
+const buildConfig: BuildConfig = buildEngine.getConfig();
+const packageJSON: { name: string } = buildEngine.system.toFileReference('package.json').readObjectSyncSafe();
 
 const webpackConfiguration = (env, options): Webpack.Configuration => {
   const isProduction: boolean = options.mode === 'production';
@@ -14,10 +14,9 @@ const webpackConfiguration = (env, options): Webpack.Configuration => {
     minimizer.push(
       new TerserPlugin({
         parallel: true,
-        sourceMap: true,
         include: /\.min\.js$/,
         terserOptions: {
-          ecma: 6,
+          ecma: 2020,
         },
       }),
     );
@@ -29,16 +28,18 @@ const webpackConfiguration = (env, options): Webpack.Configuration => {
     devtool: isProduction ? undefined : 'inline-source-map',
 
     entry: {
-      [packageJSON.name]: path.join(__dirname, buildConfig.srcFolder, 'index.ts'),
+      [packageJSON.name]: join(__dirname, buildConfig.srcFolder, 'index.ts'),
     },
 
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-    ],
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/,
+        },
+      ],
+    },
 
     resolve: {
       extensions: ['.tsx', '.ts', '.js'],
@@ -46,7 +47,7 @@ const webpackConfiguration = (env, options): Webpack.Configuration => {
 
     output: {
       libraryTarget: 'umd',
-      path: path.join(__dirname, buildConfig.distFolder),
+      path: join(__dirname, buildConfig.distFolder),
       filename: `[name]${isProduction ? '.min' : ''}.js`,
       globalObject: 'this',
     },
