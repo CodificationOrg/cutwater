@@ -9,7 +9,7 @@ export class CompoundValue {
       return new CompoundValue(value[0].split(CompoundValue.VALUE_SEPARATOR));
     }
     return new CompoundValue(
-      value.filter(el => el !== undefined).map(el => (typeof el === 'number' ? el.toString() : el)) as string[],
+      value.filter((el) => el !== undefined).map((el) => (typeof el === 'number' ? el.toString() : el)) as string[],
     );
   }
 
