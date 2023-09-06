@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.35.29 (2023-09-06)
+
+**Note:** Version bump only for package @codification/cutwater-build-web
+
+
+
+
+
 ## 0.35.28 (2023-08-18)
 
 **Note:** Version bump only for package @codification/cutwater-build-web
