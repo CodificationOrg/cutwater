@@ -8,12 +8,11 @@ import {
   CloudFrontResultResponse,
 } from 'aws-lambda';
 import {
-  ClientRequest,
   request as HttpRequest,
   IncomingHttpHeaders,
   IncomingMessage,
   RequestOptions,
-} from 'http';
+} from 'node:http';
 
 import { Config } from '@codification/cutwater-core';
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
@@ -80,18 +79,12 @@ export const withOriginRequestResponse = (
         LambdaEdgeUtils.toCloudFrontCustomOrigin(request);
       const options: RequestOptions = toRequestOptions(request, origin);
       LOG.trace('Origin request options: %j', options);
-      const httpReq: ClientRequest = HttpRequest(
-        options,
-        (response: IncomingMessage) => {
-          LambdaEdgeUtils.originResponseToCloudFrontResultResponse(response)
-            .then((result) => {
-              req.event.originResponse = result;
-            })
-            .catch((reason) => {
-              throw new Error(reason);
-            });
-        }
-      );
+      HttpRequest(options, async (response: IncomingMessage) => {
+        req.event.originResponse =
+          await LambdaEdgeUtils.originResponseToCloudFrontResultResponse(
+            response
+          );
+      });
     } else {
       LOG.debug(
         'Skipping middleware because event is not a custom Origin-Request.'

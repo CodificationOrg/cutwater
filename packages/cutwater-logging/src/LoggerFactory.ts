@@ -1,5 +1,6 @@
 import { Config } from '@codification/cutwater-core';
-import * as util from 'util';
+import * as util from 'node:util';
+
 import { Appender } from './Appender';
 import { ConsoleAppender } from './ConsoleAppender';
 import { Level } from './Level';

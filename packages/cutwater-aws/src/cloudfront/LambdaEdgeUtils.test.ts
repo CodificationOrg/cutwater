@@ -1,5 +1,5 @@
 import { CloudFrontHeaders, CloudFrontRequestEvent } from 'aws-lambda';
-import { IncomingHttpHeaders } from 'http';
+import { IncomingHttpHeaders } from 'node:http';
 
 import { mockCloudFrontRequestEvent } from './CloudFront.mock';
 import { LambdaEdgeUtils as lambda } from './LambdaEdgeUtils';
