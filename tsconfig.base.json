@@ -1,0 +1,40 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@codification/cutwater-core": ["packages/cutwater-core/src/index.ts"],
+      "@codification/cutwater-logging": [
+        "packages/cutwater-logging/src/index.ts"
+      ],
+      "@codification/cutwater-nullable": [
+        "packages/cutwater-nullable/src/index.ts"
+      ],
+      "@types/spawn-args": [
+        "packages/cutwater-nullable/src/@types/spawn-args/index.ts"
+      ],
+      "@codification/cutwater-node-core": [
+        "packages/cutwater-node-core/src/index.ts"
+      ],
+      "@codification/cutwater-repo": ["packages/cutwater-repo/src/index.ts"],
+      "@codification/cutwater-graphql": [
+        "packages/cutwater-graphql/src/index.ts"
+      ],
+      "@codification/cutwater-auth": ["packages/cutwater-auth/src/index.ts"],
+      "@codification/cutwater-aws": ["packages/cutwater-aws/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

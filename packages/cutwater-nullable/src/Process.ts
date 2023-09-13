@@ -1,12 +1,18 @@
+import { EventEmitter } from 'node:events';
 import { resolve } from 'path';
 import { ReadStream, WriteStream } from 'tty';
 
-import EventEmitter from 'events';
 import { TrackedIOStreams } from './TrackedIOStreams';
 
 export interface LimitedProcess
-  extends Pick<NodeJS.Process, 'cwd' | 'stdin' | 'stdout' | 'stderr' | 'version' | 'env' | 'exit'> {
-  on: (event: string | symbol, listener: (...args: any[]) => void) => LimitedProcess;
+  extends Pick<
+    NodeJS.Process,
+    'cwd' | 'stdin' | 'stdout' | 'stderr' | 'version' | 'env' | 'exit'
+  > {
+  on: (
+    event: string | symbol,
+    listener: (...args: unknown[]) => void
+  ) => LimitedProcess;
 }
 
 export interface ProcessResponses {
@@ -19,14 +25,19 @@ export interface ProcessResponses {
 }
 
 export class Process implements LimitedProcess {
-  public static createNull(responses: ProcessResponses = { ...new TrackedIOStreams() }): Process {
+  public static createNull(
+    responses: ProcessResponses = { ...new TrackedIOStreams() }
+  ): Process {
     return new Process(new StubbedProcessProvider(responses));
   }
 
   public static create(): Process {
     return new Process({
       ...process,
-      on: (event: string | symbol, listener: (...args: any[]) => void): LimitedProcess => {
+      on: (
+        event: string | symbol,
+        listener: (...args: unknown[]) => void
+      ): LimitedProcess => {
         process.on(event, listener);
         return this as unknown as LimitedProcess;
       },
@@ -35,7 +46,10 @@ export class Process implements LimitedProcess {
 
   constructor(private readonly process: LimitedProcess) {}
 
-  public on(event: string | symbol, listener: (...args: any[]) => void): LimitedProcess {
+  public on(
+    event: string | symbol,
+    listener: (...args: unknown[]) => void
+  ): LimitedProcess {
     this.process.on(event, listener);
     return this;
   }
@@ -70,18 +84,21 @@ export class Process implements LimitedProcess {
 }
 
 class StubbedProcessProvider implements LimitedProcess {
-  public readonly stdout;
-  public readonly stdin;
-  public readonly stderr;
+  public readonly stdout: WriteStream & { fd: 1 };
+  public readonly stdin: ReadStream & { fd: 0 };
+  public readonly stderr: WriteStream & { fd: 2 };
   private readonly emitter = new EventEmitter();
 
   constructor(private readonly responses: ProcessResponses) {
-    this.stdin = responses.stdin;
-    this.stdout = responses.stdout;
-    this.stderr = responses.stderr;
+    this.stdin = responses.stdin as ReadStream & { fd: 0 };
+    this.stdout = responses.stdout as WriteStream & { fd: 1 };
+    this.stderr = responses.stderr as WriteStream & { fd: 2 };
   }
 
-  public on(event: string | symbol, listener: (...args: any[]) => void): LimitedProcess {
+  public on(
+    event: string | symbol,
+    listener: (...args: unknown[]) => void
+  ): LimitedProcess {
     this.emitter.on(event, listener);
     return this;
   }

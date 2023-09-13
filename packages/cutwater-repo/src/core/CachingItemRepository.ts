@@ -30,7 +30,7 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   public constructor(
     private readonly repo: ItemRepository<T>,
     { name, itemDescriptor, ttl, greedy = false }: RepositoryConfig<T>,
-    cache: MemoryCache = new MemoryCache(),
+    cache: MemoryCache = new MemoryCache()
   ) {
     this.name = name;
     this.descriptor = itemDescriptor;
@@ -41,7 +41,8 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     if (greedy) {
       setInterval(async () => {
         while (this.cmdQueue.length > 0) {
-          await this.cmdQueue.shift()!();
+          const cmd = await this.cmdQueue.shift();
+          cmd && cmd();
         }
       }, 5);
     }
@@ -52,7 +53,8 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   }
 
   public async invalidate(itemOrId: string | T): Promise<void> {
-    const id = typeof itemOrId === 'string' ? itemOrId : this.descriptor.getId(itemOrId);
+    const id =
+      typeof itemOrId === 'string' ? itemOrId : this.descriptor.getId(itemOrId);
     await this.getItemCacheForItemId(id)?.invalidate(id);
   }
 
@@ -149,10 +151,15 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     return await this.getItemCache(parentId).getAll();
   }
 
-  private getItemCache(parentId: string = CachingItemRepository.ROOT_OBJECT_ID): ItemCache<T> {
+  private getItemCache(
+    parentId: string = CachingItemRepository.ROOT_OBJECT_ID
+  ): ItemCache<T> {
     let rval = this.itemCaches[parentId];
     if (!rval) {
-      this.LOG.debug(`[${this.name}] - Creating cache for parentId: `, parentId);
+      this.LOG.debug(
+        `[${this.name}] - Creating cache for parentId: `,
+        parentId
+      );
       rval = new ItemCache<T>(this.memCache, {
         repoName: this.name,
         cacheId: parentId,
@@ -165,7 +172,9 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   }
 
   private getItemCacheForItemId(id: string): ItemCache<T> | undefined {
-    const parentId = Object.keys(this.itemCaches).find((parentId) => this.itemCaches[parentId].includes(id));
+    const parentId = Object.keys(this.itemCaches).find((parentId) =>
+      this.itemCaches[parentId].includes(id)
+    );
     return parentId ? this.getItemCache(parentId) : undefined;
   }
 }

@@ -105,11 +105,15 @@ export class FileSystem {
     return FileSystem.instance;
   }
 
-  public static createNull(entries: NullFileSystemEntry[] = defaultNullFileSystemEntries): FileSystem {
+  public static createNull(
+    entries: NullFileSystemEntry[] = defaultNullFileSystemEntries
+  ): FileSystem {
     return new FileSystem(new StubFileSystemProvider([...entries]));
   }
 
-  private constructor(private readonly fileSystemProvider: FileSystemProvider) {}
+  private constructor(
+    private readonly fileSystemProvider: FileSystemProvider
+  ) {}
 
   public exists(path: string): boolean {
     return this.fileSystemProvider.exists(path);
@@ -249,28 +253,36 @@ class StubFileSystemProvider implements FileSystemProvider {
 
   isDirectory(path: string): boolean {
     this.verifyPath(path);
-    return !this.findEntry(path)!.content;
+    return !this.findEntry(path)?.content;
   }
 
   listFiles(path: string): string[] {
     if (!this.isDirectory(path)) {
       throw new Error(`Path does not refer to a directory: ${path}`);
     }
-    return this.entries.filter((entry) => dirname(entry.name) === resolve(path)).map((entry) => basename(entry.name));
+    return this.entries
+      .filter((entry) => dirname(entry.name) === resolve(path))
+      .map((entry) => basename(entry.name));
   }
 
   getByteCount(path: string): number | undefined {
     this.verifyPath(path);
     const entry = this.findEntry(path);
-    return entry ? entry.content?.byteLength || entry.byteCount || 0 : undefined;
+    return entry
+      ? entry.content?.byteLength || entry.byteCount || 0
+      : undefined;
   }
 
   delete(path: string, recursive: boolean): void {
     const entry = this.findEntry(path);
     if (this.exists(path) && this.isDirectory(path) && !recursive) {
-      throw new Error(`Cannot delete directory without recursive flag: ${path}`);
+      throw new Error(
+        `Cannot delete directory without recursive flag: ${path}`
+      );
     }
-    const children = this.entries.filter((child) => child.name.startsWith(resolve(path)) && child !== entry);
+    const children = this.entries.filter(
+      (child) => child.name.startsWith(resolve(path)) && child !== entry
+    );
     if (entry) {
       this.entries.splice(this.entries.indexOf(entry), 1);
     }
@@ -282,7 +294,8 @@ class StubFileSystemProvider implements FileSystemProvider {
     if (this.isDirectory(path)) {
       throw new Error(`Cannot read from a directory: ${path}`);
     }
-    return Buffer.from(entry!.content!);
+    const content = entry?.content;
+    return content && Buffer.from(content);
   }
 
   verifyParentPath(path: string) {

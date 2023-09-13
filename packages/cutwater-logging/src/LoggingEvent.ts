@@ -12,5 +12,9 @@ export class LoggingEvent {
    * @param level - the level associated with the message
    * @param message - the message to be logged
    */
-  constructor(public readonly logger: Logger, public readonly level: Level, public readonly message: any) {}
+  constructor(
+    public readonly logger: Logger,
+    public readonly level: Level,
+    public readonly message: unknown
+  ) {}
 }

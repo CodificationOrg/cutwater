@@ -1,21 +1,31 @@
-import { AttributeMap, Key } from 'aws-sdk/clients/dynamodb';
 import { CompoundValue } from '../CompoundValue';
 import { DynamoItem } from '../DynamoItem';
+import { AttributeMap } from '../types';
 import { CompoundItemId } from './CompoundItemId';
 
 export class CompoundKey {
   public static readonly DEFAULT_PARENT = 'CMPD_ROOT';
-  private constructor(public readonly itemType: string, public readonly compoundItemId: CompoundItemId) {}
+  private constructor(
+    public readonly itemType: string,
+    public readonly compoundItemId: CompoundItemId
+  ) {}
 
   public static fromItemId(itemType: string, itemId: string): CompoundKey {
     return new CompoundKey(itemType, CompoundItemId.fromItemId(itemId));
   }
 
-  public static fromAttributeMap(map: AttributeMap, partitionKey = 'pk', sortKey = 'sk'): CompoundKey {
+  public static fromAttributeMap(
+    map: AttributeMap,
+    partitionKey = 'pk',
+    sortKey = 'sk'
+  ): CompoundKey {
     const dynamoItem = new DynamoItem(map);
     return new CompoundKey(
-      dynamoItem.toStringPart(sortKey, 0)!,
-      CompoundItemId.fromKeys(dynamoItem.toString(partitionKey)!, dynamoItem.toString(sortKey)!),
+      dynamoItem.toSafeStringPart(sortKey, 0),
+      CompoundItemId.fromKeys(
+        dynamoItem.toSafeString(partitionKey),
+        dynamoItem.toSafeString(sortKey)
+      )
     );
   }
 
@@ -29,7 +39,7 @@ export class CompoundKey {
     return CompoundValue.create(this.itemType, this.compoundItemId.name).value;
   }
 
-  public toKey(partitionKey = 'pk', sortKey = 'sk'): Key {
+  public toKey(partitionKey = 'pk', sortKey = 'sk'): AttributeMap {
     return {
       [partitionKey]: {
         S: this.partitionKey,
@@ -46,7 +56,8 @@ export class CompoundKey {
 
   public static toPartitionKey(parentId?: string): string {
     return parentId
-      ? CompoundValue.create(...CompoundItemId.fromItemId(parentId).idParts).value
+      ? CompoundValue.create(...CompoundItemId.fromItemId(parentId).idParts)
+          .value
       : CompoundKey.DEFAULT_PARENT;
   }
 

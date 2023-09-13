@@ -1,4 +1,4 @@
-import EventEmitter from 'events';
+import { EventEmitter } from 'node:events';
 
 import { OutputTracker } from './OutputTracker';
 
@@ -20,7 +20,7 @@ export class Console {
     return OutputTracker.create(this.emitter, Console.OUTPUT_EVENT);
   }
 
-  public log(message?: any, ...optionalParams: any[]): void {
+  public log(message?: unknown, ...optionalParams: unknown[]): void {
     if (!this.isNulled) {
       console.log(message, ...optionalParams);
     }

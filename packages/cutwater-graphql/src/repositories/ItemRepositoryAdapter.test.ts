@@ -87,7 +87,10 @@ describe('ItemRepositoryAdapter', () => {
       const count = randomCount(32);
       const adapter = await newAdapter(count);
       const loader = adapter.dataLoader;
-      const items = [...(await adapter.getAll('a')), ...(await adapter.getAll('b'))];
+      const items = [
+        ...(await adapter.getAll('a')),
+        ...(await adapter.getAll('b')),
+      ];
       const keyCount = randomCount(items.length) - 1;
       const keys: string[] = [];
       while (keys.length < keyCount) {
@@ -101,7 +104,7 @@ describe('ItemRepositoryAdapter', () => {
       const key = keys[Math.max(randomCount(keyCount) - 1, 0)];
       const result = await loader.load(key);
       expect(result).toBeTruthy();
-      expect(result!.userId).toBe(key);
+      expect(result?.userId).toBe(key);
     });
   });
 

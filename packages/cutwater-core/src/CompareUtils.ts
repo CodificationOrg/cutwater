@@ -62,13 +62,13 @@ export class CompareUtils {
   };
 
   private static toSafeString(value: comparable): string {
-    return !!value ? `${value}` : '';
+    return value ? `${value}` : '';
   }
 
   private static toSafeNumber(value: comparable): number {
     const safeVal = CompareUtils.toSafeString(value);
     const isFloat = safeVal.indexOf('.') !== -1;
-    return isFloat ? parseFloat(safeVal) : !!value ? parseInt(safeVal) : -1;
+    return isFloat ? parseFloat(safeVal) : value ? parseInt(safeVal) : -1;
   }
 
   private static compareAs(a: comparable, b: comparable, type: string): boolean {

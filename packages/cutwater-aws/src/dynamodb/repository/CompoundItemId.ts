@@ -4,18 +4,32 @@ import { CompoundKey } from './CompoundKey';
 export class CompoundItemId {
   public static readonly ID_SEPARATOR = ':';
 
-  private constructor(public readonly parentId: string | undefined = undefined, public readonly name: string) {}
+  private constructor(
+    public readonly parentId: string | undefined = undefined,
+    public readonly name: string
+  ) {}
 
   public static fromItemId(itemId: string): CompoundItemId {
-    return new CompoundItemId(CompoundItemId.toParentId(itemId), CompoundItemId.toName(itemId));
+    return new CompoundItemId(
+      CompoundItemId.toParentId(itemId),
+      CompoundItemId.toName(itemId)
+    );
   }
 
-  public static fromKeys(partitionKey: string, sortKey: string): CompoundItemId {
+  public static fromKeys(
+    partitionKey: string,
+    sortKey: string
+  ): CompoundItemId {
     const parent =
       partitionKey === CompoundKey.DEFAULT_PARENT
         ? undefined
-        : CompoundValue.create(partitionKey).parts.join(CompoundItemId.ID_SEPARATOR);
-    return new CompoundItemId(parent, CompoundValue.create(sortKey).parts.pop()!);
+        : CompoundValue.create(partitionKey).parts.join(
+            CompoundItemId.ID_SEPARATOR
+          );
+    return new CompoundItemId(
+      parent,
+      CompoundValue.create(sortKey).parts.pop() || ''
+    );
   }
 
   public static create(parentId: string, name: string): CompoundItemId {
@@ -27,7 +41,9 @@ export class CompoundItemId {
   }
 
   public get itemId(): string {
-    return this.parentId ? [this.parentId, this.name].join(CompoundItemId.ID_SEPARATOR) : this.name;
+    return this.parentId
+      ? [this.parentId, this.name].join(CompoundItemId.ID_SEPARATOR)
+      : this.name;
   }
 
   public get idParts(): string[] {
@@ -35,15 +51,20 @@ export class CompoundItemId {
   }
 
   public get parentIdParts(): string[] {
-    return this.parentId ? this.parentId.split(CompoundItemId.ID_SEPARATOR) : [];
+    return this.parentId
+      ? this.parentId.split(CompoundItemId.ID_SEPARATOR)
+      : [];
   }
 
   public static toParentId(itemId: string): string | undefined {
-    const rval = itemId.split(CompoundItemId.ID_SEPARATOR).slice(0, -1).join(this.ID_SEPARATOR);
+    const rval = itemId
+      .split(CompoundItemId.ID_SEPARATOR)
+      .slice(0, -1)
+      .join(this.ID_SEPARATOR);
     return rval.length !== 0 ? rval : undefined;
   }
 
   public static toName(itemId: string): string {
-    return itemId.split(CompoundItemId.ID_SEPARATOR).pop()!;
+    return itemId.split(CompoundItemId.ID_SEPARATOR).pop() || '';
   }
 }

@@ -3,16 +3,18 @@ import { Level } from './Level';
 import { Logger } from './Logger';
 import { LoggerFactory } from './LoggerFactory';
 
+type logFnc = (message?: unknown, ...optionalParams: unknown[]) => void;
+
 const logEntries: string[] = [];
-let oldLog: any;
+let oldLog: logFnc;
 let logger: Logger;
 
 beforeAll(() => {
-  const writeEntry = (message?: any): void => {
+  const writeEntry = (message?: unknown): void => {
     const value: string = message ? message.toString() : '';
     logEntries.push(value);
   };
-  oldLog = console['log'];
+  oldLog = console.log;
   console['log'] = jest.fn(writeEntry);
   logger = LoggerFactory.getLogger('Foo');
 });
@@ -22,7 +24,7 @@ beforeEach(() => {
 });
 
 afterAll(() => {
-  console['log'] = oldLog;
+  console.log = oldLog;
 });
 
 describe('LoggerFactory', () => {

@@ -1,0 +1,18 @@
+{
+  "name": "cutwater-repo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/cutwater-repo/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest"
+    },
+    "build": {
+      "executor": "@nx/js:swc"
+    }
+  },
+  "tags": []
+}

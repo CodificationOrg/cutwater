@@ -1,9 +1,14 @@
 import { LoggerFactory } from '@codification/cutwater-logging';
-import { IncomingHttpHeaders, IncomingMessage, OutgoingHttpHeaders } from 'http';
+import {
+  IncomingHttpHeaders,
+  IncomingMessage,
+  OutgoingHttpHeaders,
+} from 'http';
+import { Readable } from 'node:stream';
 import { IOUtils } from './IOUtils';
 
 const LOG = LoggerFactory.getLogger();
-const GOT_RESPONSE_BODY = 'body';
+const GOT_RESPONSE_BODY = 'body' as keyof IncomingMessage;
 
 /**
  * Utility for handling common HTTP related tasks.
@@ -25,7 +30,7 @@ export class HttpUtils {
    *
    * @param response - response from the Node.js `http` module
    */
-  public static toBodyText(response: IncomingMessage): Promise<string> {
+  public static async toBodyText(response: IncomingMessage): Promise<string> {
     return new Promise((resolve, reject) => {
       this.toBuffer(response)
         .then((data) => resolve(data.toString()))
@@ -38,11 +43,12 @@ export class HttpUtils {
    *
    * @param response - response from the Node.js `http` module
    */
-  public static toBuffer(response: IncomingMessage): Promise<Buffer> {
+  public static async toBuffer(response: IncomingMessage): Promise<Buffer> {
     if (this.isGotResponse(response)) {
       LOG.debug(`Processing toBuffer as a GOT response...`);
       return this.gotResponseToBuffer(response);
     }
+
     let rval = '';
     return new Promise<Buffer>((resolve, reject) => {
       LOG.debug(`Processing toBuffer as standard IncomingMessage...`);
@@ -68,7 +74,7 @@ export class HttpUtils {
   public static mergeHeaders(
     dst: IncomingHttpHeaders | OutgoingHttpHeaders,
     src: IncomingHttpHeaders | OutgoingHttpHeaders,
-    overwrite = true,
+    overwrite = true
   ): IncomingHttpHeaders {
     const rval: IncomingHttpHeaders = this.toIncomingHttpHeaders(dst);
     Object.keys(src).forEach((headerName) => {
@@ -85,7 +91,9 @@ export class HttpUtils {
    *
    * @param headers - headers to be converted to the incoming format
    */
-  public static toIncomingHttpHeaders(headers: IncomingHttpHeaders | OutgoingHttpHeaders): IncomingHttpHeaders {
+  public static toIncomingHttpHeaders(
+    headers: IncomingHttpHeaders | OutgoingHttpHeaders
+  ): IncomingHttpHeaders {
     const rval: IncomingHttpHeaders = {};
     Object.keys(headers).forEach((headerName) => {
       rval[headerName] = this.toNormalizedHeaderValue(headers[headerName]);
@@ -93,25 +101,29 @@ export class HttpUtils {
     return rval;
   }
 
-  private static toNormalizedHeaderValue(value: string | string[] | number | undefined): string | string[] | undefined {
+  private static toNormalizedHeaderValue(
+    value: string | string[] | number | undefined
+  ): string | string[] | undefined {
     return typeof value === 'number' ? value.toString() : value;
   }
 
   private static isGotResponse(response: IncomingMessage): boolean {
-    return response[GOT_RESPONSE_BODY];
+    return 'body' in response;
   }
 
-  private static gotResponseToBuffer(response: IncomingMessage): Promise<Buffer> {
-    let rval: Promise<Buffer>;
-    const body: any = response[GOT_RESPONSE_BODY];
+  private static async gotResponseToBuffer(
+    response: IncomingMessage
+  ): Promise<Buffer> {
+    let rval: Buffer;
+    const body: unknown = response[GOT_RESPONSE_BODY];
 
     LOG.debug(`Got response body is of type: ${typeof body}`);
     if (typeof body === 'string') {
-      rval = Promise.resolve(Buffer.from(body));
+      rval = Buffer.from(body);
     } else if (Buffer.isBuffer(body)) {
-      rval = Promise.resolve(body);
+      rval = body;
     } else {
-      rval = IOUtils.readableToBuffer(body);
+      rval = await IOUtils.readableToBuffer(body as Readable);
     }
 
     return rval;

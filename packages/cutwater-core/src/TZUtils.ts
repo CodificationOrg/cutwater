@@ -1,4 +1,4 @@
-import fmt from 'date-fns/format';
+import * as fmt from 'date-fns/format';
 
 import { Config } from './Config';
 import { TimeUnit } from './TimeUnit';
@@ -40,7 +40,10 @@ export class TZUtils {
    * The current offset in minutes from UTC. May be positive or negative.
    */
   public static set timezoneOffset(minutes: number) {
-    Config.put(this.ENV_OFFSET, (minutes ? minutes : TZUtils.DEFAULT_OFFSET).toString());
+    Config.put(
+      this.ENV_OFFSET,
+      (minutes ? minutes : TZUtils.DEFAULT_OFFSET).toString()
+    );
   }
 
   public static get timezoneOffset(): number {
@@ -71,7 +74,7 @@ export class TZUtils {
     return new Date(
       rval.getTime() +
         TimeUnit.minutes(rval.getTimezoneOffset()).toMillis() +
-        TimeUnit.minutes(TZUtils.timezoneOffset).toMillis(),
+        TimeUnit.minutes(TZUtils.timezoneOffset).toMillis()
     );
   }
 }

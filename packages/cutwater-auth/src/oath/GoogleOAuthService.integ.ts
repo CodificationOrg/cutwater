@@ -1,7 +1,11 @@
+import { Config } from '@codification/cutwater-core';
 import { OAuthResponse } from '.';
 import { GoogleOAuthService } from './GoogleOAuthService';
 
-const service = new GoogleOAuthService(process.env['GOOGLE_CLIENT']!, process.env['GOOGLE_SECRET']!);
+const service = new GoogleOAuthService(
+  Config.getRequired('GOOGLE_CLIENT'),
+  Config.getRequired('GOOGLE_SECRET')
+);
 
 const response: OAuthResponse = {
   code: process.env['GOOGLE_CODE'] || '',
@@ -12,8 +16,9 @@ const response: OAuthResponse = {
 describe('GoogleOAuthService', () => {
   describe('generateAuthUrl', () => {
     it('can create a auth url', async () => {
-      const result = await service.generateAuthUrl(process.env['GOOGLE_REDIRECT']!);
-      console.log(result);
+      const result = await service.generateAuthUrl(
+        Config.getRequired('GOOGLE_REDIRECT')
+      );
       expect(result).toBeTruthy();
       expect(result.startsWith('https://')).toBeTruthy();
     });
@@ -23,7 +28,6 @@ describe('GoogleOAuthService', () => {
     if (process.env['GOOGLE_CODE']) {
       it('can fetch claims', async () => {
         const result = await service.getClaims(response);
-        console.log(result);
         expect(result).toBeTruthy();
       });
     }

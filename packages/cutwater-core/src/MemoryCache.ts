@@ -1,4 +1,4 @@
-import rfdc from 'rfdc';
+import * as rfdc from 'rfdc';
 import { TimeUnit } from './TimeUnit';
 
 interface CacheEntry<T> {
@@ -10,7 +10,7 @@ export class MemoryCache {
   private readonly CACHE: Record<string, CacheEntry<unknown>> = {};
   private readonly DEFAULT_TTL: number;
 
-  private nextExpiration: number;
+  private nextExpiration = 0;
 
   public constructor(defaultTTLSedonds = 90) {
     if (defaultTTLSedonds < 1) {
@@ -37,7 +37,11 @@ export class MemoryCache {
     return this.get(key) !== undefined;
   }
 
-  public put<T>(key: string, value: T, ttlSeconds: number = this.DEFAULT_TTL): T | undefined {
+  public put<T>(
+    key: string,
+    value: T,
+    ttlSeconds: number = this.DEFAULT_TTL
+  ): T | undefined {
     const rval: T | undefined = this.get(key);
     const entry: CacheEntry<T> = {
       val: rfdc()(value),
@@ -68,7 +72,8 @@ export class MemoryCache {
   }
 
   private resetNextExpiration(): void {
-    this.nextExpiration = Date.now() + TimeUnit.seconds(this.DEFAULT_TTL).toMillis();
+    this.nextExpiration =
+      Date.now() + TimeUnit.seconds(this.DEFAULT_TTL).toMillis();
   }
 
   private isExpired(entry?: CacheEntry<unknown>): boolean {

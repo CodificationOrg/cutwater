@@ -25,9 +25,13 @@ describe('System', () => {
     describe('copyTo', () => {
       it('can copy to another file', () => {
         const system = System.createNull();
-        const result = system.toFileReference('/project/package.json').copyTo(system.toFileReference('/root.json'));
+        const result = system
+          .toFileReference('/project/package.json')
+          .copyTo(system.toFileReference('/root.json'));
         expect(result.exists()).toBeTruthy();
-        expect(result.readObjectSync<Record<string, string>>()!.name).toBe('rootPackageJson');
+        expect(
+          (result.readObjectSync<Record<string, string>>() || {})['name']
+        ).toBe('rootPackageJson');
       });
     });
     describe('readObjectSyncSafe', () => {
@@ -53,8 +57,8 @@ describe('System', () => {
           .writeObjectSync({ name: 'Phil', age: 42 });
         const result: Record<string, unknown> = ref.readObjectSyncSafe();
         expect(result).toBeDefined();
-        expect(result.name).toBe('Phil');
-        expect(result.age).toBe(42);
+        expect(result['name']).toBe('Phil');
+        expect(result['age']).toBe(42);
       });
     });
   });

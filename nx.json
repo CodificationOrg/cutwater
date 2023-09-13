@@ -1,48 +1,98 @@
 {
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "affected": {
     "defaultBase": "master"
   },
-  "workspaceLayout": {
-    "libsDir": "packages"
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx-cloud",
+      "options": {
+        "cacheableOperations": ["build", "test", "lint"],
+        "accessToken": "MDg0MjhlZDctOWQwNC00N2ZlLWFiZTMtYmNiOTllYTM4ODg4fHJlYWQtd3JpdGU="
+      }
+    }
   },
-  "implicitDependencies": {
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
-    },
-    "nx.json": "*"
+  "workspaceLayout": {
+    "projectNameAndRootFormat": "as-provided"
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "{projectRoot}/lib",
-        "{projectRoot}/dist",
-        "{projectRoot}/temp"
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"],
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "rootDir": "{projectRoot}/src",
+        "outputPath": "dist/{projectRoot}",
+        "generateExportsField": true,
+        "main": "{projectRoot}/src/index.ts",
+        "swcrc": "{workspaceRoot}/.swcrc",
+        "tsConfig": "{projectRoot}/tsconfig.lib.json"
+      }
+    },
+    "lint": {
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "{projectRoot}/**/*.ts",
+          "{projectRoot}/package.json"
+        ]
+      },
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.js"
       ]
     },
     "test": {
-      "dependsOn": [
-        "^test"
-      ],
-      "outputs": [
-        "{projectRoot}/temp"
-      ]
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.ts",
+        "passWithNoTests": true,
+        "lintFilePatterns": [
+          "{projectRoot}/**/*.{ts,tsx,js,jsx}",
+          "{projectRoot}/package.json"
+        ]
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        },
+        "integ": {
+          "jestConfig": "{projectRoot}/jest-integration.config.ts"
+        }
+      }
     }
   },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/nx-cloud",
-      "options": {
-        "cacheableOperations": [
-          "test",
-          "build",
-          "lint"
-        ],
-        "accessToken": "MDg0MjhlZDctOWQwNC00N2ZlLWFiZTMtYmNiOTllYTM4ODg4fHJlYWQtd3JpdGU="
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": [
+      "default",
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/eslint.config.js",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/src/test-setup.[jt]s",
+      "!{projectRoot}/test-setup.[jt]s"
+    ],
+    "sharedGlobals": []
+  },
+  "generators": {
+    "@nx/react": {
+      "application": {
+        "babel": true
+      },
+      "library": {
+        "unitTestRunner": "jest"
       }
+    }
+  },
+  "pluginsConfig": {
+    "@nx/js": {
+      "analyzeSourceFiles": true
     }
   }
 }

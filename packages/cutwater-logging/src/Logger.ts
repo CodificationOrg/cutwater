@@ -35,7 +35,7 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  fatal(...input: any[]): boolean;
+  fatal(...input: unknown[]): boolean;
 
   /**
    * Creates a [[LoggingEvent]] of error priority, returning `true` if the message will be output based on this
@@ -43,7 +43,7 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  error(...input: any[]): boolean;
+  error(...input: unknown[]): boolean;
 
   /**
    * Creates a [[LoggingEvent]] of warn priority, returning `true` if the message will be output based on this
@@ -51,7 +51,7 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  warn(...input: any[]): boolean;
+  warn(...input: unknown[]): boolean;
 
   /**
    * Creates a [[LoggingEvent]] of info priority, returning `true` if the message will be output based on this
@@ -59,7 +59,7 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  info(...input: any[]): boolean;
+  info(...input: unknown[]): boolean;
 
   /**
    * Creates a [[LoggingEvent]] of debug priority, returning `true` if the message will be output based on this
@@ -67,7 +67,7 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  debug(...input: any[]): boolean;
+  debug(...input: unknown[]): boolean;
 
   /**
    * Creates a [[LoggingEvent]] of trace priority, returning `true` if the message will be output based on this
@@ -75,12 +75,12 @@ export interface Logger {
    *
    * @param input - data describing the logging event
    */
-  trace(...input: any[]): boolean;
+  trace(...input: unknown[]): boolean;
 
   /**
    * Supplied for compatibility with other logging systems.  Specific level varies by implementation.
    *
    * @param input - data describing the logging event
    */
-  log(...input: any[]): boolean;
+  log(...input: unknown[]): boolean;
 }

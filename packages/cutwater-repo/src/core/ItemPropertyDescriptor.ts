@@ -4,11 +4,11 @@ export class ItemPropertyDescriptor<T> implements ItemDescriptor<T> {
   public constructor(
     private readonly itemType: string,
     private readonly idProperty: string,
-    private readonly parentIdProperty?: string,
+    private readonly parentIdProperty?: string
   ) {}
 
   public getId(item: T): string {
-    return item[this.idProperty];
+    return item[this.idProperty as keyof T] as string;
   }
 
   public getType(): string {
@@ -16,6 +16,8 @@ export class ItemPropertyDescriptor<T> implements ItemDescriptor<T> {
   }
 
   public getParentId(item: T): string | undefined {
-    return this.parentIdProperty ? item[this.parentIdProperty] : undefined;
+    return this.parentIdProperty
+      ? (item[this.parentIdProperty as keyof T] as string)
+      : undefined;
   }
 }

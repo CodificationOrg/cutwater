@@ -1,8 +1,8 @@
 import { ChildProcess } from 'child_process';
-import spawn from 'cross-spawn';
-import { EventEmitter } from 'events';
+import * as spawn from 'cross-spawn';
+import { EventEmitter } from 'node:events';
 import { delimiter, resolve } from 'path';
-import spawnArgs from 'spawn-args';
+import * as spawnArgs from 'spawn-args';
 
 import { OutputTracker } from './OutputTracker';
 import { System } from './System';
@@ -24,7 +24,11 @@ export interface SpawnOptions {
   };
 }
 
-type SpawnFn = (command: string, args?: ReadonlyArray<string>, options?: any) => ChildProcess;
+type SpawnFn = (
+  command: string,
+  args?: ReadonlyArray<string>,
+  options?: unknown
+) => ChildProcess;
 
 export interface SpawnResponse {
   output?: string;
@@ -34,17 +38,23 @@ export interface SpawnResponse {
 }
 
 export class Spawn {
-  public static createNull(response: SpawnResponse = {}, system: System = System.createNull()): Spawn {
+  public static createNull(
+    response: SpawnResponse = {},
+    system: System = System.createNull()
+  ): Spawn {
     return new Spawn(system, createStubbedSpawn(response));
   }
 
   public static create(): Spawn {
-    return new Spawn(System.create(), spawn);
+    return new Spawn(System.create(), spawn as SpawnFn);
   }
 
   private readonly emitter = new EventEmitter();
   private static readonly OUTPUT_EVENT: string = 'runOutput';
-  constructor(private readonly system: System, private readonly spawn: SpawnFn) {}
+  constructor(
+    private readonly system: System,
+    private readonly spawn: SpawnFn
+  ) {}
 
   public trackOutput(): OutputTracker {
     return OutputTracker.create(this.emitter, Spawn.OUTPUT_EVENT);
@@ -102,7 +112,9 @@ export class Spawn {
           resolve(Buffer.from(output.join('\n'), 'binary'));
         } else {
           if (!options.ignoreErrors) {
-            reject(new Error(`Non-zero exit code of [${code}]: ${stderr.join('\n')}`));
+            reject(
+              new Error(`Non-zero exit code of [${code}]: ${stderr.join('\n')}`)
+            );
           } else {
             resolve(Buffer.from(output.join('\n'), 'binary'));
           }
@@ -114,7 +126,10 @@ export class Spawn {
   private spawnProccess(options: SpawnOptions): ChildProcess {
     const cwd = options.cwd || this.system.cwd();
     if (options.logger) {
-      options.logger.verbose('Executing command: %s', this.getCommandText(options));
+      options.logger.verbose(
+        'Executing command: %s',
+        this.getCommandText(options)
+      );
     }
     return this.spawn(options.command, this.toArgs(options.args), {
       stdio: this.toStdio(options),
@@ -124,7 +139,10 @@ export class Spawn {
   }
 
   private getCommandText(options: SpawnOptions): string {
-    const args = options.args && Array.isArray(options.args) ? options.args.join(' ') : options.args || '';
+    const args =
+      options.args && Array.isArray(options.args)
+        ? options.args.join(' ')
+        : options.args || '';
     return `${options.command}${args ? ' ' + args : args}`;
   }
 
@@ -145,7 +163,11 @@ export class Spawn {
     const cwd = options.cwd || this.system.cwd();
     return {
       ...this.system.env,
-      PATH: `${this.system.env.PATH}${delimiter}${resolve(cwd, 'node_modules', '.bin')}`,
+      PATH: `${this.system.env['PATH']}${delimiter}${resolve(
+        cwd,
+        'node_modules',
+        '.bin'
+      )}`,
       ...options.env,
     };
   }
@@ -173,7 +195,12 @@ class StubbedChildProcess extends EventEmitter {
       if (this.response.processError) {
         this.emit('error', this.response.processError);
       } else {
-        const exitCode = this.response.exitCode !== undefined ? this.response.exitCode : this.response.error ? 1 : 0;
+        const exitCode =
+          this.response.exitCode !== undefined
+            ? this.response.exitCode
+            : this.response.error
+            ? 1
+            : 0;
         this.emit('exit', exitCode);
       }
     });

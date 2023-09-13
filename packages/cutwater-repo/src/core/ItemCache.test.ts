@@ -2,7 +2,11 @@ import { MemoryCache } from '@codification/cutwater-core';
 import { ItemCache } from './ItemCache';
 import { ItemPropertyDescriptor } from './ItemPropertyDescriptor';
 
-const itemDescriptor = new ItemPropertyDescriptor('MockItem', 'userId', 'groupId');
+const itemDescriptor = new ItemPropertyDescriptor(
+  'MockItem',
+  'userId',
+  'groupId'
+);
 
 export interface MockItem {
   groupId: string;
@@ -14,7 +18,8 @@ export interface MockItem {
 export const randomCount = (max = 25, min = 1) => {
   return Math.max(Math.floor(Math.random() * max + 1), min);
 };
-export const selectId = (count: number): string => (randomCount(count) - 1).toString();
+export const selectId = (count: number): string =>
+  (randomCount(count) - 1).toString();
 export const mockItems = (count: number = randomCount()) => {
   const rval: MockItem[] = [];
   for (let i = 0; i < count; i++) {
@@ -110,19 +115,31 @@ describe('ItemCache', () => {
       const count = randomCount(100, 50);
       const selected = (randomCount(count) - 1).toString();
       const cache = await newInstance(count);
-      const existingItem = (await cache.get(selected))!;
+      const existingItem = await cache.get(selected);
+      if (!existingItem) {
+        fail('item should exist');
+      }
       existingItem.age = 422;
       await cache.put(existingItem);
-      const item = (await cache.getAll()).find((item) => item.userId === selected);
+      const item = (await cache.getAll()).find(
+        (item) => item.userId === selected
+      );
       expect(item?.age).toBe(422);
     });
     it('returns copies', async () => {
       const count = randomCount(100, 50);
       const selected = (randomCount(count) - 1).toString();
       const cache = await newInstance(count);
-      const existingItem = (await cache.getAll()).find((item) => item.userId === selected)!;
+      const existingItem = (await cache.getAll()).find(
+        (item) => item.userId === selected
+      );
+      if (!existingItem) {
+        fail('item should exist');
+      }
       existingItem.age = 422;
-      const item = (await cache.getAll()).find((item) => item.userId === selected);
+      const item = (await cache.getAll()).find(
+        (item) => item.userId === selected
+      );
       expect(item?.age).toBe(+selected);
     });
     it('excludes removed items', async () => {
@@ -147,9 +164,12 @@ describe('ItemCache', () => {
       const count = randomCount();
       const selected = (randomCount(count) - 1).toString();
       const cache = await newInstance(count);
-      const item = (await cache.get(selected))!;
+      const item = await cache.get(selected);
+      if (!item) {
+        fail('item should exist');
+      }
       item.age = 442;
-      expect((await cache.get(selected))!.age).toBe(+selected);
+      expect((await cache.get(selected))?.age).toBe(+selected);
     });
   });
 

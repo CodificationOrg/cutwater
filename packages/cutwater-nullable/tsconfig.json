@@ -1,21 +1,22 @@
 {
-  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
+  "composite": true,
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es6",
-    "outDir": "lib",
     "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
-    "declaration": true,
-    "sourceMap": true,
-    "declarationMap": true,
-    "inlineSources": true,
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "moduleResolution": "node",
-    "lib": ["es5", "es2015.collection", "es2015.iterable", "es2015.promise"],
-    "types": ["node", "jest"]
-  }
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.lib.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
 }

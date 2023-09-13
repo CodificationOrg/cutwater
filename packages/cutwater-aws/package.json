@@ -4,17 +4,6 @@
   "description": "A library providing general functionality for TypeScript based AWS projects.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
-  "sideEffects": false,
-  "scripts": {
-    "clean": "gulp clean",
-    "test": "gulp test",
-    "build": "gulp --clean --fix --production"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/CodificationOrg/cutwater.git",
@@ -33,32 +22,19 @@
     "url": "https://github.com/wweiss"
   },
   "license": "Apache-2.0",
-  "private": false,
-  "prettier": "@codification/cutwater-build-core/includes/prettier-config",
-  "eslintConfig": {
-    "extends": [
-      "@codification/cutwater"
-    ]
-  },
   "optionalDependencies": {
+    "@middy/core": "^4.6.2",
     "aws-lambda": "^1.0.7",
-    "middy": "^0.18.1"
+    "@aws-sdk/client-cloudfront": "^3.410.0",
+    "@aws-sdk/client-dynamodb": "^3.410.0",
+    "@aws-sdk/client-s3": "^3.410.0",
+    "@swc/helpers": "~0.5.0"
   },
   "dependencies": {
-    "@codification/cutwater-core": "^0.35.28",
-    "@codification/cutwater-logging": "^0.35.28",
-    "@codification/cutwater-node-core": "^0.35.28",
-    "@codification/cutwater-repo": "^0.35.28",
-    "@aws-sdk/client-s3": "3.405.0",
-    "@aws-sdk/client-dynamodb": "3.405.0",
-    "@aws-sdk/client-cloudfront": "3.405.0",
-    "mime": "^2.4.0"
-  },
-  "devDependencies": {
-    "@codification/cutwater-build-core": "^0.35.28",
-    "@codification/cutwater-build-node": "^0.35.28",
-    "@types/mime": "^2.0.1",
-    "aws-lambda": "^1.0.7",
-    "middy": "^0.18.1"
+    "@codification/cutwater-core": "*",
+    "@codification/cutwater-logging": "*",
+    "@codification/cutwater-node-core": "*",
+    "@codification/cutwater-repo": "*",
+    "mime": "^3.0.0"
   }
 }

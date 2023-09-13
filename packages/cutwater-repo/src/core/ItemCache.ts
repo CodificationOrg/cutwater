@@ -21,7 +21,10 @@ export class ItemCache<T> {
   private readonly cacheTTL: number;
   private readonly descriptor: ItemDescriptor<T>;
 
-  public constructor(private readonly CACHE: MemoryCache, { repoName, cacheId, itemDescriptor, ttl }: CacheConfig<T>) {
+  public constructor(
+    private readonly CACHE: MemoryCache,
+    { repoName, cacheId, itemDescriptor, ttl }: CacheConfig<T>
+  ) {
     this.repoName = repoName;
     this.cacheId = cacheId;
     this.descriptor = itemDescriptor;
@@ -34,7 +37,8 @@ export class ItemCache<T> {
   }
 
   public async invalidate(idOrItem: string | T): Promise<void> {
-    const id = typeof idOrItem === 'string' ? idOrItem : this.descriptor.getId(idOrItem);
+    const id =
+      typeof idOrItem === 'string' ? idOrItem : this.descriptor.getId(idOrItem);
     await this.remove(id);
   }
 
@@ -60,7 +64,7 @@ export class ItemCache<T> {
   public async put(item: T): Promise<T> {
     const id = this.descriptor.getId(item);
     await this.CACHE.put<T>(this.toKey(id), item, this.cacheTTL);
-    const rval = (await this.CACHE.get<T>(this.toKey(id)))!;
+    const rval = await this.CACHE.get<T>(this.toKey(id));
     if (!rval) {
       throw new Error(`[${this.repoName}] Failed to cache item: ${id}`);
     }
@@ -95,9 +99,11 @@ export class ItemCache<T> {
     return rval;
   }
 
-  protected async setCachedBulk(itemsOrCache: T[] | CachedItems<T>): Promise<CachedItems<T>> {
+  protected async setCachedBulk(
+    itemsOrCache: T[] | CachedItems<T>
+  ): Promise<CachedItems<T>> {
     const rval: CachedItems<T> = Array.isArray(itemsOrCache)
-      ? itemsOrCache.reduce((cachedItems, item) => {
+      ? itemsOrCache.reduce<Record<string, T>>((cachedItems, item) => {
           const id = this.descriptor.getId(item);
           if (!this.idIndex.includes(id)) {
             this.idIndex.push(id);
@@ -106,7 +112,10 @@ export class ItemCache<T> {
           return cachedItems;
         }, {})
       : itemsOrCache;
-    this.LOG.debug(`[${this.repoName}] Bulk cache added[${this.cacheKey}]: `, Object.keys(rval).length);
+    this.LOG.debug(
+      `[${this.repoName}] Bulk cache added[${this.cacheKey}]: `,
+      Object.keys(rval).length
+    );
     await this.CACHE.put(this.cacheKey, rval, this.cacheTTL);
     return rval;
   }

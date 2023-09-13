@@ -1,8 +1,9 @@
-import { EventEmitter } from 'events';
-import yaml, { SchemaDefinition } from 'js-yaml';
+import { EventEmitter } from 'node:events';
+import * as yaml from 'js-yaml';
+import { SchemaDefinition } from 'js-yaml';
 import { basename, isAbsolute, join, resolve } from 'path';
 import { ReadStream, WriteStream } from 'tty';
-import yargs from 'yargs';
+import * as yargs from 'yargs';
 
 import { FileReference } from './FileReference';
 import { FileSystem } from './FileSystem';
@@ -10,7 +11,11 @@ import { LimitedProcess, Process } from './Process';
 
 export class System extends EventEmitter {
   public static create(): System {
-    return new System(Process.create(), FileSystem.create(), yargs.argv as Record<string, string | boolean>);
+    return new System(
+      Process.create(),
+      FileSystem.create(),
+      yargs.argv as Record<string, string | boolean>
+    );
   }
 
   public static createNull(
@@ -57,8 +62,11 @@ export class System extends EventEmitter {
     return this.process.exit(code);
   }
 
-  public on(eventName: string | symbol, listener: (...args: any[]) => void): this {
-    this.process.on(eventName, (...args: any[]): void => {
+  public override on(
+    eventName: string | symbol,
+    listener: (...args: unknown[]) => void
+  ): this {
+    this.process.on(eventName, (...args: unknown[]): void => {
       listener(args);
     });
     return this;
@@ -94,14 +102,21 @@ class FileReferenceImpl implements FileReference {
   private static readonly YAML: string[] = ['yaml', 'yml'];
   private static readonly DEFAULT_STRING_ENCODING = 'utf-8';
 
-  constructor(public readonly path: string, private readonly fileSystem: FileSystem) {}
+  constructor(
+    public readonly path: string,
+    private readonly fileSystem: FileSystem
+  ) {}
 
   private isJSON(): boolean {
     return basename(this.path).toLowerCase().endsWith(FileReferenceImpl.JSON);
   }
 
   private isYaml(): boolean {
-    return FileReferenceImpl.YAML.find((ext) => basename(this.path).toLowerCase().endsWith(ext)) !== undefined;
+    return (
+      FileReferenceImpl.YAML.find((ext) =>
+        basename(this.path).toLowerCase().endsWith(ext)
+      ) !== undefined
+    );
   }
 
   public exists(): boolean {
@@ -122,7 +137,10 @@ class FileReferenceImpl implements FileReference {
     }
     return this.fileSystem
       .listFiles(this.path)
-      .map((file) => new FileReferenceImpl(resolve(this.path, file), this.fileSystem));
+      .map(
+        (file) =>
+          new FileReferenceImpl(resolve(this.path, file), this.fileSystem)
+      );
   }
 
   public delete(recursive = false): FileReference {
@@ -164,7 +182,9 @@ class FileReferenceImpl implements FileReference {
   }
 
   public read(): string {
-    return this.readToBuffer().toString(FileReferenceImpl.DEFAULT_STRING_ENCODING);
+    return this.readToBuffer().toString(
+      FileReferenceImpl.DEFAULT_STRING_ENCODING
+    );
   }
 
   public readToBuffer(): Buffer {
@@ -193,7 +213,10 @@ class FileReferenceImpl implements FileReference {
     return this.write(rval);
   }
 
-  public writeObjectSync(obj: unknown, schema?: SchemaDefinition): FileReference {
+  public writeObjectSync(
+    obj: unknown,
+    schema?: SchemaDefinition
+  ): FileReference {
     let serialized: string;
     if (this.isJSON()) {
       serialized = JSON.stringify(obj, null, 2);
@@ -207,7 +230,9 @@ class FileReferenceImpl implements FileReference {
 
   public write(value: string | Buffer): FileReference {
     const buffer: Buffer =
-      typeof value === 'string' ? Buffer.from(value, FileReferenceImpl.DEFAULT_STRING_ENCODING) : value;
+      typeof value === 'string'
+        ? Buffer.from(value, FileReferenceImpl.DEFAULT_STRING_ENCODING)
+        : value;
     this.fileSystem.write(this.path, buffer);
     return this;
   }

@@ -10,24 +10,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NX_BRANCH: ${{ github.ref_name }}
 
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@v2
       with:
-        python-version: "3.8"
-    - uses: aws-actions/setup-sam@v1
+        fetch-depth: 0
+    - uses: nrwl/nx-set-shas@v3
+      with:
+        main-branch-name: 'master'
     
-    - name: Configure Node
+    - name: Use Node.js 18
       uses: actions/setup-node@v3
       with:
         cache: "yarn"
-        node-version: '18'
+        node-version: "18.16.0"
 
     - name: Install Dependencies
       run: yarn install --frozen-lockfile
 
-    - name: Build
-      run:  yarn build
-      env:
-        NX_BRANCH: ${{ github.ref_name }}
+    - run: git branch --track master origin/master
+
+    - run: npx nx affected -t lint --parallel=3
+    - run: npx nx affected -t test --parallel=3
+    - run: npx nx affected -t build --parallel=3

@@ -4,7 +4,11 @@ import { MockItem, mockItems, randomCount, selectId } from './ItemCache.test';
 import { ItemPropertyDescriptor } from './ItemPropertyDescriptor';
 import { MemoryItemRepository } from './MemoryItemRepository';
 
-const itemDescriptor = new ItemPropertyDescriptor('MockItem', 'userId', 'groupId');
+const itemDescriptor = new ItemPropertyDescriptor(
+  'MockItem',
+  'userId',
+  'groupId'
+);
 
 class MockCachingRepo extends CachingItemRepository<MockItem> {
   public async update(item: MockItem): Promise<MockItem> {
@@ -12,7 +16,9 @@ class MockCachingRepo extends CachingItemRepository<MockItem> {
   }
 }
 
-export const newMemoryRepo = async (count?: number): Promise<ItemRepository<MockItem>> => {
+export const newMemoryRepo = async (
+  count?: number
+): Promise<ItemRepository<MockItem>> => {
   const rval = new MemoryItemRepository<MockItem>('MockItem', itemDescriptor);
   if (count) {
     await rval.putAll(mockItems(count));
@@ -22,7 +28,7 @@ export const newMemoryRepo = async (count?: number): Promise<ItemRepository<Mock
 
 const newCachingRepo = async (
   countOrRepo?: number | ItemRepository<MockItem>,
-  greedy = false,
+  greedy = false
 ): Promise<MockCachingRepo> => {
   const repo =
     !countOrRepo || typeof countOrRepo === 'number'
@@ -39,10 +45,13 @@ const newCachingRepo = async (
 describe('CachingItemRepository', () => {
   describe('constructor', () => {
     it('can create a new instance', async () => {
-      const result = new CachingItemRepository<MockItem>(await newMemoryRepo(), {
-        name: 'MockItems',
-        itemDescriptor,
-      });
+      const result = new CachingItemRepository<MockItem>(
+        await newMemoryRepo(),
+        {
+          name: 'MockItems',
+          itemDescriptor,
+        }
+      );
       expect(result).toBeTruthy();
     });
   });
@@ -94,25 +103,35 @@ describe('CachingItemRepository', () => {
       const count = randomCount(5);
       const selectedId = (randomCount(count) - 1).toString();
       const repo = await newCachingRepo(count);
-      const existingItem = (await repo.get(selectedId))!;
+      const existingItem = await repo.get(selectedId);
       expect(existingItem).toBeTruthy();
-      await repo.getAll(existingItem.groupId);
+      if (!existingItem) {
+        fail('item should exist');
+      }
+      await repo.getAll(existingItem?.groupId);
       existingItem.age = 442;
       const result = await repo.update(existingItem);
       expect(result.age).toBe(442);
-      const items = (await repo.getAll(existingItem.groupId)).filter((item) => item.userId === selectedId);
+      const items = (await repo.getAll(existingItem.groupId)).filter(
+        (item) => item.userId === selectedId
+      );
       expect(items.length).toBe(1);
-      expect(items[0]!.age).toBe(442);
+      expect(items[0].age).toBe(442);
     });
     it('returns copies', async () => {
       const count = randomCount();
       const selectedId = (randomCount(count) - 1).toString();
       const repo = await newCachingRepo(count);
-      const existingItem = (await repo.get(selectedId))!;
+      const existingItem = await repo.get(selectedId);
+      if (!existingItem) {
+        fail('item should exist');
+      }
       existingItem.age = 442;
-      const items = (await repo.getAll(existingItem.groupId)).filter((item) => item.userId === selectedId);
+      const items = (await repo.getAll(existingItem.groupId)).filter(
+        (item) => item.userId === selectedId
+      );
       expect(items.length).toBe(1);
-      expect(items[0]!.age).toBe(+selectedId);
+      expect(items[0].age).toBe(+selectedId);
     });
     it('excludes removed items', async () => {
       const count = randomCount();

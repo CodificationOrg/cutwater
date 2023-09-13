@@ -1,4 +1,4 @@
-import EventEmitter from 'node:events';
+import { EventEmitter } from 'node:events';
 import { ReadStream, WriteStream } from 'node:tty';
 import { OutputTracker } from './OutputTracker';
 import { TrackedDuplex } from './TrackedDuplex';

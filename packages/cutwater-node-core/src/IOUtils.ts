@@ -2,7 +2,7 @@ import { System } from '@codification/cutwater-nullable';
 import { createWriteStream } from 'fs';
 import { join } from 'path';
 import { Readable } from 'stream';
-import yauzl from 'yauzl';
+import * as yauzl from 'yauzl';
 
 /**
  * Utility for handling common IO related tasks.
@@ -27,7 +27,7 @@ export class IOUtils {
    * @param stream - the `Readable` containing the data to be buffered
    */
   public static readableToBuffer(stream: Readable): Promise<Buffer> {
-    const rval: any[] = [];
+    const rval: Array<Uint8Array> = [];
     return new Promise((resolve, reject) => {
       stream.on('data', (data) => rval.push(data));
       stream.on('error', (err) => reject(err));
@@ -37,7 +37,11 @@ export class IOUtils {
     });
   }
 
-  public static async unzip(zipFilePath: string, destPath: string, system: System = System.create()): Promise<void> {
+  public static async unzip(
+    zipFilePath: string,
+    destPath: string,
+    system: System = System.create()
+  ): Promise<void> {
     return new Promise<void>((res, rej) => {
       yauzl.open(zipFilePath, { lazyEntries: true }, (err, zipfile) => {
         if (err) {

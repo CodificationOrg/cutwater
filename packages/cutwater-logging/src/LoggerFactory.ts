@@ -6,6 +6,8 @@ import { Level } from './Level';
 import { Logger } from './Logger';
 import { LoggingEvent } from './LoggingEvent';
 
+type LoggerLevelFunction = (...input: unknown[]) => boolean;
+
 /**
  * The source and single point of management for [[Logger]] instances.
  *
@@ -25,7 +27,8 @@ export class LoggerFactory {
    *
    * @readonly
    */
-  public static readonly ENV_LOGGING_LEVEL_PREFIX: string = LoggerFactory.ENV_LOGGING_LEVEL + '_';
+  public static readonly ENV_LOGGING_LEVEL_PREFIX: string =
+    LoggerFactory.ENV_LOGGING_LEVEL + '_';
 
   /**
    * The name of the default [[Logger]].
@@ -74,7 +77,9 @@ export class LoggerFactory {
    */
   public static logEnabledLevels(logger: Logger): void {
     Level.LEVELS.forEach((level) => {
-      logger[level.name.toLowerCase()](`${level.name}: ENABLED`);
+      const levelFunctionName = level.name.toLowerCase() as keyof typeof logger;
+      const levelFunction = logger[levelFunctionName] as LoggerLevelFunction;
+      levelFunction(`${level.name}: ENABLED`);
     });
   }
 
@@ -82,12 +87,17 @@ export class LoggerFactory {
 
   private static init(): void {
     if (!this.GLOBAL_LEVEL) {
-      this.GLOBAL_LEVEL = Level.toLevel(Config.get(this.ENV_LOGGING_LEVEL), this.DEFAULT_LOGGING_LEVEL);
+      this.GLOBAL_LEVEL = Level.toLevel(
+        Config.get(this.ENV_LOGGING_LEVEL),
+        this.DEFAULT_LOGGING_LEVEL
+      );
     }
   }
 
   private static initialize(logger: DefaultLoggerImpl): Logger {
-    const levelName: string = Config.get(this.ENV_LOGGING_LEVEL_PREFIX + logger.name);
+    const levelName: string = Config.get(
+      this.ENV_LOGGING_LEVEL_PREFIX + logger.name
+    );
     if (levelName) {
       logger.level = Level.toLevel(levelName);
     }
@@ -103,8 +113,8 @@ export class LoggerFactory {
  */
 class DefaultLoggerImpl implements Logger {
   private loggerName: string;
-  private loggerLevel: Level;
-  private loggerAppender: Appender;
+  private loggerLevel = LoggerFactory.GLOBAL_LEVEL;
+  private loggerAppender = LoggerFactory.GLOBAL_APPENDER;
 
   constructor(name: string) {
     this.loggerName = name;
@@ -123,38 +133,40 @@ class DefaultLoggerImpl implements Logger {
   }
 
   get appender(): Appender {
-    return !this.loggerAppender ? LoggerFactory.GLOBAL_APPENDER : this.loggerAppender;
+    return !this.loggerAppender
+      ? LoggerFactory.GLOBAL_APPENDER
+      : this.loggerAppender;
   }
 
   set appender(appender: Appender) {
     this.loggerAppender = appender;
   }
 
-  public fatal(...input: any[]): boolean {
+  public fatal(...input: unknown[]): boolean {
     return this.doLog(Level.FATAL, input);
   }
 
-  public error(...input: any[]): boolean {
+  public error(...input: unknown[]): boolean {
     return this.doLog(Level.ERROR, input);
   }
 
-  public warn(...input: any[]): boolean {
+  public warn(...input: unknown[]): boolean {
     return this.doLog(Level.WARN, input);
   }
 
-  public info(...input: any[]): boolean {
+  public info(...input: unknown[]): boolean {
     return this.doLog(Level.INFO, input);
   }
 
-  public log(...input: any[]): boolean {
+  public log(...input: unknown[]): boolean {
     return this.doLog(Level.DEBUG, input);
   }
 
-  public debug(...input: any[]): boolean {
+  public debug(...input: unknown[]): boolean {
     return this.doLog(Level.DEBUG, input);
   }
 
-  public trace(...input: any[]): boolean {
+  public trace(...input: unknown[]): boolean {
     return this.doLog(Level.TRACE, input);
   }
 
@@ -162,10 +174,12 @@ class DefaultLoggerImpl implements Logger {
     return this.level.isGreaterOrEqual(level);
   }
 
-  private doLog(level: Level, input: any[]): boolean {
+  private doLog(level: Level, input: unknown[]): boolean {
     const rval: boolean = this.isEnabled(level);
     if (rval) {
-      this.appender.doAppend(new LoggingEvent(this, level, util.format.apply(undefined, input)));
+      this.appender.doAppend(
+        new LoggingEvent(this, level, util.format.apply(undefined, input))
+      );
     }
     return rval;
   }

@@ -1,25 +1,36 @@
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
 import { ItemRepository } from '@codification/cutwater-repo';
-import DataLoader from 'dataloader';
+import * as DataLoader from 'dataloader';
 import { NodeId } from '../core';
 import { Node, NodeSource } from '../types';
 import { NodeItemDescriptor } from './NodeItemDescriptor';
 
-export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T & Node> {
+export class ItemRepositoryAdapter<T extends object>
+  implements ItemRepository<T>, NodeSource<T & Node>
+{
   protected readonly LOG: Logger = LoggerFactory.getLogger();
   public readonly dataLoader: DataLoader<string, T | undefined>;
 
-  public constructor(protected readonly repo: ItemRepository<T>, protected readonly descriptor: NodeItemDescriptor<T>) {
+  public constructor(
+    protected readonly repo: ItemRepository<T>,
+    protected readonly descriptor: NodeItemDescriptor<T>
+  ) {
     this.dataLoader = this.createDataLoader();
   }
 
   private createDataLoader(): DataLoader<string, T | undefined> {
-    return new DataLoader(async (keys: string[]): Promise<(T | undefined)[]> => {
-      const results: (T | undefined)[] = await Promise.all(keys.map((id) => this.repo.get(id)));
-      return keys.map((id) => {
-        return results.find((item) => !!item && this.descriptor.getObjectId(item) === id);
-      });
-    });
+    return new DataLoader(
+      async (keys: ReadonlyArray<string>): Promise<(T | undefined)[]> => {
+        const results: (T | undefined)[] = await Promise.all(
+          keys.map((id) => this.repo.get(id))
+        );
+        return keys.map((id) => {
+          return results.find(
+            (item) => !!item && this.descriptor.getObjectId(item) === id
+          );
+        });
+      }
+    );
   }
 
   public get itemType(): string {
@@ -57,7 +68,10 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
   }
 
   public isSource(nodeIdOrNodeType: NodeId | string): boolean {
-    const nodeType = typeof nodeIdOrNodeType === 'string' ? nodeIdOrNodeType : nodeIdOrNodeType.nodeType;
+    const nodeType =
+      typeof nodeIdOrNodeType === 'string'
+        ? nodeIdOrNodeType
+        : nodeIdOrNodeType.nodeType;
     return nodeType === this.itemType;
   }
 
@@ -67,20 +81,24 @@ export class ItemRepositoryAdapter<T> implements ItemRepository<T>, NodeSource<T
   }
 
   public async resolveConnections(parentId?: NodeId): Promise<(T & Node)[]> {
-    const result = await this.getAll(parentId ? this.descriptor.getItemId(parentId) : undefined);
+    const result = await this.getAll(
+      parentId ? this.descriptor.getItemId(parentId) : undefined
+    );
     return result.map((item) => this.asNode(item));
   }
 
   protected asNode(item: T): T & Node {
-    if (!Object.keys(item as unknown as object).includes('id')) {
-      item['id'] = this.getNodeId(item).id;
+    if (!('id' in item)) {
+      (item as Node).id = this.getNodeId(item).id;
     }
     return item as T & Node;
   }
 
   private primeDataLoader(items: T[]): T[] {
     items.forEach((item) =>
-      this.dataLoader.clear(this.descriptor.getObjectId(item)).prime(this.descriptor.getObjectId(item), item),
+      this.dataLoader
+        .clear(this.descriptor.getObjectId(item))
+        .prime(this.descriptor.getObjectId(item), item)
     );
     return items;
   }

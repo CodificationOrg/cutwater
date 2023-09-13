@@ -4,18 +4,6 @@
   "description": "A library providing the basic utility classes for both the browser and node environments.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
-  "sideEffects": false,
-  "scripts": {
-    "clean": "gulp clean",
-    "test": "gulp test",
-    "watch": "gulp watch",
-    "build": "gulp --fix --clean --production"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/CodificationOrg/cutwater.git",
@@ -37,19 +25,8 @@
   },
   "license": "Apache-2.0",
   "private": false,
-  "prettier": "@codification/cutwater-build-core/includes/prettier-config",
-  "eslintConfig": {
-    "extends": [
-      "@codification/cutwater"
-    ]
-  },
   "dependencies": {
     "date-fns": "^1.29.0",
     "rfdc": "^1.3.0"
-  },
-  "devDependencies": {
-    "@codification/cutwater-build-core": "^0.35.28",
-    "@codification/cutwater-build-node": "^0.35.28",
-    "@types/rfdc": "^1.2.0"
   }
 }

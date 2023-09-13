@@ -85,11 +85,15 @@ describe('MemoryCache', () => {
     it('will return a new object', () => {
       const cache = newInstance(8);
       cache.put<{ test: string }>('foo', { test: 'test' });
-      const item = cache.get<{ test: string }>('foo')!;
+      const item = cache.get<{ test: string }>('foo');
+      if (!item) {
+        fail('item should be defined');
+      }
       item.test = 'bar';
-      const result = cache.get<{ test: string }>('foo')!;
+      const result = cache.get<{ test: string }>('foo');
+      expect(result).toBeDefined();
       expect(result === item).toBeFalsy();
-      expect(result.test).toBe('test');
+      expect(result && result.test).toBe('test');
     });
 
     it('will not return an expired value', async () => {

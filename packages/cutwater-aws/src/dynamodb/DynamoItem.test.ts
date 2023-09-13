@@ -10,10 +10,10 @@ describe('DynamoItem', () => {
       item.toStringSet('roles', []);
 
       const result = item.prune();
-      expect(result.pic).toBeUndefined();
-      expect(result.name).toBeUndefined();
-      expect(result.roles).toBeUndefined();
-      expect(result.email).toBeDefined();
+      expect(result['pic']).toBeUndefined();
+      expect(result['name']).toBeUndefined();
+      expect(result['roles']).toBeUndefined();
+      expect(result['email']).toBeDefined();
     });
   });
 });

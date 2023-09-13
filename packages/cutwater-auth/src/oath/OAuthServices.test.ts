@@ -22,10 +22,14 @@ const partialOpts: OAuthServiceOptions = {
 };
 
 const configSrc: OAuthServiceConfigSource = {
-  findClientId: async (provider: OAuthServiceProvider): Promise<string | undefined> => {
+  findClientId: async (
+    provider: OAuthServiceProvider
+  ): Promise<string | undefined> => {
     return opts[provider]?.clientId;
   },
-  findClientSecret: async (provider: OAuthServiceProvider): Promise<string | undefined> => {
+  findClientSecret: async (
+    provider: OAuthServiceProvider
+  ): Promise<string | undefined> => {
     return opts[provider]?.clientSecret;
   },
 };
@@ -43,21 +47,31 @@ describe('OAuthServices', () => {
   it('can create an auth url', async () => {
     const authServices = new OAuthServices(opts);
     const url = (
-      await authServices.generateConnectionConfig(OAuthServiceProvider.GOOGLE, 'https://example.com/authCallback')
+      await authServices.generateConnectionConfig(
+        OAuthServiceProvider.GOOGLE,
+        'https://example.com/authCallback'
+      )
     )?.authUrl;
     expect(url).toBeTruthy();
-    expect(url!.indexOf('google')).not.toBe(-1);
+    expect(url?.indexOf('google')).not.toBe(-1);
   }, 10000);
   it('can create an auth url using provider string', async () => {
     const authServices = new OAuthServices(configSrc);
-    const url = (await authServices.generateConnectionConfig('microsoft', 'https://example.com/authCallback'))?.authUrl;
+    const url = (
+      await authServices.generateConnectionConfig(
+        'microsoft',
+        'https://example.com/authCallback'
+      )
+    )?.authUrl;
     expect(url).toBeTruthy();
-    expect(url!.indexOf('microsoft')).not.toBe(-1);
+    expect(url?.indexOf('microsoft')).not.toBe(-1);
   }, 10000);
 
   it('does not throw error on missing config', async () => {
     const authServices = new OAuthServices(partialOpts);
-    const configs = await authServices.generateConnectionConfigs('https://example.com/authCallback');
+    const configs = await authServices.generateConnectionConfigs(
+      'https://example.com/authCallback'
+    );
     expect(configs).toBeTruthy();
     expect(configs.length).toBe(1);
   }, 10000);
@@ -65,7 +79,10 @@ describe('OAuthServices', () => {
   it('fails with invalid provider string', async () => {
     const authServices = new OAuthServices(opts);
     try {
-      await authServices.generateConnectionConfig('microshift', 'https://example.com/authCallback');
+      await authServices.generateConnectionConfig(
+        'microshift',
+        'https://example.com/authCallback'
+      );
       fail('Should have thrown error.');
     } catch (err) {
       expect(err).toBeTruthy();

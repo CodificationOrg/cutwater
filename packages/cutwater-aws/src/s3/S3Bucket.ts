@@ -1,14 +1,13 @@
-import { S3 } from 'aws-sdk';
+import { NotFound, PutObjectCommandInput, S3 } from '@aws-sdk/client-s3';
 import {
   DeleteObjectsRequest,
   GetObjectOutput,
-  GetObjectRequest,
   HeadObjectOutput,
   PutObjectOutput,
   PutObjectRequest,
 } from 'aws-sdk/clients/s3';
 import * as mime from 'mime';
-import { Readable } from 'stream';
+import { Readable } from 'node:stream';
 
 /**
  * @beta
@@ -33,11 +32,16 @@ export class S3Bucket {
     this.bucketName = name;
   }
 
-  private async headObject(fileName: string): Promise<HeadObjectOutput | undefined> {
+  private async headObject(
+    fileName: string
+  ): Promise<HeadObjectOutput | undefined> {
     try {
-      return await this.s3Client.headObject({ Bucket: this.bucketName, Key: fileName }).promise();
+      return await this.s3Client.headObject({
+        Bucket: this.bucketName,
+        Key: fileName,
+      });
     } catch (err) {
-      if (err.code !== 'NotFound') {
+      if (!(err instanceof NotFound)) {
         throw err;
       }
     }
@@ -46,7 +50,7 @@ export class S3Bucket {
 
   public async size(fileName: string): Promise<number | undefined> {
     const head = await this.headObject(fileName);
-    return !!head ? head.ContentLength : undefined;
+    return head ? head.ContentLength : undefined;
   }
 
   public async exists(fileName: string): Promise<boolean> {
@@ -68,7 +72,7 @@ export class S3Bucket {
     if (fileNames.length < 1) {
       return;
     }
-    await this.s3Client.deleteObjects(this.toDeleteObjectsRequest(fileNames)).promise();
+    await this.s3Client.deleteObjects(this.toDeleteObjectsRequest(fileNames));
   }
 
   public async loadBuffer(fileName: string): Promise<Buffer> {
@@ -79,35 +83,36 @@ export class S3Bucket {
     return output.Body;
   }
 
-  private toBaseObjectRequest(key: string): GetObjectRequest {
+  private toBaseObjectRequest(key: string): { Key: string; Bucket: string } {
     return {
       Bucket: this.bucketName,
       Key: key,
     };
   }
 
-  private toPutObjectRequest(
+  private toPutObjectCommandInput(
     key: string,
     content: string | Buffer | Readable,
-    options: Partial<PutObjectRequest> = {},
-  ): PutObjectRequest {
-    const rval: PutObjectRequest = {
+    options: Partial<PutObjectRequest> = {}
+  ): PutObjectCommandInput {
+    return {
       ...this.toBaseObjectRequest(key),
       Body: content,
       ...options,
-    };
-    return rval;
+    } as PutObjectCommandInput;
   }
 
   public async load(fileName: string): Promise<GetObjectOutput> {
-    return await this.s3Client.getObject(this.toBaseObjectRequest(fileName)).promise();
+    return this.s3Client.getObject(this.toBaseObjectRequest(fileName));
   }
 
   public async store(
     fileName: string,
     content: string | Buffer | Readable,
-    options?: Partial<PutObjectRequest>,
+    options?: Partial<PutObjectRequest>
   ): Promise<PutObjectOutput> {
-    return await this.s3Client.putObject(this.toPutObjectRequest(fileName, content, options)).promise();
+    return this.s3Client.putObject(
+      this.toPutObjectCommandInput(fileName, content, options)
+    );
   }
 }

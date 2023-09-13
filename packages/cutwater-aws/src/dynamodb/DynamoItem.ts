@@ -1,5 +1,7 @@
-import { AttributeMap, AttributeValue } from 'aws-sdk/clients/dynamodb';
+import { AttributeValue } from '@aws-sdk/client-dynamodb';
+
 import { CompoundValue } from './CompoundValue';
+import { AttributeMap } from './types';
 
 enum ValueType {
   S = 'S',
@@ -33,7 +35,7 @@ export class DynamoItem {
   }
 
   public toSafeString(key: string): string {
-    return this.toString(key, '')!;
+    return this.toString(key, '') || '';
   }
 
   public toString(key: string, defaultValue?: string): string | undefined {
@@ -48,7 +50,10 @@ export class DynamoItem {
     }
   }
 
-  public setStringParts(key: string, ...values: Array<string | number | undefined>): void {
+  public setStringParts(
+    key: string,
+    ...values: Array<string | number | undefined>
+  ): void {
     if (values && values.length > 0) {
       this.setString(key, CompoundValue.create(...values).value);
     }
@@ -67,7 +72,7 @@ export class DynamoItem {
   }
 
   public toSafeNumber(key: string): number {
-    return this.toNumber(key, -1)!;
+    return this.toNumber(key, -1) || -1;
   }
 
   public toNumber(key: string, defaultValue?: number): number | undefined {
@@ -109,23 +114,52 @@ export class DynamoItem {
     }
   }
 
-  public toStringPart(key: string, index: number, defaultValue?: string): string | undefined {
-    return CompoundValue.create(this.getValue<string>(key, ValueType.S)).getPart(index, defaultValue);
+  public toStringPart(
+    key: string,
+    index: number,
+    defaultValue?: string
+  ): string | undefined {
+    return CompoundValue.create(
+      this.getValue<string>(key, ValueType.S)
+    ).getPart(index, defaultValue);
   }
 
-  public toNumberPart(key: string, index: number, defaultValue?: number): number | undefined {
+  public toSafeStringPart(key: string, index: number): string {
+    return (
+      CompoundValue.create(this.getValue<string>(key, ValueType.S)).getPart(
+        index,
+        ''
+      ) || ''
+    );
+  }
+
+  public toNumberPart(
+    key: string,
+    index: number,
+    defaultValue?: number
+  ): number | undefined {
     const value = this.toStringPart(key, index);
     return value ? +value : defaultValue;
   }
 
+  public toSafeNumberPart(key: string, index: number): number {
+    const value = this.toStringPart(key, index);
+    return value ? +value : -1;
+  }
+
   protected getValue<T>(key: string, type: ValueType): T | undefined {
-    return this.item[key] && this.item[key][type] ? (this.item[key][type] as T) : undefined;
+    return this.item[key] && this.item[key][type]
+      ? (this.item[key][type] as T)
+      : undefined;
   }
 
   protected isEmtptyAttribute(key: string): boolean {
     const attValue: AttributeValue = this.item[key];
-    let attKey = Object.keys(attValue).find((k) => attValue[k] !== undefined);
-    if (!!attKey && Array.isArray(attValue[attKey]) && attValue[attKey].length === 0) {
+    let attKey: keyof AttributeValue | undefined = Object.keys(attValue).find(
+      (k) => attValue[k as keyof AttributeValue] !== undefined
+    ) as keyof AttributeValue;
+    const value = attKey && attValue[attKey];
+    if (!!value && Array.isArray(value) && value.length === 0) {
       attKey = undefined;
     }
     return attKey === undefined;

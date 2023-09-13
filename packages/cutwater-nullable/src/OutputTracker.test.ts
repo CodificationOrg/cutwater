@@ -1,4 +1,4 @@
-import EventEmitter from 'events';
+import { EventEmitter } from 'node:events';
 import { OutputTracker } from './OutputTracker';
 
 let emitter: EventEmitter;

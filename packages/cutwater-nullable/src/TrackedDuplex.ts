@@ -1,6 +1,7 @@
-import { EventEmitter } from 'events';
+import { EventEmitter } from 'node:events';
 import { Socket } from 'net';
 import { DuplexOptions } from 'stream';
+
 import { OutputTracker } from './OutputTracker';
 
 export class TrackedDuplex extends Socket {
@@ -22,13 +23,15 @@ export class TrackedDuplex extends Socket {
     return OutputTracker.create(this.emitter, TrackedDuplex.OUTPUT_EVENT);
   }
 
-  public _write(chunk: any): void {
-    const value: string = Buffer.isBuffer(chunk) ? chunk.toString() : chunk;
+  public override _write(chunk: unknown): void {
+    const value: string = Buffer.isBuffer(chunk)
+      ? chunk.toString()
+      : (chunk as string);
     this.buffer.push(value);
     this.emitter.emit(TrackedDuplex.OUTPUT_EVENT, value);
   }
 
-  public _read(): void {
+  public override _read(): void {
     let ready = true;
     while (ready && this.buffer.length > 0) {
       ready = this.push(this.buffer.shift());

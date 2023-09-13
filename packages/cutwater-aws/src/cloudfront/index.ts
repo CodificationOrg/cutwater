@@ -1,2 +1,2 @@
 export * from './LambdaEdgeUtils';
-export * from './MIddyMiddlewares';
+export * from './MiddyMiddlewares';

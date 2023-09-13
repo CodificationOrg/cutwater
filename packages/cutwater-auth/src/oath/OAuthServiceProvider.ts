@@ -5,10 +5,14 @@ export enum OAuthServiceProvider {
 
 export type OAuthServiceProviderLike = string | OAuthServiceProvider;
 
-export const toOAuthServiceProvider = (provider?: OAuthServiceProviderLike): OAuthServiceProvider | undefined => {
+export const toOAuthServiceProvider = (
+  provider?: OAuthServiceProviderLike
+): OAuthServiceProvider | undefined => {
   if (!provider || typeof provider !== 'string') {
     return provider as OAuthServiceProvider;
   }
-  const key = Object.keys(OAuthServiceProvider).find((k) => OAuthServiceProvider[k] === provider.toUpperCase().trim());
-  return key ? OAuthServiceProvider[key] : undefined;
+  const key = Object.keys(OAuthServiceProvider).find(
+    (k) => k === provider.toUpperCase().trim()
+  );
+  return key ? (key as OAuthServiceProvider) : undefined;
 };
