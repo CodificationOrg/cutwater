@@ -3,15 +3,19 @@ import { OutputTracker } from './OutputTracker';
 
 let emitter: EventEmitter;
 let tracker: OutputTracker;
-const EVENT_NAME = 'outputEvent';
+
+type MockEvent = {
+  method: string;
+  args: string[];
+};
 
 beforeEach(() => {
   emitter = new EventEmitter();
-  tracker = OutputTracker.create(emitter, EVENT_NAME);
+  tracker = OutputTracker.create(emitter);
 });
 
 const emit = (value: string): void => {
-  emitter.emit(EVENT_NAME, value);
+  emitter.emit(OutputTracker.DEFAULT_EVENT, value);
 };
 
 describe('OutputTracker', () => {
@@ -20,6 +24,19 @@ describe('OutputTracker', () => {
       emit('output');
       expect(tracker.data).toHaveLength(1);
       expect(tracker.data[0]).toBe('output');
+    });
+    it('collects typed output into the data property', () => {
+      const typedTracker = OutputTracker.create<MockEvent>(emitter);
+      emit(JSON.stringify({ method: 'get', args: ['yes', 'no'] }));
+      expect(typedTracker.data).toHaveLength(1);
+      expect(typedTracker.data[0].method).toBe('get');
+      expect(typedTracker.data[0].args).toHaveLength(2);
+    });
+    it('collects primitive typed output into the data property', () => {
+      const typedTracker = OutputTracker.create<number>(emitter);
+      emit('5');
+      expect(typedTracker.data).toHaveLength(1);
+      expect(typedTracker.data[0]).toBe(5);
     });
   });
   describe('clear', () => {

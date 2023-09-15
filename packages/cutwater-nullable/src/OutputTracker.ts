@@ -1,13 +1,22 @@
 import { EventEmitter } from 'node:events';
 
-export class OutputTracker {
-  public static create(emitter: EventEmitter, event: string): OutputTracker {
-    return new OutputTracker(emitter, event);
+export class OutputTracker<T = string> {
+  public static readonly DEFAULT_EVENT = 'output';
+
+  public static create<T>(
+    emitter: EventEmitter,
+    event = OutputTracker.DEFAULT_EVENT
+  ): OutputTracker<T> {
+    return new OutputTracker<T>(emitter, event);
   }
 
-  private readonly buffer: string[] = [];
+  private readonly buffer: T[] = [];
   private readonly trackerFn = (data: string) => {
-    this.buffer.push(data);
+    try {
+      this.buffer.push(JSON.parse(data));
+    } catch {
+      this.buffer.push(data as T);
+    }
   };
 
   private constructor(
@@ -17,17 +26,17 @@ export class OutputTracker {
     this.emitter.on(this.event, this.trackerFn);
   }
 
-  get data(): string[] {
+  get data(): T[] {
     return this.buffer;
   }
 
-  clear(): string[] {
+  public clear(): T[] {
     const result = [...this.buffer];
     this.buffer.length = 0;
     return result;
   }
 
-  stop() {
+  public stop() {
     this.emitter.off(this.event, this.trackerFn);
   }
 }

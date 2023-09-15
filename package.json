@@ -7,7 +7,6 @@
   },
   "private": true,
   "dependencies": {
-    "@aws-sdk/client-cloudfront": "^3.410.0",
     "@aws-sdk/client-dynamodb": "^3.410.0",
     "@aws-sdk/client-s3": "^3.410.0",
     "@swc/helpers": "~0.5.0",

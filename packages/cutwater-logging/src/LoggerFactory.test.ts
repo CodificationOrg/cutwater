@@ -1,30 +1,20 @@
 import { Config } from '@codification/cutwater-core';
+import { OutputTracker } from '@codification/cutwater-nullable';
+
 import { Level } from './Level';
 import { Logger } from './Logger';
 import { LoggerFactory } from './LoggerFactory';
 
-type logFnc = (message?: unknown, ...optionalParams: unknown[]) => void;
-
-const logEntries: string[] = [];
-let oldLog: logFnc;
 let logger: Logger;
+let tracker: OutputTracker;
 
 beforeAll(() => {
-  const writeEntry = (message?: unknown): void => {
-    const value: string = message ? message.toString() : '';
-    logEntries.push(value);
-  };
-  oldLog = console.log;
-  console['log'] = jest.fn(writeEntry);
-  logger = LoggerFactory.getLogger('Foo');
+  logger = LoggerFactory.createNullable('Foo');
+  tracker = logger.trackOutput();
 });
 
 beforeEach(() => {
-  logEntries.length = 0;
-});
-
-afterAll(() => {
-  console.log = oldLog;
+  tracker.clear();
 });
 
 describe('LoggerFactory', () => {
@@ -34,15 +24,15 @@ describe('LoggerFactory', () => {
 
   it('returns logger with level set by environment variables', () => {
     Config.put(LoggerFactory.ENV_LOGGING_LEVEL_PREFIX + 'baz', 'fatal');
-    expect(LoggerFactory.getLogger('baz').level).toBe(Level.FATAL);
+    expect(LoggerFactory.createNullable('baz').level).toBe(Level.FATAL);
   });
 
   it('logs entries in enabled levels', () => {
     logger.level = Level.INFO;
     logger.error('Test entry: %j', { id: 'Foo', data: 7 });
-    expect(logEntries.length).toBe(1);
+    expect(tracker.data).toHaveLength(1);
     logger.debug('Test entry');
-    expect(logEntries.length).toBe(1);
+    expect(tracker.data).toHaveLength(1);
   });
 
   it('properly uses the GLOBAL_LEVEL when no level is speicified', () => {
@@ -54,19 +44,19 @@ describe('LoggerFactory', () => {
   it('properly logs when ALL levels are enabled', () => {
     logger.level = Level.ALL;
     logger.trace('Trace test entry');
-    expect(logEntries.length).toBe(1);
+    expect(tracker.data).toHaveLength(1);
     logger.fatal('Fatal test entry');
-    expect(logEntries.length).toBe(2);
+    expect(tracker.data).toHaveLength(2);
   });
 
   it('properly logs enabled log levels', () => {
-    LoggerFactory.logEnabledLevels(logger);
-    expect(logEntries.length).toBe(6);
+    logger.logEnabledLevels();
+    expect(tracker.data).toHaveLength(6);
   });
 
   it('properly disables all logging when level is OFF', () => {
     logger.level = Level.OFF;
-    LoggerFactory.logEnabledLevels(logger);
-    expect(logEntries.length).toBe(0);
+    logger.logEnabledLevels();
+    expect(tracker.data).toHaveLength(0);
   });
 });

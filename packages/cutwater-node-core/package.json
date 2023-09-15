@@ -22,9 +22,6 @@
     "url": "https://github.com/wweiss"
   },
   "license": "Apache-2.0",
-  "optionalDependencies": {
-    "got": "^11.8.6"
-  },
   "dependencies": {
     "@codification/cutwater-logging": "*",
     "@codification/cutwater-nullable": "*",

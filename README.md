@@ -18,12 +18,6 @@ A library of tools for simplifying interaction with IO and HTTP on the server-si
 
 A library providing easy logging capabilities for both the browser and server-side.
 
-### Build Tools
-
-#### [@codification/cutwater-build-core](https://github.com/CodificationOrg/cutwater/tree/master/packages/cutwater-build-core/README.md)
-
-Inspired by Microsoft's [@microsoft/gulp-core-build](https://github.com/Microsoft/web-build-tools/blob/master/core-build/gulp-core-build/README.md) architecture, this project provides easy methods for building, testing, validating and publishing.
-
 ### Cloud Tools
 
 #### [@codification/cutwater-aws](https://github.com/CodificationOrg/cutwater/tree/master/packages/cutwater-aws/README.md)

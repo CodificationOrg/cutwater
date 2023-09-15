@@ -25,6 +25,7 @@
   "dependencies": {
     "@codification/cutwater-core": "*",
     "@codification/cutwater-logging": "*",
+    "@codification/cutwater-nullable": "*",
     "@swc/helpers": "~0.5.0"
   }
 }

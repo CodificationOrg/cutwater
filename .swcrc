@@ -23,7 +23,7 @@
   "exclude": [
     "jest.*.config.ts",
     ".*\\.(integ|spec|test).tsx?$",
-    "./src/@types/.*",
+    "./src/@types/**/.*",
     "./src/jest-setup.ts$",
     "./**/jest-setup.ts$",
     ".*.js$"

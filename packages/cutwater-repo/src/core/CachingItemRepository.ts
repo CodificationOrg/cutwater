@@ -1,7 +1,10 @@
 import { MemoryCache } from '@codification/cutwater-core';
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
+
 import { ItemDescriptor, ItemRepository } from '../types';
 import { ItemCache } from './ItemCache';
+import { MemoryItemRepository } from './MemoryItemRepository';
+import { MockItem, RandomRange } from './MockItem';
 
 export interface RepositoryConfig<T> {
   name: string;
@@ -10,42 +13,45 @@ export interface RepositoryConfig<T> {
   ttl?: number;
 }
 
-type Cmd = () => Promise<void>;
-type GetCallback<T> = (result?: T) => void;
-
 export class CachingItemRepository<T> implements ItemRepository<T> {
   private static readonly ROOT_OBJECT_ID = 'ROOT_OBJECT_ID';
   protected readonly LOG: Logger = LoggerFactory.getLogger();
 
+  private isLocked = false;
+  private lockTimer: NodeJS.Timer | undefined;
+
   public readonly name: string;
-
-  private cmdQueue: Cmd[] = [];
-
-  private readonly memCache: MemoryCache;
   private readonly greedy: boolean;
   private readonly descriptor: ItemDescriptor<T>;
   private readonly ttl: number;
   private readonly itemCaches: Record<string, ItemCache<T>> = {};
 
+  public static createNullable(
+    items?: number | RandomRange | MockItem[] | ItemRepository<MockItem>,
+    greedy = false
+  ): CachingItemRepository<MockItem> {
+    let repo: ItemRepository<MockItem>;
+    if (items && typeof items === 'object' && 'getAll' in items) {
+      repo = items;
+    } else {
+      repo = MemoryItemRepository.createNullable(items);
+    }
+    return new CachingItemRepository<MockItem>(repo, {
+      name: 'MockItems',
+      itemDescriptor: MockItem.ITEM_DESCRIPTOR,
+      greedy,
+    });
+  }
+
   public constructor(
     private readonly repo: ItemRepository<T>,
     { name, itemDescriptor, ttl, greedy = false }: RepositoryConfig<T>,
-    cache: MemoryCache = new MemoryCache()
+    private readonly memCache: MemoryCache = new MemoryCache()
   ) {
     this.name = name;
     this.descriptor = itemDescriptor;
     this.ttl = ttl || 90;
-    this.memCache = cache;
     this.greedy = greedy;
-
-    if (greedy) {
-      setInterval(async () => {
-        while (this.cmdQueue.length > 0) {
-          const cmd = await this.cmdQueue.shift();
-          cmd && cmd();
-        }
-      }, 5);
-    }
   }
 
   public get itemType(): string {
@@ -66,33 +72,41 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     return rval;
   }
 
-  public async get(id: string): Promise<T | undefined> {
-    return new Promise<T | undefined>((res) => {
-      const cmd: Cmd = () =>
-        this.doGet(id, (result) => {
-          res(result);
-        });
-      if (this.greedy) {
-        this.cmdQueue.push(cmd);
-      } else {
-        cmd();
-      }
+  private async lock(): Promise<void> {
+    if (!this.greedy) {
+      return;
+    }
+    return new Promise<void>((res) => {
+      const timer: NodeJS.Timer = setInterval(() => {
+        if (!this.isLocked) {
+          clearInterval(timer);
+          this.isLocked = true;
+          res();
+        }
+      }, 40);
     });
   }
 
-  private async doGet(id: string, callback: GetCallback<T>): Promise<void> {
+  private unlock(): void {
+    this.isLocked = false;
+  }
+
+  private async addToCache(item?: T): Promise<T | undefined> {
+    if (!item) {
+      return undefined;
+    }
+    if (this.greedy) {
+      await this.getAll(this.descriptor.getParentId(item));
+    }
+    return await this.cache(item);
+  }
+
+  public async get(id: string): Promise<T | undefined> {
+    await this.lock();
     let rval: T | undefined = await this.getCached(id);
-    const cacheMiss = !rval;
-    if (cacheMiss) {
-      rval = await this.repo.get(id);
-    }
-    if (cacheMiss && rval) {
-      rval = await this.cache(rval);
-      if (this.greedy) {
-        await this.getAll(this.descriptor.getParentId(rval));
-      }
-    }
-    callback(rval);
+    rval = rval || (await this.addToCache(await this.repo.get(id)));
+    this.unlock();
+    return rval;
   }
 
   public async put(item: T): Promise<T> {

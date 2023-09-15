@@ -1,3 +1,5 @@
+import { OutputTracker } from '@codification/cutwater-nullable';
+
 import { Appender } from './Appender';
 import { Level } from './Level';
 
@@ -28,6 +30,13 @@ export interface Logger {
    * @param level - the level to check
    */
   isEnabled(level: Level): boolean;
+
+  /**
+   * Causes this logger to append a single message for each enabled [[Level]].
+   */
+  logEnabledLevels(): void;
+
+  trackOutput(): OutputTracker;
 
   /**
    * Creates a [[LoggingEvent]] of fatal priority, returning `true` if the message will be output based on this

@@ -27,6 +27,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@codification/cutwater-core": "*",
+    "@codification/cutwater-nullable": "*",
     "@swc/helpers": "~0.5.0"
   }
 }

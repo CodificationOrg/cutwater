@@ -1,4 +1,5 @@
 import { Config } from '@codification/cutwater-core';
+import { OutputTracker } from '@codification/cutwater-nullable';
 import * as util from 'node:util';
 
 import { Appender } from './Appender';
@@ -6,6 +7,7 @@ import { ConsoleAppender } from './ConsoleAppender';
 import { Level } from './Level';
 import { Logger } from './Logger';
 import { LoggingEvent } from './LoggingEvent';
+import EventEmitter = require('node:events');
 
 type LoggerLevelFunction = (...input: unknown[]) => boolean;
 
@@ -53,6 +55,20 @@ export class LoggerFactory {
    */
   public static GLOBAL_APPENDER: Appender = new ConsoleAppender();
 
+  public static createNullable(
+    loggerName: string = this.DEFAULT_LOGGER
+  ): Logger {
+    this.init();
+
+    let rval: Logger = this.LOGGERS[loggerName];
+    if (!rval) {
+      rval = this.initialize(new DefaultLoggerImpl(loggerName, true));
+      this.LOGGERS[loggerName] = rval;
+    }
+
+    return rval;
+  }
+
   /**
    * Returns the [[Logger]] instance with the specified name.  If no name is provided, the default will be returned.
    * If a logger does not exist with the specified name, a new one will be created.
@@ -69,19 +85,6 @@ export class LoggerFactory {
     }
 
     return rval;
-  }
-
-  /**
-   * Causes the specified [[Logger]] to append a single message for each enabled [[Level]].
-   *
-   * @param logger - The logger to output levels for.
-   */
-  public static logEnabledLevels(logger: Logger): void {
-    Level.LEVELS.forEach((level) => {
-      const levelFunctionName = level.name.toLowerCase() as keyof typeof logger;
-      const levelFunction = logger[levelFunctionName] as LoggerLevelFunction;
-      levelFunction(`${level.name}: ENABLED`);
-    });
   }
 
   private static LOGGERS: Record<string, Logger> = {};
@@ -109,15 +112,19 @@ export class LoggerFactory {
   private constructor() {}
 }
 
+const OUTPUT_EVENT = 'output';
+
 /**
  * @ignore
  */
 class DefaultLoggerImpl implements Logger {
+  private readonly emiiter = new EventEmitter();
+
   private loggerName: string;
   private loggerLevel = LoggerFactory.GLOBAL_LEVEL;
   private loggerAppender = LoggerFactory.GLOBAL_APPENDER;
 
-  constructor(name: string) {
+  constructor(name: string, private skipAppender = false) {
     this.loggerName = name;
   }
 
@@ -175,11 +182,33 @@ class DefaultLoggerImpl implements Logger {
     return this.level.isGreaterOrEqual(level);
   }
 
+  public logEnabledLevels(): void {
+    Level.LEVELS.forEach((level) => {
+      const levelFunctionName = level.name.toLowerCase() as keyof typeof this;
+      (this[levelFunctionName] as LoggerLevelFunction)(
+        `${level.name}: ENABLED`
+      );
+    });
+  }
+
+  public trackOutput(): OutputTracker {
+    return OutputTracker.create(this.emiiter, OUTPUT_EVENT);
+  }
+
   private doLog(level: Level, input: unknown[]): boolean {
     const rval: boolean = this.isEnabled(level);
     if (rval) {
-      this.appender.doAppend(
-        new LoggingEvent(this, level, util.format.apply(undefined, input))
+      const event = new LoggingEvent(
+        this,
+        level,
+        util.format.apply(undefined, input)
+      );
+      if (!this.skipAppender) {
+        this.appender.doAppend(event);
+      }
+      this.emiiter.emit(
+        OUTPUT_EVENT,
+        JSON.stringify({ level: event.level, message: event.message })
       );
     }
     return rval;

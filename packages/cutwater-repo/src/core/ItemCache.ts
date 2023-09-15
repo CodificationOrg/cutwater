@@ -1,6 +1,8 @@
 import { MemoryCache } from '@codification/cutwater-core';
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
+
 import { ItemDescriptor } from '../types';
+import { MockItem, RandomRange } from './MockItem';
 
 export interface CacheConfig<T> {
   repoName: string;
@@ -21,6 +23,25 @@ export class ItemCache<T> {
   private readonly cacheTTL: number;
   private readonly descriptor: ItemDescriptor<T>;
 
+  public static createNullable(
+    items?: number | RandomRange | MockItem[]
+  ): ItemCache<MockItem> {
+    const rval = new ItemCache<MockItem>(new MemoryCache(), {
+      repoName: 'stuff',
+      cacheId: 'PLACEHOLDER',
+      itemDescriptor: MockItem.ITEM_DESCRIPTOR,
+      ttl: 50,
+    });
+    if (items) {
+      if (Array.isArray(items)) {
+        rval.putAll(items);
+      } else {
+        rval.putAll(MockItem.createNullables(items));
+      }
+    }
+    return rval;
+  }
+
   public constructor(
     private readonly CACHE: MemoryCache,
     { repoName, cacheId, itemDescriptor, ttl }: CacheConfig<T>
@@ -36,24 +57,24 @@ export class ItemCache<T> {
     return this.idIndex.includes(id);
   }
 
-  public async invalidate(idOrItem: string | T): Promise<void> {
+  public invalidate(idOrItem: string | T): void {
     const id =
       typeof idOrItem === 'string' ? idOrItem : this.descriptor.getId(idOrItem);
-    await this.remove(id);
+    this.remove(id);
   }
 
-  public async getAll(): Promise<T[]> {
-    return Object.values((await this.getCachedBulk()) || {});
+  public getAll(): T[] {
+    return Object.values(this.getCachedBulk() || {});
   }
 
-  public async putAll(items: T[]): Promise<T[]> {
-    return Object.values(await this.setCachedBulk(items));
+  public putAll(items: T[]): T[] {
+    return Object.values(this.setCachedBulk(items));
   }
 
-  public async get(id: string): Promise<T | undefined> {
-    let rval: T | undefined = await this.CACHE.get(this.toKey(id));
+  public get(id: string): T | undefined {
+    let rval: T | undefined = this.CACHE.get(this.toKey(id));
     if (!rval && this.idIndex.includes(id)) {
-      rval = ((await this.getCachedBulk()) || {})[id];
+      rval = (this.getCachedBulk() || {})[id];
     }
     if (!rval) {
       this.LOG.trace(`[${this.repoName}] Cache miss: `, id);
@@ -61,47 +82,45 @@ export class ItemCache<T> {
     return rval;
   }
 
-  public async put(item: T): Promise<T> {
+  public put(item: T): T {
     const id = this.descriptor.getId(item);
-    await this.CACHE.put<T>(this.toKey(id), item, this.cacheTTL);
-    const rval = await this.CACHE.get<T>(this.toKey(id));
+    this.CACHE.put<T>(this.toKey(id), item, this.cacheTTL);
+    const rval = this.CACHE.get<T>(this.toKey(id));
     if (!rval) {
       throw new Error(`[${this.repoName}] Failed to cache item: ${id}`);
     }
     if (!this.idIndex.includes(id)) {
       this.idIndex.push(id);
     }
-    const cachedItems = await this.getCachedBulk();
+    const cachedItems = this.getCachedBulk();
     if (cachedItems) {
       cachedItems[id] = rval;
-      await this.setCachedBulk(cachedItems);
+      this.setCachedBulk(cachedItems);
     }
     this.LOG.trace(`[${this.repoName}] Added to cache[${id}]: `, rval);
     return rval;
   }
 
-  public async remove(id: string): Promise<T | undefined> {
-    let rval: T | undefined = await this.get(id);
+  public remove(id: string): T | undefined {
+    let rval: T | undefined = this.get(id);
     if (this.idIndex.includes(id)) {
       const index = this.idIndex.indexOf(id);
       this.idIndex.splice(index, 1);
     }
-    const cachedItems = await this.getCachedBulk();
+    const cachedItems = this.getCachedBulk();
     if (cachedItems) {
       rval = cachedItems[id];
       delete cachedItems[id];
-      await this.setCachedBulk(cachedItems);
+      this.setCachedBulk(cachedItems);
     }
-    await this.CACHE.remove(this.toKey(id));
+    this.CACHE.remove(this.toKey(id));
     if (rval) {
       this.LOG.trace(`[${this.repoName}] Removed from cache: `, id);
     }
     return rval;
   }
 
-  protected async setCachedBulk(
-    itemsOrCache: T[] | CachedItems<T>
-  ): Promise<CachedItems<T>> {
+  protected setCachedBulk(itemsOrCache: T[] | CachedItems<T>): CachedItems<T> {
     const rval: CachedItems<T> = Array.isArray(itemsOrCache)
       ? itemsOrCache.reduce<Record<string, T>>((cachedItems, item) => {
           const id = this.descriptor.getId(item);
@@ -116,12 +135,12 @@ export class ItemCache<T> {
       `[${this.repoName}] Bulk cache added[${this.cacheKey}]: `,
       Object.keys(rval).length
     );
-    await this.CACHE.put(this.cacheKey, rval, this.cacheTTL);
+    this.CACHE.put(this.cacheKey, rval, this.cacheTTL);
     return rval;
   }
 
-  protected async getCachedBulk(): Promise<CachedItems<T> | undefined> {
-    return await this.CACHE.get(this.cacheKey);
+  protected getCachedBulk(): CachedItems<T> | undefined {
+    return this.CACHE.get(this.cacheKey);
   }
 
   private toKey(key: string): string {

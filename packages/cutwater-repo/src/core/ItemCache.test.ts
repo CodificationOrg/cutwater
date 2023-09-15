@@ -1,52 +1,17 @@
 import { MemoryCache } from '@codification/cutwater-core';
+
 import { ItemCache } from './ItemCache';
-import { ItemPropertyDescriptor } from './ItemPropertyDescriptor';
+import { MockItem } from './MockItem';
 
-const itemDescriptor = new ItemPropertyDescriptor(
-  'MockItem',
-  'userId',
-  'groupId'
-);
+let items: MockItem[];
+let cache: ItemCache<MockItem>;
+let randomId: string;
 
-export interface MockItem {
-  groupId: string;
-  userId: string;
-  name: string;
-  age: number;
-}
-
-export const randomCount = (max = 25, min = 1) => {
-  return Math.max(Math.floor(Math.random() * max + 1), min);
-};
-export const selectId = (count: number): string =>
-  (randomCount(count) - 1).toString();
-export const mockItems = (count: number = randomCount()) => {
-  const rval: MockItem[] = [];
-  for (let i = 0; i < count; i++) {
-    const groupId = `${i % 2 ? 'a' : 'b'}`;
-    const userId = `${i}`;
-    rval.push({
-      groupId,
-      userId,
-      name: `name${i}`,
-      age: i,
-    });
-  }
-  return rval;
-};
-
-const newInstance = async (count?: number): Promise<ItemCache<MockItem>> => {
-  const rval = new ItemCache<MockItem>(new MemoryCache(), {
-    repoName: 'stuff',
-    cacheId: 'PLACEHOLDER',
-    itemDescriptor,
-    ttl: 50,
-  });
-  if (count) {
-    await rval.putAll(mockItems(count));
-  }
-  return rval;
-};
+beforeEach(() => {
+  items = MockItem.createNullables({ max: 25 });
+  cache = ItemCache.createNullable(items);
+  randomId = `${Math.floor(Math.random() * items.length)}`;
+});
 
 describe('ItemCache', () => {
   describe('constructor', () => {
@@ -54,7 +19,7 @@ describe('ItemCache', () => {
       const result = new ItemCache(new MemoryCache(), {
         repoName: 'stuff',
         cacheId: 'PLACEHOLDER',
-        itemDescriptor,
+        itemDescriptor: MockItem.ITEM_DESCRIPTOR,
         ttl: 50,
       });
       expect(result).toBeTruthy();
@@ -62,143 +27,106 @@ describe('ItemCache', () => {
   });
 
   describe('invalidate', () => {
-    it('can invalidate an id or item', async () => {
-      const count = randomCount();
-      const selected = selectId(count);
-      const cache = await newInstance(count);
-      expect(cache.includes(selected)).toBeTruthy();
-      await cache.invalidate(selected);
-      expect(cache.includes(selected)).toBeFalsy();
+    it('can invalidate an id or item', () => {
+      expect(cache.includes(randomId)).toBeTruthy();
+      cache.invalidate(randomId);
+      expect(cache.includes(randomId)).toBeFalsy();
     });
   });
 
   describe('includes', () => {
-    it('can determine if the cache includes an id', async () => {
-      const count = randomCount();
-      const cache = await newInstance(count);
-      expect(cache.includes(`${randomCount(count) - 1}`)).toBeTruthy();
+    it('can determine if the cache includes an id', () => {
+      expect(cache.includes(randomId)).toBeTruthy();
     });
-    it('can determine if the cache does not include an id', async () => {
-      const cache = await newInstance(randomCount());
-      expect(cache.includes('42')).toBeFalsy();
+    it('can determine if the cache does not include an id', () => {
+      expect(cache.includes(`${items.length + 20}`)).toBeFalsy();
     });
   });
 
   describe('putAll', () => {
-    it('can put all', async () => {
-      const count = randomCount();
-      const cache = await newInstance();
-      const result = await cache.putAll(mockItems(count));
-      expect(result.length).toBe(count);
-      const items = await cache.getAll();
-      expect(items.length).toBe(count);
+    it('can put all', () => {
+      const cache = ItemCache.createNullable();
+      const result = cache.putAll(items);
+      expect(result.length).toBe(items.length);
+      expect(cache.getAll().length).toBe(items.length);
     });
   });
 
   describe('getAll', () => {
-    it('can get all', async () => {
-      const count = randomCount();
-      const cache = await newInstance(count);
-      const items = await cache.getAll();
-      expect(items.length).toBe(count);
+    it('can get all', () => {
+      expect(cache.getAll().length).toBe(items.length);
     });
-    it('includes added items', async () => {
-      const count = randomCount();
-      const cache = await newInstance(count);
-      const newItem = mockItems(1)[0];
-      newItem.userId = '42';
-      await cache.put(newItem);
-      const items = await cache.getAll();
-      expect(items.length).toBe(count + 1);
+    it('includes added items', () => {
+      const newItem = MockItem.createNullable(42);
+      cache.put(newItem);
+      const allItems = cache.getAll();
+      expect(allItems.length).toBe(items.length + 1);
     });
-    it('includes updated items', async () => {
-      const count = randomCount(100, 50);
-      const selected = (randomCount(count) - 1).toString();
-      const cache = await newInstance(count);
-      const existingItem = await cache.get(selected);
+    it('includes updated items', () => {
+      const existingItem = cache.get(randomId);
       if (!existingItem) {
-        fail('item should exist');
+        throw new Error(`Id [${randomId}] should exist.`);
       }
       existingItem.age = 422;
-      await cache.put(existingItem);
-      const item = (await cache.getAll()).find(
-        (item) => item.userId === selected
-      );
+      cache.put(existingItem);
+      const item = cache.getAll().find((item) => item.userId === randomId);
       expect(item?.age).toBe(422);
     });
-    it('returns copies', async () => {
-      const count = randomCount(100, 50);
-      const selected = (randomCount(count) - 1).toString();
-      const cache = await newInstance(count);
-      const existingItem = (await cache.getAll()).find(
-        (item) => item.userId === selected
-      );
+    it('returns copies', () => {
+      const existingItem = cache
+        .getAll()
+        .find((item) => item.userId === randomId);
       if (!existingItem) {
-        fail('item should exist');
+        throw new Error(`Id [${randomId}] should exist.`);
       }
       existingItem.age = 422;
-      const item = (await cache.getAll()).find(
-        (item) => item.userId === selected
-      );
-      expect(item?.age).toBe(+selected);
+      const item = cache.getAll().find((item) => item.userId === randomId);
+      expect(item?.age).toBe(+randomId);
     });
-    it('excludes removed items', async () => {
-      const count = randomCount();
-      const cache = await newInstance(count);
-      await cache.remove(`${randomCount(count) - 1}`);
-      const items = await cache.getAll();
-      expect(items.length).toBe(count - 1);
+    it('excludes removed items', () => {
+      cache.remove(randomId);
+      expect(cache.getAll().length).toBe(items.length - 1);
     });
   });
 
   describe('get', () => {
-    it('can get an item by id', async () => {
-      const count = randomCount();
-      const cache = await newInstance(count);
-      const id = `${randomCount(count) - 1}`;
-      const item = await cache.get(id);
+    it('can get an item by id', () => {
+      const item = cache.get(randomId);
       expect(item).toBeTruthy();
-      expect(item?.userId).toBe(id);
+      expect(item?.userId).toBe(randomId);
     });
-    it('returns a copy', async () => {
-      const count = randomCount();
-      const selected = (randomCount(count) - 1).toString();
-      const cache = await newInstance(count);
-      const item = await cache.get(selected);
-      if (!item) {
-        fail('item should exist');
+    it('returns a copy', () => {
+      const existingItem = cache.get(randomId);
+      if (!existingItem) {
+        throw new Error(`Id [${randomId}] should exist.`);
       }
-      item.age = 442;
-      expect((await cache.get(selected))?.age).toBe(+selected);
+      existingItem.age = 442;
+      expect(cache.get(randomId)?.age).toBe(+randomId);
     });
   });
 
   describe('put', () => {
-    it('can put an item', async () => {
-      const cache = await newInstance();
-      await cache.put(mockItems(1)[0]);
-      const item = await cache.get('0');
+    it('can put an item', () => {
+      const newId = items.length + 20;
+      cache.put(MockItem.createNullable(newId));
+      const item = cache.get(`${newId}`);
       expect(item).toBeTruthy();
-      expect(item?.userId).toBe('0');
+      expect(item?.userId).toBe(`${newId}`);
     });
-    it('returns a copy', async () => {
-      const cache = await newInstance();
-      const item = mockItems(1)[0];
-      const result = await cache.put(item);
+    it('returns a copy', () => {
+      const item = MockItem.createNullable(items.length + 5);
+      const result = cache.put(item);
       expect(item === result).toBeFalsy();
     });
   });
 
   describe('remove', () => {
-    it('can remove an item', async () => {
-      const count = randomCount();
-      const cache = await newInstance(count);
-      const id = `${randomCount(count) - 1}`;
-      const removedItem = await cache.remove(id);
-      const items = await cache.getAll();
-      expect(items.length).toBe(count - 1);
-      expect(removedItem?.userId).toBe(id);
-      expect(await cache.get(id)).toBeFalsy();
+    it('can remove an item', () => {
+      const removedItem = cache.remove(randomId);
+      const allItems = cache.getAll();
+      expect(allItems.length).toBe(items.length - 1);
+      expect(removedItem?.userId).toBe(randomId);
+      expect(cache.get(randomId)).toBeFalsy();
     });
   });
 });
