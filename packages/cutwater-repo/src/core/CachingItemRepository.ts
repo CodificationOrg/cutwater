@@ -1,5 +1,6 @@
 import { MemoryCache } from '@codification/cutwater-core';
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
+import { Key, SemaphoreLock } from '@codification/cutwater-node-core';
 
 import { ItemDescriptor, ItemRepository } from '../types';
 import { ItemCache } from './ItemCache';
@@ -17,8 +18,8 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
   private static readonly ROOT_OBJECT_ID = 'ROOT_OBJECT_ID';
   protected readonly LOG: Logger = LoggerFactory.getLogger();
 
-  private isLocked = false;
-  private lockTimer: NodeJS.Timer | undefined;
+  private key: Key | undefined;
+  private readonly lock = new SemaphoreLock();
 
   public readonly name: string;
   private readonly greedy: boolean;
@@ -72,40 +73,30 @@ export class CachingItemRepository<T> implements ItemRepository<T> {
     return rval;
   }
 
-  private async lock(): Promise<void> {
-    if (!this.greedy) {
-      return;
-    }
-    return new Promise<void>((res) => {
-      const timer: NodeJS.Timer = setInterval(() => {
-        if (!this.isLocked) {
-          clearInterval(timer);
-          this.isLocked = true;
-          res();
-        }
-      }, 40);
-    });
-  }
-
-  private unlock(): void {
-    this.isLocked = false;
-  }
-
-  private async addToCache(item?: T): Promise<T | undefined> {
-    if (!item) {
-      return undefined;
-    }
+  private async aquireLock(): Promise<void> {
     if (this.greedy) {
-      await this.getAll(this.descriptor.getParentId(item));
+      this.key = await this.lock.aquire();
     }
-    return await this.cache(item);
+  }
+
+  private releaseLock(): void {
+    if (this.greedy && this.key) {
+      this.lock.release(this.key);
+    }
+  }
+
+  private async addToCache(id: string): Promise<T | undefined> {
+    const rval: T | undefined = await this.repo.get(id);
+    if (rval && this.greedy) {
+      await this.getAll(this.descriptor.getParentId(rval));
+    }
+    return rval ? await this.cache(rval) : undefined;
   }
 
   public async get(id: string): Promise<T | undefined> {
-    await this.lock();
-    let rval: T | undefined = await this.getCached(id);
-    rval = rval || (await this.addToCache(await this.repo.get(id)));
-    this.unlock();
+    await this.aquireLock();
+    const rval = (await this.getCached(id)) || (await this.addToCache(id));
+    this.releaseLock();
     return rval;
   }
 

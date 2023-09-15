@@ -88,11 +88,11 @@ describe('CachingItemRepository', () => {
         throw new Error(`Id [${randomId}] should exist.`);
       }
       existingItem.age = 442;
-      const allItems = (await repo.getAll(existingItem.groupId)).filter(
+      const result = (await repo.getAll(existingItem.groupId)).find(
         (item) => item.userId === randomId
       );
-      expect(allItems).toHaveLength(1);
-      expect(allItems[0].age).toBe(+randomId);
+      expect(result).toBeDefined();
+      expect(result?.age).toBe(+randomId);
     });
     it('excludes removed items', async () => {
       await repo.remove(randomId);
