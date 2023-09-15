@@ -1,30 +1,24 @@
 import {
   MemoryItemRepository,
-  MethodCallData,
   MockItem,
   TrackedItemRepository,
 } from '@codification/cutwater-repo';
-import { OutputTracker } from '../../../cutwater-nullable/src';
 import { NodeId } from '../core';
 import { ItemRepositoryAdapter } from './ItemRepositoryAdapter';
 import { PropertyDescriptor } from './PropertyDescriptor';
 
-let count: number;
 let items: MockItem[];
 let adapter: ItemRepositoryAdapter<MockItem>;
 let repo: TrackedItemRepository<MockItem>;
 let randomId: string;
 let randomIndex: number;
 let randomItem: MockItem;
-let methodCallTracker: OutputTracker<MethodCallData>;
 
 beforeEach(() => {
   items = MockItem.createNullables(25);
-  count = items.length;
   repo = TrackedItemRepository.create(
     MemoryItemRepository.createNullable(items)
   );
-  methodCallTracker = repo.trackMethodCalls();
   adapter = new ItemRepositoryAdapter<MockItem>(
     repo,
     new PropertyDescriptor('MockItem', 'userId', 'groupId')
@@ -84,9 +78,11 @@ describe('ItemRepositoryAdapter', () => {
       expect(keys.length).toBeGreaterThan(0);
 
       loader.loadMany(keys);
-      const key = keys[Math.min(randomIndex - 5, 0)];
-      const result = await loader.load(key);
-      expect(result).toBeTruthy();
+      const key = keys.pop();
+      expect(key).toBeDefined();
+
+      const result = key ? await loader.load(key) : undefined;
+      expect(result).toBeDefined();
       expect(result?.userId).toBe(key);
     });
   });
