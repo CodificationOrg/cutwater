@@ -1,5 +1,5 @@
 import { LoggerFactory } from '@codification/cutwater-logging';
-import { existsSync, mkdirSync, mkdtempSync, rmdirSync } from 'fs';
+import { existsSync, mkdirSync, mkdtempSync, rmSync } from 'fs';
 import * as os from 'node:os';
 import { dirname, join, resolve } from 'path';
 import { v4 as uuid } from 'uuid';
@@ -38,6 +38,6 @@ export class FileUtils {
     maxRetries = 5,
     retryDelay = 100
   ): void {
-    rmdirSync(dirPath, { recursive, retryDelay, maxRetries });
+    rmSync(dirPath, { recursive, retryDelay, maxRetries });
   }
 }
