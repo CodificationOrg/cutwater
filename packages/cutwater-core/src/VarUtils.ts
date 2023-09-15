@@ -10,7 +10,7 @@ export class VarUtils {
    * @param value - the value to be checked
    * @returns true if the value is undefined or null
    */
-  public static isMissing(value?: any): boolean {
+  public static isMissing(value?: unknown): boolean {
     return !this.isPresent(value);
   }
 
@@ -21,7 +21,7 @@ export class VarUtils {
    * @param value - the value to be checked
    * @returns true if the value is defined and non-null
    */
-  public static isPresent(value?: any): boolean {
+  public static isPresent(value?: unknown): boolean {
     return typeof value !== 'undefined' && value !== null;
   }
 }
