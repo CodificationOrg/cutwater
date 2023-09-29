@@ -4,25 +4,13 @@ import { IncomingMessage } from 'http';
 import * as needle from 'needle';
 import { BodyData, NeedleResponse } from 'needle';
 import { dirname } from 'path';
+import {
+  DataResponse,
+  HtmlResponse,
+  HttpResponse,
+  ObjectResponse,
+} from './HttpClient';
 import { HttpUtils } from './HttpUtils';
-
-export interface HttpResponse {
-  statusCode: number;
-  contentLength: number;
-  contentType: string;
-}
-
-export interface HtmlResponse extends HttpResponse {
-  body: string;
-}
-
-export interface DataResponse extends HttpResponse {
-  data: Buffer;
-}
-
-export interface ObjectResponse<T> extends HttpResponse {
-  object: T;
-}
 
 export class HttpService {
   private readonly LOG = LoggerFactory.getLogger();
