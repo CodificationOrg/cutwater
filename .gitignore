@@ -60,6 +60,7 @@ lib
 lib-amd
 lib-es6
 dist
+tmp
 temp
 *.scss.ts
 *.sass.ts
