@@ -1,7 +1,15 @@
-# Change Log
+# Changelog
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
+
+## [0.35.30-alpha.0](https://github.com/CodificationOrg/cutwater/compare/v0.35.29...v0.35.30-alpha.0) (2023-09-30)
+
+
+### Bug Fixes
+
+* correct filename ([9cef7b3](https://github.com/CodificationOrg/cutwater/commit/9cef7b355fe2cc06da091d92802b532bb100ec48))
+
+
 
 ## 0.35.29 (2023-09-06)
 
