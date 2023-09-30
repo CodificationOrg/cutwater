@@ -10,7 +10,6 @@
         "push": true,
         "preset": "angular",
         "postTargets": [
-          "workspace:github",
           "cutwater-auth:deploy",
           "cutwater-aws:deploy",
           "cutwater-core:deploy",
@@ -18,7 +17,8 @@
           "cutwater-logging:deploy",
           "cutwater-node-core:deploy",
           "cutwater-nullable:deploy",
-          "cutwater-repo:deploy"
+          "cutwater-repo:deploy",
+          "workspace:github"
         ]
       },
       "configurations": {
