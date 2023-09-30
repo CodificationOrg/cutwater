@@ -7,6 +7,7 @@
       "options": {
         "syncVersions": true,
         "baseBranch": "master",
+        "push": true,
         "preset": "angular",
         "postTargets": [
           "workspace:github",
