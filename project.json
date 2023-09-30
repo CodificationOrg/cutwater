@@ -1,13 +1,41 @@
 {
-  "name": "@codification/root",
+  "name": "workspace",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "targets": {
-    "local-registry": {
-      "executor": "@nx/js:verdaccio",
+    "version": {
+      "executor": "@jscutlery/semver:version",
       "options": {
-        "port": 4873,
-        "config": ".verdaccio/config.yml",
-        "storage": "tmp/local-registry/storage"
+        "syncVersions": true,
+        "baseBranch": "master",
+        "preset": "angular",
+        "postTargets": [
+          "workspace:github",
+          "cutwater-auth:deploy",
+          "cutwater-aws:deploy",
+          "cutwater-core:deploy",
+          "cutwater-graphql:deploy",
+          "cutwater-logging:deploy",
+          "cutwater-node-core:deploy",
+          "cutwater-nullable:deploy",
+          "cutwater-repo:deploy"
+        ]
+      },
+      "configurations": {
+        "alpha": {
+          "releaseAs": "prerelease",
+          "preid": "alpha"
+        },
+        "beta": {
+          "releaseAs": "prerelease",
+          "preid": "beta"
+        }
+      }
+    },
+    "github": {
+      "executor": "@jscutlery/semver:github",
+      "options": {
+        "tag": "${tag}",
+        "notes": "${notes}"
       }
     }
   }
