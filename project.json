@@ -23,10 +23,12 @@
       },
       "configurations": {
         "alpha": {
+          "baseBranch": "alpha",
           "releaseAs": "prerelease",
           "preid": "alpha"
         },
         "beta": {
+          "baseBranch": "beta",
           "releaseAs": "prerelease",
           "preid": "beta"
         }
