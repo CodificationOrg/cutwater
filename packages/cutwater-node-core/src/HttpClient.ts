@@ -2,9 +2,14 @@ import { Logger, LoggerFactory } from '@codification/cutwater-logging';
 import { System } from '@codification/cutwater-nullable';
 import { IncomingMessage } from 'http';
 import * as needle from 'needle';
-import { BodyData, NeedleResponse } from 'needle';
+import { BodyData } from 'needle';
 import { dirname } from 'path';
 import { HttpUtils } from './HttpUtils';
+
+export interface ExtendedIncomingMessage extends IncomingMessage {
+  raw: Buffer;
+  body?: unknown;
+}
 
 export interface HttpResponse {
   statusCode: number;
@@ -25,19 +30,25 @@ export interface ObjectResponse<T> extends HttpResponse {
 }
 
 interface InternalClient {
-  fetchData(url: string): Promise<DataResponse | undefined>;
-  post(
+  doGet(url: string): Promise<ExtendedIncomingMessage>;
+  doPost(
     url: string,
     body: BodyData,
     json: boolean
-  ): Promise<DataResponse | undefined>;
+  ): Promise<ExtendedIncomingMessage>;
 }
 
 export class HttpClient {
   private readonly LOG: Logger;
   private readonly client: InternalClient;
 
+  private static readonly CONTENT_LENGTH_HEADER = 'content-length';
+  private static readonly CONTENT_TYPE_HEADER = 'content-type';
+
+  private static readonly NOT_FOUND_STATUS_CODE = 404;
+
   public static readonly TEXT_ENCODING = 'utf-8';
+
   public static readonly HTML_CONTENT_TYPE = 'text/html';
   public static readonly JSON_CONTENT_TYPE = 'application/json';
 
@@ -48,7 +59,9 @@ export class HttpClient {
   }
 
   public static createNull(
-    response?: DataResponse,
+    response: Partial<ExtendedIncomingMessage> = {
+      statusCode: 404,
+    },
     system: System = System.createNull()
   ): HttpClient {
     return new HttpClient(new NullInternalClient(response), system);
@@ -69,6 +82,21 @@ export class HttpClient {
     } catch (err) {
       return false;
     }
+  }
+
+  private toHttpResponse(response: IncomingMessage): HttpResponse {
+    const rval: HttpResponse = {
+      statusCode: response.statusCode || 0,
+      contentLength: -1,
+      contentType: '',
+    };
+    if (response.headers) {
+      rval.contentLength = +(
+        response.headers[HttpClient.CONTENT_LENGTH_HEADER] || '-1'
+      );
+      rval.contentType = response.headers[HttpClient.CONTENT_TYPE_HEADER] || '';
+    }
+    return rval;
   }
 
   public async fetchHtml(url: string): Promise<HtmlResponse | undefined> {
@@ -116,7 +144,22 @@ export class HttpClient {
   }
 
   public async fetchData(url: string): Promise<DataResponse | undefined> {
-    return this.client?.fetchData(url);
+    const response: ExtendedIncomingMessage = await this.client.doGet(url);
+    if (HttpUtils.isResponseOk(response)) {
+      return {
+        data: response.raw,
+        ...this.toHttpResponse(response),
+      };
+    } else if (response.statusCode === HttpClient.NOT_FOUND_STATUS_CODE) {
+      return undefined;
+    } else {
+      this.LOG.error(
+        `Url[${url}] returned error status code [${response.statusCode}]: \n`,
+        response.statusMessage,
+        response.body
+      );
+      throw new Error('Data could not be fetched from url.');
+    }
   }
 
   public async downloadToFile(url: string, path: string): Promise<void> {
@@ -162,102 +205,61 @@ export class HttpClient {
     body: BodyData,
     json = true
   ): Promise<DataResponse | undefined> {
-    return this.client.post(url, body, json);
-  }
-}
-
-class NullInternalClient implements InternalClient {
-  public constructor(private readonly response?: DataResponse) {}
-
-  public async fetchData(): Promise<DataResponse | undefined> {
-    return this.response;
-  }
-
-  public async post(): Promise<DataResponse | undefined> {
-    return this.response;
-  }
-}
-
-class NeedleInteralClient implements InternalClient {
-  private static readonly CONTENT_LENGTH_HEADER = 'content-length';
-  private static readonly CONTENT_TYPE_HEADER = 'content-type';
-  private static readonly NOT_FOUND_STATUS_CODE = 404;
-  private static readonly GET_METHOD = 'get';
-  private static readonly POST_METHOD = 'post';
-
-  public constructor(private readonly log: Logger) {}
-
-  private toHttpResponse(response: IncomingMessage): HttpResponse {
-    const rval: HttpResponse = {
-      statusCode: response.statusCode || 0,
-      contentLength: -1,
-      contentType: '',
-    };
-    if (response.headers) {
-      rval.contentLength = +(
-        response.headers[NeedleInteralClient.CONTENT_LENGTH_HEADER] || '-1'
-      );
-      rval.contentType =
-        response.headers[NeedleInteralClient.CONTENT_TYPE_HEADER] || '';
-    }
-    return rval;
-  }
-
-  public async fetchData(url: string): Promise<DataResponse | undefined> {
-    const response: NeedleResponse = await needle(
-      NeedleInteralClient.GET_METHOD,
-      url,
-      {
-        responseType: 'buffer',
-        throwHttpErrors: false,
-      }
-    );
-    if (HttpUtils.isResponseOk(response)) {
-      return {
-        data: response.raw,
-        ...this.toHttpResponse(response),
-      };
-    } else if (
-      response.statusCode === NeedleInteralClient.NOT_FOUND_STATUS_CODE
-    ) {
-      return undefined;
-    } else {
-      this.log.error(
-        `Url[${url}] returned error status code [${response.statusCode}]: \n`,
-        response.statusMessage,
-        response.body
-      );
-      throw new Error('Data could not be fetched from url.');
-    }
-  }
-
-  public async post(
-    url: string,
-    body: BodyData,
-    json = true
-  ): Promise<DataResponse | undefined> {
-    const response: NeedleResponse = await needle(
-      NeedleInteralClient.POST_METHOD,
+    const response: ExtendedIncomingMessage = await this.client.doPost(
       url,
       body,
-      { json }
+      json
     );
     if (HttpUtils.isResponseOk(response)) {
       return {
         data: response.raw,
         ...this.toHttpResponse(response),
       };
-    } else if (
-      response.statusCode === NeedleInteralClient.NOT_FOUND_STATUS_CODE
-    ) {
+    } else if (response.statusCode === HttpClient.NOT_FOUND_STATUS_CODE) {
       return undefined;
     } else {
-      this.log.error(
+      this.LOG.error(
         `Url[${url}] returned error status code [${response.statusCode}]: \n`,
         response.statusMessage,
         response.body
       );
       throw new Error('Error during post to url.');
     }
+  }
+}
+
+class NullInternalClient implements InternalClient {
+  public constructor(
+    private readonly response: Partial<ExtendedIncomingMessage>
+  ) {}
+
+  public async doGet(): Promise<ExtendedIncomingMessage> {
+    return this.response as ExtendedIncomingMessage;
+  }
+
+  public async doPost(): Promise<ExtendedIncomingMessage> {
+    return this.response as ExtendedIncomingMessage;
+  }
+}
+
+class NeedleInteralClient implements InternalClient {
+  private static readonly GET_METHOD = 'get';
+  private static readonly POST_METHOD = 'post';
+
+  public constructor(private readonly log: Logger) {}
+
+  public async doGet(url: string): Promise<ExtendedIncomingMessage> {
+    return await needle(NeedleInteralClient.GET_METHOD, url, {
+      responseType: 'buffer',
+      throwHttpErrors: false,
+    });
+  }
+
+  public async doPost(
+    url: string,
+    body: BodyData,
+    json = true
+  ): Promise<ExtendedIncomingMessage> {
+    return await needle(NeedleInteralClient.POST_METHOD, url, body, { json });
   }
 }

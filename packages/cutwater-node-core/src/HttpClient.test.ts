@@ -8,9 +8,11 @@ const notFoundClient = HttpClient.createNull(undefined, system);
 const successHtmlClient = HttpClient.createNull(
   {
     statusCode: 200,
-    contentLength: 42,
-    contentType: 'text/html',
-    data: Buffer.from('<html><head></head><body>Hi!</body></html>', 'utf-8'),
+    headers: {
+      'content-length': '42',
+      'content-type': 'text/html',
+    },
+    raw: Buffer.from('<html><head></head><body>Hi!</body></html>', 'utf-8'),
   },
   system
 );
@@ -18,9 +20,11 @@ const successHtmlClient = HttpClient.createNull(
 const successObjectClient = HttpClient.createNull(
   {
     statusCode: 200,
-    contentLength: 20,
-    contentType: 'application/json',
-    data: Buffer.from(JSON.stringify({ data: 'test data' }), 'utf-8'),
+    headers: {
+      'content-length': '20',
+      'content-type': 'application/json',
+    },
+    raw: Buffer.from(JSON.stringify({ data: 'test data' }), 'utf-8'),
   },
   system
 );
