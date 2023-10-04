@@ -44,42 +44,42 @@ export class Process implements LimitedProcess {
     });
   }
 
-  constructor(private readonly process: LimitedProcess) {}
+  constructor(private readonly limitedProcess: LimitedProcess) {}
 
   public on(
     event: string | symbol,
     listener: (...args: unknown[]) => void
   ): LimitedProcess {
-    this.process.on(event, listener);
+    this.limitedProcess.on(event, listener);
     return this;
   }
 
   public cwd(): string {
-    return this.process.cwd();
+    return this.limitedProcess.cwd();
   }
 
   public get version(): string {
-    return this.process.version;
+    return this.limitedProcess.version;
   }
 
   public get env(): Record<string, string | undefined> {
-    return this.process.env;
+    return this.limitedProcess.env;
   }
 
   public exit(code?: number | undefined): never {
-    return this.process.exit(code);
+    return this.limitedProcess.exit(code);
   }
 
   public get stdin(): ReadStream & { fd: 0 } {
-    return this.process.stdin;
+    return this.limitedProcess.stdin;
   }
 
   public get stdout(): WriteStream & { fd: 1 } {
-    return this.process.stdout;
+    return this.limitedProcess.stdout;
   }
 
   public get stderr(): WriteStream & { fd: 2 } {
-    return this.process.stderr;
+    return this.limitedProcess.stderr;
   }
 }
 

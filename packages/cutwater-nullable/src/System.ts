@@ -1,6 +1,6 @@
-import { EventEmitter } from 'node:events';
 import * as yaml from 'js-yaml';
 import { SchemaDefinition } from 'js-yaml';
+import { EventEmitter } from 'node:events';
 import { basename, isAbsolute, join, resolve } from 'path';
 import { ReadStream, WriteStream } from 'tty';
 import * as yargs from 'yargs';
@@ -20,14 +20,14 @@ export class System extends EventEmitter {
 
   public static createNull(
     args: Record<string, string | boolean> = {},
-    process: Process = Process.createNull(),
+    limitedProcess: Process = Process.createNull(),
     fileSystem: FileSystem = FileSystem.createNull()
   ): System {
-    return new System(process, fileSystem, args);
+    return new System(limitedProcess, fileSystem, args);
   }
 
   protected constructor(
-    private readonly process: LimitedProcess,
+    private readonly limitedProcess: LimitedProcess,
     private readonly fileSystem: FileSystem,
     public readonly args: Record<string, string | boolean>
   ) {
@@ -35,38 +35,38 @@ export class System extends EventEmitter {
   }
 
   public cwd(): string {
-    return this.process.cwd();
+    return this.limitedProcess.cwd();
   }
 
   public get version(): string {
-    return this.process.version;
+    return this.limitedProcess.version;
   }
 
   public get env(): Record<string, string | undefined> {
-    return this.process.env;
+    return this.limitedProcess.env;
   }
 
   public get stdin(): ReadStream & { fd: 0 } {
-    return this.process.stdin;
+    return this.limitedProcess.stdin;
   }
 
   public get stdout(): WriteStream & { fd: 1 } {
-    return this.process.stdout;
+    return this.limitedProcess.stdout;
   }
 
   public get stderr(): WriteStream & { fd: 2 } {
-    return this.process.stderr;
+    return this.limitedProcess.stderr;
   }
 
   public exit(code?: number | undefined): never {
-    return this.process.exit(code);
+    return this.limitedProcess.exit(code);
   }
 
   public override on(
     eventName: string | symbol,
     listener: (...args: unknown[]) => void
   ): this {
-    this.process.on(eventName, (...args: unknown[]): void => {
+    this.limitedProcess.on(eventName, (...args: unknown[]): void => {
       listener(args);
     });
     return this;
