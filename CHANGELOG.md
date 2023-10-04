@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.35.30-alpha.6](https://github.com/CodificationOrg/cutwater/compare/v0.35.30-alpha.5...v0.35.30-alpha.6) (2023-10-04)
+
+
+### Features
+
+* improve IOUtils compression support ([a932460](https://github.com/CodificationOrg/cutwater/commit/a9324601fbc9165f57f74e244167246f8afc9af2))
+
+
+
 ## [0.35.30-alpha.5](https://github.com/CodificationOrg/cutwater/compare/v0.35.30-alpha.4...v0.35.30-alpha.5) (2023-10-04)
 
 
