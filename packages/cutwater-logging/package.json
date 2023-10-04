@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-logging",
-  "version": "0.35.30-alpha.2",
+  "version": "0.35.30-alpha.3",
   "description": "Yet another simple logging utility.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
