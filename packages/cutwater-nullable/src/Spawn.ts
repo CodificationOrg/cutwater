@@ -3,6 +3,7 @@ import * as spawn from 'cross-spawn';
 import { EventEmitter } from 'node:events';
 import { delimiter, resolve } from 'path';
 import * as spawnArgs from 'spawn-args';
+import { setImmediate } from 'timers';
 
 import { OutputTracker } from './OutputTracker';
 import { System } from './System';
