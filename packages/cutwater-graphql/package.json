@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-graphql",
-  "version": "0.35.30-alpha.8",
+  "version": "0.35.30-alpha.9",
   "description": "A library providing useful tools for working with GraphQL.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
