@@ -7,7 +7,7 @@ import { dirname } from 'path';
 import { HttpUtils } from './HttpUtils';
 
 export interface ExtendedIncomingMessage extends IncomingMessage {
-  raw: Buffer;
+  raw?: Buffer;
   body?: unknown;
 }
 
@@ -45,14 +45,13 @@ export class HttpClient {
   private static readonly CONTENT_LENGTH_HEADER = 'content-length';
   private static readonly CONTENT_TYPE_HEADER = 'content-type';
 
+  private static readonly SUCCESS_STATUS_CODE = 200;
   private static readonly NOT_FOUND_STATUS_CODE = 404;
 
   public static readonly TEXT_ENCODING = 'utf-8';
 
   public static readonly HTML_CONTENT_TYPE = 'text/html';
   public static readonly JSON_CONTENT_TYPE = 'application/json';
-
-  public static readonly SUCCESS_STATUS_CODE = 200;
 
   public static create(): HttpClient {
     return new HttpClient();
@@ -145,7 +144,7 @@ export class HttpClient {
 
   public async fetchData(url: string): Promise<DataResponse | undefined> {
     const response: ExtendedIncomingMessage = await this.client.doGet(url);
-    if (HttpUtils.isResponseOk(response)) {
+    if (HttpUtils.isResponseOk(response) && response.raw) {
       return {
         data: response.raw,
         ...this.toHttpResponse(response),
@@ -210,7 +209,7 @@ export class HttpClient {
       body,
       json
     );
-    if (HttpUtils.isResponseOk(response)) {
+    if (HttpUtils.isResponseOk(response) && response.raw) {
       return {
         data: response.raw,
         ...this.toHttpResponse(response),
