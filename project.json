@@ -9,6 +9,7 @@
         "baseBranch": "master",
         "push": true,
         "preset": "angular",
+        "trackDeps": true,
         "postTargets": [
           "cutwater-auth:deploy",
           "cutwater-aws:deploy",
