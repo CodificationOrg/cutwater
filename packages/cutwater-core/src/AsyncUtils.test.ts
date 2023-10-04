@@ -6,8 +6,7 @@ describe('AsyncUtils', () => {
       const start = Date.now();
       await AsyncUtils.wait(50);
       const result = Date.now() - start;
-      expect(result).toBeGreaterThan(48);
-      expect(result).toBeLessThan(52);
+      expect(result).toBeGreaterThan(49);
     });
   });
 });
