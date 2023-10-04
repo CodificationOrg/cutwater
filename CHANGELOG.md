@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.35.30-alpha.5](https://github.com/CodificationOrg/cutwater/compare/v0.35.30-alpha.4...v0.35.30-alpha.5) (2023-10-04)
+
+
+### Bug Fixes
+
+* explicitly import setImmediate ([1263324](https://github.com/CodificationOrg/cutwater/commit/1263324172f59f5f9f09cd7e31eca504deed3f76))
+
+
+
 ## [0.35.30-alpha.4](https://github.com/CodificationOrg/cutwater/compare/v0.35.30-alpha.3...v0.35.30-alpha.4) (2023-10-04)
 
 
