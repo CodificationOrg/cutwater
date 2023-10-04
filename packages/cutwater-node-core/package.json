@@ -23,8 +23,8 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@codification/cutwater-logging": "0.35.30-alpha.7",
-    "@codification/cutwater-nullable": "0.35.30-alpha.7",
+    "@codification/cutwater-logging": "*",
+    "@codification/cutwater-nullable": "*",
     "@swc/helpers": "~0.5.0",
     "adm-zip": "^0.5.10",
     "needle": "^3.0.0",
