@@ -1,8 +1,7 @@
 import { System } from '@codification/cutwater-nullable';
-import { createWriteStream } from 'fs';
-import { join } from 'path';
+import * as AdmZip from 'adm-zip';
+import { resolve } from 'path';
 import { Readable } from 'stream';
-import * as yauzl from 'yauzl';
 
 /**
  * Utility for handling common IO related tasks.
@@ -37,40 +36,49 @@ export class IOUtils {
     });
   }
 
-  public static async unzip(
-    zipFilePath: string,
+  public static zip(
+    srcPath: string,
+    destPath: string,
+    data?: Buffer,
+    system: System = System.create()
+  ): void {
+    const zip = new AdmZip();
+
+    if (!data) {
+      const src = system.toFileReference(srcPath);
+      if (src.isDirectory()) {
+        zip.addLocalFolder(src.path);
+      } else {
+        zip.addLocalFile(src.path);
+      }
+    } else {
+      zip.addFile(srcPath, data);
+    }
+    const dest = system.toFileReference(destPath);
+    dest.write(zip.toBuffer());
+  }
+
+  public static unzip(
+    zipPathorBuffer: string | Buffer,
     destPath: string,
     system: System = System.create()
-  ): Promise<void> {
-    return new Promise<void>((res, rej) => {
-      yauzl.open(zipFilePath, { lazyEntries: true }, (err, zipfile) => {
-        if (err) {
-          rej(err);
-        }
-        zipfile.readEntry();
-        zipfile.on('entry', (entry) => {
-          const entryPath = join(destPath, entry.fileName);
-          if (/\/$/.test(entry.fileName)) {
-            system.mkdir(entryPath, true);
-            zipfile.readEntry();
-          } else {
-            zipfile.openReadStream(entry, (err, readStream) => {
-              if (err) {
-                rej(err);
-              }
-              readStream.on('end', () => {
-                zipfile.readEntry();
-              });
-              const writeStream = createWriteStream(entryPath);
-              writeStream.on('error', (err) => {
-                rej(err);
-              });
-              readStream.pipe(writeStream);
-            });
-          }
-        });
-        zipfile.on('end', res);
-      });
+  ): void {
+    const src: Buffer =
+      typeof zipPathorBuffer === 'string'
+        ? system.toFileReference(zipPathorBuffer).readToBuffer()
+        : zipPathorBuffer;
+    const zip = new AdmZip(src);
+    const entries = zip.getEntries();
+
+    entries.forEach((entry) => {
+      if (entry.isDirectory) {
+        system.mkdir(entry.entryName, true);
+      } else {
+        const destFile = system.toFileReference(
+          resolve(destPath, entry.entryName)
+        );
+        destFile.write(entry.getData());
+      }
     });
   }
 }
