@@ -1,5 +1,5 @@
 import { LoggerFactory } from '@codification/cutwater-logging';
-import { HttpService } from '@codification/cutwater-node-core';
+import { HttpClient } from '@codification/cutwater-node-core';
 import * as jwt from 'jsonwebtoken';
 import { GetPublicKeyOrSecret, JwtHeader } from 'jsonwebtoken';
 import * as jwks from 'jwks-rsa';
@@ -36,19 +36,21 @@ export abstract class AbstractOAuthService implements OAuthService {
   private readonly KEY_ENDPOINT = 'jwks_uri';
 
   private readonly discoveryUrl: string;
-  private readonly httpService: HttpService = new HttpService();
+  private readonly httpClient: HttpClient;
 
   private jwksClient?: jwks.JwksClient;
   private discoveryDocument?: Record<string, string>;
   private jwtVerificationFunction?: GetPublicKeyOrSecret;
 
   public constructor(
+    httpClient = HttpClient.create(),
     public readonly provider: OAuthServiceProvider,
     private readonly clientId: string,
     private readonly clientSecret: string,
     discoveryUrlBase: string,
     private readonly scope: string[] = ['openid', 'profile', 'email']
   ) {
+    this.httpClient = httpClient;
     this.AUTH_STATE = new AuthState(provider, clientSecret);
     this.discoveryUrl = `${discoveryUrlBase}/.well-known/openid-configuration`;
   }
@@ -100,7 +102,7 @@ export abstract class AbstractOAuthService implements OAuthService {
   }
 
   private async getTokens(req: TokenRequestConfig): Promise<Tokens> {
-    const resp = await this.httpService.postFormForObject<TokenResponse>(
+    const resp = await this.httpClient.postForObject<TokenResponse>(
       await this.tokenEndpoint,
       req
     );
@@ -147,7 +149,7 @@ export abstract class AbstractOAuthService implements OAuthService {
 
   private async getDiscoveryDocumentValue(key: string): Promise<string> {
     if (!this.discoveryDocument) {
-      const data = await this.httpService.fetchObject<Record<string, string>>(
+      const data = await this.httpClient.fetchObject<Record<string, string>>(
         this.discoveryUrl
       );
       if (data) {
