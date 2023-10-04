@@ -16,6 +16,9 @@
     "projectNameAndRootFormat": "as-provided"
   },
   "targetDefaults": {
+    "version": {
+      "dependsOn": ["^version"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"],
