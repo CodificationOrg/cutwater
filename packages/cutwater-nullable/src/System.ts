@@ -20,53 +20,53 @@ export class System extends EventEmitter {
 
   public static createNull(
     args: Record<string, string | boolean> = {},
-    limitedProcess: Process = Process.createNull(),
+    process: LimitedProcess = Process.createNull(),
     fileSystem: FileSystem = FileSystem.createNull()
   ): System {
-    return new System(limitedProcess, fileSystem, args);
+    return new System(process, fileSystem, args);
   }
 
   protected constructor(
-    private readonly limitedProcess: LimitedProcess,
-    private readonly fileSystem: FileSystem,
+    protected readonly process: LimitedProcess,
+    protected readonly fileSystem: FileSystem,
     public readonly args: Record<string, string | boolean>
   ) {
     super();
   }
 
   public cwd(): string {
-    return this.limitedProcess.cwd();
+    return this.process.cwd();
   }
 
   public get version(): string {
-    return this.limitedProcess.version;
+    return this.process.version;
   }
 
   public get env(): Record<string, string | undefined> {
-    return this.limitedProcess.env;
+    return this.process.env;
   }
 
   public get stdin(): ReadStream & { fd: 0 } {
-    return this.limitedProcess.stdin;
+    return this.process.stdin;
   }
 
   public get stdout(): WriteStream & { fd: 1 } {
-    return this.limitedProcess.stdout;
+    return this.process.stdout;
   }
 
   public get stderr(): WriteStream & { fd: 2 } {
-    return this.limitedProcess.stderr;
+    return this.process.stderr;
   }
 
   public exit(code?: number | undefined): never {
-    return this.limitedProcess.exit(code);
+    return this.process.exit(code);
   }
 
   public override on(
     eventName: string | symbol,
     listener: (...args: unknown[]) => void
   ): this {
-    this.limitedProcess.on(eventName, (...args: unknown[]): void => {
+    this.process.on(eventName, (...args: unknown[]): void => {
       listener(args);
     });
     return this;

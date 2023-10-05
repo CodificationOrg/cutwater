@@ -27,11 +27,11 @@ export interface ProcessResponses {
 export class Process implements LimitedProcess {
   public static createNull(
     responses: ProcessResponses = { ...new TrackedIOStreams() }
-  ): Process {
+  ): LimitedProcess {
     return new Process(new StubbedProcessProvider(responses));
   }
 
-  public static create(): Process {
+  public static create(): LimitedProcess {
     return new Process({
       ...process,
       on: (
@@ -44,42 +44,42 @@ export class Process implements LimitedProcess {
     });
   }
 
-  constructor(private readonly limitedProcess: LimitedProcess) {}
+  constructor(protected readonly process: LimitedProcess) {}
 
   public on(
     event: string | symbol,
     listener: (...args: unknown[]) => void
   ): LimitedProcess {
-    this.limitedProcess.on(event, listener);
+    this.process.on(event, listener);
     return this;
   }
 
   public cwd(): string {
-    return this.limitedProcess.cwd();
+    return this.process.cwd();
   }
 
   public get version(): string {
-    return this.limitedProcess.version;
+    return this.process.version;
   }
 
   public get env(): Record<string, string | undefined> {
-    return this.limitedProcess.env;
+    return this.process.env;
   }
 
   public exit(code?: number | undefined): never {
-    return this.limitedProcess.exit(code);
+    return this.process.exit(code);
   }
 
   public get stdin(): ReadStream & { fd: 0 } {
-    return this.limitedProcess.stdin;
+    return this.process.stdin;
   }
 
   public get stdout(): WriteStream & { fd: 1 } {
-    return this.limitedProcess.stdout;
+    return this.process.stdout;
   }
 
   public get stderr(): WriteStream & { fd: 2 } {
-    return this.limitedProcess.stderr;
+    return this.process.stderr;
   }
 }
 
