@@ -10,7 +10,6 @@
         "push": true,
         "preset": "angular",
         "postTargets": [
-          "workspace:peer-version",
           "cutwater-auth:deploy",
           "cutwater-aws:deploy",
           "cutwater-core:deploy",
