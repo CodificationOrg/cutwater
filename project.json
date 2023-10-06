@@ -11,7 +11,15 @@
         "preset": "angular",
         "postTargets": [
           "workspace:peer-version",
-          "workspace:deploy",
+          "cutwater-auth:deploy",
+          "cutwater-aws:deploy",
+          "cutwater-core:deploy",
+          "cutwater-graphql:deploy",
+          "cutwater-logging:deploy",
+          "cutwater-node-core:deploy",
+          "cutwater-nullable:deploy",
+          "cutwater-repo:deploy",
+          "cutwater-nx-plugin:deploy",
           "workspace:github"
         ]
       },
@@ -26,14 +34,6 @@
           "releaseAs": "prerelease",
           "preid": "beta"
         }
-      }
-    },
-    "deploy": {
-      "executor": "ngx-deploy-npm:deploy",
-      "options": {
-        "access": "public",
-        "noBuild": true,
-        "registry": "https://registry.npmjs.org"
       }
     },
     "github": {

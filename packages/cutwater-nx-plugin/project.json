@@ -60,6 +60,9 @@
           "codeCoverage": true
         }
       }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy"
     }
   },
   "tags": []

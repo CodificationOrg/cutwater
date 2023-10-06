@@ -67,6 +67,13 @@
           "jestConfig": "{projectRoot}/jest-integration.config.ts"
         }
       }
+    },
+    "deploy": {
+      "options": {
+        "access": "public",
+        "noBuild": true,
+        "registry": "https://registry.npmjs.org"
+      }
     }
   },
   "namedInputs": {
