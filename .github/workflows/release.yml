@@ -36,18 +36,12 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
-      - run: yarn nx affected -t version
       - run: yarn nx affected -t lint --parallel=3
       - run: yarn nx affected -t test --parallel=3
       - run: yarn nx affected -t build --parallel=3
-      - run: yarn nx affected -t peer-version
-
-      - name: Publish
-        run: yarn nx affected -t deploy
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Release
-        run: yarn nx affected -t github
+        run: yarn nx affected -t version
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

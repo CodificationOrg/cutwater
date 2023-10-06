@@ -12,9 +12,6 @@
     },
     "build": {
       "executor": "@nx/js:swc"
-    },
-    "deploy": {
-      "executor": "ngx-deploy-npm:deploy"
     }
   },
   "tags": []

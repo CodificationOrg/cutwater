@@ -8,7 +8,12 @@
         "syncVersions": true,
         "baseBranch": "master",
         "push": true,
-        "preset": "angular"
+        "preset": "angular",
+        "postTargets": [
+          "workspace:peer-version",
+          "workspace:deploy",
+          "workspace:github"
+        ]
       },
       "configurations": {
         "alpha": {
@@ -21,6 +26,14 @@
           "releaseAs": "prerelease",
           "preid": "beta"
         }
+      }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public",
+        "noBuild": true,
+        "registry": "https://registry.npmjs.org"
       }
     },
     "github": {
