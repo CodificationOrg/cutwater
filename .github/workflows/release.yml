@@ -5,7 +5,7 @@ on:
     branches:
       - master
     tags-ignore:
-      - "v*"
+      - 'v*'
 
 jobs:
   build:
@@ -29,19 +29,25 @@ jobs:
       - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
-          cache: "yarn"
-          node-version: "18.16.0"
+          cache: 'yarn'
+          node-version: '18.16.0'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
-      
+
+      - run: yarn nx affected -t version
       - run: yarn nx affected -t lint --parallel=3
       - run: yarn nx affected -t test --parallel=3
       - run: yarn nx affected -t build --parallel=3
+      - run: yarn nx affected -t peer-version
+
+      - name: Publish
+        run: yarn nx affected -t deploy
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Release
-        run: yarn nx affected -t version
+        run: yarn nx affected -t github
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

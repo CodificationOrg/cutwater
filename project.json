@@ -8,21 +8,7 @@
         "syncVersions": true,
         "baseBranch": "master",
         "push": true,
-        "preset": "angular",
-        "trackDeps": true,
-        "postTargets": [
-          "workspace:peer-version",
-          "cutwater-auth:deploy",
-          "cutwater-aws:deploy",
-          "cutwater-core:deploy",
-          "cutwater-graphql:deploy",
-          "cutwater-logging:deploy",
-          "cutwater-node-core:deploy",
-          "cutwater-nullable:deploy",
-          "cutwater-repo:deploy",
-          "cutwater-nx-plugin:deploy",
-          "workspace:github"
-        ]
+        "preset": "angular"
       },
       "configurations": {
         "alpha": {
