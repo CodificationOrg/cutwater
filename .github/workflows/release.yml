@@ -41,7 +41,11 @@ jobs:
       - run: yarn nx affected -t build --parallel=3
 
       - name: Release
-        run: yarn nx affected -t version
+        run: yarn nx affected -t version -c ${{ github.ref_name }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish
+        run: yarn nx affected -t deploy
+        env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
