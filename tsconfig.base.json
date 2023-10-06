@@ -30,6 +30,9 @@
       "@codification/cutwater-nullable": [
         "packages/cutwater-nullable/src/index.ts"
       ],
+      "@codification/cutwater-nx-plugin": [
+        "packages/cutwater-nx-plugin/src/index.ts"
+      ],
       "@codification/cutwater-repo": ["packages/cutwater-repo/src/index.ts"],
       "@types/spawn-args": [
         "packages/cutwater-nullable/src/@types/spawn-args/index.ts"

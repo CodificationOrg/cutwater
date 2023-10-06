@@ -11,6 +11,7 @@
         "preset": "angular",
         "trackDeps": true,
         "postTargets": [
+          "workspace:peer-version",
           "cutwater-auth:deploy",
           "cutwater-aws:deploy",
           "cutwater-core:deploy",
@@ -19,6 +20,7 @@
           "cutwater-node-core:deploy",
           "cutwater-nullable:deploy",
           "cutwater-repo:deploy",
+          "cutwater-nx-plugin:deploy",
           "workspace:github"
         ]
       },
@@ -41,6 +43,9 @@
         "tag": "${tag}",
         "notes": "${notes}"
       }
+    },
+    "peer-version": {
+      "executor": "@codification/cutwater-nx-plugin:peer-version"
     }
   }
 }

@@ -14,10 +14,7 @@
       "executor": "@nx/js:swc"
     },
     "deploy": {
-      "executor": "ngx-deploy-npm:deploy",
-      "options": {
-        "access": "public"
-      }
+      "executor": "ngx-deploy-npm:deploy"
     }
   },
   "tags": []

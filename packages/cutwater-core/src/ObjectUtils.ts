@@ -1,19 +1,24 @@
 export class ObjectUtils {
   public static findProperty(
-    obj: Record<string, unknown>,
+    obj: unknown,
     propName: string
   ): unknown | undefined {
-    if (propName.indexOf('.') === -1) {
-      return obj[propName];
-    } else {
-      let rval: unknown | undefined = obj;
-      let index = 0;
-      const props = propName.split('.');
-      while (rval && index < props.length) {
-        rval = this.findProperty(rval as Record<string, unknown>, props[index]);
-        index++;
+    if (obj && typeof obj === 'object') {
+      if (propName.indexOf('.') === -1) {
+        return propName in obj
+          ? (obj as Record<string, unknown>)[propName]
+          : undefined;
+      } else {
+        let rval: unknown | undefined = obj;
+        let index = 0;
+        const props = propName.split('.');
+        while (rval && index < props.length) {
+          rval = this.findProperty(rval, props[index]);
+          index++;
+        }
+        return rval;
       }
-      return rval;
     }
+    return undefined;
   }
 }

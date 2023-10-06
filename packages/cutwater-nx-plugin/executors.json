@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "peer-version": {
+      "implementation": "./src/executors/peer-version/Executor",
+      "schema": "./src/executors/peer-version/schema.json",
+      "description": "peer-version executor"
+    }
+  }
+}
