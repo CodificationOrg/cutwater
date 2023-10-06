@@ -68,7 +68,11 @@
         }
       }
     },
+    "peer-version": {
+      "dependsOn": ["build"]
+    },
     "deploy": {
+      "dependsOn": ["peer-version"],
       "options": {
         "access": "public",
         "noBuild": true,

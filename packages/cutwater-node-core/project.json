@@ -13,6 +13,9 @@
     "build": {
       "executor": "@nx/js:swc"
     },
+    "peer-version": {
+      "executor": "@codification/cutwater-nx-plugin:peer-version"
+    },
     "deploy": {
       "executor": "ngx-deploy-npm:deploy"
     }

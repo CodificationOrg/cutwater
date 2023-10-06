@@ -42,9 +42,6 @@
         "tag": "${tag}",
         "notes": "${notes}"
       }
-    },
-    "peer-version": {
-      "executor": "@codification/cutwater-nx-plugin:peer-version"
     }
   }
 }
