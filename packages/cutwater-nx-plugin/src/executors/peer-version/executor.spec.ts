@@ -1,11 +1,17 @@
-import { CutwaterNxPeerVersionExecutorSchema } from './schema';
-import executor from './executor';
+import { ExecutorContext } from '@nx/devkit';
+import executor from './Executor';
+import { PeerVersionOptions } from './Schema';
 
-const options: CutwaterNxPeerVersionExecutorSchema = {};
+const options: PeerVersionOptions = {};
+const context: ExecutorContext = {
+  root: '/Projects/Test',
+  isVerbose: true,
+  cwd: '/Projects/Test',
+};
 
-describe('CutwaterNxPeerVersion Executor', () => {
+describe('PeerVersion Executor', () => {
   it('can run', async () => {
-    const output = await executor(options);
+    const output = await executor(options, context);
     expect(output.success).toBe(true);
   });
 });

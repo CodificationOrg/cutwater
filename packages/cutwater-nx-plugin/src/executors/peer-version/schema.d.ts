@@ -1,1 +1,1 @@
-export interface CutwaterNxPeerVersionExecutorSchema {} // eslint-disable-line
+export interface PeerVersionOptions {} // eslint-disable-line
