@@ -71,6 +71,7 @@
     "deploy": {
       "options": {
         "access": "public",
+        "noBuild": true,
         "registry": "https://registry.npmjs.org"
       }
     }
