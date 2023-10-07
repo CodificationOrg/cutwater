@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-auth",
-  "version": "0.35.30-alpha.19",
+  "version": "0.35.30-alpha.20",
   "description": "A library providing a simple solution for authentication.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",
