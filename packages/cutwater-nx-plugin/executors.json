@@ -4,6 +4,11 @@
       "implementation": "./src/executors/peer-version/Executor",
       "schema": "./src/executors/peer-version/schema.json",
       "description": "peer-version executor"
+    },
+    "fetch-layer": {
+      "implementation": "./src/executors/fetch-layer/Executor",
+      "schema": "./src/executors/fetch-layer/schema.json",
+      "description": "fetch-layer executor"
     }
   }
 }
