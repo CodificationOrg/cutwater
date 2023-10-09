@@ -15,9 +15,7 @@ export class CliUtils {
   }
 
   protected static preparedCommand(command = '', subCommand = ''): string {
-    return command
-      ? `${command}${subCommand ? ' ' + subCommand : ''} `
-      : '';
+    return command ? `${command}${subCommand ? ' ' + subCommand : ''} ` : '';
   }
 
   protected static preparedOptions(
@@ -30,7 +28,7 @@ export class CliUtils {
   }
 
   protected static toArgString(
-    args: any,
+    args: unknown,
     filteredParams: string[] = []
   ): string {
     const argArray: string[] = Object.keys(args)
@@ -54,7 +52,7 @@ export class CliUtils {
     return ` ${argArray.join(' ')}`;
   }
 
-  protected static toParameterList(arg: any[]): string {
+  protected static toParameterList(arg: unknown[]): string {
     return arg
       .map((value) => {
         if (typeof value === 'string') {
