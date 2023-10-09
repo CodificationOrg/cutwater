@@ -15,8 +15,8 @@ export class CliUtils {
   }
 
   protected static preparedCommand(command = '', subCommand = ''): string {
-    return !!command
-      ? `${command}${!!subCommand ? ' ' + subCommand : ''} `
+    return command
+      ? `${command}${subCommand ? ' ' + subCommand : ''} `
       : '';
   }
 
@@ -24,7 +24,7 @@ export class CliUtils {
     config: CliOptions<unknown, unknown>,
     filteredParams?: string[]
   ): string {
-    return !!config.options
+    return config.options
       ? CliUtils.toArgString(config.options, filteredParams)
       : '';
   }
@@ -71,7 +71,7 @@ export class CliUtils {
     config: CliOptions<unknown, unknown>,
     filteredParams?: string[]
   ): string {
-    return !!config.parameters
+    return config.parameters
       ? CliUtils.toArgString(config.parameters, filteredParams)
       : '';
   }

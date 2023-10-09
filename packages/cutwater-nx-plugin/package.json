@@ -32,7 +32,9 @@
     "@nx/devkit": "16.10.0",
     "@swc/helpers": "~0.5.2",
     "@codification/cutwater-core": "*",
-    "nx": "16.10.0"
+    "nx": "16.10.0",
+    "@codification/cutwater-node-core": "*",
+    "@codification/cutwater-nullable": "*"
   },
   "type": "commonjs",
   "main": "./src/index.js",
