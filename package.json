@@ -1,6 +1,6 @@
 {
   "name": "@codification/root",
-  "version": "0.35.30-alpha.20",
+  "version": "0.35.30-alpha.21",
   "license": "Apache-2.0",
   "scripts": {
     "prepare": "husky install"

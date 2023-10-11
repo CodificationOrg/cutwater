@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-aws",
-  "version": "0.35.30-alpha.20",
+  "version": "0.35.30-alpha.21",
   "description": "A library providing general functionality for TypeScript based AWS projects.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",

@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.35.30-alpha.21](https://github.com/CodificationOrg/cutwater/compare/v0.35.30-alpha.20...v0.35.30-alpha.21) (2023-10-11)
+
+
+### Features
+
+* add fetch-layer executor ([fffd2c1](https://github.com/CodificationOrg/cutwater/commit/fffd2c1bcceedbe7acec4c4e47f5fb43ff8df42a))
+
+
+
 ## [0.35.30-alpha.20](https://github.com/CodificationOrg/cutwater/compare/v0.35.30-alpha.19...v0.35.30-alpha.20) (2023-10-07)
 
 
