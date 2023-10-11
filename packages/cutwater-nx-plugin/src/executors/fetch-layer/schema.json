@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "version": 2,
+  "title": "FetchLayer executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "layerName": {
+      "type": "string",
+      "description": "Simple layer name without version number."
+    },
+    "versionNumber": {
+      "type": "integer",
+      "description": "Numeric version of the layer."
+    },
+    "outputPath": {
+      "type": "string",
+      "description": "Directory where the layer should be extracted."
+    },
+    "region": {
+      "type": "string",
+      "description": "Optional AWS region of the layer."
+    },
+    "profile": {
+      "type": "string",
+      "description": "Optional AWS profile to use."
+    }
+  },
+  "required": ["layerName", "versionNumber", "outputPath"]
+}
