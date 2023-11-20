@@ -25,6 +25,7 @@
     "name": "William Weiss",
     "url": "https://github.com/wweiss"
   },
+  "type": "module",
   "license": "Apache-2.0",
   "dependencies": {
     "@codification/cutwater-core": "*",
