@@ -39,7 +39,13 @@ export class OAuthServices {
         authUrl: await service.generateAuthUrl(redirectUrl, scope),
       };
     } catch (err) {
-      return undefined;
+      throw new Error(
+        `Service [${provider}] returned an error while generating connection config: ${JSON.stringify(
+          err,
+          null,
+          2
+        )}`
+      );
     }
   }
 
