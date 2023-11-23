@@ -70,7 +70,10 @@ describe('OAuthServices', () => {
   it('throws an error on missing config', async () => {
     const authServices = new OAuthServices(partialOpts);
     await expect(
-      authServices.generateConnectionConfigs('https://example.com/authCallback')
+      authServices.generateConnectionConfig(
+        OAuthServiceProvider.MICROSOFT,
+        'https://example.com/authCallback'
+      )
     ).rejects.toBeTruthy();
   });
 

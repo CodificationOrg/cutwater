@@ -32,21 +32,11 @@ export class OAuthServices {
     if (!oAuthProvider) {
       throw new Error(`Unknown OAuth provider: ${provider}`);
     }
-    try {
-      const service = await this.findOAuthService(oAuthProvider);
-      return {
-        provider: service.provider,
-        authUrl: await service.generateAuthUrl(redirectUrl, scope),
-      };
-    } catch (err) {
-      throw new Error(
-        `Service [${provider}] returned an error while generating connection config: ${JSON.stringify(
-          err,
-          null,
-          2
-        )}`
-      );
-    }
+    const service = await this.findOAuthService(oAuthProvider);
+    return {
+      provider: service.provider,
+      authUrl: await service.generateAuthUrl(redirectUrl, scope),
+    };
   }
 
   public async generateConnectionConfigs(
