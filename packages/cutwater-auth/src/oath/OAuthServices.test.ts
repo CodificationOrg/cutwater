@@ -67,14 +67,12 @@ describe('OAuthServices', () => {
     expect(url?.indexOf('microsoft')).not.toBe(-1);
   }, 10000);
 
-  it('does not throw error on missing config', async () => {
+  it('throws an error on missing config', async () => {
     const authServices = new OAuthServices(partialOpts);
-    const configs = await authServices.generateConnectionConfigs(
-      'https://example.com/authCallback'
-    );
-    expect(configs).toBeTruthy();
-    expect(configs.length).toBe(1);
-  }, 10000);
+    await expect(
+      authServices.generateConnectionConfigs('https://example.com/authCallback')
+    ).rejects.toBeTruthy();
+  });
 
   it('fails with invalid provider string', async () => {
     const authServices = new OAuthServices(opts);
