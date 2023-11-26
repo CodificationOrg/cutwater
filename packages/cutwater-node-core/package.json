@@ -1,6 +1,6 @@
 {
   "name": "@codification/cutwater-node-core",
-  "version": "0.35.30-alpha.23",
+  "version": "0.35.30-alpha.24",
   "description": "A library providing the basic utility classes for node.",
   "homepage": "https://github.com/CodificationOrg/cutwater",
   "bugs": "https://github.com/CodificationOrg/cutwater/issues",

@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.35.30-alpha.24](https://github.com/CodificationOrg/cutwater/compare/v0.35.30-alpha.23...v0.35.30-alpha.24) (2023-11-23)
+
+
+### Bug Fixes
+
+* more work on revealing auth errors ([f4b325a](https://github.com/CodificationOrg/cutwater/commit/f4b325a262baba75402b3bd74586c4900bcff7f0))
+
+
+
 ## [0.35.30-alpha.23](https://github.com/CodificationOrg/cutwater/compare/v0.35.30-alpha.22...v0.35.30-alpha.23) (2023-11-23)
 
 
