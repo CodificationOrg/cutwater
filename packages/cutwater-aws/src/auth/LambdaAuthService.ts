@@ -1,10 +1,10 @@
+import { AuthService } from '@codification/cutwater-auth';
 import { TimeUnit } from '@codification/cutwater-core';
 import { Logger, LoggerFactory } from '@codification/cutwater-logging';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import * as cookie from 'cookie';
 import * as jwt from 'jsonwebtoken';
 import { JwtPayload } from 'jsonwebtoken';
-import { AuthService } from '../AuthService';
 import { LambdaAuthOptions } from './LambdaAuthOptions';
 
 export type TokenSecret = string | (() => Promise<string>);
