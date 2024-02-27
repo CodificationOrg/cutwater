@@ -1,6 +1,10 @@
-import { NotFound, PutObjectCommandInput, S3 } from '@aws-sdk/client-s3';
 import {
-  DeleteObjectsRequest,
+  DeleteObjectsCommandInput,
+  NotFound,
+  PutObjectCommandInput,
+  S3,
+} from '@aws-sdk/client-s3';
+import {
   GetObjectOutput,
   HeadObjectOutput,
   PutObjectOutput,
@@ -57,7 +61,7 @@ export class S3Bucket {
     return !!(await this.headObject(fileName));
   }
 
-  private toDeleteObjectsRequest(keys: string[]): DeleteObjectsRequest {
+  private toDeleteObjectsRequest(keys: string[]): DeleteObjectsCommandInput {
     return {
       Bucket: this.bucketName,
       Delete: {
@@ -72,7 +76,7 @@ export class S3Bucket {
     if (fileNames.length < 1) {
       return;
     }
-    await this.s3Client.deleteObjects(this.toDeleteObjectsRequest(fileNames));
+    this.s3Client.deleteObjects(this.toDeleteObjectsRequest(fileNames));
   }
 
   public async loadBuffer(fileName: string): Promise<Buffer> {
