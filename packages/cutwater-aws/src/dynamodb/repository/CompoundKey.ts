@@ -1,4 +1,4 @@
-import { AttributeMap, Key } from 'aws-sdk/clients/dynamodb';
+import { AttributeMap } from '../AttributeMap';
 import { CompoundValue } from '../CompoundValue';
 import { DynamoItem } from '../DynamoItem';
 import { CompoundItemId } from './CompoundItemId';
@@ -29,7 +29,7 @@ export class CompoundKey {
     return CompoundValue.create(this.itemType, this.compoundItemId.name).value;
   }
 
-  public toKey(partitionKey = 'pk', sortKey = 'sk'): Key {
+  public toKey(partitionKey = 'pk', sortKey = 'sk'): AttributeMap {
     return {
       [partitionKey]: {
         S: this.partitionKey,

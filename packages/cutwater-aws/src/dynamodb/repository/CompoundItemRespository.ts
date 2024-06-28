@@ -1,24 +1,25 @@
-import { AsyncUtils } from '@codification/cutwater-core';
-import { Logger, LoggerFactory } from '@codification/cutwater-logging';
-import { ItemRepository } from '@codification/cutwater-repo';
-import { DynamoDB } from 'aws-sdk';
 import {
-  AttributeMap,
   BatchWriteItemInput,
   BatchWriteItemOutput,
   DeleteRequest,
+  DynamoDB,
+  GetItemInput,
   GetItemOutput,
   PutItemInput,
   QueryInput,
   QueryOutput,
   WriteRequest,
-  WriteRequests,
-} from 'aws-sdk/clients/dynamodb';
-import { CompoundKey } from '.';
-import { DynamoItem } from '..';
-import { CompoundItemRepositoryConfig } from './CompoundItemRepositoryConfig';
+} from '@aws-sdk/client-dynamodb';
+import { AsyncUtils } from '@codification/cutwater-core';
+import { Logger, LoggerFactory } from '@codification/cutwater-logging';
+import { ItemRepository } from '@codification/cutwater-repo';
 
-export class CompoundItemRepository<T> implements ItemRepository<T> {
+import { DynamoItem } from '../DynamoItem';
+import { AttributeMap } from '../AttributeMap';
+import { CompoundItemRepositoryConfig } from './CompoundItemRepositoryConfig';
+import { CompoundKey } from './CompoundKey';
+
+export class CompoundItemRepository<T extends object> implements ItemRepository<T> {
   protected readonly LOG: Logger = LoggerFactory.getLogger();
   protected readonly db: DynamoDB = new DynamoDB();
 
@@ -43,7 +44,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
   public async get(id: string): Promise<T | undefined> {
     const params = this.toItemInput(id);
     this.LOG.trace('DynamoDB Get: ', params);
-    const result: GetItemOutput = await this.db.getItem(params).promise();
+    const result: GetItemOutput = await this.db.getItem(params);
     if (!result.Item) {
       this.LOG.trace('No result.');
     }
@@ -54,7 +55,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     if (item instanceof DynamoItem) {
       return CompoundKey.fromAttributeMap(item.item).compoundItemId.itemId;
     }
-    return item[this.config.idProperty];
+    return item[this.config.idProperty as keyof T] as string;
   }
 
   private async refreshItem(item: T): Promise<T> {
@@ -68,7 +69,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
       ...this.baseInput,
     };
     this.LOG.trace('DynamoDB Put: ', params);
-    await this.db.putItem(params).promise();
+    await this.db.putItem(params);
     return this.attributeMapToItem(attributeMap);
   }
 
@@ -86,7 +87,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     if (rval) {
       const params = this.toItemInput(id);
       this.LOG.trace('DynamoDB Delete: ', params);
-      await this.db.deleteItem(params).promise();
+      await this.db.deleteItem(params);
     }
     return rval;
   }
@@ -96,7 +97,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     return (await this.batchPutOrDelete(keys)).map((key) => key.compoundItemId.itemId);
   }
 
-  public toItemInput(id: string): any {
+  public toItemInput(id: string): GetItemInput {
     const key = CompoundKey.fromItemId(this.itemType, id);
     const rval = {
       Key: {
@@ -120,9 +121,10 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
 
   protected attributeMapToItem(map: AttributeMap): T {
     const dynamoItem = new DynamoItem(map);
-    const rval = this.config.toItem(map);
-    rval[this.config.idProperty] = this.toId(dynamoItem);
-    return rval;
+    const idObj = {
+      [this.config.idProperty]: this.toId(dynamoItem),
+    };
+    return Object.assign(this.config.toItem(map), idObj);
   }
 
   protected async itemToAttributeMap(item: T): Promise<AttributeMap> {
@@ -156,7 +158,7 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     this.LOG.trace('DynamoDB GetAll: ', params);
     let result: QueryOutput;
     try {
-      result = await this.db.query(params).promise();
+      result = await this.db.query(params);
       if (!result || !result.Items) {
         return [];
       }
@@ -166,8 +168,8 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     }
 
     const rval = result.Items;
-    if (result.LastEvaluatedKey) {
-      const moreResults = await this.getAllMaps(partitionValue, result.LastEvaluatedKey[this.config.sortKey].S!);
+    if (result.LastEvaluatedKey && result.LastEvaluatedKey[this.config.sortKey].S) {
+      const moreResults = await this.getAllMaps(partitionValue, result.LastEvaluatedKey[this.config.sortKey].S);
       for (const m of moreResults) {
         rval.push(m);
       }
@@ -198,6 +200,14 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     }
   }
 
+  private findWriteRequests(input: BatchWriteItemInput, tableName: string): WriteRequest[] {
+    const rval: WriteRequest[] | undefined = input.RequestItems && input.RequestItems[tableName];
+    if (!rval) {
+      throw new Error(`Write requests missing for table: ${tableName}`);
+    }
+    return rval;
+  }
+
   private async toBatchWriteInputItems<V extends T | CompoundKey>(itemsOrKeys: V[]): Promise<BatchWriteItemInput[]> {
     const tableName = this.config.tableName;
     const writeRequests = await this.toWriteRequests(itemsOrKeys);
@@ -205,14 +215,15 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
       if (index % 24 === 0) {
         inputs.push({ RequestItems: { [tableName]: [] } });
       }
-      inputs[inputs.length - 1].RequestItems[tableName].push(req);
+      const current: BatchWriteItemInput = inputs[inputs.length - 1] && inputs[inputs.length - 1];
+      this.findWriteRequests(current, tableName).push(req);
       return inputs;
     }, []);
     return rval;
   }
 
-  private async toWriteRequests<V extends T | CompoundKey>(itemsOrKeys: V[]): Promise<WriteRequests> {
-    const rval: WriteRequests = [];
+  private async toWriteRequests<V extends T | CompoundKey>(itemsOrKeys: V[]): Promise<WriteRequest[]> {
+    const rval: WriteRequest[] = [];
     for (const val of itemsOrKeys) {
       rval.push(await this.toWriteRequest(val));
     }
@@ -229,14 +240,14 @@ export class CompoundItemRepository<T> implements ItemRepository<T> {
     const tableName = this.config.tableName;
     const rval: AttributeMap[] = [];
     if (currentTry === maxTries) {
-      const remaining = input.RequestItems[this.config.tableName];
+      const remaining = this.findWriteRequests(input, this.config.tableName);
       if ((remaining[0] as DeleteRequest).Key !== undefined) {
-        return remaining.map((req) => req.DeleteRequest!.Key);
+        return remaining.map((req) => req.DeleteRequest?.Key) as AttributeMap[];
       } else {
-        return remaining.map((req) => req.PutRequest!.Item);
+        return remaining.map((req) => req.PutRequest?.Item) as AttributeMap[];
       }
     }
-    const result: BatchWriteItemOutput = await this.db.batchWriteItem(input).promise();
+    const result: BatchWriteItemOutput = await this.db.batchWriteItem(input);
     const unprocessed = (result.UnprocessedItems && result.UnprocessedItems[tableName]) || [];
     if (unprocessed.length > 0) {
       currentTry++;

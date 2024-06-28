@@ -1,5 +1,5 @@
-import { DynamoDB } from 'aws-sdk';
-import { AttributeMap } from 'aws-sdk/clients/dynamodb';
+import { DynamoDB } from '@aws-sdk/client-dynamodb';
+import { AttributeMap } from '../AttributeMap';
 
 export interface CompoundItemRepositoryConfig<T> {
   readonly db?: DynamoDB;

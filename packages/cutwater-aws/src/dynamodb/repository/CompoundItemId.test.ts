@@ -1,5 +1,5 @@
-import { CompoundKey } from '.';
 import { CompoundItemId } from './CompoundItemId';
+import { CompoundKey } from './CompoundKey';
 
 describe('CompoundItemId', () => {
   describe('create', () => {

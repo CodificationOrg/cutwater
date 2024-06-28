@@ -1,4 +1,4 @@
-import { DynamoItem } from '..';
+import { DynamoItem } from '../DynamoItem';
 import { CompoundKey } from './CompoundKey';
 
 describe('CompoundKey', () => {

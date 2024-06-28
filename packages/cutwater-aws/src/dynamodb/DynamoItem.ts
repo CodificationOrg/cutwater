@@ -1,4 +1,5 @@
-import { AttributeMap, AttributeValue } from 'aws-sdk/clients/dynamodb';
+import { AttributeValue } from '@aws-sdk/client-dynamodb';
+import { AttributeMap } from './AttributeMap';
 import { CompoundValue } from './CompoundValue';
 
 enum ValueType {

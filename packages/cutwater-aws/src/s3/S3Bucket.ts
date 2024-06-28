@@ -1,4 +1,3 @@
-import { S3 } from 'aws-sdk';
 import {
   DeleteObjectsRequest,
   GetObjectOutput,
@@ -6,7 +5,8 @@ import {
   HeadObjectOutput,
   PutObjectOutput,
   PutObjectRequest,
-} from 'aws-sdk/clients/s3';
+  S3,
+} from '@aws-sdk/client-s3';
 import * as mime from 'mime';
 import { Readable } from 'stream';
 
@@ -35,7 +35,7 @@ export class S3Bucket {
 
   private async headObject(fileName: string): Promise<HeadObjectOutput | undefined> {
     try {
-      return await this.s3Client.headObject({ Bucket: this.bucketName, Key: fileName }).promise();
+      return await this.s3Client.headObject({ Bucket: this.bucketName, Key: fileName });
     } catch (err) {
       if (err.code !== 'NotFound') {
         throw err;
@@ -68,7 +68,7 @@ export class S3Bucket {
     if (fileNames.length < 1) {
       return;
     }
-    await this.s3Client.deleteObjects(this.toDeleteObjectsRequest(fileNames)).promise();
+    await this.s3Client.deleteObjects(this.toDeleteObjectsRequest(fileNames));
   }
 
   public async loadBuffer(fileName: string): Promise<Buffer> {
@@ -100,7 +100,7 @@ export class S3Bucket {
   }
 
   public async load(fileName: string): Promise<GetObjectOutput> {
-    return await this.s3Client.getObject(this.toBaseObjectRequest(fileName)).promise();
+    return await this.s3Client.getObject(this.toBaseObjectRequest(fileName));
   }
 
   public async store(
@@ -108,6 +108,6 @@ export class S3Bucket {
     content: string | Buffer | Readable,
     options?: Partial<PutObjectRequest>,
   ): Promise<PutObjectOutput> {
-    return await this.s3Client.putObject(this.toPutObjectRequest(fileName, content, options)).promise();
+    return await this.s3Client.putObject(this.toPutObjectRequest(fileName, content, options));
   }
 }
