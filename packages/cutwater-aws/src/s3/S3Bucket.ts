@@ -91,9 +91,15 @@ export class S3Bucket {
     content: string | Buffer | Readable,
     options: Partial<PutObjectRequest> = {},
   ): PutObjectRequest {
+    const Body: Readable =
+      typeof content == 'string'
+        ? Readable.from(Buffer.from(content))
+        : content instanceof Buffer
+        ? Readable.from(content)
+        : content;
     const rval: PutObjectRequest = {
       ...this.toBaseObjectRequest(key),
-      Body: content,
+      Body,
       ...options,
     };
     return rval;
